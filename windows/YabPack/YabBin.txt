@@ -1,0 +1,9 @@
+E:\Projekte\Yabasic\Yabasic\Release\YABASIC.EXE
+E:\Projekte\Yabasic\Setup\Release\SETUP.EXE
+E:\Projekte\Yabasic\YabPack\Dist\COPYING.TXT
+E:\Projekte\Yabasic\YabPack\Dist\README.TXT
+E:\Projekte\Yabasic\YabPack\YABVER.TXT
+E:\Projekte\Yabasic\YABICO.ICO
+E:\Projekte\Yabasic\YabPack\Dist\ANIMALS.YAB
+E:\Html\Homepage\YABASIC.HTM
+E:\Projekte\Yabasic\YabPack\Dist\YABDEMO.YAB

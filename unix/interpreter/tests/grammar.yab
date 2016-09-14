@@ -1,0 +1,23 @@
+#!./yabasic
+
+#   This demo just tests, if the grammar is still okay;
+#   it need not run, only compile. So we exit right away :-)
+exit 0
+
+# test for bug in version 2.680
+if (!eof(1)) exit
+if (!eof(#1)) exit
+print #foo bar
+
+# test for expression bug from 2.681
+if (1<2 and 7) exit
+
+# bug in 2.690
+print a/(b*c)
+
+# variuous forms of i/o
+close #1:close #a+1:close 1:close a
+open #1,"a":open #a,"a":open #(a+1),"a"
+print #1 "a":print #a "a":print #(a+1) "a"
+input #1 a:input #a a:input #(a+1) a
+

@@ -1,0 +1,29 @@
+Version 2.716
+  - Bugfix: fixed 'open "foo" for reading as 1'
+	
+Version 2.715
+  - Bugfix: continue is no longer disturbed by switch
+    statements
+  - The special option '--' stops option processing
+
+Version 2.714
+  - Bugfix: >> if (not open("bad","r")) error "!" << 
+    now works as designed
+
+Version 2.713
+  - Fixed a memory leak associated with arrays-refs
+  - return from within a switch statement is now possible
+
+Version 2.712: 
+  - The new Option '-check' can be used to check for
+    compatibility with previous versions of yabasic
+  - The instr(a$,b$)-function now returns 0, if
+    b$ is the empty string
+
+Version 2.711: 
+  - Fixed a bug related with subs and while-loops
+
+Version 2.710: 
+  - Improved th short if-statement to be more intuitive
+  - Added switch-case statement
+  - Better loop-control: break and continue

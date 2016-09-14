@@ -1,0 +1,31 @@
+﻿Build started 04.07.2015 12:48:04.
+     1>Project "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\yabasic.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)" /Zi /nologo /W2 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D WINDOWS /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /arch:IA32 /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Release\\" /Fd".\Release\vc120.pdb" /FR".\Release\\" /Gd /TC /analyze- /errorReport:prompt Bison.c Flex.c function.c graphic.c io.c main.c symbol.c
+         Bison.c
+         Flex.c
+         function.c
+         graphic.c
+         io.c
+         main.c
+         symbol.c
+         Generating Code...
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D NDEBUG /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /l"0x0407" /nologo /fo".\Release\yabasic.res" yabasic.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Release\yabasic.exe" /INCREMENTAL:NO /NOLOGO odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\Release\yabasic.pdb" /SUBSYSTEM:CONSOLE,"5.01" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Release\yabasic.lib" /MACHINE:X86 /SAFESEH .\Release\yabasic.res
+         .\Release\Bison.obj
+         .\Release\Flex.obj
+         .\Release\function.obj
+         .\Release\graphic.obj
+         .\Release\io.obj
+         .\Release\main.obj
+         .\Release\symbol.obj
+         yabasic.vcxproj -> C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\.\Release\yabasic.exe
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o".\Release\yabasic.bsc" .\Release\Bison.sbr .\Release\Flex.sbr .\Release\function.sbr .\Release\graphic.sbr .\Release\io.sbr .\Release\main.sbr .\Release\symbol.sbr
+     1>Done Building Project "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\yabasic.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:08.98

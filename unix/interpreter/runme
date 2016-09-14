@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# This script is used to compile yabasic
+#
+
+echo 
+
+# remove files, that might interfere
+echo "===output of 'make clean'" >runme.log
+make clean >>runme.log 2>&1
+rm -f ./yabasic config.cache config.log config.status
+
+# get version from yabasic.h
+echo "===Version from configure" >>runme.log
+grep "VERSION=" configure >>runme.log 2>&1
+
+# get username
+echo "===Output of who" >>runme.log
+who -m >>runme.log 2>&1
+
+# get host information
+echo "===Output of uname" >>runme.log
+uname >>runme.log 2>&1
+
+# list current file
+echo "===Files in current directory" >>runme.log
+ls -l >>runme.log 2>&1
+
+# preset returncode
+RC=0
+
+echo "===Running configure ..." | tee -a runme.log | tr -d =
+./configure >>runme.log 2>&1
+# success ?
+if [ $? -eq 0 ]
+then 
+  echo "===Trying to make yabasic ..." | tee -a runme.log | tr -d =
+  make >>runme.log 2>&1
+  # success ?
+  if [ $? -eq 0 ] 
+  then
+    echo "===Testing yabasic ..." | tee -a runme.log | tr -d =
+    make check >>runme.log 2>&1
+    # success ?
+    if [ $? -eq 0 ]
+    then    
+      echo
+      echo "===SUCCESS, you may now start yabasic from this directory" | tee -a runme.log | tr -d =
+      echo "===or install it in system by typing 'make install' (need to be root)" | tee -a runme.log | tr -d =
+      echo
+    else
+      echo
+      echo "===FAILURE, the tests have failed" | tee -a runme.log | tr -d =
+      echo "===yabasic has not been built properly !" | tee -a runme.log | tr -d =
+      echo
+      RC=1
+    fi
+  else
+    echo
+    echo "===FAILURE, could not make yabasic !" | tee -a runme.log | tr -d =
+    echo
+    RC=2
+  fi
+else
+   echo
+   echo "===FAILURE, could not configure yabasic" | tee -a runme.log | tr -d =
+   echo
+   RC=3
+fi
+
+# append config.log to runme.log
+echo "===config.log:" >>runme.log
+touch config.log
+cat config.log >>runme.log 2>&1
+
+exit $RC

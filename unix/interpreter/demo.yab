@@ -1,0 +1,259 @@
+//
+//      This program demos yabasic
+//
+
+
+//      Check, if screen is large enough
+clear screen
+sw=peek("screenwidth"):sh=peek("screenheight")
+if (sw<78 or sh<24) then
+  print
+  print "  Sorry, but your screen (",sw," x ",sh,") is to small (minimum 78 x 24) to run this demo !"
+  print
+  end
+endif
+sw=78:sh=24
+
+//  Initialize everything
+restore mmdata
+read mmnum:dim mmtext$(mmnum)
+for a=1 to mmnum:read mmtext$(a):next a
+
+//  Main loop selection of demo
+ysel=1
+label mainloop
+clear screen
+print colour("cyan","magenta") at(7,2) "################################"
+print colour("cyan","magenta") at(7,3) "################################"
+print colour("cyan","magenta") at(7,4) "################################"
+print colour("yellow","blue") at(8,3) " This is the demo for yabasic "
+yoff=7
+for a=1 to mmnum
+  if (a=mmnum) then ydisp=1:else ydisp=0:fi
+  if (a=ysel) then
+    print colour("blue","green") at(5,yoff+ydisp+a) mmtext$(a);
+  else
+    print at(5,yoff+ydisp+a) mmtext$(a);
+  endif
+next a
+print at(3,sh-3) "Move selection with CURSOR KEYS (or u and d),"
+print at(3,sh-2) "Press RETURN or SPACE to choose, ESC to quit."
+
+do    // loop for keys pressed
+  rev=1
+  do    // loop for blinking
+    k$=inkey$(0.4)
+    if (k$="") then
+      if (ysel=mmnum) then
+        if (rev=1) then 
+          print colour("blue","green") at(5,yoff+mmnum+1) mmtext$(mmnum);
+          rev=0
+        else
+          print colour("yellow","red") at(5,yoff+mmnum+1) mmtext$(mmnum);
+          rev=1
+        endif
+      endif
+    else    // key has been pressed, leave loop
+      break
+    endif
+  loop    // loop for blinking
+
+  yalt=ysel
+  if (k$="up" or k$="u") then 
+    if (ysel=1) then ysel=mmnum else ysel=ysel-1 fi
+    redraw():heal():continue
+  fi
+  if (k$="down" or k$="d") then 
+    if (ysel=mmnum) then ysel=1 else ysel=ysel+1 fi
+    redraw():heal():continue
+  fi
+  if (k$=" " or k$="enter" or k$="right") then 
+    on ysel gosub overview,bitmap,tetraeder,endit
+    goto mainloop
+  fi
+  if (k$="esc") then
+    endit()
+  fi
+  beep
+  print at(3,sh-5) "Invalid key: ",k$,"         "
+loop    // loop for keys pressed
+
+
+//  redraw line
+sub redraw()
+  if (yalt=mmnum) then ydisp=1:else ydisp=0:fi
+  print at(5,yoff+yalt+ydisp) mmtext$(yalt);
+  if (ysel=mmnum) then ydisp=1:else ydisp=0:fi
+  print colour("blue","green") at(5,yoff+ysel+ydisp) mmtext$(ysel);
+  return
+end sub
+
+
+//  erase a line
+sub heal()
+  print at(3,sh-5) "                                                       "
+  return
+end sub
+
+
+//  Go here to exit
+label endit
+  print at(3,sh-8) "Bye ...\n   ";
+  sleep 1
+  exit
+return
+
+
+//  Present a short overview
+label overview
+  clear screen
+  print
+  print "  Yabasic is a quite traditional basic: It comes with"
+  print "  print, input, for-next-loops, goto, gosub, while and"
+  print "  repeat. It has user defined procedures and libraries,"
+  print "  however, it is not object oriented.\n"
+  print "  Yabasic makes it easy to open a window, draw lines"
+  print "  and print the resulting picture.\n"
+  print "  Yabasic programs are interpreted and run under Unix"
+  print "  and Windows. The Yabasic interpreter (around 200K)"
+  print "  and any Yabasic program can be glued together to"
+  print "  form a standalone executable.\n" 
+  print "  Yabasic is free software, i.e. subject to the"
+  print "  GNU copyright.\n"
+  print "\n\n\n  While you read this, I am calculating prime numbers,\n"
+  print "  Press any key to return to main menu ..."
+  can=1
+  print at(6,17) "This is a prime number: "
+  label nextcan
+  can=can+2
+  for i=2 to sqrt(can):if (frac(can/i)=0) then goto notprime:fi:next i
+  print at(32,17) can;
+  label notprime
+  if (lower$(inkey$(0))<>"") then 
+    print at(10,sh) "Wrapping around once ...";
+    for x=1 to sw
+      a$=getscreen$(0,0,1,sh-2)
+      b$=getscreen$(1,0,sw-1,sh-2)
+      putscreen b$,0,0
+      putscreen a$,sw-1,0
+      sleep 0.02
+    next x
+    sleep 1
+    return
+  fi
+goto nextcan
+
+
+//  Show some animated bitmaps
+label bitmap
+  clear screen
+  print 
+  print "Yabasic offers some commands for drawing simple graphics."
+  print reverse at(5,12) " Press any key to return to main menu ... "
+
+  n=20
+  open window 400,400
+
+  for b=20 to 0 step -1
+    color 255-b*12,0,b*12
+    fill circle 200,200,b
+  next b
+  c$=getbit$(179,179,221,221)
+  for a=1 to 2000
+    color ran(255),ran(255),ran(255)
+    x=ran(500)-100:y=ran(500)-100
+    fill rectangle ran(500)-100,ran(500)-100,ran(500)-100,ran(500)-100
+  next a
+
+  x=200:y=200:phi=ran(2*pi):dx=2*sin(phi):dy=2*cos(phi)
+  o$=""
+  count=0
+  label pong
+    count=count+1
+    if (o$<>"") putbit o$,xo-2,yo-2
+    if (count>1000) then
+      phi=ran(2*pi):dx=2*sin(phi):dy=2*cos(phi)
+      sleep 2
+      count=0
+    endif
+    xo=x:yo=y
+    x=x+dx:y=y+dy
+    o$=getbit$(x-2,y-2,x+46,y+46)
+    putbit c$,x,y,"t"
+    if (x<0 or x>360) dx=-dx
+    if (y<0 or y>360) dy=-dy
+    if (inkey$(0.01)<>"") then	
+      close window
+      return
+    endif
+  goto pong
+return
+
+label tetraeder
+open window 400,400
+clear window
+clear screen
+print reverse at(5,12) " Press any key to return to main menu ... "	
+
+dim opoints(4,3)
+restore points
+for n=1 to 4:for p=1 to 3:read opoints(n,p):next p:next n
+
+dim triangles(4,3)
+restore triangles
+for n=1 to 4:for p=1 to 3:read triangles(n,p):next p:next n
+
+phi=0:dphi=0.1:psi=0:dpsi=0.05
+dim points(4,3)
+
+r=60:g=20
+dr=0.5:dg=1.2:db=3
+label main
+
+  phi=phi+dphi
+  psi=psi+dpsi
+  for n=1 to 4
+    points(n,1)=opoints(n,1)*cos(phi)-opoints(n,2)*sin(phi)
+    points(n,2)=opoints(n,2)*cos(phi)+opoints(n,1)*sin(phi)
+    p2=          points(n,2)*cos(psi)-opoints(n,3)*sin(psi)
+    points(n,3)=opoints(n,3)*cos(psi)+ points(n,2)*sin(psi)
+    points(n,2)=p2
+  next n
+
+  r=r+dr:if (r<0 or r>60) dr=-dr
+  g=g+dg:if (g<0 or g>60) dg=-dg
+  b=b+db:if (b<0 or b>60) db=-db
+  dm=dm+0.01
+  m=120-80*sin(dm)
+  for n=1 to 4
+    p1=triangles(n,1)
+    p2=triangles(n,2)
+    p3=triangles(n,3)
+    n1=points(p1,1)+points(p2,1)+points(p3,1)
+    n2=points(p1,2)+points(p2,2)+points(p3,2)
+    n3=points(p1,3)+points(p2,3)+points(p3,3)
+    if (n3>0) then
+      sp=n1*0.5-n2*0.7-n3*0.6
+      color 60+r+30*sp,60+g+30*sp,60+b+30*sp
+      fill triangle 200+m*points(p1,1),200+m*points(p1,2),200+m*points(p2,1),200+m*points(p2,2),200+m*points(p3,1),200+m*points(p3,2)
+    endif
+  next n
+  if (inkey$(0.1)<>"") close window:return
+  clear window
+goto main
+
+label points
+data  -1,-1,+1,  +1,-1,-1,  +1,+1,+1,  -1,+1,-1
+label triangles
+data  1,2,4,  2,3,4,  1,3,4,  1,2,3
+
+//  Data section ...
+label mmdata
+//  Data for main menu: Number and text of entries in main menu
+data 4
+data "   Yabasic in a nutshell   "
+data "   Some graphics           "
+data "   A rotating Tetraeder    "
+data "   Exit this demo          "
+
+   

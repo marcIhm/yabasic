@@ -1,0 +1,14 @@
+#!/usr/bin/perl -w
+
+print "<html>\n<body>\n<p>";
+
+foreach $line (<>) {
+        chomp($line);
+        $line =~ s/(\s{2,})/"&nbsp;" x length($1)/ge;
+        $line =~ s/</&lt;/g;
+        $line =~ s/>/&gt;/g;
+        print "\n<p>" if ($line eq '');
+        print "$line<br>\n";
+}
+
+print "</body>\n</html>\n";

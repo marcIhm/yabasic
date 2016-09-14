@@ -1,0 +1,16 @@
+﻿Build started 28.06.2015 19:50:37.
+     1>Project "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic Setup (Projekt)\setup.vcxproj" on node 3 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IE:\Projekte\Yabasic\Yabasic /Zi /nologo /W2 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /D _MBCS /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Release\\" /Fd".\Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt yabinst.c
+         yabinst.c
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(1): error C2143: syntax error : missing '{' before ':'
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(1): error C2059: syntax error : ':'
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(1): error C3872: '0x24': this character is not allowed in an identifier
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(2): error C2018: unknown character '0x17'
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(2): warning C4129: '(' : unrecognized character escape sequence
+     1>c:\program files (x86)\microsoft sdks\windows\v7.1a\include\msxml.h(2): fatal error C1004: unexpected end-of-file found
+     1>Done Building Project "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic Setup (Projekt)\setup.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:03.52

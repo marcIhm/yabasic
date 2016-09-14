@@ -1,0 +1,17 @@
+﻿Der Buildvorgang wurde am 24.05.2014 21:42:53 gestartet.
+     1>Projekt "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic Setup (Projekt)\setup.vcxproj" auf Knoten "2", Rebuild Ziel(e).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\\" /Fd".\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt yabinst.c
+         yabinst.c
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D _DEBUG /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /l"0x0407" /nologo /fo".\Debug\yabinst.res" yabinst.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Debug\setup.exe" /INCREMENTAL /NOLOGO comctl32.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug\setup.pdb" /SUBSYSTEM:WINDOWS,"5.01" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\setup.lib" /MACHINE:X86 /SAFESEH .\Debug\yabinst.res
+         .\Debug\yabinst.obj
+     1>yabinst.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /SAFESEH ignoriert.
+         setup.vcxproj -> C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic Setup (Projekt)\.\Debug\setup.exe
+     1>Die Erstellung des Projekts "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic Setup (Projekt)\setup.vcxproj" ist abgeschlossen, Rebuild Ziel(e).
+
+Build erfolgreich.
+
+Verstrichene Zeit 00:00:03.32

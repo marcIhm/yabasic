@@ -1,0 +1,48 @@
+#!./yabasic
+do
+break
+a=1
+loop
+if a error "1"
+
+for a=1 to 3
+switch a
+case 1:break
+case 2:continue
+end switch
+next a
+if a<>4 error "2"
+
+a=0
+while(a<=3)
+a=a+1
+switch a
+case 1:break
+case 2:continue
+end switch
+wend
+if a<>4 error "3"
+
+a=0
+repeat
+a=a+1
+switch a
+case 1:break
+case 2:continue
+end switch
+until(a=4)
+if a<>4 error "4"
+
+a=0
+do
+a=a+1
+switch a
+case 1:break
+case 2:continue
+end switch
+if a=4 break
+loop
+if a<>4 error "5"
+
+exit 0
+

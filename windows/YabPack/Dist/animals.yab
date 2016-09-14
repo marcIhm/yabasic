@@ -1,0 +1,199 @@
+#!/home/ihm/yabasic/yabasic 
+
+rem append to file, so that open will succeed anyway
+open 1,"animals.dat","a"
+print #1 1
+print #1 0,0," duck"
+close 1
+
+rem read data
+print
+print "Reading data ... ";
+open 1,"animals.dat","r"
+input #1 num
+maxnum=num+100
+dim idyes(maxnum),idno(maxnum),question$(maxnum)
+for a=1 to num
+  input #1 idyes(a),idno(a),question$(a)
+next a
+close #1
+print num," question(s)"
+print
+
+rem initialize game
+label start
+if (num>maxnum-5) then
+  print "Sorry, memory is exhausted, changes are saved automatically."
+  goto save
+endif
+
+print "Think of an animal ..."
+curr=1
+
+rem ask question
+label question
+print
+first$=left$(question$(curr),1)
+if (first$="a" or first$="e" or first$="i" or first$="o" or first$="u") then
+  pronoun$="an"
+else
+  pronoun$="a"
+fi
+if (idyes(curr)<>0) then
+  print "Does your animal have the following property: ",question$(curr)," ?"
+else
+  print "Is your animal ",pronoun$," ",question$(curr)," ?"
+endif
+
+rem get answer
+if (idyes(curr)=0) then
+  print "y)es, n)o, b)ut, c)ancel, q)uit, h)elp: ";
+else
+  print "y)es, n)o, c)ancel, q)uit, h)elp: ";
+endif
+a$=inkey$
+
+rem process answer
+if (a$="q") then print "quit":gosub quit:goto question:fi
+if (a$="h") then print "help":gosub help:goto question:fi
+if (a$="c") then print "cancel":print:goto start:fi
+
+if (a$="y") then 
+  print "yes"
+  if (idyes(curr)=0) then
+    print "Your animal is ",pronoun$," ",question$(curr),"."
+    print "Starting next game ..." 
+    print 
+    goto start
+  else
+    curr=idyes(curr)
+    goto question
+  fi 
+fi
+
+if (a$="n") then
+  print "no"
+  if (idno(curr)=0) then
+    print "Can't figure out, what you are thinking off."
+    input "Please enter the name of your animal: " animal$
+    print "Please enter a property, that discriminates"
+    print "between ",question$(curr)," and ",animal$,":";
+    input " " question$
+    print "Does ",animal$," have this property ?"
+    print "y)es, n)o, c)ancel: ";
+    a$=inkey$
+    if (a$="c") then print "cancel":goto question:fi
+    if (a$<>"y" and a$<>"n") then 
+      print a$," - don't understand, continue with game"
+      goto question
+    fi
+    question$(num+1)=question$(curr)
+    idyes(num+1)=idyes(curr):idno(num+1)=idno(curr)
+    question$(num+2)=animal$
+    idyes(num+2)=0:idno(num+1)=0
+    question$(curr)=question$
+    if (a$="y") then
+      print "yes"
+      idyes(curr)=num+2
+      idno(curr)=num+1
+    else
+      print "no"
+      idyes(curr)=num+1
+      idno(curr)=num+2
+    endif
+    num=num+2
+    print "Learned about ",animal$,"."
+    print "Starting next game ..." 
+    print 
+    goto start
+  else
+    curr=idno(curr)
+    goto question
+  fi    
+fi          
+
+if (a$="b") then
+  if (idyes(curr)=0) then
+    print "yes, but"
+    print "Your animal is ",pronoun$," ",question$(curr),", ";
+    print "but it has additional properties."
+    input "Please enter the name of your animal: " animal$
+    print "Please enter a property, that makes",animal$
+    print "special in ",question$(curr),":";
+    input " " question$
+    print "Does ",animal$," have this property ?"
+    print "y)es, n)o, c)ancel: ";
+    a$=inkey$
+    if (a$="c") then print "cancel":goto question:fi
+    if (a$<>"y" and a$<>"n") then 
+      print a$," - don't understand, continue with game"
+      goto question
+    fi
+    question$(curr)="is "+pronoun$+" "+question$(curr)
+    question$(num+1)=question$
+    question$(num+2)=animal$
+    idyes(num+2)=0:idno(num+2)=0
+    idyes(curr)=num+1
+    if (a$="y") then
+      idyes(num+1)=num+2
+      idno(num+1)=0
+    else
+      idyes(num+1)=0
+      idno(num+1)=num+2
+    fi
+    num=num+2
+    print "Learned about ",animal$,"."
+    print "Starting next game ..." 
+    print 
+    goto start
+  else
+    print "but - only valid as answer on final guess,"
+    print "continue with game"
+    goto question
+  fi
+fi
+
+
+print a$," - don't understand"
+goto question
+
+rem issue help-message
+label help
+print
+print "This program asks you, to think of an animal and then tries to figure out, "
+print "which animal you have in mind. The program asks questions and prompts "
+print "for answers, til it finds the right animal."
+print "If the program can't figure out, what you're thinking off, it prompts "
+print "for a property that discriminates your animal from it's own guess."
+print "With your answers the program steadily improves it knwoledge."
+return
+
+rem  ask, save and quit
+label quit
+print
+print "You chose quit; now you can press s,d or c to:"
+print "  s - save your changes and quit"
+print "  d - discard your changes and quit without saving"
+print "  c - cancel quit and continue with the game"
+print "Your choice: ";
+a$=inkey$
+if (a$="s") then print "save":goto save:fi
+if (a$="c") then print "cancel":return:fi
+if (a$="d") then print "discard":goto done:fi
+print a$," - don't understand, continue with game"
+return
+
+rem save questions
+label save
+print
+print "Saving data ... ";
+open 1,"animals.dat","w"
+print #1,num
+for a=1 to num
+  print #1 idyes(a),idno(a)," ",question$(a)
+next a
+close #1
+print num," question(s)"
+label done
+print "bye ..."
+end

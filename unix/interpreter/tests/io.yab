@@ -1,0 +1,33 @@
+#!./yabasic
+
+a=open("tests/io.yab","r")
+while(!eof(a))
+   line input #a a$
+   l=l+1
+wend
+close a
+if (l<5) exit 1
+
+if (!open(1,"tests/io.yab")) exit 1
+while(!eof(1))
+  input #1 a$
+wend
+close 1
+
+rem bug from 2.700
+a$ = dummy$(add$)
+print a$;
+
+rem bug from 2.714 (must be last test)
+if (!open(1,"nonexistent.yab")) exit 0
+exit 1
+
+end
+sub dummy$(add$)
+	f = open ("tests/out.dat", "w")
+	print #f "tmp"
+	close #f
+	return ""
+end sub
+
+

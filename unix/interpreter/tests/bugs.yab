@@ -1,0 +1,11 @@
+#!./yabasic
+
+for a=1 to 10
+if (a=1) continue
+if (a=2) continue
+next a
+
+if (2<0+1) exit 1
+exit 0
+
+print token$(undefined$,"x")

@@ -1,0 +1,55 @@
+<html>
+<body>
+<pre>
+<h1>Erstellungsprotokoll</h1>
+<h3>
+--------------------Konfiguration: yabasic - Win32 Release--------------------
+</h3>
+<h3>Befehlszeilen</h3>
+Erstellen der temporären Datei  "C:\DOKUME~1\Olli\LOKALE~1\Temp\RSP8.tmp" mit Inhalten
+[
+/nologo /ML /W2 /GX /O2 /I "C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "WINDOWS" /FR"Release/" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\Bison.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\Flex.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\function.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\graphic.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\io.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\main.c"
+"C:\Dokumente und Einstellungen\Olli\Eigene Dateien\Visual C++ Projekte\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\symbol.c"
+]
+Creating command line "cl.exe @C:\DOKUME~1\Olli\LOKALE~1\Temp\RSP8.tmp" 
+Erstellen der temporären Datei  "C:\DOKUME~1\Olli\LOKALE~1\Temp\RSP9.tmp" mit Inhalten
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/yabasic.pdb" /machine:I386 /out:"Release/yabasic.exe" 
+".\Release\Bison.obj"
+".\Release\Flex.obj"
+".\Release\function.obj"
+".\Release\graphic.obj"
+".\Release\io.obj"
+".\Release\main.obj"
+".\Release\symbol.obj"
+".\Release\yabasic.res"
+]
+Erstellen der Befehlzeile "link.exe @C:\DOKUME~1\Olli\LOKALE~1\Temp\RSP9.tmp"
+<h3>Ausgabefenster</h3>
+Kompilierung läuft...
+Bison.c
+Flex.c
+function.c
+graphic.c
+io.c
+main.c
+symbol.c
+Generieren von Code...
+Linker-Vorgang läuft...
+Erstellen der Befehlzeile "bscmake.exe /nologo /o"Release/yabasic.bsc"  ".\Release\Bison.sbr" ".\Release\Flex.sbr" ".\Release\function.sbr" ".\Release\graphic.sbr" ".\Release\io.sbr" ".\Release\main.sbr" ".\Release\symbol.sbr""
+Browse-Informationsdatei wird erstellt...
+<h3>Ausgabefenster</h3>
+
+
+
+<h3>Ergebnisse</h3>
+yabasic.exe - 0 Fehler, 0 Warnung(en)
+</pre>
+</body>
+</html>

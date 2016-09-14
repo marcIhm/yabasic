@@ -1,0 +1,35 @@
+﻿Der Buildvorgang wurde am 25.05.2014 09:18:03 gestartet.
+     1>Projekt "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\yabasic.vcxproj" auf Knoten "2", Rebuild Ziel(e).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug\\" /Fd".\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt Bison.c Flex.c function.c graphic.c io.c main.c symbol.c
+         Bison.c
+         Flex.c
+     1><stdout>(3178): warning C4996: 'isatty': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _isatty. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\io.h(332): Siehe Deklaration von 'isatty'
+     1><stdout>(3178): warning C4996: 'fileno': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _fileno. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(718): Siehe Deklaration von 'fileno'
+     1><stdout>(3377): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
+         function.c
+         graphic.c
+         io.c
+         main.c
+         symbol.c
+         Code wird generiert...
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D _DEBUG /D _VC80_UPGRADE=0x0600 /D _USING_V110_SDK71_ /l"0x0407" /nologo /fo".\Debug\yabasic.res" yabasic.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Debug\yabasic.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Programme\Itchy\ odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug\yabasic.pdb" /SUBSYSTEM:CONSOLE,"5.01" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Debug\yabasic.lib" /MACHINE:X86 /SAFESEH .\Debug\yabasic.res
+         .\Debug\Bison.obj
+         .\Debug\Flex.obj
+         .\Debug\function.obj
+         .\Debug\graphic.obj
+         .\Debug\io.obj
+         .\Debug\main.obj
+         .\Debug\symbol.obj
+     1>Bison.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /SAFESEH ignoriert.
+         yabasic.vcxproj -> C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\.\Debug\yabasic.exe
+     1>Die Erstellung des Projekts "C:\Users\Marc-Oliver\Documents\yabasic\Windows\Yabasic (Arbeitsbereich)\Yabasic (Projekt)\yabasic.vcxproj" ist abgeschlossen, Rebuild Ziel(e).
+
+Build erfolgreich.
+
+Verstrichene Zeit 00:00:03.16

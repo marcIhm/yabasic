@@ -1,0 +1,11 @@
+* Yabasic
+
+A simple Basic interpreter for Unix and Windows.
+
+Yabasic implements the most common and simple elements of the basic
+language. It comes with goto/gosub, with various loops, with user
+defined subroutines and Libraries. Yabasic does simple graphics and
+printing. Yabasic runs under Unix and Windows, it is small, open
+source and free.
+
+Here are the sources for yabasic; see http://www.yabasic.de for documentation.

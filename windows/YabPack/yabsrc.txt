@@ -1,0 +1,15 @@
+E:\Projekte\Yabasic\Setup\YABINST.RC
+E:\Projekte\Yabasic\Setup\YABINST.C
+E:\Projekte\Yabasic\Setup\SETUP.DSP
+E:\Projekte\Yabasic\Setup\RESOURCE.H
+E:\Projekte\Yabasic\YABICO.ICO
+E:\Projekte\Yabasic\Yabasic\YABFLEX.TXT
+E:\Projekte\Yabasic\Yabasic\YABBISON.TXT
+E:\Projekte\Yabasic\Yabasic\YABASIC.H
+E:\Projekte\Yabasic\Yabasic\YABASIC.DSP
+E:\Projekte\Yabasic\Yabasic\YABASIC.C
+E:\Projekte\Yabasic\Yabasic\FLEX.C
+E:\Projekte\Yabasic\Yabasic\BISON.H
+E:\Projekte\Yabasic\Yabasic\BISON.C
+E:\Projekte\Yabasic\Yabpack\Source\COPYING.TXT
+E:\Projekte\Yabasic\Yabpack\Source\README.TXT

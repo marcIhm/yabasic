@@ -1,0 +1,1986 @@
+===output of 'make clean'
+test -z "yabasic" || rm -f yabasic
+rm -f *.o
+===Version from configure
+PACKAGE_VERSION=
+ VERSION=2.768
+===Output of who
+ihm      pts/1        2014-04-27 19:30
+===Output of uname
+Linux
+===Files in current directory
+total 2707
+-rwxrwxrwx 1 ihm users  35135 Apr 27 19:25 aclocal.m4
+-rwxrwxrwx 1 ihm users   6242 Dec 28  2009 artistic
+-rwxrwxrwx 1 ihm users    226 Jan 11 17:00 AUTHORS
+drwxrwxrwx 1 ihm users   4096 Apr 27 19:25 autom4te.cache
+-rwxrwxrwx 1 ihm users     96 May 25 09:14 beautify.sh
+-rwxrwxrwx 1 ihm users 209351 May 25 09:15 bison.c
+-rwxrwxrwx 1 ihm users 209351 May 23 22:29 bison.c.orig
+-rwxrwxrwx 1 ihm users   5744 May 25 09:15 bison.h
+-rwxrwxrwx 1 ihm users   5744 May 18 17:22 bison.h.orig
+-rwxrwxrwx 1 ihm users 932179 May 18 17:22 bison.output
+-rwxrwxrwx 1 ihm users   4715 Jan 23 16:45 ChangeLog
+-rwxrwxrwx 1 ihm users  42846 Mar  2 20:20 config.guess
+-rwxrwxrwx 1 ihm users   6559 Apr 27 19:25 config.h.in
+-rwxrwxrwx 1 ihm users   6473 Jan 26 07:38 config.h.in~
+-rwxrwxrwx 1 ihm users  35594 Mar  2 20:21 config.sub
+-rwxrwxrwx 1 ihm users 217607 Apr 27 19:25 configure
+-rwxrwxrwx 1 ihm users   2181 Apr 27 19:25 configure.in
+-rwxrwxrwx 1 ihm users   1248 Dec 28  2009 configure.scan
+-rwxrwxrwx 1 ihm users    208 Dec 28  2009 COPYING
+-rwxrwxrwx 1 ihm users   6695 Jan 22 17:12 demo.yab
+-rwxrwxrwx 1 ihm users  20842 Jan 11 17:25 depcomp
+-rwxrwxrwx 1 ihm users 118126 May 25 09:15 flex.c
+-rwxrwxrwx 1 ihm users 118126 May 23 22:30 flex.c.orig
+-rwxrwxrwx 1 ihm users     48 Apr 30 22:44 foo.yab
+-rwxrwxrwx 1 ihm users  49220 May 25 09:15 function.c
+-rwxrwxrwx 1 ihm users  17992 Dec 28  2009 GPL
+-rwxrwxrwx 1 ihm users  81405 May 25 09:15 graphic.c
+-rwxrwxrwx 1 ihm users     73 Jan 11 17:21 INSTALL
+-rwxrwxrwx 1 ihm users  13997 Jan 22 21:28 install-sh
+-rwxrwxrwx 1 ihm users  45418 May 25 09:15 io.c
+-rwxrwxrwx 1 ihm users 119618 Dec 28  2009 libtool
+-rwxrwxrwx 1 ihm users  97712 Dec 28  2009 ltconfig
+-rwxrwxrwx 1 ihm users 110767 Dec 28  2009 ltmain.sh
+-rwxrwxrwx 1 ihm users  69376 May 25 09:15 main.c
+-rwxrwxrwx 1 ihm users  29998 May 23 22:28 Makefile
+-rwxrwxrwx 1 ihm users    937 Jan 11 21:29 Makefile.am
+-rwxrwxrwx 1 ihm users  30463 Apr 27 19:25 Makefile.in
+-rwxrwxrwx 1 ihm users  10270 Dec 28  2009 missing
+-rwxrwxrwx 1 ihm users    722 Dec 28  2009 mkinstalldirs
+-rwxrwxrwx 1 ihm users   1754 May 25 09:11 NEWS
+-rwxrwxrwx 1 ihm users   7693 Jan 24 09:29 out
+-rwxrwxrwx 1 ihm users   7299 Jan 30 19:55 pack
+-rwxrwxrwx 1 ihm users    447 Feb 23 21:46 README
+-rwxrwxrwx 1 ihm users   1821 Mar 15 21:30 runme
+-rwxrwxrwx 1 ihm users    240 May 25 09:16 runme.log
+-rwxrwxrwx 1 ihm users     10 Dec 28  2009 stamp-h
+-rwxrwxrwx 1 ihm users     23 May 23 22:28 stamp-h1
+-rwxrwxrwx 1 ihm users     10 Dec 28  2009 stamp-h.in
+-rwxrwxrwx 1 ihm users  51097 May 25 09:15 symbol.c
+-rwxrwxrwx 1 ihm users    430 Feb 16 00:23 tabl.y
+drwxrwxrwx 1 ihm users   4096 Jan 26 22:08 tests
+-rwxrwxrwx 1 ihm users     26 Dec 28  2009 ToDo
+-rwxrwxrwx 1 ihm users 236290 May 23 22:32 yabasic.1
+drwxrwxrwx 1 ihm users      0 Feb 23 21:43 yabasic-2.765
+-rwxrwxrwx 1 ihm users 572078 Mar 15 21:31 yabasic-2.766.tar.gz
+-rwxrwxrwx 1 ihm users 572114 Apr 13 07:39 yabasic-2.767.tar.gz
+-rwxrwxrwx 1 ihm users  35227 May 23 22:31 yabasic.bison
+-rwxrwxrwx 1 ihm users   5715 Dec 28  2009 yabasic.dump
+-rwxrwxrwx 1 ihm users  12576 May 23 22:32 yabasic.flex
+-rwxrwxrwx 1 ihm users  28612 May 25 09:15 yabasic.h
+-rwxrwxrwx 1 ihm users 488042 Dec 28  2009 yabasic.htm
+-rwxrwxrwx 1 ihm users   1049 May 25 09:12 yabasic.spec
+-rwxrwxrwx 1 ihm users 415592 Dec 28  2009 yabasic.xml
+-rwxrwxrwx 1 ihm users    413 Apr 30 22:34 zins.data
+-rwxrwxrwx 1 ihm users 397651 Apr 30 22:34 zins.exe
+===Running configure ...
+configure: loading site script /usr/share/site/i686-pc-linux-gnu
+checking build system type... i686-pc-linux-gnu
+checking host system type... i686-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking for style of include used by make... GNU
+checking dependency style of gcc... gcc3
+checking for gcc... -Wall
+checking how to run the C preprocessor... gcc -E
+checking for X... libraries , headers 
+checking for gethostbyname... yes
+checking for connect... yes
+checking for remove... yes
+checking for shmat... yes
+checking for IceConnectionNumber in -lICE... yes
+checking for sys/wait.h that is POSIX.1 compatible... yes
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking fcntl.h usability... yes
+checking fcntl.h presence... yes
+checking for fcntl.h... yes
+checking limits.h usability... yes
+checking limits.h presence... yes
+checking for limits.h... yes
+checking stddef.h usability... yes
+checking stddef.h presence... yes
+checking for stddef.h... yes
+checking for stdlib.h... (cached) yes
+checking stdio.h usability... yes
+checking stdio.h presence... yes
+checking for stdio.h... yes
+checking float.h usability... yes
+checking float.h presence... yes
+checking for float.h... yes
+checking math.h usability... yes
+checking math.h presence... yes
+checking for math.h... yes
+checking time.h usability... yes
+checking time.h presence... yes
+checking for time.h... yes
+checking sys/time.h usability... yes
+checking sys/time.h presence... yes
+checking for sys/time.h... yes
+checking for string.h... (cached) yes
+checking for strings.h... (cached) yes
+checking for unistd.h... (cached) yes
+checking signal.h usability... yes
+checking signal.h presence... yes
+checking for signal.h... yes
+checking ctype.h usability... yes
+checking ctype.h presence... yes
+checking for ctype.h... yes
+checking malloc.h usability... yes
+checking malloc.h presence... yes
+checking for malloc.h... yes
+checking sys/prctl.h usability... yes
+checking sys/prctl.h presence... yes
+checking for sys/prctl.h... yes
+checking for an ANSI C-conforming const... yes
+checking for size_t... yes
+checking whether time.h and sys/time.h may both be included... yes
+checking for error_at_line... yes
+checking for pid_t... yes
+checking vfork.h usability... no
+checking vfork.h presence... no
+checking for vfork.h... no
+checking for fork... yes
+checking for vfork... yes
+checking for working fork... yes
+checking for working vfork... (cached) yes
+checking sys/select.h usability... yes
+checking sys/select.h presence... yes
+checking for sys/select.h... yes
+checking sys/socket.h usability... yes
+checking sys/socket.h presence... yes
+checking for sys/socket.h... yes
+checking types of arguments for select... int,fd_set *,struct timeval *
+checking return type of signal handlers... void
+checking for strftime... yes
+checking for working strtod... yes
+checking whether setpgrp takes no argument... yes
+checking whether lstat correctly handles trailing slash... no
+checking whether stat accepts an empty string... no
+checking for floor... no
+checking for pow... no
+checking for select... yes
+checking for sqrt... no
+checking for strchr... yes
+checking for strerror... yes
+checking for strpbrk... yes
+checking for strrchr... yes
+checking for strstr... yes
+checking for mkstemp... yes
+checking for string.h... (cached) yes
+checking for strings.h... (cached) yes
+checking ncurses.h usability... yes
+checking ncurses.h presence... yes
+checking for ncurses.h... yes
+checking curses.h usability... yes
+checking curses.h presence... yes
+checking for curses.h... yes
+checking for initscr in -lncurses... yes
+checking for initscr in -lcurses... no
+checking for getnstr... yes
+checking for setitimer... yes
+checking for difftime... yes
+checking for working alloca.h... yes
+checking for alloca... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+===Trying to make yabasic ...
+make  all-am
+make[1]: Entering directory `/mnt/hgfs/yabasic/Linux/yabmain'
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT main.o -MD -MP -MF .deps/main.Tpo -c -o main.o main.c
+mv -f .deps/main.Tpo .deps/main.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT function.o -MD -MP -MF .deps/function.Tpo -c -o function.o function.c
+mv -f .deps/function.Tpo .deps/function.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT io.o -MD -MP -MF .deps/io.Tpo -c -o io.o io.c
+mv -f .deps/io.Tpo .deps/io.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT graphic.o -MD -MP -MF .deps/graphic.Tpo -c -o graphic.o graphic.c
+mv -f .deps/graphic.Tpo .deps/graphic.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT symbol.o -MD -MP -MF .deps/symbol.Tpo -c -o symbol.o symbol.c
+mv -f .deps/symbol.Tpo .deps/symbol.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT flex.o -MD -MP -MF .deps/flex.Tpo -c -o flex.o flex.c
+mv -f .deps/flex.Tpo .deps/flex.Po
+gcc -DHAVE_CONFIG_H -I. -DUNIX    -g -O2 -MT bison.o -MD -MP -MF .deps/bison.Tpo -c -o bison.o bison.c
+mv -f .deps/bison.Tpo .deps/bison.Po
+gcc  -g -O2   -o yabasic main.o function.o io.o graphic.o symbol.o flex.o bison.o -lSM -lICE -lm -lncurses  -lX11   -lncurses 
+make[1]: Leaving directory `/mnt/hgfs/yabasic/Linux/yabmain'
+===Testing yabasic ...
+make  check-TESTS
+make[1]: Entering directory `/mnt/hgfs/yabasic/Linux/yabmain'
+Yabasic, version 2.768
+PASS: tests/simple.yab
+PASS: tests/grammar.yab
+PASS: tests/io.yab
+PASS: tests/bugs.yab
+PASS: tests/break.yab
+==================
+All 5 tests passed
+==================
+make[1]: Leaving directory `/mnt/hgfs/yabasic/Linux/yabmain'
+===SUCCESS, you may now start yabasic from this directory
+===or install it in system by typing 'make install' (need to be root)
+===config.log:
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+It was created by configure, which was
+generated by GNU Autoconf 2.69.  Invocation command line was
+
+  $ ./configure 
+
+## --------- ##
+## Platform. ##
+## --------- ##
+
+hostname = think.site
+uname -m = i686
+uname -r = 3.7.10-1.28-default
+uname -s = Linux
+uname -v = #1 SMP Mon Feb 3 14:11:15 UTC 2014 (c9a2c6c)
+
+/usr/bin/uname -p = i686
+/bin/uname -X     = unknown
+
+/bin/arch              = i686
+/usr/bin/arch -k       = unknown
+/usr/convex/getsysinfo = unknown
+/usr/bin/hostinfo      = unknown
+/bin/machine           = unknown
+/usr/bin/oslevel       = unknown
+/bin/universe          = unknown
+
+PATH: /home/ihm/perl5/bin
+PATH: /home/ihm/perl5/bin
+PATH: /home/ihm/bin
+PATH: /usr/local/bin
+PATH: /usr/bin
+PATH: /bin
+PATH: /usr/bin/X11
+PATH: /usr/X11R6/bin
+PATH: /usr/games
+PATH: /usr/lib/mit/bin
+PATH: /usr/lib/mit/sbin
+
+
+## ----------- ##
+## Core tests. ##
+## ----------- ##
+
+configure:2117: loading site script /usr/share/site/i686-pc-linux-gnu
+| #!/bin/sh
+| # Site script for configure. It is resourced via $CONFIG_SITE environment varaible.
+| 
+| # If user did not specify libdir, guess the correct target:
+| # Use lib64 for 64 bit bi-arch targets, keep the default for the rest.
+| if test "$libdir" = '${exec_prefix}/lib' ; then
+| 
+| 	ac_config_site_64bit_host=NONE
+| 
+| 	case "$host" in
+| 	"" )
+| 		# User did not specify host target.
+| 		# The native platform i386 is not a bi-arch platform.
+| 		# There is no need to check for compatible sub-architecture.
+| 		ac_config_site_64bit_host=NONE
+| 
+| 		;;
+| 	*x86_64* | *ppc64* | *s390x* )
+| 		ac_config_site_64bit_host=YES
+| 		;;
+| 	esac
+| 
+| 	if test "x$ac_config_site_64bit_host" = xYES; then
+| 		libdir='${exec_prefix}/lib64'
+| 	fi
+| fi
+| 
+| # If user did not specify libexecdir, set the correct target:
+| # Nor FHS nor openSUSE allow prefix/libexec. Let's default to prefix/lib.
+| 
+| if test "$libexecdir" = '${exec_prefix}/libexec' ; then
+| 	libexecdir='${exec_prefix}/lib'
+| fi
+| 
+| # Continue with the standard behavior of configure defined in AC_SITE_LOAD:
+| if test "x$prefix" != xNONE; then
+| 	ac_site_file1=$prefix/share/config.site
+| 	ac_site_file2=$prefix/etc/config.site
+| else
+| 	ac_site_file1=$ac_default_prefix/share/config.site
+| 	ac_site_file2=$ac_default_prefix/etc/config.site
+| fi
+| for ac_site_file in "$ac_site_file1" "$ac_site_file2"
+| do
+| 	test "x$ac_site_file" = xNONE && continue
+| 	if test /dev/null != "$ac_site_file" && test -r "$ac_site_file"; then
+| 		{ $as_echo "/usr/share/site/i686-pc-linux-gnu:${as_lineno-$LINENO}: loading site script $ac_site_file" >&5
+| $as_echo "/usr/share/site/i686-pc-linux-gnu: loading site script $ac_site_file" >&6;}
+| 		sed 's/^/| /' "$ac_site_file" >&5
+| 		. "$ac_site_file" \
+| 			|| { { $as_echo "/usr/share/site/i686-pc-linux-gnu:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+| $as_echo "/usr/share/site/i686-pc-linux-gnu: error: in \`$ac_pwd':" >&2;}
+| as_fn_error $? "failed to load site script $ac_site_file
+| See \`config.log' for more details" "$LINENO" 5; }
+| 	fi
+| done
+configure:2249: checking build system type
+configure:2263: result: i686-pc-linux-gnu
+configure:2283: checking host system type
+configure:2296: result: i686-pc-linux-gnu
+configure:2333: checking for a BSD-compatible install
+configure:2401: result: /usr/bin/install -c
+configure:2412: checking whether build environment is sane
+configure:2467: result: yes
+configure:2618: checking for a thread-safe mkdir -p
+configure:2657: result: /usr/bin/mkdir -p
+configure:2664: checking for gawk
+configure:2680: found /usr/bin/gawk
+configure:2691: result: gawk
+configure:2702: checking whether make sets $(MAKE)
+configure:2724: result: yes
+configure:2855: checking for gcc
+configure:2871: found /usr/bin/gcc
+configure:2882: result: gcc
+configure:3111: checking for C compiler version
+configure:3120: gcc --version >&5
+gcc (SUSE Linux) 4.7.2 20130108 [gcc-4_7-branch revision 195012]
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+configure:3131: $? = 0
+configure:3120: gcc -v >&5
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/i586-suse-linux/4.7/lto-wrapper
+Target: i586-suse-linux
+Configured with: ../configure --prefix=/usr --infodir=/usr/share/info --mandir=/usr/share/man --libdir=/usr/lib --libexecdir=/usr/lib --enable-languages=c,c++,objc,fortran,obj-c++,java,ada --enable-checking=release --with-gxx-include-dir=/usr/include/c++/4.7 --enable-ssp --disable-libssp --disable-libitm --disable-plugin --with-bugurl=http://bugs.opensuse.org/ --with-pkgversion='SUSE Linux' --disable-libgcj --disable-libmudflap --with-slibdir=/lib --with-system-zlib --enable-__cxa_atexit --enable-libstdcxx-allocator=new --disable-libstdcxx-pch --enable-version-specific-runtime-libs --enable-linker-build-id --program-suffix=-4.7 --enable-linux-futex --without-system-libunwind --with-arch-32=i586 --with-tune=generic --build=i586-suse-linux
+Thread model: posix
+gcc version 4.7.2 20130108 [gcc-4_7-branch revision 195012] (SUSE Linux) 
+configure:3131: $? = 0
+configure:3120: gcc -V >&5
+gcc: error: unrecognized command line option '-V'
+gcc: fatal error: no input files
+compilation terminated.
+configure:3131: $? = 1
+configure:3120: gcc -qversion >&5
+gcc: error: unrecognized command line option '-qversion'
+gcc: fatal error: no input files
+compilation terminated.
+configure:3131: $? = 1
+configure:3151: checking whether the C compiler works
+configure:3173: gcc    conftest.c  >&5
+configure:3177: $? = 0
+configure:3225: result: yes
+configure:3228: checking for C compiler default output file name
+configure:3230: result: a.out
+configure:3236: checking for suffix of executables
+configure:3243: gcc -o conftest    conftest.c  >&5
+configure:3247: $? = 0
+configure:3269: result: 
+configure:3291: checking whether we are cross compiling
+configure:3299: gcc -o conftest    conftest.c  >&5
+configure:3303: $? = 0
+configure:3310: ./conftest
+configure:3314: $? = 0
+configure:3329: result: no
+configure:3334: checking for suffix of object files
+configure:3356: gcc -c   conftest.c >&5
+configure:3360: $? = 0
+configure:3381: result: o
+configure:3385: checking whether we are using the GNU C compiler
+configure:3404: gcc -c   conftest.c >&5
+configure:3404: $? = 0
+configure:3413: result: yes
+configure:3422: checking whether gcc accepts -g
+configure:3442: gcc -c -g  conftest.c >&5
+configure:3442: $? = 0
+configure:3483: result: yes
+configure:3500: checking for gcc option to accept ISO C89
+configure:3563: gcc  -c -g -O2  conftest.c >&5
+configure:3563: $? = 0
+configure:3576: result: none needed
+configure:3607: checking for style of include used by make
+configure:3635: result: GNU
+configure:3661: checking dependency style of gcc
+configure:3772: result: gcc3
+configure:3790: checking for gcc
+configure:3806: found /usr/bin/gcc
+configure:3817: result: -Wall
+configure:3832: checking how to run the C preprocessor
+configure:3863: gcc -E  conftest.c
+configure:3863: $? = 0
+configure:3877: gcc -E  conftest.c
+conftest.c:11:28: fatal error: ac_nonexistent.h: No such file or directory
+compilation terminated.
+configure:3877: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| /* end confdefs.h.  */
+| #include <ac_nonexistent.h>
+configure:3902: result: gcc -E
+configure:3922: gcc -E  conftest.c
+configure:3922: $? = 0
+configure:3936: gcc -E  conftest.c
+conftest.c:11:28: fatal error: ac_nonexistent.h: No such file or directory
+compilation terminated.
+configure:3936: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| /* end confdefs.h.  */
+| #include <ac_nonexistent.h>
+configure:3965: checking for X
+configure:4104: gcc -o conftest -g -O2   conftest.c -lX11  >&5
+configure:4104: $? = 0
+configure:4154: result: libraries , headers 
+configure:4253: gcc -o conftest -g -O2   conftest.c   -lX11 >&5
+configure:4253: $? = 0
+configure:4351: checking for gethostbyname
+configure:4351: gcc -o conftest -g -O2   conftest.c  >&5
+configure:4351: $? = 0
+configure:4351: result: yes
+configure:4448: checking for connect
+configure:4448: gcc -o conftest -g -O2   conftest.c  >&5
+configure:4448: $? = 0
+configure:4448: result: yes
+configure:4497: checking for remove
+configure:4497: gcc -o conftest -g -O2   conftest.c  >&5
+configure:4497: $? = 0
+configure:4497: result: yes
+configure:4546: checking for shmat
+configure:4546: gcc -o conftest -g -O2   conftest.c  >&5
+configure:4546: $? = 0
+configure:4546: result: yes
+configure:4604: checking for IceConnectionNumber in -lICE
+configure:4629: gcc -o conftest -g -O2   conftest.c -lICE   >&5
+configure:4629: $? = 0
+configure:4638: result: yes
+configure:4649: checking for sys/wait.h that is POSIX.1 compatible
+configure:4675: gcc -c -g -O2  conftest.c >&5
+configure:4675: $? = 0
+configure:4682: result: yes
+configure:4690: checking for grep that handles long lines and -e
+configure:4748: result: /usr/bin/grep
+configure:4753: checking for egrep
+configure:4815: result: /usr/bin/grep -E
+configure:4820: checking for ANSI C header files
+configure:4840: gcc -c -g -O2  conftest.c >&5
+configure:4840: $? = 0
+configure:4913: gcc -o conftest -g -O2   conftest.c  >&5
+configure:4913: $? = 0
+configure:4913: ./conftest
+configure:4913: $? = 0
+configure:4924: result: yes
+configure:4937: checking for sys/types.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for sys/stat.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for stdlib.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for string.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for memory.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for strings.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for inttypes.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for stdint.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4937: checking for unistd.h
+configure:4937: gcc -c -g -O2  conftest.c >&5
+configure:4937: $? = 0
+configure:4937: result: yes
+configure:4954: checking fcntl.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking fcntl.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for fcntl.h
+configure:4954: result: yes
+configure:4954: checking limits.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking limits.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for limits.h
+configure:4954: result: yes
+configure:4954: checking stddef.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking stddef.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for stddef.h
+configure:4954: result: yes
+configure:4954: checking for stdlib.h
+configure:4954: result: yes
+configure:4954: checking stdio.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking stdio.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for stdio.h
+configure:4954: result: yes
+configure:4954: checking float.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking float.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for float.h
+configure:4954: result: yes
+configure:4954: checking math.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking math.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for math.h
+configure:4954: result: yes
+configure:4954: checking time.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking time.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for time.h
+configure:4954: result: yes
+configure:4954: checking sys/time.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking sys/time.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for sys/time.h
+configure:4954: result: yes
+configure:4954: checking for string.h
+configure:4954: result: yes
+configure:4954: checking for strings.h
+configure:4954: result: yes
+configure:4954: checking for unistd.h
+configure:4954: result: yes
+configure:4954: checking signal.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking signal.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for signal.h
+configure:4954: result: yes
+configure:4954: checking ctype.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking ctype.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for ctype.h
+configure:4954: result: yes
+configure:4954: checking malloc.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking malloc.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for malloc.h
+configure:4954: result: yes
+configure:4954: checking sys/prctl.h usability
+configure:4954: gcc -c -g -O2  conftest.c >&5
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking sys/prctl.h presence
+configure:4954: gcc -E  conftest.c
+configure:4954: $? = 0
+configure:4954: result: yes
+configure:4954: checking for sys/prctl.h
+configure:4954: result: yes
+configure:4965: checking for an ANSI C-conforming const
+configure:5031: gcc -c -g -O2  conftest.c >&5
+configure:5031: $? = 0
+configure:5038: result: yes
+configure:5046: checking for size_t
+configure:5046: gcc -c -g -O2  conftest.c >&5
+configure:5046: $? = 0
+configure:5046: gcc -c -g -O2  conftest.c >&5
+conftest.c: In function 'main':
+conftest.c:74:21: error: expected expression before ')' token
+configure:5046: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| /* end confdefs.h.  */
+| #include <stdio.h>
+| #ifdef HAVE_SYS_TYPES_H
+| # include <sys/types.h>
+| #endif
+| #ifdef HAVE_SYS_STAT_H
+| # include <sys/stat.h>
+| #endif
+| #ifdef STDC_HEADERS
+| # include <stdlib.h>
+| # include <stddef.h>
+| #else
+| # ifdef HAVE_STDLIB_H
+| #  include <stdlib.h>
+| # endif
+| #endif
+| #ifdef HAVE_STRING_H
+| # if !defined STDC_HEADERS && defined HAVE_MEMORY_H
+| #  include <memory.h>
+| # endif
+| # include <string.h>
+| #endif
+| #ifdef HAVE_STRINGS_H
+| # include <strings.h>
+| #endif
+| #ifdef HAVE_INTTYPES_H
+| # include <inttypes.h>
+| #endif
+| #ifdef HAVE_STDINT_H
+| # include <stdint.h>
+| #endif
+| #ifdef HAVE_UNISTD_H
+| # include <unistd.h>
+| #endif
+| int
+| main ()
+| {
+| if (sizeof ((size_t)))
+| 	    return 0;
+|   ;
+|   return 0;
+| }
+configure:5046: result: yes
+configure:5057: checking whether time.h and sys/time.h may both be included
+configure:5077: gcc -c -g -O2  conftest.c >&5
+configure:5077: $? = 0
+configure:5084: result: yes
+configure:5093: checking for error_at_line
+configure:5109: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5109: $? = 0
+configure:5117: result: yes
+configure:5128: checking for pid_t
+configure:5128: gcc -c -g -O2  conftest.c >&5
+configure:5128: $? = 0
+configure:5128: gcc -c -g -O2  conftest.c >&5
+conftest.c: In function 'main':
+conftest.c:75:20: error: expected expression before ')' token
+configure:5128: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| /* end confdefs.h.  */
+| #include <stdio.h>
+| #ifdef HAVE_SYS_TYPES_H
+| # include <sys/types.h>
+| #endif
+| #ifdef HAVE_SYS_STAT_H
+| # include <sys/stat.h>
+| #endif
+| #ifdef STDC_HEADERS
+| # include <stdlib.h>
+| # include <stddef.h>
+| #else
+| # ifdef HAVE_STDLIB_H
+| #  include <stdlib.h>
+| # endif
+| #endif
+| #ifdef HAVE_STRING_H
+| # if !defined STDC_HEADERS && defined HAVE_MEMORY_H
+| #  include <memory.h>
+| # endif
+| # include <string.h>
+| #endif
+| #ifdef HAVE_STRINGS_H
+| # include <strings.h>
+| #endif
+| #ifdef HAVE_INTTYPES_H
+| # include <inttypes.h>
+| #endif
+| #ifdef HAVE_STDINT_H
+| # include <stdint.h>
+| #endif
+| #ifdef HAVE_UNISTD_H
+| # include <unistd.h>
+| #endif
+| int
+| main ()
+| {
+| if (sizeof ((pid_t)))
+| 	    return 0;
+|   ;
+|   return 0;
+| }
+configure:5128: result: yes
+configure:5141: checking vfork.h usability
+configure:5141: gcc -c -g -O2  conftest.c >&5
+conftest.c:72:19: fatal error: vfork.h: No such file or directory
+compilation terminated.
+configure:5141: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| /* end confdefs.h.  */
+| #include <stdio.h>
+| #ifdef HAVE_SYS_TYPES_H
+| # include <sys/types.h>
+| #endif
+| #ifdef HAVE_SYS_STAT_H
+| # include <sys/stat.h>
+| #endif
+| #ifdef STDC_HEADERS
+| # include <stdlib.h>
+| # include <stddef.h>
+| #else
+| # ifdef HAVE_STDLIB_H
+| #  include <stdlib.h>
+| # endif
+| #endif
+| #ifdef HAVE_STRING_H
+| # if !defined STDC_HEADERS && defined HAVE_MEMORY_H
+| #  include <memory.h>
+| # endif
+| # include <string.h>
+| #endif
+| #ifdef HAVE_STRINGS_H
+| # include <strings.h>
+| #endif
+| #ifdef HAVE_INTTYPES_H
+| # include <inttypes.h>
+| #endif
+| #ifdef HAVE_STDINT_H
+| # include <stdint.h>
+| #endif
+| #ifdef HAVE_UNISTD_H
+| # include <unistd.h>
+| #endif
+| #include <vfork.h>
+configure:5141: result: no
+configure:5141: checking vfork.h presence
+configure:5141: gcc -E  conftest.c
+conftest.c:39:19: fatal error: vfork.h: No such file or directory
+compilation terminated.
+configure:5141: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| /* end confdefs.h.  */
+| #include <vfork.h>
+configure:5141: result: no
+configure:5141: checking for vfork.h
+configure:5141: result: no
+configure:5154: checking for fork
+configure:5154: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:62:6: warning: conflicting types for built-in function 'fork' [enabled by default]
+configure:5154: $? = 0
+configure:5154: result: yes
+configure:5154: checking for vfork
+configure:5154: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5154: $? = 0
+configure:5154: result: yes
+configure:5164: checking for working fork
+configure:5186: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5186: $? = 0
+configure:5186: ./conftest
+configure:5186: $? = 0
+configure:5196: result: yes
+configure:5217: checking for working vfork
+configure:5327: result: yes
+configure:5355: checking sys/select.h usability
+configure:5355: gcc -c -g -O2  conftest.c >&5
+configure:5355: $? = 0
+configure:5355: result: yes
+configure:5355: checking sys/select.h presence
+configure:5355: gcc -E  conftest.c
+configure:5355: $? = 0
+configure:5355: result: yes
+configure:5355: checking for sys/select.h
+configure:5355: result: yes
+configure:5355: checking sys/socket.h usability
+configure:5355: gcc -c -g -O2  conftest.c >&5
+configure:5355: $? = 0
+configure:5355: result: yes
+configure:5355: checking sys/socket.h presence
+configure:5355: gcc -E  conftest.c
+configure:5355: $? = 0
+configure:5355: result: yes
+configure:5355: checking for sys/socket.h
+configure:5355: result: yes
+configure:5365: checking types of arguments for select
+configure:5393: gcc -c -g -O2  conftest.c >&5
+configure:5393: $? = 0
+configure:5404: result: int,fd_set *,struct timeval *
+configure:5427: checking return type of signal handlers
+configure:5445: gcc -c -g -O2  conftest.c >&5
+conftest.c: In function 'main':
+conftest.c:54:1: error: void value not ignored as it ought to be
+configure:5445: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| /* end confdefs.h.  */
+| #include <sys/types.h>
+| #include <signal.h>
+| 
+| int
+| main ()
+| {
+| return *(signal (0, 0)) (0) == 1;
+|   ;
+|   return 0;
+| }
+configure:5452: result: void
+configure:5462: checking for strftime
+configure:5462: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:72:6: warning: conflicting types for built-in function 'strftime' [enabled by default]
+configure:5462: $? = 0
+configure:5462: result: yes
+configure:5515: checking for working strtod
+configure:5556: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5556: $? = 0
+configure:5556: ./conftest
+configure:5556: $? = 0
+configure:5566: result: yes
+configure:5628: checking whether setpgrp takes no argument
+configure:5650: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c: In function 'main':
+conftest.c:89:3: error: too many arguments to function 'setpgrp'
+In file included from conftest.c:81:0:
+/usr/include/unistd.h:672:12: note: declared here
+configure:5650: $? = 1
+configure: program exited with status 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| #define RETSIGTYPE void
+| #define HAVE_STRFTIME 1
+| /* end confdefs.h.  */
+| #include <stdio.h>
+| #ifdef HAVE_SYS_TYPES_H
+| # include <sys/types.h>
+| #endif
+| #ifdef HAVE_SYS_STAT_H
+| # include <sys/stat.h>
+| #endif
+| #ifdef STDC_HEADERS
+| # include <stdlib.h>
+| # include <stddef.h>
+| #else
+| # ifdef HAVE_STDLIB_H
+| #  include <stdlib.h>
+| # endif
+| #endif
+| #ifdef HAVE_STRING_H
+| # if !defined STDC_HEADERS && defined HAVE_MEMORY_H
+| #  include <memory.h>
+| # endif
+| # include <string.h>
+| #endif
+| #ifdef HAVE_STRINGS_H
+| # include <strings.h>
+| #endif
+| #ifdef HAVE_INTTYPES_H
+| # include <inttypes.h>
+| #endif
+| #ifdef HAVE_STDINT_H
+| # include <stdint.h>
+| #endif
+| #ifdef HAVE_UNISTD_H
+| # include <unistd.h>
+| #endif
+| int
+| main ()
+| {
+| /* If this system has a BSD-style setpgrp which takes arguments,
+|   setpgrp(1, 1) will fail with ESRCH and return -1, in that case
+|   exit successfully. */
+|   return setpgrp (1,1) != -1;
+|   ;
+|   return 0;
+| }
+configure:5660: result: yes
+configure:5668: checking whether lstat correctly handles trailing slash
+configure:5711: result: no
+configure:5730: checking whether stat accepts an empty string
+configure:5750: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5750: $? = 0
+configure:5750: ./conftest
+configure:5750: $? = 0
+configure:5760: result: no
+configure:5779: checking for floor
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:74:6: warning: conflicting types for built-in function 'floor' [enabled by default]
+/tmp/ccYgDKLY.o: In function `main':
+/mnt/hgfs/yabasic/Linux/yabmain/conftest.c:85: undefined reference to `floor'
+collect2: error: ld returned 1 exit status
+configure:5779: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| #define RETSIGTYPE void
+| #define HAVE_STRFTIME 1
+| #define SETPGRP_VOID 1
+| /* end confdefs.h.  */
+| /* Define floor to an innocuous variant, in case <limits.h> declares floor.
+|    For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+| #define floor innocuous_floor
+| 
+| /* System header to define __stub macros and hopefully few prototypes,
+|     which can conflict with char floor (); below.
+|     Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+|     <limits.h> exists even on freestanding compilers.  */
+| 
+| #ifdef __STDC__
+| # include <limits.h>
+| #else
+| # include <assert.h>
+| #endif
+| 
+| #undef floor
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char floor ();
+| /* The GNU C library defines this for functions which it implements
+|     to always fail with ENOSYS.  Some functions are actually named
+|     something starting with __ and the normal name is an alias.  */
+| #if defined __stub_floor || defined __stub___floor
+| choke me
+| #endif
+| 
+| int
+| main ()
+| {
+| return floor ();
+|   ;
+|   return 0;
+| }
+configure:5779: result: no
+configure:5779: checking for pow
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:74:6: warning: conflicting types for built-in function 'pow' [enabled by default]
+/tmp/cc3BP1b3.o: In function `main':
+/mnt/hgfs/yabasic/Linux/yabmain/conftest.c:85: undefined reference to `pow'
+collect2: error: ld returned 1 exit status
+configure:5779: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| #define RETSIGTYPE void
+| #define HAVE_STRFTIME 1
+| #define SETPGRP_VOID 1
+| /* end confdefs.h.  */
+| /* Define pow to an innocuous variant, in case <limits.h> declares pow.
+|    For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+| #define pow innocuous_pow
+| 
+| /* System header to define __stub macros and hopefully few prototypes,
+|     which can conflict with char pow (); below.
+|     Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+|     <limits.h> exists even on freestanding compilers.  */
+| 
+| #ifdef __STDC__
+| # include <limits.h>
+| #else
+| # include <assert.h>
+| #endif
+| 
+| #undef pow
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char pow ();
+| /* The GNU C library defines this for functions which it implements
+|     to always fail with ENOSYS.  Some functions are actually named
+|     something starting with __ and the normal name is an alias.  */
+| #if defined __stub_pow || defined __stub___pow
+| choke me
+| #endif
+| 
+| int
+| main ()
+| {
+| return pow ();
+|   ;
+|   return 0;
+| }
+configure:5779: result: no
+configure:5779: checking for select
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for sqrt
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:75:6: warning: conflicting types for built-in function 'sqrt' [enabled by default]
+/tmp/ccqsmpFw.o: In function `main':
+/mnt/hgfs/yabasic/Linux/yabmain/conftest.c:86: undefined reference to `sqrt'
+collect2: error: ld returned 1 exit status
+configure:5779: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| #define RETSIGTYPE void
+| #define HAVE_STRFTIME 1
+| #define SETPGRP_VOID 1
+| #define HAVE_SELECT 1
+| /* end confdefs.h.  */
+| /* Define sqrt to an innocuous variant, in case <limits.h> declares sqrt.
+|    For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+| #define sqrt innocuous_sqrt
+| 
+| /* System header to define __stub macros and hopefully few prototypes,
+|     which can conflict with char sqrt (); below.
+|     Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+|     <limits.h> exists even on freestanding compilers.  */
+| 
+| #ifdef __STDC__
+| # include <limits.h>
+| #else
+| # include <assert.h>
+| #endif
+| 
+| #undef sqrt
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char sqrt ();
+| /* The GNU C library defines this for functions which it implements
+|     to always fail with ENOSYS.  Some functions are actually named
+|     something starting with __ and the normal name is an alias.  */
+| #if defined __stub_sqrt || defined __stub___sqrt
+| choke me
+| #endif
+| 
+| int
+| main ()
+| {
+| return sqrt ();
+|   ;
+|   return 0;
+| }
+configure:5779: result: no
+configure:5779: checking for strchr
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:75:6: warning: conflicting types for built-in function 'strchr' [enabled by default]
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for strerror
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for strpbrk
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:77:6: warning: conflicting types for built-in function 'strpbrk' [enabled by default]
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for strrchr
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:78:6: warning: conflicting types for built-in function 'strrchr' [enabled by default]
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for strstr
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:79:6: warning: conflicting types for built-in function 'strstr' [enabled by default]
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5779: checking for mkstemp
+configure:5779: gcc -o conftest -g -O2   conftest.c  >&5
+configure:5779: $? = 0
+configure:5779: result: yes
+configure:5789: checking for string.h
+configure:5789: result: yes
+configure:5797: checking for strings.h
+configure:5797: result: yes
+configure:5806: checking ncurses.h usability
+configure:5806: gcc -c -g -O2  conftest.c >&5
+configure:5806: $? = 0
+configure:5806: result: yes
+configure:5806: checking ncurses.h presence
+configure:5806: gcc -E  conftest.c
+configure:5806: $? = 0
+configure:5806: result: yes
+configure:5806: checking for ncurses.h
+configure:5806: result: yes
+configure:5814: checking curses.h usability
+configure:5814: gcc -c -g -O2  conftest.c >&5
+configure:5814: $? = 0
+configure:5814: result: yes
+configure:5814: checking curses.h presence
+configure:5814: gcc -E  conftest.c
+configure:5814: $? = 0
+configure:5814: result: yes
+configure:5814: checking for curses.h
+configure:5814: result: yes
+configure:5823: checking for initscr in -lncurses
+configure:5848: gcc -o conftest -g -O2   conftest.c -lncurses   >&5
+configure:5848: $? = 0
+configure:5857: result: yes
+configure:5868: checking for initscr in -lcurses
+configure:5893: gcc -o conftest -g -O2   conftest.c -lcurses  -lncurses  >&5
+/usr/lib/gcc/i586-suse-linux/4.7/../../../../i586-suse-linux/bin/ld: cannot find -lcurses
+collect2: error: ld returned 1 exit status
+configure:5893: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| #define PACKAGE "yabasic"
+| #define VERSION "2.768"
+| #define HAVE_SYS_WAIT_H 1
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_FCNTL_H 1
+| #define HAVE_LIMITS_H 1
+| #define HAVE_STDDEF_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STDIO_H 1
+| #define HAVE_FLOAT_H 1
+| #define HAVE_MATH_H 1
+| #define HAVE_TIME_H 1
+| #define HAVE_SYS_TIME_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_SIGNAL_H 1
+| #define HAVE_CTYPE_H 1
+| #define HAVE_MALLOC_H 1
+| #define HAVE_SYS_PRCTL_H 1
+| #define TIME_WITH_SYS_TIME 1
+| #define HAVE_FORK 1
+| #define HAVE_VFORK 1
+| #define HAVE_WORKING_VFORK 1
+| #define HAVE_WORKING_FORK 1
+| #define HAVE_SYS_SELECT_H 1
+| #define HAVE_SYS_SOCKET_H 1
+| #define SELECT_TYPE_ARG1 int
+| #define SELECT_TYPE_ARG234 (fd_set *)
+| #define SELECT_TYPE_ARG5 (struct timeval *)
+| #define RETSIGTYPE void
+| #define HAVE_STRFTIME 1
+| #define SETPGRP_VOID 1
+| #define HAVE_SELECT 1
+| #define HAVE_STRCHR 1
+| #define HAVE_STRERROR 1
+| #define HAVE_STRPBRK 1
+| #define HAVE_STRRCHR 1
+| #define HAVE_STRSTR 1
+| #define HAVE_MKSTEMP 1
+| #define HAVE_STRING_HEADER 1
+| #define HAVE_STRINGS_HEADER 1
+| #define HAVE_NCURSES_HEADER 1
+| #define HAVE_CURSES_HEADER 1
+| #define HAVE_LIBNCURSES 1
+| /* end confdefs.h.  */
+| 
+| /* Override any GCC internal prototype to avoid an error.
+|    Use char because int might match the return type of a GCC
+|    builtin and then its argument prototype would still apply.  */
+| #ifdef __cplusplus
+| extern "C"
+| #endif
+| char initscr ();
+| int
+| main ()
+| {
+| return initscr ();
+|   ;
+|   return 0;
+| }
+configure:5902: result: no
+configure:5916: checking for getnstr
+configure:5916: gcc -o conftest -g -O2   conftest.c -lncurses  >&5
+configure:5916: $? = 0
+configure:5916: result: yes
+configure:5928: checking for setitimer
+configure:5928: gcc -o conftest -g -O2   conftest.c -lncurses  >&5
+configure:5928: $? = 0
+configure:5928: result: yes
+configure:5939: checking for difftime
+configure:5939: gcc -o conftest -g -O2   conftest.c -lncurses  >&5
+configure:5939: $? = 0
+configure:5939: result: yes
+configure:5951: checking for working alloca.h
+configure:5968: gcc -o conftest -g -O2   conftest.c -lncurses  >&5
+configure:5968: $? = 0
+configure:5976: result: yes
+configure:5984: checking for alloca
+configure:6021: gcc -o conftest -g -O2   conftest.c -lncurses  >&5
+configure:6021: $? = 0
+configure:6029: result: yes
+configure:6259: checking that generated files are newer than configure
+configure:6265: result: done
+configure:6288: creating ./config.status
+
+## ---------------------- ##
+## Running config.status. ##
+## ---------------------- ##
+
+This file was extended by config.status, which was
+generated by GNU Autoconf 2.69.  Invocation command line was
+
+  CONFIG_FILES    = 
+  CONFIG_HEADERS  = 
+  CONFIG_LINKS    = 
+  CONFIG_COMMANDS = 
+  $ ./config.status 
+
+on think.site
+
+config.status:913: creating Makefile
+config.status:913: creating config.h
+config.status:1142: executing depfiles commands
+
+## ---------------- ##
+## Cache variables. ##
+## ---------------- ##
+
+ac_cv_build=i686-pc-linux-gnu
+ac_cv_c_compiler_gnu=yes
+ac_cv_c_const=yes
+ac_cv_env_CC_set=
+ac_cv_env_CC_value=
+ac_cv_env_CFLAGS_set=
+ac_cv_env_CFLAGS_value=
+ac_cv_env_CPPFLAGS_set=
+ac_cv_env_CPPFLAGS_value=
+ac_cv_env_CPP_set=
+ac_cv_env_CPP_value=
+ac_cv_env_LDFLAGS_set=
+ac_cv_env_LDFLAGS_value=
+ac_cv_env_LIBS_set=
+ac_cv_env_LIBS_value=
+ac_cv_env_XMKMF_set=
+ac_cv_env_XMKMF_value=
+ac_cv_env_build_alias_set=
+ac_cv_env_build_alias_value=
+ac_cv_env_host_alias_set=
+ac_cv_env_host_alias_value=
+ac_cv_env_target_alias_set=
+ac_cv_env_target_alias_value=
+ac_cv_func_alloca_works=yes
+ac_cv_func_connect=yes
+ac_cv_func_difftime=yes
+ac_cv_func_floor=no
+ac_cv_func_fork=yes
+ac_cv_func_fork_works=yes
+ac_cv_func_gethostbyname=yes
+ac_cv_func_getnstr=yes
+ac_cv_func_lstat_dereferences_slashed_symlink=no
+ac_cv_func_mkstemp=yes
+ac_cv_func_pow=no
+ac_cv_func_remove=yes
+ac_cv_func_select=yes
+ac_cv_func_select_args='int,fd_set *,struct timeval *'
+ac_cv_func_setitimer=yes
+ac_cv_func_setpgrp_void=yes
+ac_cv_func_shmat=yes
+ac_cv_func_sqrt=no
+ac_cv_func_stat_empty_string_bug=no
+ac_cv_func_strchr=yes
+ac_cv_func_strerror=yes
+ac_cv_func_strftime=yes
+ac_cv_func_strpbrk=yes
+ac_cv_func_strrchr=yes
+ac_cv_func_strstr=yes
+ac_cv_func_strtod=yes
+ac_cv_func_vfork=yes
+ac_cv_func_vfork_works=yes
+ac_cv_have_x='have_x=yes	ac_x_includes='\'''\''	ac_x_libraries='\'''\'''
+ac_cv_header_ctype_h=yes
+ac_cv_header_curses_h=yes
+ac_cv_header_fcntl_h=yes
+ac_cv_header_float_h=yes
+ac_cv_header_inttypes_h=yes
+ac_cv_header_limits_h=yes
+ac_cv_header_malloc_h=yes
+ac_cv_header_math_h=yes
+ac_cv_header_memory_h=yes
+ac_cv_header_ncurses_h=yes
+ac_cv_header_signal_h=yes
+ac_cv_header_stdc=yes
+ac_cv_header_stddef_h=yes
+ac_cv_header_stdint_h=yes
+ac_cv_header_stdio_h=yes
+ac_cv_header_stdlib_h=yes
+ac_cv_header_string_h=yes
+ac_cv_header_strings_h=yes
+ac_cv_header_sys_prctl_h=yes
+ac_cv_header_sys_select_h=yes
+ac_cv_header_sys_socket_h=yes
+ac_cv_header_sys_stat_h=yes
+ac_cv_header_sys_time_h=yes
+ac_cv_header_sys_types_h=yes
+ac_cv_header_sys_wait_h=yes
+ac_cv_header_time=yes
+ac_cv_header_time_h=yes
+ac_cv_header_unistd_h=yes
+ac_cv_header_vfork_h=no
+ac_cv_host=i686-pc-linux-gnu
+ac_cv_lib_ICE_IceConnectionNumber=yes
+ac_cv_lib_curses_initscr=no
+ac_cv_lib_error_at_line=yes
+ac_cv_lib_ncurses_initscr=yes
+ac_cv_objext=o
+ac_cv_path_EGREP='/usr/bin/grep -E'
+ac_cv_path_GREP=/usr/bin/grep
+ac_cv_path_install='/usr/bin/install -c'
+ac_cv_path_mkdir=/usr/bin/mkdir
+ac_cv_prog_AWK=gawk
+ac_cv_prog_CCOPTIONS=-Wall
+ac_cv_prog_CPP='gcc -E'
+ac_cv_prog_ac_ct_CC=gcc
+ac_cv_prog_cc_c89=
+ac_cv_prog_cc_g=yes
+ac_cv_prog_make_make_set=yes
+ac_cv_type_pid_t=yes
+ac_cv_type_signal=void
+ac_cv_type_size_t=yes
+ac_cv_working_alloca_h=yes
+am_cv_CC_dependencies_compiler_type=gcc3
+
+## ----------------- ##
+## Output variables. ##
+## ----------------- ##
+
+ACLOCAL='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/missing --run aclocal-1.12'
+ALLOCA=''
+AMDEPBACKSLASH='\'
+AMDEP_FALSE='#'
+AMDEP_TRUE=''
+AMTAR='$${TAR-tar}'
+AUTOCONF='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/missing --run autoconf'
+AUTOHEADER='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/missing --run autoheader'
+AUTOMAKE='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/missing --run automake-1.12'
+AWK='gawk'
+CC='gcc'
+CCDEPMODE='depmode=gcc3'
+CCOPTIONS='-Wall'
+CFLAGS='-g -O2'
+CPP='gcc -E'
+CPPFLAGS=''
+CYGPATH_W='echo'
+DEFS='-DHAVE_CONFIG_H'
+DEPDIR='.deps'
+ECHO_C=''
+ECHO_N='-n'
+ECHO_T=''
+EGREP='/usr/bin/grep -E'
+EXEEXT=''
+GREP='/usr/bin/grep'
+INSTALL_DATA='${INSTALL} -m 644'
+INSTALL_PROGRAM='${INSTALL}'
+INSTALL_SCRIPT='${INSTALL}'
+INSTALL_STRIP_PROGRAM='$(install_sh) -c -s'
+LDFLAGS=''
+LIBOBJS=' ${LIBOBJDIR}lstat$U.o'
+LIBS='-lncurses '
+LTLIBOBJS=' ${LIBOBJDIR}lstat$U.lo'
+MAKEINFO='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/missing --run makeinfo'
+MKDIR_P='/usr/bin/mkdir -p'
+OBJEXT='o'
+PACKAGE='yabasic'
+PACKAGE_BUGREPORT=''
+PACKAGE_NAME=''
+PACKAGE_STRING=''
+PACKAGE_TARNAME=''
+PACKAGE_URL=''
+PACKAGE_VERSION=''
+PATH_SEPARATOR=':'
+POW_LIB=''
+SET_MAKE=''
+SHELL='/bin/sh'
+STRIP=''
+VERSION='2.768'
+XMKMF=''
+X_CFLAGS=''
+X_EXTRA_LIBS=''
+X_LIBS=''
+X_PRE_LIBS=' -lSM -lICE'
+ac_ct_CC='gcc'
+am__EXEEXT_FALSE=''
+am__EXEEXT_TRUE='#'
+am__fastdepCC_FALSE='#'
+am__fastdepCC_TRUE=''
+am__include='include'
+am__isrc=''
+am__leading_dot='.'
+am__nodep='_no'
+am__quote=''
+am__tar='$${TAR-tar} chof - "$$tardir"'
+am__untar='$${TAR-tar} xf -'
+bindir='${exec_prefix}/bin'
+build='i686-pc-linux-gnu'
+build_alias=''
+build_cpu='i686'
+build_os='linux-gnu'
+build_vendor='pc'
+datadir='${datarootdir}'
+datarootdir='${prefix}/share'
+docdir='${datarootdir}/doc/${PACKAGE}'
+dvidir='${docdir}'
+exec_prefix='${prefix}'
+host='i686-pc-linux-gnu'
+host_alias=''
+host_cpu='i686'
+host_os='linux-gnu'
+host_vendor='pc'
+htmldir='${docdir}'
+includedir='${prefix}/include'
+infodir='${datarootdir}/info'
+install_sh='${SHELL} /mnt/hgfs/yabasic/Linux/yabmain/install-sh'
+libdir='${exec_prefix}/lib'
+libexecdir='${exec_prefix}/lib'
+localedir='${datarootdir}/locale'
+localstatedir='${prefix}/var'
+mandir='${datarootdir}/man'
+mkdir_p='/usr/bin/mkdir -p'
+oldincludedir='/usr/include'
+pdfdir='${docdir}'
+prefix='/usr/local'
+program_transform_name='s,x,x,'
+psdir='${docdir}'
+sbindir='${exec_prefix}/sbin'
+sharedstatedir='${prefix}/com'
+sysconfdir='${prefix}/etc'
+target_alias=''
+
+## ----------- ##
+## confdefs.h. ##
+## ----------- ##
+
+/* confdefs.h */
+#define PACKAGE_NAME ""
+#define PACKAGE_TARNAME ""
+#define PACKAGE_VERSION ""
+#define PACKAGE_STRING ""
+#define PACKAGE_BUGREPORT ""
+#define PACKAGE_URL ""
+#define PACKAGE "yabasic"
+#define VERSION "2.768"
+#define HAVE_SYS_WAIT_H 1
+#define STDC_HEADERS 1
+#define HAVE_SYS_TYPES_H 1
+#define HAVE_SYS_STAT_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+#define HAVE_MEMORY_H 1
+#define HAVE_STRINGS_H 1
+#define HAVE_INTTYPES_H 1
+#define HAVE_STDINT_H 1
+#define HAVE_UNISTD_H 1
+#define HAVE_FCNTL_H 1
+#define HAVE_LIMITS_H 1
+#define HAVE_STDDEF_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STDIO_H 1
+#define HAVE_FLOAT_H 1
+#define HAVE_MATH_H 1
+#define HAVE_TIME_H 1
+#define HAVE_SYS_TIME_H 1
+#define HAVE_STRING_H 1
+#define HAVE_STRINGS_H 1
+#define HAVE_UNISTD_H 1
+#define HAVE_SIGNAL_H 1
+#define HAVE_CTYPE_H 1
+#define HAVE_MALLOC_H 1
+#define HAVE_SYS_PRCTL_H 1
+#define TIME_WITH_SYS_TIME 1
+#define HAVE_FORK 1
+#define HAVE_VFORK 1
+#define HAVE_WORKING_VFORK 1
+#define HAVE_WORKING_FORK 1
+#define HAVE_SYS_SELECT_H 1
+#define HAVE_SYS_SOCKET_H 1
+#define SELECT_TYPE_ARG1 int
+#define SELECT_TYPE_ARG234 (fd_set *)
+#define SELECT_TYPE_ARG5 (struct timeval *)
+#define RETSIGTYPE void
+#define HAVE_STRFTIME 1
+#define SETPGRP_VOID 1
+#define HAVE_SELECT 1
+#define HAVE_STRCHR 1
+#define HAVE_STRERROR 1
+#define HAVE_STRPBRK 1
+#define HAVE_STRRCHR 1
+#define HAVE_STRSTR 1
+#define HAVE_MKSTEMP 1
+#define HAVE_STRING_HEADER 1
+#define HAVE_STRINGS_HEADER 1
+#define HAVE_NCURSES_HEADER 1
+#define HAVE_CURSES_HEADER 1
+#define HAVE_LIBNCURSES 1
+#define HAVE_GETNSTR 1
+#define HAVE_SETITIMER 1
+#define HAVE_DIFFTIME 1
+#define HAVE_ALLOCA_H 1
+#define HAVE_ALLOCA 1
+#define UNIX_ARCHITECTURE "i686-pc-linux-gnu"
+#define BUILD_TIME "Sun May 25 09:16:14 CEST 2014"
+
+configure: exit 0

@@ -1,0 +1,69 @@
+#!/usr/bin/ruby
+
+require 'pp'
+require 'fileutils'
+include FileUtils
+require 'erb'
+require 'rake/testtask'
+
+desc "Check git"
+task :git do 
+  unless system "git diff --exit-code --quiet"
+    system "git status"
+    #  fail "Uncommited local changes, please fix with 'git add' etc."
+  end
+end
+
+desc "Create html documentation from xml"
+task :html => [:git] do
+  ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
+  system 'xsltproc documentation/mystyle.xsl documentation/yabasic.xml >interpreter/yabasic.htm' or fail
+  cp 'documentation/yabasic.htm','interpreter/yabasic.htm'
+  cp 'documentation/yabasic.xml','interpreter/yabasic.xml'
+end
+
+desc "Crate man page"
+task :man => [:html] do
+  without_anchor=File.new('interpreter/yabasic.htm').read.gsub!(/<a.*?>/,'').gsub!(/<\/a.*?>/,'')
+  File.open('/tmp/ywoa.htm','w') {|f| f.puts without_anchor}
+  ENV['COLUMNS']='74'
+  utf8=%x{/usr/bin/lynx --dump /tmp/ywoa.htm}
+  utf8.gsub!(/\xE2\x80\xA6/,'...').gsub!(/\xE2\x80\x94/,'-').gsub!(/\xCF\x80/,'pi').gsub!(/\xE2\x80\x9C/,'"').gsub!(/\xE2\x80\x9D/,'"')
+  File.open('/tmp/y.utf8','w') {|f| f.puts utf8}
+  system('/usr/bin/iconv -f UTF-8 -t ASCII /tmp/y.utf8 >/tmp/y.ascii')
+  ascii=File.new('/tmp/y.ascii').read
+  open('documentation/yabasic.1','w') {|f| f.write ERB.new(File.new('documentation/yabasic.1.erb').read).result}
+end
+
+desc "Collect Versions"
+task :versions do
+  vs=Hash.new
+  vs['yabasic']=%x( interpreter/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
+  vs['configure.ac']=File.new('interpreter/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
+  vs['yabasic.htm']=File.new('interpreter/yabasic.htm').read.match(/version\s+(\d\.\d+\.\d+)/)[1]
+  pp vs
+  fail "Mismatch" unless (vs['yabasic'].gsub(/\.\d+$/,"").to_f-vs['yabasic.htm'].gsub(/\.\d+$/,"").to_f).abs<0.01 && vs['yabasic']==vs['configure.ac']
+end
+
+
+desc "Create tar with sources"
+task :sources do
+  system('make dist-gzip') or fail
+  cp "yabasic-#{vs['yabasic']}.tar.gz", '/work/yabasic/products'
+  mv "yabasic-#{vs['yabasic']}.tar.gz", '/home/ihm/rpmbuild/SOURCES'
+end
+  
+desc "Create rpm"
+task :rpm do
+  open('yabasic.spec','w') {|f| f.write ERB.new(File.new('yabasic.spec.erb').read).result}
+  system 'rpmbuild -bb --clean yabasic.spec --buildroot /usr/src/packages/BUILD/yabasic' or fail
+  cp "/home/ihm/rpmbuild/RPMS/x86_64/yabasic-#{vs['yabasic']}-1.x86_64.rpm",'/work/yabasic/products'
+end
+
+desc "Show products"
+task :show do
+  puts "\n--- Show products"
+  system 'ls -l /work/yabasic/products'
+end
+
+task :default => %w[:git :html :man :versions :sources :rpm :show]

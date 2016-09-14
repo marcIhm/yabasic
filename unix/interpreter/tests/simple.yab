@@ -1,0 +1,5 @@
+#!./yabasic
+
+print "Yabasic, version ",peek("version")
+exit 0
+

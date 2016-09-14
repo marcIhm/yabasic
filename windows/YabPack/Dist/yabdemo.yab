@@ -1,0 +1,1661 @@
+#!/usr/bin/yabasic
+rem
+rem	This program demoes yabasic
+rem
+rem 	Check, if screen is large enough
+clear screen
+sw=peek("screenwidth"):sh=peek("screenheight")
+if (sw<78 or sh<24) then
+	print
+	print "  Sorry, but your screen is to small to run this demo !"
+	print
+	end
+endif
+
+rem	Initialize everything
+restore mmdata
+read mmnum:dim mmtext$(mmnum)
+for a=1 to mmnum:read mmtext$(a):next a
+
+rem	Main loop for demo selection
+ysel=1
+label mainloop
+clear screen
+print colour("cyan","magenta") at(7,2) "################################"
+print colour("cyan","magenta") at(7,3) "################################"
+print colour("cyan","magenta") at(7,4) "################################"
+print colour("yellow","blue") at(8,3) " This is the demo for yabasic "
+yoff=7
+for a=1 to mmnum
+	if (a=mmnum) then ydisp=1:else ydisp=0:fi
+	if (a=ysel) then
+		print colour("blue","green") at(5,yoff+ydisp+a) mmtext$(a);
+	else
+		print at(5,yoff+ydisp+a) mmtext$(a);
+	endif
+next a
+print at(3,sh-3) "Move selection with CURSOR KEYS (or u and d),"
+print at(3,sh-2) "Press RETURN or SPACE to choose, ESC to quit."
+
+label keyloop
+rev=1
+label blinkloop
+k$=inkey$(0.4)
+if (k$="") then
+	if (ysel=mmnum) then
+		if (rev=1) then 
+			print colour("blue","green") at(5,yoff+mmnum+1) mmtext$(mmnum);
+			rev=0
+		else
+			print colour("yellow","red") at(5,yoff+mmnum+1) mmtext$(mmnum);
+			rev=1
+		endif
+	endif
+	goto blinkloop
+endif
+
+yalt=ysel
+if (k$="up" or k$="u") then 
+	if (ysel=1) then ysel=mmnum else ysel=ysel-1 fi
+	gosub redraw:gosub heal:goto keyloop
+fi
+if (k$="down" or k$="d") then 
+	if (ysel=mmnum) then ysel=1 else ysel=ysel+1 fi
+	gosub redraw:gosub heal:goto keyloop
+fi
+if (k$=" " or k$="enter" or k$="right") then 
+	on ysel gosub overview,bitmap,sokoban,endit,notyet
+	goto mainloop
+fi
+if (k$="esc") then
+	goto endit
+fi
+beep
+print at(3,sh-5) "Invalid key: ",k$,"         "
+goto keyloop
+
+rem	Some procedures used within mainloop
+label redraw
+if (yalt=mmnum) then ydisp=1:else ydisp=0:fi
+print at(5,yoff+yalt+ydisp) mmtext$(yalt);
+if (ysel=mmnum) then ydisp=1:else ydisp=0:fi
+print colour("blue","green") at(5,yoff+ysel+ydisp) mmtext$(ysel);
+return
+label heal
+print at(3,sh-5) "                                                       "
+return
+
+rem	Go here to exit
+label endit
+print at(3,sh-8) "Hope you liked it ...\n   ";
+exit
+
+rem	Present a short overview
+label overview
+clear screen
+print "\n  Yabasic is a quite traditional basic: It comes with"
+print "  print, input, for-next-loops, goto, gosub, while and"
+print "  repeat ... and even user defined procedures and libraries."
+print "\n  Yabasic has the usual functions, from sin(), int() to mid$();"
+print "  more advanced functions are date$ (is ",date$,"),"
+print "  or token$(), system$(), ran() and glob$()."
+print "\n  Yabasic makes it easy to open a window, draw lines"
+print "  and print the resulting picture."
+print "\n  Yabasic programs are interpreted and run under Unix"
+print "  and Windows. Yabasic is small (around 200k) and"
+print "  free, i.e. subject to the GNU copyleft."
+print "\n  Finally, this demo itself is written in yabasic and"
+print "  gives an idea of what can be done with the language."
+print "\n\n\n  While you read this, I am calculating prime numbers,"
+print "  Press any key to return to main menu ..."
+can=1
+print at(6,19) "This is a prime number: "
+label nextcan
+can=can+2
+for i=2 to sqrt(can):if (frac(can/i)=0) then goto notprime:fi:next i
+print at(32,19) can;
+label notprime
+if (lower$(inkey$(0))<>"") then return:fi
+goto nextcan
+
+rem	Show some animated bitmaps
+label bitmap
+clear screen
+print at(5,5) "Yabasic offers limited support for bitmapped grafics."
+print at(5,6) "You can retrieve and alter rectangular regions of"
+print at(5,7) "the grafics window with a single command."
+print reverse at(5,12) " Press any key to return to main menu ... "
+n=20
+open window 400,400
+if (picsinitialized=0) then
+  picsinitialized=1
+  dim pics(n,4)
+  dim pics$(5)
+  restore pics
+  for a=1 to 5:read pics$(a):next a
+endif
+tick=1
+for a=1 to n:pics(a,4)=0:next a
+cx=ran(370):cy=ran(370):vx=10-ran(20):vy=10-ran(20)
+label picloop
+  for a=1 to n
+    if (pics(a,4)<=tick) then
+      if (pics(a,4)=tick) then
+        bitblit pics$(pics(a,3)) to pics(a,1),pics(a,2),"xor"
+      endif
+      x=cx+50-ran(100):y=cy+50-ran(100)
+      if (ran(10)>3) then
+        pics(a,1)=x:pics(a,2)=y:pics(a,3)=ran(5)+1
+        pics(a,4)=tick+4+int(ran(4))
+	bitblit pics$(pics(a,3)) to pics(a,1),pics(a,2),"xor"          
+      endif
+    endif
+  next a
+  tick=tick+1
+  cx=cx+vx:cy=cy+vy
+  if (cx<-30 or cx>400) then cx=cx-vx:vx=-vx fi
+  if (cy<-30 or cy>400) then cy=cy-vy:vy=-vy fi
+if (inkey$(0.1)="") then goto picloop fi
+close window
+return
+
+label pics
+data "24,24:00000000000000000000000008f1000eff000fff308f9f30cf0c70e30870e30070e00070e07070e07870e0fc70e1ff30e1ff3ec1cf1ec3000fc700cf8f3cf78ffff30efff000ff00"
+data "24,24:00c10000e10000f10000f10008f30008f30008f700fff700ffff30ffffffefffffefffff0ffff70eff700eff000cff100eff300fff70cfff70ef7ef1ef1cf3e700e3e100c3000000"
+data "24,24:0000000000700e00700e00700e00700e10700e38700c38700c7c30087c3000fe1000ff1000ef0000e70000c70000c30000c30000e10000f10000f0000c70000c70000c3000000000"
+data "24,24:000000000000008700008f30008f7000cf7000c37000e97000f97000f83008f8300878300cf8300ef8300efb300eef700fcf700f0f708700f0c700f1c300e1c100e1000000000000"
+data "24,24:0000000000000cf1000cff000cff300cbf300c3c700838700c30700cff700cff700cff700c9f700c1c700e10700e10700f38708fff708fff7083ff10000000000000000000000000"
+
+rem	Go here for a feature not yet implemented
+label notyet
+clear screen
+print "\n\n  Sorry this section is not yet implemented !"
+print "  Press any key to return to main menu ..."
+inkey$
+return
+end
+
+rem	Data section ...
+label mmdata
+rem	Data for main menu: Number and text of entries in main menu
+data 4
+data " Yabasic in a nutshell "
+data " Animated Bitmaps "
+data " Sokoban by Hermang Mansilla"
+data " Exit this demo "
+
+rem	Play sokoban
+label sokoban
+window origin "lt"
+
+clear screen
+
+rem <html> <body bgcolor="#0099cc"> <form>
+includedlevels=50
+goto Main : rem <br> <textarea cols=80 rows=6>
+label CopyLeft
+print "YaSokoban r2.0, Programmed by Hermang Mansilla (C)1998, 1999"
+print "E-mail: hmansilla@usa.net"
+? "This is a clone of a puzzle in which you move in a maze pushing "
+? "blocks, to put them in the grid regions of the maze."
+? "This version has ",includedlevels," levels embedded inside,"
+? "For additional levels you must download them as external files"
+print "For more information visit my Web Page"
+print "www.geocities.com/SunsetStrip/Palms/1624/yabasic/"
+print "This program is free software; you can redistribute it and or"
+print "modify it under the terms of the GNU General Public License as" 
+print "published by the Free Software Foundation."
+print "This Program is distributed in the hope that it will be useful,"
+print "but WITHOUT ANY WARRANTY  :-)   :-> "
+print "Developed and tested in Linux 2.0.27, should work in windows too"
+print "Yabasic version 2.45 or later recommended"
+print "Tip: arrange the position of this window so it does not "
+print "cover the graphic window"
+print "To move in the maze or push blocks press the cursor keys"
+return : rem CopyLeft
+rem </textarea><br>
+
+rem <table border=1><td>
+rem <td rowspan=2><textarea cols=40 rows=30>
+LABEL Initialize
+saving=0
+nmovs=0
+npush=0
+SokobanPATH$="."
+if peek$("os")="unix" then
+SCREENPATH$=SokobanPATH$+"/screens/"
+else
+print "This program has not been fully tested with windows "
+print "if you find bugs or errors, please, send me an E-mail message"
+input "press enter to continue" dummy$
+SCREENPATH$=SokobanPATH$+ chr$(92) +"screens" +chr$(92)
+fi
+nivel=1
+MAXROW=21
+MAXCOL=21
+sizetile=30
+WidthScreen=sizetile*(MAXCOL-1)
+HeightScreen=sizetile*(MAXROW-1)
+tsprites=6
+dim Sprites$(tsprites,35)
+dim height(tsprites),width(tsprites)
+dim DirtyX(tsprites,35,35), DirtyY(tsprites,35,35), tpoints(tsprites,35)
+valid$="@.#$+* "
+retError$="ok"
+dim Mapa$(MAXROW,MAXCOL)
+dim Dirty(MAXROW,MAXCOL)
+Ground$=" ":player$="@"
+store$=".":playerstore$="+"
+packet$="$":save$="*"
+wall$="#"
+newline$=chr$(10)
+DIM niveldata$(92)
+return
+rem Initialize </textarea><tr>
+
+rem <td ><textarea cols=40 rows=30>
+label Main
+ gosub CopyLeft
+ gosub Initialize
+ gosub LoadSprites
+print "\n ...  Sprites loaded in Memory"
+restore level1
+for nivel=1 to includedlevels
+gosub LeeNivel
+next nivel
+print " ...First ",includedlevels," Levels loaded in Memory"
+input "Press Enter to continue " dummy$
+  clear screen
+  gosub AskLevel
+label innerloop
+if nivel>includedlevels then
+gosub ReadLevel
+fi
+gosub GeneraMapa
+if retError$="ok" then 
+  clear screen
+  gosub ShowStatus
+  WidthScreen=cols*sizetile
+  HeightScreen=rows*sizetile
+  open window WidthScreen,HeightScreen
+  gosub DrawMap
+  gosub playit
+else
+  print "Errors Reading this Level : ",retError$ 
+  beep 
+  k$=inkey$
+  if k$="q" then 
+  CLOSE WINDOW
+  end
+  fi
+fi
+Print "\n Changing level\n"
+close window
+  if k$="q" then  end
+  fi
+nivel=nivel+1
+goto innerloop
+rem Main </textarea><tr>
+
+
+rem  <td ><textarea cols=40 rows=16>
+Label ReadBitmap
+read ancho, alto
+height(sprite)=alto
+ width(sprite)=ancho
+for ybmrow=1 to height(sprite)
+read  Sprites$(sprite,ybmrow)
+next ybmrow
+for ybmrow=1 to height(sprite)
+point=0
+for ybmcol=1 to width(sprite)
+tmp$=mid$(Sprites$(sprite,ybmrow),ybmcol,1)
+if tmp$="1" then
+point=point+1
+DirtyX(sprite,point,ybmrow)=ybmcol
+DirtyY(sprite,point,ybmrow)=ybmrow
+fi
+next ybmcol
+tpoints(sprite,ybmrow)=point
+next ybmrow
+return : rem ReadYBitmap </textarea><br>
+
+rem  <td ><textarea cols=40 rows=7>
+Label ShowYbm
+for ybmrow=1 to height(sprite)
+ for point=1 to tpoints(sprite,ybmrow)
+  dot DirtyX(sprite,point,ybmrow)+offsetx,DirtyY(sprite,point,ybmrow)+offsety
+ next point
+next ybmrow
+return :rem </textarea><br>
+
+rem <br><textarea cols=40 rows=5>
+label LoadSprites
+restore ybitmaps
+for sprite=1 to tsprites
+ gosub ReadBitmap
+next sprite
+return :rem </textarea><br><tr>
+
+
+rem <td><textarea cols=40 rows=7>
+LABEL ReadLevel
+MapFile$=""
+MapFile$=SCREENPATH$+"screen."+str$(nivel,"%1.0f")
+niveldata$(nivel)=""
+open 1,MapFile$,"r"
+label loopLeeNivel
+if (not eof(1)) then line input #1 buflinea$
+niveldata$(nivel)=niveldata$(nivel)+buflinea$+newline$
+else 
+close 1
+goto SalirLeeNivel
+endif
+goto loopLeeNivel
+label SalirLeeNivel
+return : rem ReadLevel
+
+Label LeeNivel
+niveldata$(nivel)=""
+read levrows , levcols
+for j=1 to levrows
+read  buflinea$
+niveldata$(nivel)=niveldata$(nivel)+buflinea$+newline$
+next j
+return
+rem </textarea> <br>
+
+
+rem <br><td rowspan=2><textarea cols=40 rows=19>
+LABEL GeneraMapa
+nmovs=0 : npush=0
+for y=1 to MAXROW
+for x=1 to MAXCOL
+Mapa$(y,x)=Ground$
+Dirty(y,x)=1
+next x:next y
+j=1:cols=1:rows=1:packets=0:savepack=0
+playerposx=-1:playerposy=-1
+for index=1 to len(niveldata$(nivel))
+temp$=mid$( niveldata$(nivel), index, 1)
+if temp$=newline$ then 
+   rows=rows+1
+   if rows > MAXROW then
+      retError$="ErrTOMUCHROWS"
+   else
+      if j> cols then cols=j fi
+      j=1
+   fi
+else 
+   opt=instr(valid$,temp$)
+   if opt>0 then
+      if temp$=player$ or temp$=playerstore$ then
+         playerposy=rows
+         playerposx=j
+      fi
+      if temp$=save$ then
+         savepack=savepack+1
+         packets=packets+1
+      fi
+      if temp$=packet$ then packets=packets+1 
+      fi
+      Mapa$(rows,j)=temp$
+      j=j+1
+      if j>MAXCOL then retError$="ErrTOMUCHCOLS" 
+      fi
+   else 
+      retError$="ErrILLCHAR"  
+   fi
+fi
+next index
+return : rem GeneraMapa
+rem </textarea> <tr>
+
+rem <br><td><textarea cols=40 rows=9>
+label ShowStatus
+MapRows=rows-1
+MapCols=cols-1
+print " Level = ",nivel
+rem print " Rows = ",MapRows
+rem print " Columns = ",MapCols
+print " Packets = ",packets
+print
+print " let's play "
+print " Press q to Quit the Game"
+print " Arrows to Move, n for next Level"
+print " r to restart current level"
+print " w to select other level"
+print " t to redraw the screen (if needed)"
+return : rem ShowStatus </textarea><tr><td>
+
+
+rem <br><textarea cols=40 rows=26>
+label DrawMap
+for tiley=1 to rows
+for tilex=1 to cols
+sprite=0
+ if Mapa$(tiley,tilex)=wall$ then sprite=3 fi
+ if Mapa$(tiley,tilex)=player$ then sprite=1 fi
+ if Mapa$(tiley,tilex)=store$ then sprite=2 fi
+ if Mapa$(tiley,tilex)=packet$ then sprite=4 fi
+ if Mapa$(tiley,tilex)=playerstore$ then sprite=5 fi
+ if Mapa$(tiley,tilex)=save$ then sprite=6 fi
+ if Mapa$(tiley,tilex)=Ground$ then sprite=7 fi
+if Dirty(tiley,tilex)=1 then
+clear fill rect (tilex-1)*sizetile,(tiley-1)*sizetile to tilex*sizetile,tiley*sizetile 
+rect (tilex-1)*sizetile,(tiley-1)*sizetile to tilex*sizetile,tiley*sizetile 
+  if sprite>0 then
+    if sprite=7 then
+    rem nothing :-)
+    else 
+         offsetx=sizetile*(tilex-1)-1
+         offsety=sizetile*(tiley-1)
+         gosub ShowYbm 
+    fi
+  fi
+  Dirty(tiley,tilex)=0
+fi
+next tilex : next tiley
+return : rem DrawMap </textarea><br>
+
+rem <td> <textarea rows=3 cols=40>
+rem This was used to create new 
+rem levels for the next release 
+Label SaveMap
+saveas$=""
+saveas$="./levels/level."+str$(nivel,"%1.0f")
+estenivel$="level"+str$(nivel,"%1.0f")
+open 1,saveas$,"w"
+print #1 "Label ",estenivel$
+print #1 "data ",MapRows," , ",MapCols
+for tiley=1 to MapRows
+bl$=""
+for tilex=1 to MapCols
+bl$=bl$+Mapa$(tiley,tilex)
+next tilex 
+print #1 "data ", "\"",bl$,"\""
+next tiley
+close 1
+if nivel=90 then end fi
+
+return : rem SaveMap </textarea><br>
+
+
+rem <br><textarea cols=40 rows=20>
+label playit
+label KeepPlaying
+dx=0:dy=0
+if saving=1 then k$="s"
+else
+k$=inkey$
+fi
+desde$=Mapa$(playerposy,playerposx)
+if k$="up" then dy=-1 fi
+if k$="down" then dy=1 fi
+if k$="left" then dx=-1 fi
+if k$="right" then dx=1 fi
+hacia$=Mapa$(playerposy+dy,playerposx+dx)
+   if hacia$=Ground$ or hacia$=store$ then
+      gosub Movedxdy
+   fi
+   if hacia$=packet$ or hacia$=save$ then
+     atras$=Mapa$(playerposy+2*dy,playerposx+2*dx)
+     if atras$=Ground$ or atras$=store$ then
+       gosub Pushdxdy
+     fi
+   fi
+gosub DrawMap
+  if k$="q" then end fi
+  if k$="t" then
+  for tiley=1 to rows
+      for tilex=1 to cols
+      Dirty(tiley,tilex)=1
+      next tilex
+  next tiley
+  gosub DrawMap
+  fi
+  if k$="s" then saving=1
+   gosub SaveMap 
+   k$="n"
+   print "Wait ! Creating new Levels on ./levels"
+  fi
+  if k$="r" then
+     nivel=nivel-1
+     k$="n"
+  fi
+  if k$="w" then
+     gosub AskLevel
+     nivel=nivel-1
+     k$="n"
+  fi
+  if k$<>"n" then goto KeepPlaying fi
+return : rem playit </textarea><tr>
+
+rem <td><textarea cols=40 rows=9>
+Label Pushdxdy
+  if desde$=player$ then
+        Mapa$(playerposy,playerposx)=Ground$ 
+  else  Mapa$(playerposy,playerposx)=store$
+  fi
+  if hacia$=packet$ then
+        Mapa$(playerposy+dy,playerposx+dx)=player$ 
+  else  Mapa$(playerposy+dy,playerposx+dx)=playerstore$
+  fi
+  if atras$=Ground$ then
+       Mapa$(playerposy+2*dy,playerposx+2*dx)=packet$
+  else Mapa$(playerposy+2*dy,playerposx+2*dx)=save$
+  fi
+      Dirty(playerposy,playerposx)=1
+      Dirty(playerposy+dy,playerposx+dx)=1
+      Dirty(playerposy+2*dy,playerposx+2*dx)=1
+      playerposx=playerposx+dx
+      playerposy=playerposy+dy
+npush=npush+1
+return : rem Pushdxdy </textarea><br>
+
+rem <td><textarea cols=40 rows=9>
+Label Movedxdy
+  if desde$=player$ then
+        Mapa$(playerposy,playerposx)=Ground$ 
+  else  Mapa$(playerposy,playerposx)=store$
+  fi
+  if hacia$=Ground$ then
+        Mapa$(playerposy+dy,playerposx+dx)=player$ 
+  else  Mapa$(playerposy+dy,playerposx+dx)=playerstore$
+  fi
+      Dirty(playerposy,playerposx)=1
+      Dirty(playerposy+dy,playerposx+dx)=1
+      playerposx=playerposx+dx
+      playerposy=playerposy+dy
+nmovs=nmovs+1
+return : rem Movedxdy
+rem </textarea></table><br>
+
+
+rem <table border=1> <td><textarea rows=6 cols=40>
+rem Man.ybm
+Label ybitmaps
+data  30 ,  30
+data "00000000000000000000000000000000"
+data "00000000000011111100000000000000"
+data "00000000000100000010000000000000"
+data "00000000000100000010000000000000"
+data "00000000001000000001000000000000"
+data "00000000001011001101000000000000"
+data "00000000001000000001000000000000"
+data "00000000000101111010000000000000"
+data "00000000001100110011000000000000"
+data "00000000011110110111100000000000"
+data "00000000010110110110100000000000"
+data "00000000010111001110100000000000"
+data "00000000100111111110010000000000"
+data "00000000100111111110010000000000"
+data "00000001000111111110001000000000"
+data "00000001000111111110001000000000"
+data "00000001000111111110001000000000"
+data "00000000100111111110010000000000"
+data "00000000100111111110010000000000"
+data "00000000101111111111010000000000"
+data "00000000011111111111100000000000"
+data "00000000001111111111000000000000"
+data "00000000000111111110000000000000"
+data "00000000001010000101000000000000"
+data "00000000011111001111100000000000"
+data "00000000111111001111110000000000"
+data "00000001111111001111111000000000"
+data "00000011011011001101101100000000"
+data "00000000000000000000000000000000"
+data "00000000000000000000000000000000"
+rem </textarea><br><textarea rows=6 cols=40>
+rem Goal.ybm
+data  30 ,  30
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101000101000101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101000101000101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101000101000101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101000101000101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101000101000101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+rem </textarea><br><textarea rows=6 cols=40>
+rem Wall
+data  30 ,  30
+data "11110111111111101111111110111111"
+data "11110111111111101111111110111111"
+data "00000000000000000000000000000011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+data "00000000000000000000000000000011"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "00000000000000000000000000000011"
+data "01111111100111111111001111111111"
+data "01111111100111111111001111111111"
+data "01111111100111111111001111111111"
+data "01111111100111111111001111111111"
+data "01111111100111111111001111111111"
+data "00000000000000000000000000000011"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "11110011111111001111111100111111"
+data "00000000000000000000000000000011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+data "01111111100111111110011111111011"
+rem </textarea><br><textarea rows=6 cols=40>
+
+rem   "object.ybm"
+data  30 ,  30
+data "00000000000000000000000000000000"
+data "00000000000000000000000000000000"
+data "00000000000011111110000000000000"
+data "00000000001111111111100000000000"
+data "00000000111100000001111000000000"
+data "00000001110000000000011100000000"
+data "00000011000000000000000110000000"
+data "00000110000011111000000011000000"
+data "00000110001111110000000011000000"
+data "00001100011100000000000001100000"
+data "00001100111000000000000001100000"
+data "00011000100000000000000000110000"
+data "00011000000000000000000000110000"
+data "00011000000000000000000000110000"
+data "00011000000000000000000000110000"
+data "00011000100000000000000000110000"
+data "00011000100000000000000000110000"
+data "00011000110000000000000000110000"
+data "00001100111000000000000001100000"
+data "00001100011100000000000001100000"
+data "00000110001110000000000011000000"
+data "00000110000111100000000011000000"
+data "00000011000001111000000110000000"
+data "00000001110000000000011100000000"
+data "00000000111100000001111000000000"
+data "00000000001111111111100000000000"
+data "00000000000011111110000000000000"
+data "00000000000000000000000000000000"
+data "00000000000000000000000000000000"
+data "00000000000000000000000000000000"
+rem </textarea><br><textarea rows=6 cols=40>
+rem "Saveman.ybm"
+data  30 ,  30
+data "10000010000010000010000010000000"
+data "01000101000111111101000101000100"
+data "00101000101100000010101000101000"
+data "00010000010100000010010000010000"
+data "00101000101000000001101000101000"
+data "01000101001011001101000101000100"
+data "10000010001000000001000010000000"
+data "01000101000101111010000101000100"
+data "00101000101100110011001000101000"
+data "00010000011110110111110000010000"
+data "00101000110110110110101000101000"
+data "01000101010111001110100101000100"
+data "10000010100111111110010010000000"
+data "01000101100111111110011101000100"
+data "00101001000111111110001000101000"
+data "00010001000111111110001000010000"
+data "00101001000111111110001000101000"
+data "01000101100111111110011101000100"
+data "10000010100111111110010010000000"
+data "01000101101111111111010101000100"
+data "00101000011111111111101000101000"
+data "00010000011111111111010000010000"
+data "00101000100111111110101000101000"
+data "01000101001010000101000101000100"
+data "10000010011111001111100010000000"
+data "01000101111111001111110101000100"
+data "00101001111111101111111000101000"
+data "00010011011011011101101100010000"
+data "00101000101000101000001000101000"
+data "01000101000101000101000101000100"
+rem </textarea><br><textarea rows=6 cols=40>
+rem "treasure.ybm"
+data  30 ,  30
+data "10000010000010000010000010000000"
+data "01000101000101000101000101000100"
+data "00101000101011111110101000101000"
+data "00010000011111111111110000010000"
+data "00101000111100010101111000101000"
+data "01000101110000001010001101000100"
+data "10000011010000010101000110000000"
+data "01000110101011111010100011000100"
+data "00101110011111110001010111101000"
+data "00011100011110100000101011110000"
+data "00101100111101000000010101101000"
+data "01011000101010100000101010110100"
+data "10011100010101010001010101110000"
+data "01011010101000101010100010110100"
+data "00111101010000010101000001111000"
+data "00011010100000001010000000110000"
+data "00111101110000010101000001111000"
+data "01011010111000101010100010110100"
+data "10001100111101010001010101100000"
+data "01001100011110100000101011100100"
+data "00101110001111000000010111101000"
+data "00010110001111100000101011010000"
+data "00101011010101111001010110101000"
+data "01000101111000101010111101000100"
+data "10000010111100010101111010000000"
+data "01000101001111111111100101000100"
+data "00101000101011111110101000101000"
+data "00010000010000010000010000010000"
+data "00101000101000101000101000101000"
+data "01000101000101000101000101000100"
+rem </textarea><br>
+
+rem </table><br><hr>
+
+rem <hr><table border=1><td >
+rem <textarea rows=7 cols=80>
+Label AskLevel
+print "\n Indicate which level to play (1-",includedlevels,")"
+print " for higher levels from ",includedlevels," upto 90 you need to" 
+print " download external files" 
+input " Start Level [Default = 1] " dummy$
+if dummy$="" then nivel=1
+else
+nivel=val(dummy$)
+fi
+if nivel=0 then end fi
+if nivel<0 or nivel>90 then goto AskLevel fi
+if nivel>includedlevels then
+print "You will need an external file for this level"
+input "Press Enter key to continue " dummy$
+fi
+return :rem </textarea><tr>
+
+rem <td><textarea rows=11 cols=40>
+Label level1
+data 11 , 19
+data "    #####          "
+data "    #   #          "
+data "    #$  #          "
+data "  ###  $##         "
+data "  #  $ $ #         "
+data "### # ## #   ######"
+data "#   # ## #####  ..#"
+data "# $  $          ..#"
+data "##### ### #@##  ..#"
+data "    #     #########"
+data "    #######        "
+
+Label level2
+data 10 , 14
+data "############  "
+data "#..  #     ###"
+data "#..  # $  $  #"
+data "#..  #$####  #"
+data "#..    @ ##  #"
+data "#..  # #  $ ##"
+data "###### ##$ $ #"
+data "  # $  $ $ $ #"
+data "  #    #     #"
+data "  ############"
+
+Label level3
+data 10 , 17
+data "        ######## "
+data "        #     @# "
+data "        # $#$ ## "
+data "        # $  $#  "
+data "        ##$ $ #  "
+data "######### $ # ###"
+data "#....  ## $  $  #"
+data "##...    $  $   #"
+data "#....  ##########"
+data "########         "
+
+Label level4
+data 14 , 19
+data "           ########"
+data "           #  ....#"
+data "############  ....#"
+data "#    #  $ $   ....#"
+data "# $$$#$  $ #  ....#"
+data "#  $     $ #  ....#"
+data "# $$ #$ $ $########"
+data "#  $ #     #       "
+data "## #########       "
+data "#    #    ##       "
+data "#     $   ##       "
+data "#  $$#$$  @#       "
+data "#    #    ##       "
+data "###########        "
+
+Label level5
+data 13 , 17
+data "        #####    "
+data "        #   #####"
+data "        # #$##  #"
+data "        #     $ #"
+data "######### ###   #"
+data "#....  ## $  $###"
+data "#....    $ $$ ## "
+data "#....  ##$  $ @# "
+data "#########  $  ## "
+data "        # $ $  # "
+data "        ### ## # "
+data "          #    # "
+data "          ###### "
+
+Label level6
+data 11 , 12
+data "######  ### "
+data "#..  # ##@##"
+data "#..  ###   #"
+data "#..     $$ #"
+data "#..  # # $ #"
+data "#..### # $ #"
+data "#### $ #$  #"
+data "   #  $# $ #"
+data "   # $  $  #"
+data "   #  ##   #"
+data "   #########"
+
+Label level7
+data 12 , 13
+data "       ##### "
+data " #######   ##"
+data "## # @## $$ #"
+data "#    $      #"
+data "#  $  ###   #"
+data "### #####$###"
+data "# $  ### ..# "
+data "# $ $ $ ...# "
+data "#    ###...# "
+data "# $$ # #...# "
+data "#  ### ##### "
+data "####         "
+
+Label level8
+data 16 , 16
+data "  ####          "
+data "  #  ###########"
+data "  #    $   $ $ #"
+data "  # $# $ #  $  #"
+data "  #  $ $  #    #"
+data "### $# #  #### #"
+data "#@#$ $ $  ##   #"
+data "#    $ #$#   # #"
+data "#   $    $ $ $ #"
+data "#####  #########"
+data "  #      #      "
+data "  #      #      "
+data "  #......#      "
+data "  #......#      "
+data "  #......#      "
+data "  ########      "
+
+Label level9
+data 14 , 17
+data "          #######"
+data "          #  ...#"
+data "      #####  ...#"
+data "      #      . .#"
+data "      #  ##  ...#"
+data "      ## ##  ...#"
+data "     ### ########"
+data "     # $$$ ##    "
+data " #####  $ $ #####"
+data "##   #$ $   #   #"
+data "#@ $  $    $  $ #"
+data "###### $$ $ #####"
+data "     #      #    "
+data "     ########    "
+
+Label level10
+data 16 , 19
+data " ###  #############"
+data "##@####       #   #"
+data "# $$   $$  $ $ ...#"
+data "#  $$$#    $  #...#"
+data "# $   # $$ $$ #...#"
+data "###   #  $    #...#"
+data "#     # $ $ $ #...#"
+data "#    ###### ###...#"
+data "## #  #  $ $  #...#"
+data "#  ## # $$ $ $##..#"
+data "# ..# #  $      #.#"
+data "# ..# # $$$ $$$ #.#"
+data "##### #       # #.#"
+data "    # ######### #.#"
+data "    #           #.#"
+data "    ###############"
+
+Label level11
+data 15 , 19
+data "          ####     "
+data "     #### #  #     "
+data "   ### @###$ #     "
+data "  ##      $  #     "
+data " ##  $ $$## ##     "
+data " #  #$##     #     "
+data " # # $ $$ # ###    "
+data " #   $ #  # $ #####"
+data "####    #  $$ #   #"
+data "#### ## $         #"
+data "#.    ###  ########"
+data "#.. ..# ####       "
+data "#...#.#            "
+data "#.....#            "
+data "#######            "
+
+Label level12
+data 13 , 17
+data "################ "
+data "#              # "
+data "# # ######     # "
+data "# #  $ $ $ $#  # "
+data "# #   $@$   ## ##"
+data "# #  $ $ $###...#"
+data "# #   $ $  ##...#"
+data "# ###$$$ $ ##...#"
+data "#     # ## ##...#"
+data "#####   ## ##...#"
+data "    #####     ###"
+data "        #     #  "
+data "        #######  "
+
+Label level13
+data 13 , 19
+data "   #########       "
+data "  ##   ##  #####   "
+data "###     #  #    ###"
+data "#  $ #$ #  #  ... #"
+data "# # $#@$## # #.#. #"
+data "#  # #$  #    . . #"
+data "# $    $ # # #.#. #"
+data "#   ##  ##$ $ . . #"
+data "# $ #   #  #$#.#. #"
+data "## $  $   $  $... #"
+data " #$ ######    ##  #"
+data " #  #    ##########"
+data " ####              "
+
+Label level14
+data 16 , 18
+data "       #######    "
+data " #######     #    "
+data " #     # $@$ #    "
+data " #$$ #   #########"
+data " # ###......##   #"
+data " #   $......## # #"
+data " # ###......     #"
+data "##   #### ### #$##"
+data "#  #$   #  $  # # "
+data "#  $ $$$  # $## # "
+data "#   $ $ ###$$ # # "
+data "#####     $   # # "
+data "    ### ###   # # "
+data "      #     #   # "
+data "      ########  # "
+data "             #### "
+
+Label level15
+data 16 , 17
+data "   ########      "
+data "   #   #  #      "
+data "   #  $   #      "
+data " ### #$   ####   "
+data " #  $  ##$   #   "
+data " #  # @ $ # $#   "
+data " #  #      $ ####"
+data " ## ####$##     #"
+data " # $#.....# #   #"
+data " #  $..**. $# ###"
+data "##  #.....#   #  "
+data "#   ### #######  "
+data "# $$  #  #       "
+data "#  #     #       "
+data "######   #       "
+data "     #####       "
+
+Label level16
+data 15 , 14
+data "#####         "
+data "#   ##        "
+data "#    #  ####  "
+data "# $  ####  #  "
+data "#  $$ $   $#  "
+data "###@ #$    ## "
+data " #  ##  $ $ ##"
+data " # $  ## ## .#"
+data " #  #$##$  #.#"
+data " ###   $..##.#"
+data "  #    #.*...#"
+data "  # $$ #.....#"
+data "  #  #########"
+data "  #  #        "
+data "  ####        "
+
+Label level17
+data 14 , 16
+data "   ##########   "
+data "   #..  #   #   "
+data "   #..      #   "
+data "   #..  #  #### "
+data "  #######  #  ##"
+data "  #            #"
+data "  #  #  ##  #  #"
+data "#### ##  #### ##"
+data "#  $  ##### #  #"
+data "# # $  $  # $  #"
+data "# @$  $   #   ##"
+data "#### ## ####### "
+data "   #    #       "
+data "   ######       "
+
+Label level18
+data 13 , 19
+data "     ###########   "
+data "     #  .  #   #   "
+data "     # #.    @ #   "
+data " ##### ##..# ####  "
+data "##  # ..###     ###"
+data "# $ #...   $ #  $ #"
+data "#    .. ##  ## ## #"
+data "####$##$# $ #   # #"
+data "  ## #    #$ $$ # #"
+data "  #  $ # #  # $## #"
+data "  #               #"
+data "  #  ###########  #"
+data "  ####         ####"
+
+Label level19
+data 16 , 19
+data "  ######           "
+data "  #   @####        "
+data "##### $   #        "
+data "#   ##    ####     "
+data "# $ #  ##    #     "
+data "# $ #  ##### #     "
+data "## $  $    # #     "
+data "## $ $ ### # #     "
+data "## #  $  # # #     "
+data "## # #$#   # #     "
+data "## ###   # # ######"
+data "#  $  #### # #....#"
+data "#    $    $   ..#.#"
+data "####$  $# $   ....#"
+data "#       #  ## ....#"
+data "###################"
+
+Label level20
+data 16 , 19
+data "    ##########     "
+data "#####        ####  "
+data "#     #   $  #@ #  "
+data "# #######$####  ###"
+data "# #    ## #  #$ ..#"
+data "# # $     #  #  #.#"
+data "# # $  #     #$ ..#"
+data "# #  ### ##     #.#"
+data "# ###  #  #  #$ ..#"
+data "# #    #  ####  #.#"
+data "# #$   $  $  #$ ..#"
+data "#    $ # $ $ #  #.#"
+data "#### $###    #$ ..#"
+data "   #    $$ ###....#"
+data "   #      ## ######"
+data "   ########        "
+
+Label level21
+data 15 , 15
+data "#########      "
+data "#       #      "
+data "#       ####   "
+data "## #### #  #   "
+data "## #@##    #   "
+data "# $$$ $  $$#   "
+data "#  # ## $  #   "
+data "#  # ##  $ ####"
+data "####  $$$ $#  #"
+data " #   ##   ....#"
+data " # #   # #.. .#"
+data " #   # # ##...#"
+data " ##### $  #...#"
+data "     ##   #####"
+data "      #####    "
+
+Label level22
+data 16 , 19
+data "######     ####    "
+data "#    #######  #####"
+data "#   $#  #  $  #   #"
+data "#  $  $  $ # $ $  #"
+data "##$ $   # @# $    #"
+data "#  $ ########### ##"
+data "# #   #.......# $# "
+data "# ##  # ......#  # "
+data "# #   $........$ # "
+data "# # $ #.... ..#  # "
+data "#  $ $####$#### $# "
+data "# $   ### $   $  ##"
+data "# $     $ $  $    #"
+data "## ###### $ ##### #"
+data "#         #       #"
+data "###################"
+
+Label level23
+data 14 , 19
+data "    #######        "
+data "    #  #  ####     "
+data "##### $#$ #  ##    "
+data "#.. #  #  #   #    "
+data "#.. # $#$ #  $#### "
+data "#.  #     #$  #  # "
+data "#..   $#  # $    # "
+data "#..@#  #$ #$  #  # "
+data "#.. # $#     $#  # "
+data "#.. #  #$$#$  #  ##"
+data "#.. # $#  #  $#$  #"
+data "#.. #  #  #   #   #"
+data "##. ####  #####   #"
+data " ####  ####   #####"
+
+Label level24
+data 16 , 19
+data "###############    "
+data "#..........  .#### "
+data "#..........$$.#  # "
+data "###########$ #   ##"
+data "#      $  $     $ #"
+data "## ####   #  $ #  #"
+data "#      #   ##  # ##"
+data "#  $#  # ##  ### ##"
+data "# $ #$###    ### ##"
+data "###  $ #  #  ### ##"
+data "###    $ ## #  # ##"
+data " # $  #  $  $ $   #"
+data " #  $  $#$$$  #   #"
+data " #  #  $      #####"
+data " # @##  #  #  #    "
+data " ##############    "
+
+Label level25
+data 16 , 19
+data "####               "
+data "#  ##############  "
+data "#  #   ..#......#  "
+data "#  # # ##### ...#  "
+data "##$#    ........#  "
+data "#   ##$######  ####"
+data "# $ #     ######@ #"
+data "##$ # $   ######  #"
+data "#  $ #$$$##       #"
+data "#      #    #$#$###"
+data "# #### #$$$$$    # "
+data "# #    $     #   # "
+data "# #   ##        ###"
+data "# ######$###### $ #"
+data "#        #    #   #"
+data "##########    #####"
+
+Label level26
+data 12 , 15
+data " #######       "
+data " #  #  #####   "
+data "##  #  #...### "
+data "#  $#  #...  # "
+data "# $ #$$ ...  # "
+data "#  $#  #... .# "
+data "#   # $########"
+data "##$       $ $ #"
+data "##  #  $$ #   #"
+data " ######  ##$$@#"
+data "      #      ##"
+data "      ######## "
+
+Label level27
+data 13 , 19
+data " ################# "
+data " #...   #    #   ##"
+data "##.....  $## # #$ #"
+data "#......#  $  #    #"
+data "#......#  #  # #  #"
+data "######### $  $ $  #"
+data "  #     #$##$ ##$##"
+data " ##   $    # $    #"
+data " #  ## ### #  ##$ #"
+data " # $ $$     $  $  #"
+data " # $    $##$ ######"
+data " #######  @ ##     "
+data "       ######      "
+
+Label level28
+data 15 , 17
+data "         #####   "
+data "     #####   #   "
+data "    ## $  $  ####"
+data "##### $  $ $ ##.#"
+data "#       $$  ##..#"
+data "#  ###### ###.. #"
+data "## #  #    #... #"
+data "# $   #    #... #"
+data "#@ #$ ## ####...#"
+data "####  $ $$  ##..#"
+data "   ##  $ $  $...#"
+data "    # $$  $ #  .#"
+data "    #   $ $  ####"
+data "    ######   #   "
+data "         #####   "
+
+Label level29
+data 13 , 19
+data "#####              "
+data "#   ##             "
+data "# $  #########     "
+data "## # #       ######"
+data "## #   $#$#@  #   #"
+data "#  #      $ #   $ #"
+data "#  ### ######### ##"
+data "#  ## ..*..... # ##"
+data "## ## *.*..*.* # ##"
+data "# $########## ##$ #"
+data "#  $   $  $    $  #"
+data "#  #   #   #   #  #"
+data "###################"
+
+Label level30
+data 14 , 19
+data "       ########### "
+data "       #   #     # "
+data "#####  #     $ $ # "
+data "#   ##### $## # ## "
+data "# $ ##   # ## $  # "
+data "# $  @$$ # ##$$$ # "
+data "## ###   # ##    # "
+data "## #   ### #####$# "
+data "## #     $  #....# "
+data "#  ### ## $ #....##"
+data "# $   $ #   #..$. #"
+data "#  ## $ #  ##.... #"
+data "#####   ######...##"
+data "    #####    ##### "
+
+Label level31
+data 16 , 18
+data "  ####            "
+data "  #  #########    "
+data " ##  ##  #   #    "
+data " #  $# $@$   #### "
+data " #$  $  # $ $#  ##"
+data "##  $## #$ $     #"
+data "#  #  # #   $$$  #"
+data "# $    $  $## ####"
+data "# $ $ #$#  #  #   "
+data "##  ###  ###$ #   "
+data " #  #....     #   "
+data " ####......####   "
+data "   #....####      "
+data "   #...##         "
+data "   #...#          "
+data "   #####          "
+
+Label level32
+data 15 , 13
+data "      ####   "
+data "  #####  #   "
+data " ##     $#   "
+data "## $  ## ### "
+data "#@$ $ # $  # "
+data "#### ##   $# "
+data " #....#$ $ # "
+data " #....#   $# "
+data " #....  $$ ##"
+data " #... # $   #"
+data " ######$ $  #"
+data "      #   ###"
+data "      #$ ### "
+data "      #  #   "
+data "      ####   "
+
+Label level33
+data 15 , 12
+data " ###########"
+data " #     ##  #"
+data " #   $   $ #"
+data "#### ## $$ #"
+data "#   $ #    #"
+data "# $$$ # ####"
+data "#   # # $ ##"
+data "#  #  #  $ #"
+data "# $# $#    #"
+data "#   ..# ####"
+data "####.. $ #@#"
+data "#.....# $# #"
+data "##....#  $ #"
+data " ##..##    #"
+data "  ##########"
+
+Label level34
+data 15 , 14
+data " #########    "
+data " #....   ##   "
+data " #.#.#  $ ##  "
+data "##....# # @## "
+data "# ....#  #  ##"
+data "#     #$ ##$ #"
+data "## ###  $    #"
+data " #$  $ $ $#  #"
+data " # #  $ $ ## #"
+data " #  ###  ##  #"
+data " #    ## ## ##"
+data " #  $ #  $  # "
+data " ###$ $   ### "
+data "   #  #####   "
+data "   ####       "
+
+Label level35
+data 16 , 19
+data "############ ######"
+data "#   #    # ###....#"
+data "#   $$#   @  .....#"
+data "#   # ###   # ....#"
+data "## ## ###  #  ....#"
+data " # $ $     # # ####"
+data " #  $ $##  #      #"
+data "#### #  #### # ## #"
+data "#  # #$   ## #    #"
+data "# $  $  # ## #   ##"
+data "# # $ $    # #   # "
+data "#  $ ## ## # ##### "
+data "# $$     $$  #     "
+data "## ## ### $  #     "
+data " #    # #    #     "
+data " ###### ######     "
+
+Label level36
+data 16 , 19
+data "            #####  "
+data "#####  ######   #  "
+data "#   ####  $ $ $ #  "
+data "# $   ## ## ##  ## "
+data "#   $ $     $  $ # "
+data "### $  ## ##     ##"
+data "  # ##### #####$$ #"
+data " ##$##### @##     #"
+data " # $  ###$### $  ##"
+data " # $  #   ###  ### "
+data " # $$ $ #   $$ #   "
+data " #     #   ##  #   "
+data " #######.. .###    "
+data "    #.........#    "
+data "    #.........#    "
+data "    ###########    "
+
+Label level37
+data 15 , 19
+data "###########        "
+data "#......   #########"
+data "#......   #  ##   #"
+data "#..### $    $     #"
+data "#... $ $ #   ##   #"
+data "#...#$#####    #  #"
+data "###    #   #$  #$ #"
+data "  #  $$ $ $  $##  #"
+data "  #  $   #$#$ ##$ #"
+data "  ### ## #    ##  #"
+data "   #  $ $ ## ######"
+data "   #    $  $  #    "
+data "   ##   # #   #    "
+data "    #####@#####    "
+data "        ###        "
+
+Label level38
+data 11 , 11
+data "      #### "
+data "####### @# "
+data "#     $  # "
+data "#   $## $# "
+data "##$#...# # "
+data " # $...  # "
+data " # #. .# ##"
+data " #   # #$ #"
+data " #$  $    #"
+data " #  #######"
+data " ####      "
+
+Label level39
+data 16 , 19
+data "             ######"
+data " #############....#"
+data "##   ##     ##....#"
+data "#  $$##  $ @##....#"
+data "#      $$ $#  ....#"
+data "#  $ ## $$ # # ...#"
+data "#  $ ## $  #  ....#"
+data "## ##### ### ##.###"
+data "##   $  $ ##   .  #"
+data "# $###  # ##### ###"
+data "#   $   #       #  "
+data "#  $ #$ $ $###  #  "
+data "# $$$# $   # ####  "
+data "#    #  $$ #       "
+data "######   ###       "
+data "     #####         "
+
+Label level40
+data 16 , 17
+data "    ############ "
+data "    #          ##"
+data "    #  # #$$ $  #"
+data "    #$ #$#  ## @#"
+data "   ## ## # $ # ##"
+data "   #   $ #$  # # "
+data "   #   # $   # # "
+data "   ## $ $   ## # "
+data "   #  #  ##  $ # "
+data "   #    ## $$# # "
+data "######$$   #   # "
+data "#....#  ######## "
+data "#.#... ##        "
+data "#....   #        "
+data "#....   #        "
+data "#########        "
+
+Label level41
+data 15 , 19
+data "           #####   "
+data "          ##   ##  "
+data "         ##     #  "
+data "        ##  $$  #  "
+data "       ## $$  $ #  "
+data "       # $    $ #  "
+data "####   #   $$ #####"
+data "#  ######## ##    #"
+data "#.            $$$@#"
+data "#.# ####### ##   ##"
+data "#.# #######. #$ $##"
+data "#........... #    #"
+data "##############  $ #"
+data "             ##  ##"
+data "              #### "
+
+Label level42
+data 13 , 18
+data "     ########     "
+data "  ####      ######"
+data "  #    ## $ $   @#"
+data "  # ## ##$#$ $ $##"
+data "### ......#  $$ ##"
+data "#   ......#  #   #"
+data "# # ......#$  $  #"
+data "# #$...... $$# $ #"
+data "#   ### ###$  $ ##"
+data "###  $  $  $  $ # "
+data "  #  $  $  $  $ # "
+data "  ######   ###### "
+data "       #####      "
+
+Label level43
+data 11 , 19
+data "        #######    "
+data "    #####  #  #### "
+data "    #   #   $    # "
+data " #### #$$ ## ##  # "
+data "##      # #  ## ###"
+data "#  ### $#$  $  $  #"
+data "#...    # ##  #   #"
+data "#...#    @ # ### ##"
+data "#...#  ###  $  $  #"
+data "######## ##   #   #"
+data "          #########"
+
+Label level44
+data 15 , 19
+data " #####             "
+data " #   #             "
+data " # # #######       "
+data " #      $@######   "
+data " # $ ##$ ###   #   "
+data " # #### $    $ #   "
+data " # ##### #  #$ ####"
+data "##  #### ##$      #"
+data "#  $#  $  # ## ## #"
+data "#         # #...# #"
+data "######  ###  ...  #"
+data "     #### # #...# #"
+data "          # ### # #"
+data "          #       #"
+data "          #########"
+
+Label level45
+data 14 , 16
+data "##### ####      "
+data "#...# #  ####   "
+data "#...###  $  #   "
+data "#....## $  $### "
+data "##....##   $  # "
+data "###... ## $ $ # "
+data "# ##    #  $  # "
+data "#  ## # ### ####"
+data "# $ # #$  $    #"
+data "#  $ @ $    $  #"
+data "#   # $ $$ $ ###"
+data "#  ######  ###  "
+data "# ##    ####    "
+data "###             "
+
+Label level46
+data 16 , 14
+data "##########    "
+data "#        #### "
+data "# ###### #  ##"
+data "# # $ $ $  $ #"
+data "#       #$   #"
+data "###$  $$#  ###"
+data "  #  ## # $## "
+data "  ##$#   $ @# "
+data "   #  $ $ ### "
+data "   # #   $  # "
+data "   # ##   # # "
+data "  ##  ##### # "
+data "  #         # "
+data "  #.......### "
+data "  #.......#   "
+data "  #########   "
+
+Label level47
+data 11 , 18
+data "         ####     "
+data " #########  ##    "
+data "##  $      $ #####"
+data "#   ## ##   ##...#"
+data "# #$$ $ $$#$##...#"
+data "# #   @   #   ...#"
+data "#  $# ###$$   ...#"
+data "# $  $$  $ ##....#"
+data "###$       #######"
+data "  #  #######      "
+data "  ####            "
+
+Label level48
+data 16 , 13
+data "  #########  "
+data "  #*.*#*.*#  "
+data "  #.*.*.*.#  "
+data "  #*.*.*.*#  "
+data "  #.*.*.*.#  "
+data "  #*.*.*.*#  "
+data "  ###   ###  "
+data "    #   #    "
+data "###### ######"
+data "#           #"
+data "# $ $ $ $ $ #"
+data "## $ $ $ $ ##"
+data " #$ $ $ $ $# "
+data " #   $@$   # "
+data " #  #####  # "
+data " ####   #### "
+
+Label level49
+data 15 , 17
+data "       ####      "
+data "       #  ##     "
+data "       #   ##    "
+data "       # $$ ##   "
+data "     ###$  $ ##  "
+data "  ####    $   #  "
+data "###  # #####  #  "
+data "#    # #....$ #  "
+data "# #   $ ....# #  "
+data "#  $ # #.*..# #  "
+data "###  #### ### #  "
+data "  #### @$  ##$## "
+data "     ### $     # "
+data "       #  ##   # "
+data "       ######### "
+
+Label level50
+data 16 , 19
+data "      ############ "
+data "     ##..    #   # "
+data "    ##..* $    $ # "
+data "   ##..*.# # # $## "
+data "   #..*.# # # $  # "
+data "####...#  #    # # "
+data "#  ## #          # "
+data "# @$ $ ###  #   ## "
+data "# $   $   # #   #  "
+data "###$$   # # # # #  "
+data "  #   $   # # #####"
+data "  # $# #####      #"
+data "  #$   #   #    # #"
+data "  #  ###   ##     #"
+data "  #  #      #    ##"
+data "  ####      ###### "
+
+rem </textarea></table></body></html>
+end

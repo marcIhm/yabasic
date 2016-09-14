@@ -1,0 +1,92 @@
+#!/usr/bin/perl
+
+$wan="yabasic.htm";
+$woan="yabasic_without_anchor.htm";
+$utf8="yabasic_without_anchor_utf8.txt";
+$ascii="yabasic_without_anchor_ascii.txt";
+$roff="../yabmain/yabasic.1";
+$|=1;
+
+open HTML,$wan or die $!;
+while(<HTML>) {
+  $h.=$_;
+}
+
+while($h=~s/<a.*?>//g+$h=~s/<\/a.*?>//g) {
+  # do nothing
+}
+
+open HTML,">$woan" or die $!;
+print HTML $h;
+close HTML;
+
+system("export COLUMNS=74 ; /usr/bin/lynx --dump $woan >$utf8");
+system("/usr/bin/perl -i -pe 's/\xE2\x80\xA6/.../g;s/\xE2\x80\x94/-/g;s/\xCF\x80/pi/g;s/\xE2\x80\x9C/\"/g;s/\xE2\x80\x9D/\"/g' $utf8");
+system("/usr/bin/iconv -f UTF-8 -t ASCII $utf8 >$ascii");
+open ASCII,$ascii or die $!;
+while(<ASCII>) {
+    push @ascii,$_;
+}
+
+open ROFF,">$roff" or die $!;
+print ROFF <<ENDOFROFF;
+.TH yabasic 1
+.SH NAME
+yabasic \- yet another Basic
+.SH SYNOPSIS
+yabasic [options] [filename [arguments]]
+.SH DESCRIPTION
+Yabasic is a simple, old fashioned basic interpreter with
+some additional features like subroutines and libraries.
+Graphics and printing are limited but very easy to use.
+
+Yabasic is documented within the file yabasic.htm, which
+may or may not be present on your system; in any case this
+document can be found on www.yabasic.de.
+
+However, this html-document has been inserted as a preformatted text into this man page. Note, that you will at least need an eighty-column terminal to read this text without ugly wrapped lines.
+
+Moreover, this man-page contains some chapters, that are specific for windows and do not directly apply to your system.
+
+Finally note, that this man-page (unlike the html-document it is based upon) does not contain hyperlinks. In fact due to its large number of hyperlinks the html-document is much easier to read, understand and navigate than this man-page. However if you are determined to read this man-page, there are three especially useful ways to navigate; each works by searching for specific strings:
+
+.IP \\(bu 4
+To go to a specific chapter (e.g. Chapter 5, "All commands and functions of yabasic"), you may look up the number of this chapter in the table of contents and search for the string "\\fBChapter 5.\\fR"; please note the uppercase "C" and the dot.
+
+.IP \\(bu 4
+To go to the description of a specific command (e.g. the \\fBfor\\fR-command), you may search for its name followed by a single space and a double hyphen. In the example this would be "\\fBfor --\\fR".
+
+.IP \\(bu 4
+The description of functions contain the name of the function followed by parens ("\\fB()\\fR"). Therefore, to find the description of the sine-function, you should search for "\\fBsin\\\\(\\\\) --\\fR". Note, that you will probably need to escape those parens by prepending them with a backslash ("\\fB\\\\\\fR").
+
+.in 1v
+
+But now for the documentation itself:    
+
+.nf
+
+ENDOFROFF
+
+for (@ascii) {
+  s/\s\s+--/ --/g;
+  s/\\/\\\\/g;
+  print ROFF "$_";
+}
+
+print ROFF <<ENDOFROFF;
+
+.SH AUTHOR
+Marc-Oliver Ihm, with the input and suggestions from
+many others.
+.SH "SEE ALSO"
+yabasic.htm \- for the hyperlinked version of the text that is presented above.
+
+www.yabasic.de \- for further information about yabasic.
+.SH BUGS
+Still some.
+
+ENDOFROFF
+close ROFF;
+
+
+  

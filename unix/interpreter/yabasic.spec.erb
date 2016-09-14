@@ -1,0 +1,34 @@
+
+#
+# Use
+#	rpmbuild -bb yabasic.spec
+#
+# to build the package.
+#
+
+%define _unpackaged_files_terminate_build 0
+Summary: simple Basic Interpreter
+Name: yabasic
+Version: <%= vs['yabasic'] %>
+Release: 1
+License: Artistic License or GPL
+Group: Development/Languages
+Vendor: Marc Ihm
+Source: yabasic-<%= vs['yabasic'] %>.tar.gz
+BuildRoot: /usr/src/redhat/BUILD/yabasic
+%description
+Yabasic implements the most common and simple elements of the basic
+language. It comes with goto/gosub, with various loops, with user defined
+subroutines and Libraries. Yabasic does simple graphics and printing. Yabasic
+runs under Unix and Windows, it is small, open source and free.
+%prep
+%setup
+%build
+./configure
+make
+%install
+make DESTDIR=/usr/src/packages/BUILD/yabasic install
+%files
+%doc README NEWS ChangeLog yabasic.htm
+/usr/local/bin/yabasic
+/usr/local/share/man/man1/yabasic.1
