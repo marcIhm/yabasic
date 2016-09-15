@@ -48,9 +48,11 @@ end
 
 desc "Create tar with sources"
 task :sources do
-  system('make dist-gzip') or fail
-  cp "yabasic-#{vs['yabasic']}.tar.gz", '/work/yabasic/products'
-  mv "yabasic-#{vs['yabasic']}.tar.gz", '/home/ihm/rpmbuild/SOURCES'
+  Dir.chdir("interpreter") do
+    system('make dist-gzip') or fail
+    cp "yabasic-#{vs['yabasic']}.tar.gz", '/work/yabasic/products'
+    mv "yabasic-#{vs['yabasic']}.tar.gz", '/home/ihm/rpmbuild/SOURCES'
+  end
 end
   
 desc "Create rpm"
@@ -66,4 +68,4 @@ task :show do
   system 'ls -l /work/yabasic/products'
 end
 
-task :default => %w[:git :html :man :versions :sources :rpm :show]
+task :default => [:git, :html, :man, :versions, :sources, :rpm, :show]

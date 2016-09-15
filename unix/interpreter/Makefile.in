@@ -99,14 +99,16 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = config.h
+CONFIG_HEADER = $(top_builddir)/../../common/src/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_yabasic_OBJECTS = main.$(OBJEXT) function.$(OBJEXT) io.$(OBJEXT) \
-	graphic.$(OBJEXT) symbol.$(OBJEXT) flex.$(OBJEXT) \
-	bison.$(OBJEXT)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_yabasic_OBJECTS = ${SRCDIR}/main.$(OBJEXT) \
+	${SRCDIR}/function.$(OBJEXT) ${SRCDIR}/io.$(OBJEXT) \
+	${SRCDIR}/graphic.$(OBJEXT) ${SRCDIR}/symbol.$(OBJEXT) \
+	${SRCDIR}/flex.$(OBJEXT) ${SRCDIR}/bison.$(OBJEXT)
 yabasic_OBJECTS = $(am_yabasic_OBJECTS)
 yabasic_LDADD = $(LDADD)
 yabasic_DEPENDENCIES =
@@ -122,7 +124,7 @@ AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
-DEFAULT_INCLUDES = -I.@am__isrc@
+DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/../../common/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
@@ -497,13 +499,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flex.c bison.c yabasic.h bison.h
+SRCDIR = ../../common/src
+yabasic_SOURCES = ${SRCDIR}/main.c ${SRCDIR}/function.c ${SRCDIR}/io.c ${SRCDIR}/graphic.c ${SRCDIR}/symbol.c ${SRCDIR}/flex.c ${SRCDIR}/bison.c ${SRCDIR}/yabasic.h ${SRCDIR}/bison.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.spec yabasic.flex yabasic.bison pack tests configure.ac GPL yabasic.xml demo.yab $(man_MANS)
 TESTS = tests/simple.yab tests/grammar.yab tests/io.yab tests/bugs.yab tests/break.yab
-AUTOMAKE_OPTIONS = check-news
+AUTOMAKE_OPTIONS = check-news subdir-objects
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
@@ -511,8 +514,7 @@ flexflags = -i -I -L -s
 
 # flags for bison (-t -v for debugging)
 bisonflags = -d -l -t -v
-all: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .log .o .obj .test .test$(EXEEXT) .trs
@@ -550,20 +552,20 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
 
-config.h: stamp-h1
-	@test -f $@ || rm -f stamp-h1
-	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) stamp-h1
+../../common/src/config.h: ../../common/src/stamp-h1
+	@test -f $@ || rm -f ../../common/src/stamp-h1
+	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) ../../common/src/stamp-h1
 
-stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
-	@rm -f stamp-h1
-	cd $(top_builddir) && $(SHELL) ./config.status config.h
+../../common/src/stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
+	@rm -f ../../common/src/stamp-h1
+	cd $(top_builddir) && $(SHELL) ./config.status ../../common/src/config.h
 $(srcdir)/config.h.in:  $(am__configure_deps) 
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
-	rm -f stamp-h1
+	rm -f ../../common/src/stamp-h1
 	touch $@
 
 distclean-hdr:
-	-rm -f config.h stamp-h1
+	-rm -f ../../common/src/config.h ../../common/src/stamp-h1
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -606,6 +608,26 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+${SRCDIR}/$(am__dirstamp):
+	@$(MKDIR_P) ${SRCDIR}
+	@: > ${SRCDIR}/$(am__dirstamp)
+${SRCDIR}/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ${SRCDIR}/$(DEPDIR)
+	@: > ${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/main.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/function.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/io.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/graphic.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/symbol.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/flex.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+${SRCDIR}/bison.$(OBJEXT): ${SRCDIR}/$(am__dirstamp) \
+	${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
 
 yabasic$(EXEEXT): $(yabasic_OBJECTS) $(yabasic_DEPENDENCIES) $(EXTRA_yabasic_DEPENDENCIES) 
 	@rm -f yabasic$(EXEEXT)
@@ -613,28 +635,31 @@ yabasic$(EXEEXT): $(yabasic_OBJECTS) $(yabasic_DEPENDENCIES) $(EXTRA_yabasic_DEP
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ${SRCDIR}/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bison.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/graphic.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/symbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/bison.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/flex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/function.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/graphic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/io.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@${SRCDIR}/$(DEPDIR)/symbol.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
@@ -1104,7 +1129,7 @@ distcleancheck: distclean
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(PROGRAMS) $(MANS) config.h
+all-am: Makefile $(PROGRAMS) $(MANS)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -1138,6 +1163,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ${SRCDIR}/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ${SRCDIR}/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1148,7 +1175,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ${SRCDIR}/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -1196,7 +1223,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ${SRCDIR}/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1216,7 +1243,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-man
 
 uninstall-man: uninstall-man1
 
-.MAKE: all check-am install-am install-strip
+.MAKE: check-am install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-TESTS \
 	check-am clean clean-binPROGRAMS clean-cscope clean-generic \

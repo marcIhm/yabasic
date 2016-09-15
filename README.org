@@ -8,4 +8,8 @@ defined subroutines and Libraries. Yabasic does simple graphics and
 printing. Yabasic runs under Unix and Windows, it is small, open
 source and free.
 
-Here are the sources for yabasic; see http://www.yabasic.de for documentation.
+If you want to write programs for yabasic, see http://www.yabasic.de for
+documentation.
+
+If you want to change yabasic itself, read below.
+

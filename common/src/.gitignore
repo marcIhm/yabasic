@@ -1,0 +1,5 @@
+.deps
+.dirstamp
+*.o
+stamp-h1
+config.h

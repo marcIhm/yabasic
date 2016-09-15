@@ -1,12 +1,13 @@
 
 bin_PROGRAMS = yabasic
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flex.c bison.c yabasic.h bison.h
+SRCDIR = ../../common/src
+yabasic_SOURCES = ${SRCDIR}/main.c ${SRCDIR}/function.c ${SRCDIR}/io.c ${SRCDIR}/graphic.c ${SRCDIR}/symbol.c ${SRCDIR}/flex.c ${SRCDIR}/bison.c ${SRCDIR}/yabasic.h ${SRCDIR}/bison.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.spec yabasic.flex yabasic.bison pack tests configure.ac GPL yabasic.xml demo.yab $(man_MANS)
 TESTS = tests/simple.yab tests/grammar.yab tests/io.yab tests/bugs.yab tests/break.yab
-AUTOMAKE_OPTIONS = check-news
+AUTOMAKE_OPTIONS = check-news subdir-objects
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
