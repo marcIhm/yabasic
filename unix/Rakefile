@@ -11,59 +11,63 @@ task :git do
   sh "git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
-      fail "Uncommited local changes, please fix with 'git add' etc."
+#      fail "Uncommited local changes, please fix with 'git add' etc."
     end
   end
 end
 
-desc "Create html documentation from xml"
-file 'interpreter/yabasic.htm' => 'documentation/yabasic.xml' do
+desc "Create html doc from xml"
+file 'lang/yabasic.htm' => 'doc/yabasic.xml' do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
-  sh 'xsltproc documentation/mystyle.xsl documentation/yabasic.xml >interpreter/yabasic.htm'
-  cp 'documentation/yabasic.htm','interpreter/yabasic.htm'
-  cp 'documentation/yabasic.htm','/work/yabasic/products/yabasic.htm'
-  cp 'documentation/yabasic.xml','interpreter/yabasic.xml'
+  sh 'xsltproc doc/mystyle.xsl doc/yabasic.xml >lang/yabasic.htm'
+  cp 'doc/yabasic.htm','lang/yabasic.htm'
+  cp 'doc/yabasic.htm','../products/yabasic.htm'
+  cp 'doc/yabasic.xml','lang/yabasic.xml'
 end
 
 desc "Create man page"
-file 'interpreter/yabasic.1' => 'documentation/yabasic.htm' do
+file 'lang/yabasic.1' => 'doc/yabasic.htm' do
   ascii=%x{ w3m -dump -o display_charset=ascii,cols=74 yabasic.htm >/tmp/y.utf8 }
   fail if $?.exitstatus
-  open('documentation/yabasic.1','w') {|f| f.write ERB.new(File.new('documentation/yabasic.1.erb').read).result}
+  open('doc/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result}
 end
 
 desc "Run make"
 task :make do
-  sh make
+  cd "lang" do
+    sh "make"
+  end
 end
 
+vs=Hash.new
 desc "Collect Versions"
-task :versions => [:git,'interpreter/yabasic.htm',:make] do
-  vs=Hash.new
-  vs['yabasic']=%x( interpreter/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
-  vs['configure.ac']=File.new('interpreter/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
-  vs['yabasic.htm']=File.new('interpreter/yabasic.htm').read.match(/version\s+(\d\.\d+\.\d+)/)[1]
+task :versions => [:git,'lang/yabasic.htm',:make] do
+  vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
+  vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
+  vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/version\s+(\d\.\d+\.\d+)/)[1]
   pp vs
   fail "Mismatch" unless (vs['yabasic'].gsub(/\.\d+$/,"").to_f-vs['yabasic.htm'].gsub(/\.\d+$/,"").to_f).abs<0.01 && vs['yabasic']==vs['configure.ac']
 end
 
 desc "Create tar with sources"
 task :sources => :versions do
-  Dir.chdir("interpreter") do
+  Dir.chdir("lang") do
     system('make dist-gzip') or fail
-    cp "yabasic-#{vs['yabasic']}.tar.gz", '/work/yabasic/products'
-    mv "yabasic-#{vs['yabasic']}.tar.gz", '/home/ihm/rpmbuild/SOURCES'
+    cp "yabasic-#{vs['yabasic']}.tar.gz", '../../products'
+    mv "yabasic-#{vs['yabasic']}.tar.gz", '/usr/src/packages/BUILD/yabasic'
   end
 end
   
 desc "Create rpm"
 task :rpm => :versions do
-  open('yabasic.spec','w') {|f| f.write ERB.new(File.new('yabasic.spec.erb').read).result}
-  sh 'rpmbuild -bb --clean yabasic.spec --buildroot /usr/src/packages/BUILD/yabasic'
-  cp "/home/ihm/rpmbuild/RPMS/x86_64/yabasic-#{vs['yabasic']}-1.x86_64.rpm",'/work/yabasic/products'
+  cd "lang" do
+    sh 'make install DESTDIR=rpm'
+    sh "fpm -f -s dir -t rpm -n yabasic -v #{vs['yabasic']} -C rpm"
+    cp "/home/ihm/rpmbuild/RPMS/x86_64/yabasic-#{vs['yabasic']}-1.x86_64.rpm",'../products'
+  end
 end
 
 desc "Show products"
 task :default => [:rpm, :sources] do
-  sh 'ls -l /work/yabasic/products'
+  sh 'ls -l ../products'
 end
