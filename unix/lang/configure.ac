@@ -2,7 +2,7 @@
 dnl  Process this file with 'autoconf' to get a configure-script
 
 AC_INIT([yabasic], [2.77.1])
-AC_CONFIG_SRCDIR([../../common/src/main.c])
+AC_CONFIG_SRCDIR([main.c])
 #AC_CONFIG_LINKS
 AM_INIT_AUTOMAKE
 
@@ -75,6 +75,6 @@ dnl --- build-time, that will be displayed in banner ---
 AC_DEFINE_UNQUOTED(BUILD_TIME,"`date`",[build-time, that will be displayed in banner])
 
 dnl --- write out results ---
-AC_CONFIG_HEADERS([../../common/src/config.h:config.h.in])
+AC_CONFIG_HEADERS([config.h:config.h.in])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

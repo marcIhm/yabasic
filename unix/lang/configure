@@ -582,7 +582,7 @@ PACKAGE_STRING='yabasic 2.77.1'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
-ac_unique_file="../../common/src/main.c"
+ac_unique_file="main.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -6329,7 +6329,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-ac_config_headers="$ac_config_headers ../../common/src/config.h:config.h.in"
+ac_config_headers="$ac_config_headers config.h:config.h.in"
 
 ac_config_files="$ac_config_files Makefile"
 
@@ -7059,7 +7059,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
-    "../../common/src/config.h") CONFIG_HEADERS="$CONFIG_HEADERS ../../common/src/config.h:config.h.in" ;;
+    "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h:config.h.in" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
