@@ -385,7 +385,7 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
                     error (DUMP, "Executing in:");
                 }
                 sprintf (string, "sub %s() called in %s,%d",
-                         dot ? (dot + 1) : cmd->pointer, cmd->lib->l,
+                         dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->l,
                          cmd->line);
                 error (DUMP, string);
                 first = FALSE;

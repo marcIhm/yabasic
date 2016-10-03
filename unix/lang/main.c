@@ -978,8 +978,12 @@ initialize (void)
     cmdroot->next = cmdroot->prev = NULL;
 
     /* initialize random number generator */
-    gettimeofday(&time,NULL);
-    srand((time.tv_sec * 1000) + (time.tv_usec / 1000));
+#ifdef UNIX
+	gettimeofday(&time, NULL);
+#else
+	GetSystemTime(&time);
+#endif
+	srand((time.tv_sec * 1000) + (time.tv_usec / 1000));
 
     /* specify default text-alignement and window origin */
     text_align = my_strdup ("lb");
