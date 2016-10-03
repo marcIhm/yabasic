@@ -36,7 +36,6 @@ check your compiler settings
 #include <limits.h>
 #include <errno.h>
 #ifdef WINDOWS
-#define WIN32_LEAN_AND_MEAN
 #include <string.h>
 #include <windows.h>
 #include <io.h>
