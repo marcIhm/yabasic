@@ -931,7 +931,9 @@ initialize (void)
 {
     struct symbol *s;
     struct stackentry *base;
+#ifdef UNIX
     struct timeval time;
+#endif
     int i;
 
 #ifdef UNIX
@@ -980,10 +982,10 @@ initialize (void)
     /* initialize random number generator */
 #ifdef UNIX
 	gettimeofday(&time, NULL);
-#else
-	GetSystemTime(&time);
-#endif
 	srand((time.tv_sec * 1000) + (time.tv_usec / 1000));
+#else
+	srand(GetTickCount());
+#endif
 
     /* specify default text-alignement and window origin */
     text_align = my_strdup ("lb");
