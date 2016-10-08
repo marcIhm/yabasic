@@ -1,0 +1,29 @@
+#!/usr/bin/ruby
+
+require 'pp'
+require 'fileutils'
+include FileUtils
+
+desc 'Check git'
+task :git do 
+  sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
+    if !ok
+      sh "git status"
+#      fail "Uncommited local changes, please fix with 'git add' etc."
+    end
+  end
+end
+
+vs=Hash.new
+desc 'Collect Versions'
+task :versions => :git do
+  File.open('start.bat','w') {|f| f.puts %x( cygpath lang/Release/yabasic.exe ) + " --version >yabasic.out 2>&1"}
+  sh "cygstart start.bat"
+  vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d\.\d+\.\d+)/ )[1]
+  pp vs
+end
+
+desc 'Show products'
+task :default => :versions do
+  sh 'ls -l ../products'
+end
