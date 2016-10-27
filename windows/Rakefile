@@ -14,9 +14,14 @@ task :git do
   end
 end
 
+desc 'Build yabasic.exe'
+task :build_yabasic => :git do
+  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/yabasic.sln'
+end
+
 vs=Hash.new
 desc 'Collect Versions'
-task :versions => :git do
+task :versions => :build_yabasic do
   File.open('start.bat','w') {|f| f.puts %x( cygpath lang/Release/yabasic.exe ) + " --version >yabasic.out 2>&1"}
   sh "cygstart start.bat"
   vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d\.\d+\.\d+)/ )[1]
