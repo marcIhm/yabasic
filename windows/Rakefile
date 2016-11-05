@@ -4,6 +4,8 @@ require 'pp'
 require 'fileutils'
 include FileUtils
 
+start_time = Time.now
+binaries = {:yabasic => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe' }
 desc 'Check git'
 task :git do 
   sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
@@ -15,15 +17,21 @@ task :git do
 end
 
 desc 'Build yabasic'
-task :build_yabasic => :git do
-  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/lang/yabasic.vcxproj'
-  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/setup/setup.vcxproj'
+task :build => :git do
+  binaries.each do |key,bin|
+    rm bin
+  end
+  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/lang/yabasic.vcxproj','/p:Configuration=Release'
+  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/setup/setup.vcxproj','/p:Configuration=Release'
+  binaries.each do |key,bin|
+    fail "File '#{bin}' has not been build" if File.mtime(bin)<start_time
+  end
 end
 
 vs=Hash.new
 desc 'Collect Versions'
-task :versions => :build_yabasic do
-  File.open('start.bat','w') {|f| f.puts %x( cygpath lang/Release/yabasic.exe ) + " --version >yabasic.out 2>&1"}
+task :versions => :build do
+  File.open('start.bat','w') {|f| f.puts %x( cygpath -w #{binaries[:yabasic]} ).chomp + " --version >yabasic.out 2>&1"}
   sh "cygstart start.bat"
   vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d\.\d+\.\d+)/ )[1]
   pp vs
@@ -31,5 +39,5 @@ end
 
 desc 'Show products'
 task :default => :versions do
-  sh 'ls -l ../products'
+  sh 'ls -l ../products ' + binaries.values.join(" ")
 end
