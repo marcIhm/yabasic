@@ -4,7 +4,7 @@ written by Marc-Oliver Ihm in 1996.
 
   Date of last change:
 */
-#define DOLC                     "October 29, 2016"
+#define DOLC                     "November 5, 2016"
 /*
 
 This file is part of yabasic and may be copied under the terms of
@@ -157,7 +157,7 @@ void progress(char *); /* show progress */
 /* for handling semantic versions */
 int parsesemver(char *, SEMVER *); /* parse semantiv version contained in string */
 int comparesemver(SEMVER *, SEMVER *); /* compare two semantic version numbers */
-char *formatsemver(SEMVER *); /* return string with formatted version number */
+char *formatsemver(SEMVER *,char *); /* return string with formatted version number */
 
 /* miscellanous functions */
 void end(int); /* display message and terminate */
@@ -177,7 +177,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 	LPSTR commandline,
 	int win_state)
 {
-	float oldversion;    /* version already installed */
+	SEMVER oldversion;    /* version already installed */
 	FILE *verfile;       /* file with version */
 	int cancel;          /* return value of dialog */
 	int success;         /* return value of My..() functions */
@@ -244,7 +244,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		else {
 			sprintf(logs, "--Content of directory '%s':\n", currentpath);
 			logit(logs);
-			sprintf(logs, "  %s\n", fileinfo.cFileName);
+			sprintf(logs, "   %s\n", fileinfo.cFileName);
 			logit(logs);
 			while (FindNextFile(dir, &fileinfo)) {
 				sprintf(logs, "   %s\n", fileinfo.cFileName);
@@ -288,13 +288,13 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		if (ver) parsesemver(ver, &oldversion);
 
 		/* get confirmation */
-		sprintf(string, "This will install\n\n       Yabasic, Version %s\n\nDo you want to proceed ?", formatsemver(&newversion,string));
+		sprintf(string, "This will install\n\n       Yabasic, Version %s\n\nDo you want to proceed ?", formatsemver(&newversion,string2));
 		if (MyMessage(NULL, string, INSTALL_HEADING,
 			MB_YESNO | MB_ICONQUESTION | MB_SYSTEMMODAL) == IDNO)
 			end(INSTALL_CANCELLED);
 
 		/* check versions */
-		if (comparesemver(&oldversion, &newversion)<0) {
+		if (comparesemver(&oldversion, &newversion)>0) {
 			sprintf(string, "A newer Version of "BASIC_NAME
 				" has already been installed:\n"
 				"  \talready installed: \t%s\n"
@@ -308,7 +308,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 
 		/* get path */
 		installpath = getreg("path");
-		if (installpath == NULL) installpath = DEFAULTPATH;
+		if (!installpath) installpath = DEFAULTPATH;
 		cancel = !DialogBox((HANDLE)this_instance,
 			MAKEINTRESOURCE(IDD_PATHDIALOG),
 			(HWND)NULL, (DLGPROC)pathdialog);
@@ -663,7 +663,12 @@ content : it's content
 	DWORD istype;
 	char *iscon;
 	DWORD islen;
+	char buf[SSLEN];
+	char buf2[SSLEN];
+	char details[SSLEN];	
+	DWORD ret;
 
+	sprintf(details, "keyname='%s', name='%s', content='%s'", keyname, name, content);
 	islen = strlen(content) + 1;
 	iscon = malloc(islen);
 	if (RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS) {
@@ -674,23 +679,49 @@ content : it's content
 			}
 			else {
 				RegCloseKey(key);
-				if (RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &key) == ERROR_SUCCESS) {
-					if (RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1) == ERROR_SUCCESS)
+				if (ret = RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &key) == ERROR_SUCCESS) {
+					ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
+					if (ret == ERROR_SUCCESS) {
 						return TRUE;
-					else
+					}
+					else {
+						FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
+						sprintf(buf2, "Could not set value for existing Registry key RegSetValueEx(%s), %s", details, buf);
+						logit(buf2);
 						return FALSE;
+					}
+				}
+				else {
+					FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
+					sprintf(buf2, "Could not open existing Registry key for writing RegOpenKeyEx(%s), %s", details, buf);
+					logit(buf2);
+					return FALSE;
 				}
 			}
 	}
 	else {
 		RegCloseKey(key);
 	}
-	RegCreateKeyEx(start, keyname, 0, "", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, NULL, &key, &status);
-	free(iscon);
-	if (RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1) == ERROR_SUCCESS)
-		return TRUE;
-	else
+	sprintf(buf2, "Registry key could not be opend for reading, trying to create it RegOpenKeyEx(%s), %s", details, buf);
+	logit(buf2);
+	ret = RegCreateKeyEx(start, keyname, 0, "", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, NULL, &key, &status);
+	if (ret != ERROR_SUCCESS) {
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
+		sprintf(buf2, "Could not create Registry key RegCreateKeyEx(%s), %s", details, buf);
+		logit(buf2);
 		return FALSE;
+	}
+	free(iscon);
+	ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
+	if (ret == ERROR_SUCCESS) {
+		return TRUE;
+	}
+	else {
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
+		sprintf(buf2, "Could not set value of newly created Registry key RegSetValueEx(%s), %s", details, buf);
+		logit(buf2);
+		return FALSE;
+	}
 }
 
 
@@ -749,9 +780,9 @@ void end(int m) { /* display message and terminate */
 silent:
 
 	/* close log-file */
-	logit(NULL);
 	sprintf(string, "\n\n\n%s\n\n\n( Please Note: A logfile of this installation can be found in\n  %s\n  If you have any problems with this installation,\n  you may send it to mail@yabasic.de.\n  Please include information on your system\n  and the way you tried to install yabasic. )", msg, logpath);
 	MyMessage(NULL, string, INSTALL_HEADING, MB_STYLE);
+	logit(NULL);
 	exit(ret);
 
 	return;
@@ -955,6 +986,7 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 	int success = TRUE;
 	char string[SSLEN];   /* multi-purpose-string */
 	char windir[SSLEN];   /* windows-directory */
+	char buf[SSLEN];
 
 	switch (mode) {
 	case INSTALL:
@@ -977,7 +1009,7 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 		success = putreg(LOCAL, SOFT BASIC_NAME, "background", DEFAULTBACKGROUND) && success;
 		progress(NULL);
 		success = putreg(LOCAL, SOFT BASIC_NAME, "geometry", DEFAULTGEOMETRY) && success;
-		sprintf(string, "%s", formatsemver(&newversion));
+		sprintf(string, "%s", formatsemver(&newversion,buf));
 		progress(NULL);
 		success = putreg(LOCAL, SOFT BASIC_NAME, "version", string) && success;
 
@@ -1195,11 +1227,9 @@ char *brushup(char *path) /* change to lower case, add slash */
 	return strdup(buf);
 }
 
+
 void logit(char *text)
-/*
-write text to log-file
-text : text to write
-*/
+/* write text to log-file */
 {
 	static FILE *log = NULL;   /* file for logging */
 	SYSTEMTIME time;         /* time */
@@ -1300,11 +1330,11 @@ int parsesemver(char *text, SEMVER *parsed)
 			parsed->minor = (parsed->minor - parsed->patch) / 10;
 		}
 		else {
-			parsed->patch = 0
+			parsed->patch = 0;
 		}
-		return TRUE
+		return TRUE;
 	}
-	return FALSE
+	return FALSE;
 }
 
 int comparesemver(SEMVER *this, SEMVER *other)
@@ -1313,27 +1343,27 @@ int comparesemver(SEMVER *this, SEMVER *other)
 	if (this->major == other->major) {
 		if (this->minor == other->minor) {
 			if (this->patch == other->patch) {
-				return 0
+				return 0;
 			}
 			else if (this->patch < other->patch) {
-				return -1
+				return -1;
 			}
 			else {
-				return 1
+				return 1;
 			}
 		}
 		else if (this->minor < other->minor) {
-			return -1
+			return -1;
 		}
 		else {
-			return 1
+			return 1;
 		}
 	}
 	else if (this->major < other->major) {
-		return -1
+		return -1;
 	}
 	else {
-		return 1
+		return 1;
 	}
 }
 
@@ -1342,5 +1372,5 @@ char *formatsemver(SEMVER *ver, char *buf)
 /* return string with formatted version number */
 {
 	sprintf(buf, "%d.%d.%d", ver->major, ver->minor, ver->patch);
-	buf
+	return buf;
 }
