@@ -3,9 +3,16 @@
 require 'pp'
 require 'fileutils'
 include FileUtils
+require 'erb'
 
 start_time = Time.now
-binaries = {:yabasic => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe' }
+binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe' }
+
+packfiles=[ binaries[:yabasic], binaries[:setup],
+            'resources/README.txt', 'resources/yabver.txt',
+            'resources/yabico.ico', '../../products/yabasic.html',
+            '../unix/lang/demo.yab' ]
+
 desc 'Check git'
 task :git do 
   sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
@@ -19,25 +26,36 @@ end
 desc 'Build yabasic'
 task :build => :git do
   binaries.each do |key,bin|
-    rm bin
-  end
-  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/lang/yabasic.vcxproj','/p:Configuration=Release'
-  sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe','c:/work/yabasic/windows/setup/setup.vcxproj','/p:Configuration=Release'
-  binaries.each do |key,bin|
-    fail "File '#{bin}' has not been build" if File.mtime(bin)<start_time
+    vcxproj = {:lang => 'yabasic', :setup => 'setup' }
+    rm bin if File.exist?(bin)
+    sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe',
+       "c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj",
+       '/p:Configuration=Release'
+    fail "File '#{bin}' has not been build" if File.mtime(bin) < start_time
   end
 end
 
 vs=Hash.new
 desc 'Collect Versions'
 task :versions => :build do
-  File.open('start.bat','w') {|f| f.puts %x( cygpath -w #{binaries[:yabasic]} ).chomp + " --version >yabasic.out 2>&1"}
-  sh "cygstart start.bat"
-  vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d\.\d+\.\d+)/ )[1]
+  File.open('start.bat','w') {|f| f.puts %x( cygpath -w #{binaries[:lang]} ).chomp + " --version >yabasic.out 2>&1"}
+  rm 'yabasic.out' if File.exist?('yabasic.out')
+  sh 'cygstart start.bat'
+  system 'cygstart start.bat'
+  puts File.new('yabasic.out').read
+  vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d+\.\d+\.\d+)/)[1]
   pp vs
 end
 
+desc 'Pack binaries'
+task :pack => :versions do
+  File.open('yabasic-setup.SED','w') do |file|
+    file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
+  end
+  sh 'iexpress /N yabasic-setup.SED'
+end
+
 desc 'Show products'
-task :default => :versions do
+task :default => :pack do
   sh 'ls -l ../products ' + binaries.values.join(" ")
 end
