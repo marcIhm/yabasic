@@ -6289,7 +6289,7 @@ a=peek(#1)
 	    <varlistentry>
 	      <term><function>peek("version")</function></term>
 	      <listitem>
-		<para>Return the version number of <application>yabasic</application>, e.g. 2.769.</para>
+		<para>Return the version number of <application>yabasic</application>, e.g. 2.77. See also the related <function><link linkend="ref_peek2">peek$("version")</link></function>, which returns nearly the same information (plus the patchlevel) as a string, e.g. <literal>"2.77.1"</literal>.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -6397,6 +6397,13 @@ print peek$("foo")
 	      <term><function>peek$("library")</function></term>
 	      <listitem>
 		<para>Return the name of the library, this statement is contained in. See the <function><link linkend="ref_import">import</link></function>-command for a detailed description or for more about libraries.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("version")</function></term>
+	      <listitem>
+		<para>Version of <application>yabasic</application> as a string; e.g. <literal>2.77.1</literal>. See also the related <function><link linkend="ref_peek">peek("version")</link></function>, which returns nearly the same information (minus the patchlevel) as a number, e.g. <literal>2.77</literal>.</para>
 	      </listitem>
 	    </varlistentry>
 

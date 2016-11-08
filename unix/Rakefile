@@ -5,6 +5,7 @@ require 'fileutils'
 include FileUtils
 require 'erb'
 require 'rake/testtask'
+require 'matrix'
 
 desc 'Check git'
 task :git do 
@@ -20,9 +21,6 @@ desc 'Create html doc from xml'
 file 'lang/yabasic.htm' => 'doc/yabasic.xml' do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
   sh 'xsltproc doc/mystyle.xsl doc/yabasic.xml >lang/yabasic.htm'
-  cp 'doc/yabasic.htm','lang/yabasic.htm'
-  cp 'doc/yabasic.htm','../products/yabasic.htm'
-  cp 'doc/yabasic.xml','lang/yabasic.xml'
 end
 
 desc 'Create man page'
@@ -81,7 +79,34 @@ task :rpm => :versions do
   end
 end
 
-desc 'Show products'
-task :default => [:rpm, :sources] do
-  sh 'ls -l ../products'
+def compare_semver one,two
+  vers = [one, two].map do |x|
+    md = x.match(/(\d+)\.(\d+)\.(\d+)/)
+    fail "Argument '#{x}' does not contain a semantic version number" unless md
+    [md[1],md[2],md[3]]
+  end.transpose
+
+  vers.inject(0) {|s,x| 2*s+(x[0]<=>x[1])} <=> 0
 end
+
+def cleanup glob
+  Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| puts "==== rm #{x}"}
+end
+
+desc 'Cleanup, sync and show products'
+task :default => [:rpm, :sources] do
+
+  prod_globs = %w( yabasic*.x86_64.rpm yabasic*amd64.deb yabasic*.tar.gz )
+  prod_globs.each { |glob| cleanup "../products/#{glob}" }
+  sync_dest = '/work/yabasic/products'
+  if File.directory?(sync_dest)
+    Dir['../products/*'].each do |p|
+      cp p, sync_dest
+    end
+    prod_globs.each { |glob| cleanup sync_dest+"/"+glob }
+    sh "ls -l #{sync_dest}"
+  else
+    puts "Sync destination #{sync_dest} not present !"
+  end
+end
+
