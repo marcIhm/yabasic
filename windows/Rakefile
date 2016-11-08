@@ -38,12 +38,9 @@ end
 vs=Hash.new
 desc 'Collect Versions'
 task :versions => :build do
-  File.open('start.bat','w') {|f| f.puts %x( cygpath -w #{binaries[:lang]} ).chomp + " --version >yabasic.out 2>&1"}
-  rm 'yabasic.out' if File.exist?('yabasic.out')
-  sh 'cygstart start.bat'
-  system 'cygstart start.bat'
-  puts File.new('yabasic.out').read
-  vs['yabasic']=File.new('yabasic.out').read.match(/yabasic (\d+\.\d+\.\d+)/)[1]
+  File.open('version.yab','w') { |f| f.puts 'open 1,"yabasic.version","w":print #1 peek$("version"):close 1' }
+  sh 'cygstart --wait ./lang/Release/yabasic.exe version.yab'
+  vs['yabasic']=File.new('yabasic.out').read.chomp.strip
   pp vs
 end
 
