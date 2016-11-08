@@ -1550,6 +1550,8 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
         return my_strdup (errorstring);
     } else if (!strcmp (dest, "library")) {
         return my_strdup (curr->lib->s);
+    } else if (!strcmp (dest, "version")) {
+        return my_strdup (PACKAGE_VERSION);
     } else if (!strcmp (dest, "os")) {
 #ifdef UNIX
         return my_strdup ("unix");
