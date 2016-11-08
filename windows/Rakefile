@@ -38,9 +38,9 @@ end
 vs=Hash.new
 desc 'Collect Versions'
 task :versions => :build do
-  File.open('version.yab','w') { |f| f.puts 'open 1,"yabasic.version","w":print #1 peek$("version"):close 1' }
+  File.open('version.yab','w') { |f| f.puts 'open 1,"yabasic.version","w":print #1 peek$("version"):close 1:exit' }
   sh 'cygstart --wait ./lang/Release/yabasic.exe version.yab'
-  vs['yabasic']=File.new('yabasic.out').read.chomp.strip
+  vs['yabasic']=File.new('yabasic.version').read.chomp.strip
   pp vs
 end
 
