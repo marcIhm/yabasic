@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+<title>Download Yabasic</title>
+<link rel="stylesheet" type="text/css" href="standard.css">
+<meta name="author" content="Marc Ihm">
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+
+<h1><a name="upgrading">Upgrading from an earlier&nbsp;Version</a></h1>
+<p>There is <b>no special procedure necessary</b> to upgrade from a previous 
+Version of yabasic. </p>
+<p>So, If you already have yabasic installed, or if you do a fresh install, 
+just follow the instructions given below.</p>
+<h1><a name="binwin">Binaries for Windows</a></h1>
+<p>Yabasic runs under any version of Windows; this is how to install: 
+<ul type="disc">
+    <li>Download <a href="download/yabasic-2.769-setup.exe">yabasic-2.769-setup.exe</a>; save it on your harddisk. 
+    <li>double-click on the file 
+    <li>follow the instructions 
+</ul>
+<p>The setup-program does the following: 
+<ul type="disc">
+    <li>Make an entry in the start-menu 
+    <li>Register the extension &quot;.yab&quot; 
+    <li>Make an entry in the Root-Menu (this is the menu, which appears if you 
+    click the right Mousebutton on an empty part of your Desktop) 
+    <li>Put default-settings into the registry 
+    <li>Register its uninstall-program 
+    <li>Write a complete installation-log in Windows/Temp/yabasic.log 
+</ul>
+<p>To <b>remove</b> yabasic, go to the control-panel and click on the software-icon: 
+You will find an entry for deleting yabasic. </p>
+<p>If anything goes wrong please give me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</adress></a>&nbsp; 
+</p>
+ <h1><a name="binlin">Binaries for Linux</a></h1>
+<p>This is how to get the redhat package of yabasic for linux-i586: 
+<ul type="disc">
+    <li>Click here to download <a href="download/yabasic-2.769-1.i586.rpm">yabasic-2.769-1.i586.rpm</a>, the redhat package of yabasic. 
+    <li>Type <strong>rpm -i --force --nodeps FILE </strong>(where FILE is the 
+    full name of the file you have just downloaded); the <strong>--force</strong> 
+    switch causes <strong>rpm</strong> to superseed an existing (older) version 
+    of yabasic. <strong>--nodeps</strong> is necessary, because my version of 
+    rpm (2.5.5) introduces some silly dependencies; hope I will be able to fix 
+    this soon. You need to be <strong>root</strong> to do this. 
+    <li>Read the documentation under /usr/doc/yabasic 
+    <li>or try the demos under /usr/share/yabasic 
+    <li>to remove yabasic type <strong>rpm -e --allmatches yabasic</strong> 
+    ; again this can only be done as root. 
+</ul>
+<p>This binary distribution can be installed under Linux with an Intel CPU and 
+rpm (the redhat package manager) only. If your system doesn't match these requirements, 
+or if you want to see the sources you may download them from <a href="download.html#sourceunix">this 
+page.</a> </p>
+<p>If you have any problems, please drop me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</adress></a>.</p>
+<h1><a name="sourceunix">Compile the sources for Unix</a></h1>
+<p>Compiling yabasic requires a decent C-Compiler, the ncurses-library and the 
+X-Window libraries. To compile yabasic in your home-directory proceed like this: 
+
+<ul type="disc">
+    <li>Click here to download <a href="download/yabasic-2.769.tar.gz">yabasic-2.769.tar.gz</a>, the tar-file of yabasic. 
+    <li>Uncompress the tar-file: <b>gunzip FILE </b>(where FILE is the full 
+    name of the file you have just downloaded). 
+    <li><b>tar xf yabasic-x.xxx.tar</b>, this unpacks the tar-file, giving you 
+    a directory named <strong>yabasic-x.xxx</strong> (where x.xxx is the current 
+    version of yabasic) 
+    <li><b>cd yabasic-x.xxx</b> 
+    <li><b>runme</b>, this starts a shell script which builts the executable 
+    program. (Alternatively you may type: <b>./configure &amp;&amp; make &amp;&amp; 
+    make check</b>) 
+    <li>If you have root privileges, you may try <strong>make install</strong> 
+    to install yabasic in your system. 
+</ul>
+<p>Yabasic needs the X and ncurses libraries to compile. Yabasic compiles under 
+HPUX and linux, but chances are high, that users of other mainstream Unixes 
+will have no problems. If anything goes wrong please give me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</adress></a>, 
+including: 
+<ul type="disc">
+    <li>the sort of <b>system</b> you are working on and 
+    <li>the file <b>runme.log</b> which is written during execution of the script 
+    <b>runme</b> 
+</ul>
+<p>I will try to find and fix the problem.</p>
+<h1><a name="sourcewin">Sources for Windows</a></h1>
+<p>If you'd like to get the Windows specific files (including the sources of 
+the installation program), you may download <a href="download/yabasic-2.769-src.zip">yabasic-2.769-src.zip</a>. This file does not contain the sources for yabasic itself (only the 
+project files), so in addition you will have to download the <a href="#sourceunix"
+ target="_self">sources for unix</a> (there is no difference between Unix and 
+Windows sources) and import them into the project. To compile yabasic you need 
+MS Visual C++, Version 6.0.</p>
+<p>If anything goes wrong please give me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</adress></a></p>
+<h1><a name="older">Older Versions</a></h1>
+<p>As I do not clean up my homepage very often, there may be older versions 
+available within the <a href="download">download</a> area.</p>
+</body>
+
+</html>

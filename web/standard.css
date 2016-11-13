@@ -1,0 +1,8 @@
+p,ul,h1,h2,h3 { font-family: verdana, sans-serif; }  
+p { margin-left: 20pt; font-size: 10pt; }
+ul { margin-left: 40pt; font-size: 10pt; }
+body { margin-bottom: 100vh; }
+h1,h2,h3 { margin-left: 0pt; font-weight: 800; }
+h1 { font-size:16pt; }  
+h2 { font-size:14pt; }  
+h3 { font-size:12pt; }

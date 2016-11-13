@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+<title>Related Sites</title>
+<link rel="stylesheet" type="text/css" href="standard.css">
+<meta name="author" content="Marc Ihm">
+
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+
+<h1><a name="japi"><b>Japi</b></a></h1>
+<p><b>Merten Joost </b>has written <a href="http://www.japi.de" target="_parent">japi</a>, 
+a library making the powerful graphics of Java available for users of other 
+languages e.g. C, Pascal, Fortran and Yabasic ! </p>
+<p><a href="http://www.japi.de" target="_parent">www.japi.de</a></p>
+<h1><a name="gtkserver">Build a GTK-Gui with GTK-Server !</a></h1>
+<p><b>Peter van Eerten</b> has created the&nbsp;program <b>GTK-Server</b>, which 
+allows to build a decent <b>GUI</b> for any <b>yabasic</b>-Program, using the 
+GTK widget set with&nbsp;<b>Listboxes</b>, <b>Radiobuttons</b>, <b>Menus</b> 
+and much more.</p>
+<p>The <b>GTK-Server</b> uses the well known and featureful <b>GTK-Library</b> 
+(which&nbsp;is used for example to build the GUI of the <b>GIMP</b>) and communicates 
+with yabasic through&nbsp;standard pipes. It is known to work with yabasic under 
+Windows and Unix.</p>
+<p>Peter van Eertens&nbsp;program may be used&nbsp;not only with yabasic but 
+with <b>many scripting languages</b>,&nbsp;enabling them all to built their&nbsp;GUI. 
+For details, descriptions and downloads, please visit:</p>
+<p><a href="http://www.gtk-server.org" target="_top">http://www.gtk-server.org</a></p>
+<p>For a quick overview, you may have a look at&nbsp;the Screenshots below for 
+Linux and Windows:</p>
+<p><img src="gtk_linux.gif" width="400" height="226" border="0"> &nbsp;&nbsp;&nbsp;<img src="gtk_windows.gif" width="358" height="199" border="0"></p>
+<p>And here is the associated yabasic program:</p>
+     <ul>
+        <table border="0">
+            <tr>
+                <td bgcolor="#EEEEEE">
+            <ul>
+                <pre><br>#!/usr/local/bin/yabasic
+
+REM Demoprogram for Yabasic with the GTK-server
+REM Encode to and decode from ROT13
+REM
+REM Runs on both Linux and Windows
+REM
+REM (C) January 10, 2005 by Peter van Eerten
+REM
+REM Tested with Slackware Linux 10 and Win2000
+REM Will not run on Win9x/ME!
+
+REM ****************************************
+
+REM Setup pipes
+
+SUB SETUP()
+
+os$ = PEEK$(&quot;os&quot;)
+
+IF (os$ = &quot;unix&quot;) THEN
+SYSTEM(&quot;gtk-server fifo /tmp/yab.pipe &amp;&quot;)
+ELSE
+SYSTEM(&quot;start gtk-server.exe fifo&quot;)
+SLEEP 0.5
+OPEN &quot;\\\\.\\pipe\\out&quot; FOR WRITING AS 1
+SLEEP 0.5
+OPEN &quot;\\\\.\\pipe\\in&quot; FOR READING AS 2
+END IF
+
+SLEEP 1
+
+END SUB
+
+REM ****************************************
+
+REM Communication function using pipes
+
+SUB GTK$(st$)
+
+LOCAL tp$
+
+IF (os$ = &quot;unix&quot;) THEN
+OPEN &quot;/tmp/yab.pipe&quot; FOR WRITING AS 1
+PRINT #1 st$;
+CLOSE 1
+IF (st$ = &quot;gtk_exit 0&quot;) THEN
+SYSTEM(&quot;rm /tmp/yab.pipe&quot;)
+ELSE
+OPEN &quot;/tmp/yab.pipe&quot; FOR READING AS 1
+LINE INPUT #1 tp$
+CLOSE 1
+END IF
+ELSE
+PRINT #1 st$;
+LINE INPUT #2 tp$
+IF (st$ = &quot;gtk_exit 0&quot;) THEN
+CLOSE 2
+CLOSE 1
+END IF
+END IF
+
+RETURN tp$
+
+END SUB
+
+REM ****************************************
+
+REM Setup GUI with GTK-SERVER
+
+SUB GUI()
+
+REM First, initialize GTK
+GTK$(&quot;gtk_init NULL NULL&quot;)
+
+REM Create main window
+win$ = GTK$(&quot;gtk_window_new 0&quot;)
+GTK$(&quot;gtk_window_set_title &quot; + win$ + &quot; \&quot;Yabasic ROT13 converter\&quot;&quot;)
+GTK$(&quot;gtk_window_set_default_size &quot; + win$ + &quot; 350 150&quot;)
+GTK$(&quot;gtk_window_set_position &quot; + win$ + &quot; 1&quot;)
+
+REM Create notebook
+notebook$ = GTK$(&quot;gtk_notebook_new&quot;)
+GTK$(&quot;gtk_notebook_set_tab_pos &quot; + notebook$ + &quot; 2&quot;)
+
+REM Create EXIT button
+myexit$ = GTK$(&quot;gtk_button_new_with_label Exit&quot;)
+GTK$(&quot;gtk_widget_set_usize &quot; + myexit$ + &quot; 75 40&quot;)
+
+REM Put on main window
+vbox1$ = GTK$(&quot;gtk_vbox_new 0 3&quot;)
+hbox1$ = GTK$(&quot;gtk_hbox_new 0 3&quot;)
+GTK$(&quot;gtk_box_pack_end &quot; + hbox1$ + &quot; &quot; + myexit$ + &quot; 0 0 1&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + vbox1$ + &quot; &quot; + notebook$ + &quot; 1 1 1&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + vbox1$ + &quot; &quot; + hbox1$ + &quot; 1 1 1&quot;)
+GTK$(&quot;gtk_container_add &quot; + win$ + &quot; &quot; + vbox1$)
+
+REM Define notebook pages
+frame1$ = GTK$(&quot;gtk_frame_new NULL&quot;)
+frame2$ = GTK$(&quot;gtk_frame_new NULL&quot;)
+
+notelabel1$ = GTK$(&quot;gtk_label_new Convert&quot;)
+notelabel2$ = GTK$(&quot;gtk_label_new About...&quot;)
+
+REM Add the pages to the notebook
+GTK$(&quot;gtk_notebook_insert_page &quot; + notebook$ + &quot; &quot; + frame1$ + &quot; &quot; + notelabel1$ + &quot; 1&quot;)
+GTK$(&quot;gtk_notebook_insert_page &quot; + notebook$ + &quot; &quot; + frame2$ + &quot; &quot; + notelabel2$ + &quot; 2&quot;)
+
+REM Create converter part
+entry$ = GTK$(&quot;gtk_entry_new&quot;)
+convert$ = GTK$(&quot;gtk_button_new_with_label Convert&quot;)
+GTK$(&quot;gtk_widget_set_usize &quot; + convert$ + &quot; 75 40&quot;)
+result$ = GTK$(&quot;gtk_entry_new&quot;)
+
+REM Put it all on notebook page
+vbox2$ = GTK$(&quot;gtk_vbox_new 0 3&quot;)
+hbox2$ = GTK$(&quot;gtk_hbox_new 0 3&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + vbox2$ + &quot; &quot; + entry$ + &quot; 1 1 1&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + hbox2$ + &quot; &quot; + convert$ + &quot; 0 0 1&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + vbox2$ + &quot; &quot; + hbox2$ + &quot; 1 1 1&quot;)
+GTK$(&quot;gtk_box_pack_start &quot; + vbox2$ + &quot; &quot; + result$ + &quot; 1 1 1&quot;)
+GTK$(&quot;gtk_container_add &quot; + frame1$ + &quot; &quot; + vbox2$)
+
+REM Create ABOUT part
+ex$ = &quot;This is a small and simple GTK-server demonstration with Yabasic.&quot;
+ex$ = ex$ + &quot; It will run both on Windows and Linux &quot;
+ex$ = ex$ + &quot;without modifications on the source code.\n\n&quot;
+ex$ = ex$ + &quot;This is Yabasic version &quot; + STR$(peek(&quot;version&quot;)) + &quot; with &quot;
+ex$ = ex$ + GTK$(&quot;gtk_server_version&quot;) + &quot;.\n\n&quot;
+ex$ = ex$ + &quot;For more information, please visit http://www.gtk-server.org!&quot;
+label$ = GTK$(&quot;gtk_label_new \&quot;&quot; + ex$ + &quot;\&quot;&quot;)
+GTK$(&quot;gtk_label_set_line_wrap &quot; + label$ + &quot; 1&quot;)
+GTK$(&quot;gtk_label_set_justify &quot; + label$ + &quot; 2&quot;)
+GTK$(&quot;gtk_container_add &quot; + frame2$ + &quot; &quot; + label$)
+
+REM Show all widgets
+GTK$(&quot;gtk_widget_show_all &quot; + win$)
+REM Get focus to input entry
+GTK$(&quot;gtk_widget_grab_focus &quot; + entry$)
+
+END SUB
+
+REM ****************************************
+
+REM Get input and convert
+
+SUB CONVERT()
+
+LOCAL tmp$, i, c$
+
+tmp$ = GTK$(&quot;gtk_entry_get_text &quot; + entry$)
+
+FOR i = 1 TO LEN(tmp$)
+c$ = MID$(tmp$, i, 1)
+IF (ASC(c$) &gt;= 97 AND ASC(c$) &lt;= 109) THEN
+MID$(tmp$, i, 1) = CHR$(ASC(c$) + 13)
+ELSEIF (ASC(c$) &gt;= 110 AND ASC(c$) &lt;= 122) THEN
+MID$(tmp$, i, 1) = CHR$(ASC(c$) - 13)
+ELSEIF (ASC(c$) &gt;= 65 AND ASC(c$) &lt;= 77) THEN
+MID$(tmp$, i, 1) = CHR$(ASC(c$) + 13)
+ELSEIF (ASC(c$) &gt;= 78 AND ASC(c$) &lt;= 90) THEN
+MID$(tmp$, i, 1) = CHR$(ASC(c$) - 13)
+END IF
+NEXT i
+
+REM Put in result entry
+GTK$(&quot;gtk_entry_set_text &quot; + result$ + &quot; \&quot;&quot; + tmp$ + &quot;\&quot;&quot;)
+GTK$(&quot;gtk_widget_grab_focus &quot; + entry$)
+
+END SUB
+
+REM ****************************************
+
+REM Main program starts here
+
+SETUP()
+
+GUI()
+
+REPEAT
+event$ = GTK$(&quot;gtk_server_callback wait&quot;)
+IF (event$ = entry$ OR event$ = convert$) THEN
+CONVERT()
+END IF
+UNTIL (event$ = myexit$ OR event$ = win$)
+
+REM Exit GTK
+GTK$(&quot;gtk_exit 0&quot;)
+
+END</pre>
+            </ul>
+                    <p>&nbsp;</p>
+                </td>
+            </tr>
+        </table>
+</ul>
+<p>&nbsp;</p>
+
+<h1><a name="other">Other Basic Sites</a> </h1>
+<ul type="square">
+    <li><a href="http://www.nicholson.com/rhn/basic/" target="_parent">Chipmunk 
+    Basic</a> is a free Basic interpreter offering a rich set of features and 
+    language elements; it is especially strong on the Macintosh and the Palm 
+    Pilot. Written by <b>Ron Nicholson</b>.&nbsp; 
+    <li><a href="http://wxbasic.sourceforge.net" target="_parent">wxBasic</a> 
+    is available for Windows and linux and offers <b>great grafics</b> and some 
+    very interesting features.</li>    
+</ul>
+
+
+</body>
+
+</html>

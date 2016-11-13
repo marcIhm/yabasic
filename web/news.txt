@@ -1,0 +1,52 @@
+Version 2.769 (June 29, 2015)
+  - print color under windows handles single argument correctly
+
+Version 2.768 (May 25, 2014)
+  - Fixed some memory issue related with grafics, which could lead to abnormal
+    termination under Linux
+  - Fixed problems with embedded newlines within the Windows console
+  - Keys pressed within grafic window are now reliably reported by inkey$
+    (Windows-Version)
+
+Version 2.767 (February 23, 2014)
+  - Fixed a bug which caused yabasic under Windows to freeze on
+    syntax errors
+
+Version 2.766 (February 23, 2014)
+  - Fixed some bugs for MacOS
+
+Version 2.765 (January 26, 2014)
+  - Added support for later versions of ncurses and 64 bit Systems
+  - Avoided forks for inkey$
+  - Fixed a bug related with break and continue
+
+Version 2.763 (September 19, 2005)
+  - Tiny fix in the documentation: Sections now have
+    their own toc again.
+
+Version 2.762 (September 16, 2005)
+  - Swapped the precedence of unary minus and exponentiation to
+    follow the mainstream of programming languages. Suggested
+    by Mike Hoffman.
+  - Fixed a bug with drawing the outline of a triangle.
+  - Lots bugs and typos fixed in the docu. Thanx to A. Costa !
+  - rinstr() is okay again.
+  - system$() may not dump any longer, if an external command returns no output.
+  - Some improvements for compiling on FreeBSD.
+  - Made the text-command working again.
+  - Maybe yabasic does not leak resources under Windows 95 any longer.
+  - Some fixes related with the console window under Windows
+  - Added a list of reserved words to the documentation.
+  - Special thanks to Derek and Mike Huffmann !
+
+Version 2.761 (July 29, 2005)
+  - Fixed a memory leak
+  - Bugfix for docu
+
+Version 2.760 (July 25, 2005)
+  Some major improvements for grafics:
+  - Full color support !
+  - Different fonts for the text-command
+  - The new command triangle
+
+
