@@ -232,7 +232,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		char dirglob[SSLEN];
 
 		/* set advance for progresscount */
-		total_progress = 27;
+		total_progress = 28;
 
 		/* write contents of current directory to logfile */
 		sprintf(dirglob, "%s*.*", currentpath);
@@ -1152,7 +1152,7 @@ void progress(char *msg) /* show progress */
 
 	/* write to logfile */
 	if (msg) {
-		sprintf(logs, "--Progress: '%s'\n", msg);
+		sprintf(logs, "--Progress: %d, '%s'\n", count, msg);
 		logit(logs);
 	}
 
