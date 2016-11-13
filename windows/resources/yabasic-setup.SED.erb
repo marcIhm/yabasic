@@ -24,9 +24,9 @@ SourceFiles=SourceFiles
 InstallPrompt=
 DisplayLicense=
 FinishMessage=
-TargetName=C:\work\yabasic\windows\yabasic-2.77.0-setup.exe
+TargetName=C:\work\yabasic\products\yabasic-<%= version %>-setup.exe
 FriendlyName=Yabasic
-AppLaunched=setup.exe
+AppLaunched=wrapper.exe
 PostInstallCmd=<None>
 AdminQuietInstCmd=
 UserQuietInstCmd=
@@ -37,12 +37,14 @@ FILE3="yabver.txt"
 FILE4="yabico.ico"
 FILE5="yabasic.htm"
 FILE6="demo.yab"
+FILE7="wrapper.exe"
 [SourceFiles]
 SourceFiles0=C:\work\yabasic\windows\lang\Release\
 SourceFiles1=C:\work\yabasic\windows\setup\Release\
 SourceFiles2=C:\work\yabasic\windows\resources\
 SourceFiles3=C:\work\yabasic\products\
 SourceFiles4=C:\work\yabasic\unix\lang\
+SourceFiles5=C:\work\yabasic\windows\wrapper\Release\
 [SourceFiles0]
 %FILE0%=
 [SourceFiles1]
@@ -55,3 +57,5 @@ SourceFiles4=C:\work\yabasic\unix\lang\
 %FILE5%=
 [SourceFiles4]
 %FILE6%=
+[SourceFiles5]
+%FILE7%=

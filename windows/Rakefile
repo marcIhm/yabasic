@@ -6,9 +6,9 @@ include FileUtils
 require 'erb'
 
 start_time = Time.now
-binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe' }
+binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe', :wrapper => 'wrapper/Release/wrapper.exe' }
 
-packfiles=[ binaries[:yabasic], binaries[:setup],
+packfiles=[ binaries[:yabasic], binaries[:setup], binaries[:wrapper],
             'resources/README.txt', 'resources/yabver.txt',
             'resources/yabico.ico', '../../products/yabasic.html',
             '../unix/lang/demo.yab' ]
@@ -26,7 +26,7 @@ end
 desc 'Build yabasic'
 task :build => :git do
   binaries.each do |key,bin|
-    vcxproj = {:lang => 'yabasic', :setup => 'setup' }
+    vcxproj = {:lang => 'yabasic', :setup => 'setup', :wrapper => 'wrapper' }
     rm bin if File.exist?(bin)
     sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe',
        "c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj",
@@ -35,13 +35,13 @@ task :build => :git do
   end
 end
 
-vs=Hash.new
+version = nil
 desc 'Collect Versions'
 task :versions => :build do
   File.open('version.yab','w') { |f| f.puts 'open 1,"yabasic.version","w":print #1 peek$("version"):close 1:exit' }
   sh 'cygstart --wait ./lang/Release/yabasic.exe version.yab'
-  vs['yabasic']=File.new('yabasic.version').read.chomp.strip
-  pp vs
+  version=File.new('yabasic.version').read.chomp.strip
+  puts "Version = " + version
 end
 
 desc 'Pack binaries'
@@ -49,6 +49,7 @@ task :pack => :versions do
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
   end
+  File.open('resources/yabver.txt','w') { |f| f.puts version }
   sh 'iexpress /N yabasic-setup.SED'
 end
 
