@@ -1,6 +1,6 @@
 /*
 Install-Program for yabasic
-written by Marc-Oliver Ihm in 1996.
+written by Marc Ihm in 1996.
 
   Date of last change:
 */
@@ -728,61 +728,98 @@ content : it's content
 void end(int m) { /* display message and terminate */
 	char *msg;
 	int ret;
+	int ret2;
 	char string[SSLEN];          /* multi-purpose string */
+	char string2[SSLEN];
+	int run_demo = FALSE;
+	int show_log = TRUE;
+	char *heading = INSTALL_HEADING;
 
 	switch (m) {
 	case INSTALL_CANCELLED:
-		msg = "Okay, installation cancelled.\n\n"
+		msg = "Installation cancelled.\n\n"
 			"No garbage has been left.";
 		ret = FALSE;
+		show_log = FALSE;
 		break;
 	case INSTALL_IMPOSSIBLE:
-		msg = "Sorry, Installation impossible.\n\n"
+		msg = "Installation failed !\n\n"
 			"No garbage has been left.";
 		ret = FALSE;
 		break;
 	case INSTALL_FAILURE:
-		msg = "Installation failed.\n"
+		msg = "Installation failed !\n"
 			"Some garbage has been left in the system.\n\n"
-			"To clear up, you better remove "BASIC_NAME".";
+			"To clear up, you better remove "BASIC_NAME" through its entry in control-panel, section software.";
 		ret = FALSE;
 		break;
 	case INSTALL_ABORTED:
 		msg = "Installation aborted.\n"
 			"Some garbage has been left in the system !\n\n"
-			"To clear up, you better remove "BASIC_NAME".";
+			"To clean up, you better remove "BASIC_NAME" through its entry in control-panel, section software.";
 		ret = FALSE;
 		break;
 	case INSTALL_SUCCESS:
 		msg = "Installation completed successfully !\n\n"
 			"You may now start writing Yabasic-programs.";
 		ret = TRUE;
+		run_demo = TRUE;
+		show_log = FALSE;
 		break;
 	case REMOVE_SUCCESS:
 		msg = BASIC_NAME" has been removed properly !";
 		ret = TRUE;
+		show_log = FALSE;
+		heading = REMOVE_HEADING;
 		break;
 	case REMOVE_CANCELLED:
 		msg = "Cancelled. "BASIC_NAME" has been left intact.";
 		ret = FALSE;
+		show_log = FALSE;
+		heading = REMOVE_HEADING;
 		break;
 	case REMOVE_FAILURE:
 		msg = "Couldn't remove "BASIC_NAME" properly !";
 		ret = FALSE;
+		heading = REMOVE_HEADING;
 		break;
 	case SILENT:
 		ret = TRUE;
+		show_log = FALSE;
 		goto silent;
 	default:
 		break;
 	}
 
+	string2[0] = '\0';
+	if (show_log) sprintf(string2, "\n\n\nDo you want to view the logfile ?\n(%s)\n\nYou may send it to mail@yabasic.de and I will try to help.", logpath);
+	if (run_demo) sprintf(string2, "\n\n\nDo you want to run the demo of yabasic ?");
+	sprintf(string, "\n\n\n%s%s", msg, string2);
+	if (MyMessage(NULL, string, heading, (show_log || run_demo) ? (MB_YESNO | MB_ICONQUESTION | MB_SYSTEMMODAL) : MB_STYLE) == IDYES) {
+		if (show_log) sprintf(string, "%s", logpath);
+		if (run_demo) sprintf(string, "%s/demo.yab", installpath);
+		ret2 = ShellExecute(NULL, "open", string, NULL, NULL, SW_SHOWNORMAL);
+		if (ret2 <= 32) {
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), string, SSLEN, NULL);
+			if (show_log) {
+				sprintf(string2, "Could show setup log (%s): %d, %s", logpath, ret2, string);
+				heading = " Could not show Logfile ! ";
+			}
+			if (run_demo) {
+				sprintf(string2, "Could start demo of yabasic: %d, %s", ret2, string);
+				heading = " Could not show Logfile ! ";
+			}
+			MessageBoxEx(NULL, string2, heading,
+				MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+		}
+	}
+
 silent:
 
 	/* close log-file */
-	sprintf(string, "\n\n\n%s\n\n\n( Please Note: A logfile of this installation can be found in\n  %s\n  If you have any problems with this installation,\n  you may send it to mail@yabasic.de.\n  Please include information on your system\n  and the way you tried to install yabasic. )", msg, logpath);
-	MyMessage(NULL, string, INSTALL_HEADING, MB_STYLE);
 	logit(NULL);
+
 	exit(ret);
 
 	return;
