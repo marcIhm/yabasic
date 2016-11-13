@@ -1,0 +1,68 @@
+#!/usr/bin/ruby
+
+require 'pp'
+require 'fileutils'
+include FileUtils
+require 'erb'
+require 'find'
+
+desc 'Check git'
+task :git do 
+  sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
+    if !ok
+      sh "git status"
+      warn "Uncommited local changes, please fix with 'git add' etc."
+    end
+  end
+end
+
+version = nil
+desc 'Update versions'
+task :version => :git do
+  version = File.read('../windows/resources/yabver.txt').chomp.strip
+  puts "Version #{version}"
+end
+
+desc 'Check and edit changelog'
+task :changelog => :version do
+  %w( log.html whatsnew.html ).each do |name|
+    open(name) do |file|
+      unless file.read.include?(version)
+        sh "emacs -nw #{name}"
+      end
+    end
+  end
+end
+
+desc 'Process erb templates'
+task :templates => :changelog do
+  Find.find('.') do |path|
+    if path =~ /.*\.erb$/
+      result = path.chomp('.erb')
+      File.open(result,'w') do |file|
+        file.write ERB.new(File.read(path)).result(binding)
+      end
+    end
+  end
+end
+
+desc 'Copy content'
+task :copy => :templates do
+  todir = '../products/web'
+  rm_rf todir if File.exists?(todir)
+  cp_r '../web','../products'
+  Dir["#{todir}/*.erb"].each do |file|
+    rm file
+  end
+  rm "#{todir}/Rakefile"
+  %w( *.gz *.deb *.rpm *.exe ).each do |glob|
+    Dir["../products/#{glob}"].each do |file|
+      cp file, "#{todir}/download"
+    end
+  end
+  cp '../products/yabasic.htm', todir
+end
+
+desc 'Invoke site'
+task :default => :copy do
+end

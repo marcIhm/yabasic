@@ -16,7 +16,7 @@ just follow the instructions given below.</p>
 <h1><a name="binwin">Binaries for Windows</a></h1>
 <p>Yabasic runs under any version of Windows; this is how to install: 
 <ul type="disc">
-    <li>Download <a href="download/yabasic-2.769-setup.exe">yabasic-2.769-setup.exe</a>; save it on your harddisk. 
+    <li>Download <a href="download/yabasic-<%= version %>-setup.exe">yabasic-<%= version %>-setup.exe</a>; save it on your harddisk. 
     <li>double-click on the file 
     <li>follow the instructions 
 </ul>
@@ -37,7 +37,7 @@ You will find an entry for deleting yabasic. </p>
  <h1><a name="binlin">Binaries for Linux</a></h1>
 <p>This is how to get the redhat package of yabasic for linux-i586: 
 <ul type="disc">
-    <li>Click here to download <a href="download/yabasic-2.769-1.i586.rpm">yabasic-2.769-1.i586.rpm</a>, the redhat package of yabasic. 
+    <li>Click here to download <a href="download/yabasic-<%= version %>-1.i586.rpm">yabasic-<%= version %>-1.i586.rpm</a>, the redhat package of yabasic. 
     <li>Type <strong>rpm -i --force --nodeps FILE </strong>(where FILE is the 
     full name of the file you have just downloaded); the <strong>--force</strong> 
     switch causes <strong>rpm</strong> to superseed an existing (older) version 
@@ -59,7 +59,7 @@ page.</a> </p>
 X-Window libraries. To compile yabasic in your home-directory proceed like this: 
 
 <ul type="disc">
-    <li>Click here to download <a href="download/yabasic-2.769.tar.gz">yabasic-2.769.tar.gz</a>, the tar-file of yabasic. 
+    <li>Click here to download <a href="download/yabasic-<%= version %>.tar.gz">yabasic-<%= version %>.tar.gz</a>, the tar-file of yabasic. 
     <li>Uncompress the tar-file: <b>gunzip FILE </b>(where FILE is the full 
     name of the file you have just downloaded). 
     <li><b>tar xf yabasic-x.xxx.tar</b>, this unpacks the tar-file, giving you 
@@ -84,7 +84,7 @@ including:
 <p>I will try to find and fix the problem.</p>
 <h1><a name="sourcewin">Sources for Windows</a></h1>
 <p>If you'd like to get the Windows specific files (including the sources of 
-the installation program), you may download <a href="download/yabasic-2.769-src.zip">yabasic-2.769-src.zip</a>. This file does not contain the sources for yabasic itself (only the 
+the installation program), you may download <a href="download/yabasic-<%= version %>-src.zip">yabasic-<%= version %>-src.zip</a>. This file does not contain the sources for yabasic itself (only the 
 project files), so in addition you will have to download the <a href="#sourceunix"
  target="_self">sources for unix</a> (there is no difference between Unix and 
 Windows sources) and import them into the project. To compile yabasic you need 
