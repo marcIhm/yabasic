@@ -8,17 +8,12 @@ require 'erb'
 start_time = Time.now
 binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe', :wrapper => 'wrapper/Release/wrapper.exe' }
 
-packfiles=[ binaries[:yabasic], binaries[:setup], binaries[:wrapper],
-            'resources/README.txt', 'resources/yabver.txt',
-            'resources/yabico.ico', '../../products/yabasic.html',
-            '../unix/lang/demo.yab' ]
-
 desc 'Check git'
 task :git do 
   sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
-#      fail "Uncommited local changes, please fix with 'git add' etc."
+      warn "Uncommited local changes, please fix with 'git add' etc."
     end
   end
 end
@@ -46,6 +41,7 @@ end
 
 desc 'Pack binaries'
 task :pack => :versions do
+  cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp'
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
   end
