@@ -72,8 +72,14 @@ desc 'Create rpm'
 task :rpm => :versions do
   cd "lang" do
     sh 'make install DESTDIR=pkg'
-    sh "fpm -f -s dir -t rpm -n yabasic -v #{vs['yabasic']} -C pkg"
-    sh "fpm -f -s dir -t deb -n yabasic -v #{vs['yabasic']} -C pkg"
+    ydir = 'pkg/usr/local/share/applications/yabasic'
+    mkdir_p ydir
+    %w( demo.yab yabasic.htm ).each do |file|
+      cp file, ydir
+    end
+    %w( rpm deb ).each do |fmt|
+      sh "fpm -f -s dir -t #{fmt} -n yabasic -v #{vs['yabasic']} -C pkg"
+    end
     mv "yabasic-#{vs['yabasic']}-1.x86_64.rpm",'../../products'
     mv "yabasic_#{vs['yabasic']}_amd64.deb",'../../products'
   end
