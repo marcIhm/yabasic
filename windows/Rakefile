@@ -41,7 +41,7 @@ end
 
 desc 'Pack binaries'
 task :pack => :versions do
-  cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp'
+  cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp/LICENSE.txt'
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
   end

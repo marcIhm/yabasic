@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -7,11 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "windows.h"
-
-//manually added to make IDC_STATIC work
-#define IDC_STATIC                        -1
-
+#include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -20,10 +16,8 @@
 // Deutsch (Deutschland) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
-#ifdef _WIN32
 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -31,64 +25,23 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
 END
 
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_ICON1               ICON    DISCARDABLE     "..\\yabico.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_EXPLANATION DIALOG DISCARDABLE  0, 0, 194, 58
-STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Sans Serif"
-BEGIN
-    LTEXT           "Change to the directory, where the files of yabasic should be installed, e.g  ""C:\\yabasic"".",
-                    IDC_TEXT,14,28,162,20
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    IDD_EXPLANATION, DIALOG
-    BEGIN
-        LEFTMARGIN, 10
-        RIGHTMARGIN, 178
-        BOTTOMMARGIN, 50
-    END
-END
 #endif    // APSTUDIO_INVOKED
 
 #endif    // Deutsch (Deutschland) resources
@@ -99,37 +52,64 @@ END
 // Englisch (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "..\\yabico.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_PATHDIALOG DIALOG DISCARDABLE  0, 0, 246, 74
-STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
-    WS_SYSMENU
+IDD_PATHDIALOG DIALOGEX 0, 0, 237, 123
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Choose Install Path"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,133,54,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,189,54,50,14
-    EDITTEXT        IDINSTPATH,19,26,157,12,ES_AUTOHSCROLL
-    GROUPBOX        "Enter Path, where yabasic should be installed",
-                    IDC_STATIC,7,14,232,33
-    PUSHBUTTON      "Browse ...",IDC_BROWSE,189,25,43,15
+    DEFPUSHBUTTON   "OK",IDOK,126,95,43,14
+    PUSHBUTTON      "Cancel",IDCANCEL,174,95,43,14
+    EDITTEXT        IDINSTPATH,19,60,150,15,ES_AUTOHSCROLL
+    GROUPBOX        "Type or browse",IDC_STATIC,6,42,222,48
+    PUSHBUTTON      "Browse ...",IDC_BROWSE,174,60,43,15
+    LTEXT           "Please enter directory, where yabasic should be installed.\nIt will be created, if neccessary.",IDC_STATIC,14,17,201,24
 END
 
-IDD_PROGRESSDIALOG DIALOG DISCARDABLE  0, 0, 187, 74
-STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PROGRESSDIALOG DIALOG 0, 0, 187, 74
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CTEXT           "Static",IDC_PROGRESSTEXT,21,17,146,19,SS_CENTERIMAGE | 
-                    WS_BORDER
+    CTEXT           "Static",IDC_PROGRESSTEXT,21,17,146,19,SS_CENTERIMAGE | WS_BORDER
+END
+
+IDD_ON_SUCCESS DIALOGEX 0, 0, 309, 154
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Installation succeeded !"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Static",IDC_SUCCESSTEXT,21,17,267,70
+    PUSHBUTTON      "Exit",IDC_BUTTON_JUST_EXIT,193,111,66,24
+    PUSHBUTTON      "Run Demo",IDC_BUTTON_RUN_DEMO,41,111,66,24,BS_MULTILINE
+    PUSHBUTTON      "Read Documentation",IDC_BUTTON_READ_DOCU,117,111,66,24,BS_MULTILINE
+END
+
+IDD_ON_ERROR DIALOGEX 0, 0, 309, 195
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Installation failed !"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "View Logfile",IDC_BUTTON_VIEW_LOG,81,148,66,24,BS_MULTILINE
+    PUSHBUTTON      "Exit",IDC_BUTTON_JUST_EXIT,159,148,66,24
+    LTEXT           "Static",IDC_ERRORTEXT,21,17,267,113
 END
 
 
@@ -139,14 +119,14 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_PATHDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 239
+        RIGHTMARGIN, 230
         TOPMARGIN, 7
-        BOTTOMMARGIN, 67
+        BOTTOMMARGIN, 116
     END
 
     IDD_PROGRESSDIALOG, DIALOG
@@ -156,8 +136,45 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 62
     END
+
+    IDD_ON_SUCCESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_ON_ERROR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 188
+    END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ON_SUCCESS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ON_ERROR AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_PATHDIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 #endif    // Englisch (USA) resources
 /////////////////////////////////////////////////////////////////////////////
