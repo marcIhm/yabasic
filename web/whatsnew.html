@@ -8,7 +8,7 @@
     </head>
     <body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
 <h1><a name="whatsnew">What's new ?</a></h1>
-<h3>Version 2.77.1, November 13, 2016</h3>
+<h3>Version 2.77.1, November 20, 2016</h3>
 <p align="left">Redid the development process of yabasic:</p>
 <ul>
 <li>Adopted the <a href="mit.html">MIT License</a> for yabasic</li>
@@ -35,8 +35,18 @@
             its&nbsp;<a href="history.html">history</a> or the
             <a href="log.html">log of changes</a> and bugs.
         </p>
-<p>            &nbsp;
-        </p>
+<h2>Hello World</h2>
+<p>This is a simple hello-world.yab written in yabasic, complete with the resulting screenshot:
+<p>  <pre>
+clear screen
+print "Press 'q' to quit ..."
+do
+  print color("green") "Hello ";
+  print color("blue") "World !   ";
+  if (inkey$(1)="q") exit
+loop
+    </pre></p>
+<p><img src="hello-world.png" width="50%"></p>
     </body>
 </html>
 
