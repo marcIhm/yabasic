@@ -834,7 +834,7 @@ void end(int result) { /* display message and terminate */
 
 	string2[0] = '\0';
 	if (ask_run_something) {
-		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?", msg);
+		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\n\n( These options are also available in the start-menu under 'Yabasic' )", msg);
 		answer = DialogBoxParam((HANDLE)this_instance,
 			MAKEINTRESOURCE(IDD_ON_SUCCESS),
 			(HWND)NULL, (DLGPROC)successdialog, (LPARAM) string);
