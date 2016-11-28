@@ -201,7 +201,7 @@ But now for the documentation itself:
 >     those options to the appropriate entries in the registry.
 >  
 >     All  the options below may be abbreviated, as long as the abbreviation
->     does  not  become  ambigous.  For example, you may write -e instead of
+>     does  not  become ambiguous.  For example, you may write -e instead of
 >     -execute.
 >  
 >     -help or -?
@@ -225,7 +225,7 @@ But now for the documentation itself:
 >  
 >     -execute A-PROGRAM-AS-A-SINGLE-STRING
 >            With  this  option  you  may  specify  some  yabasic-code to be
->            executed  rigth  away.This  is  useful for very short programs,
+>            executed  right  away.This  is  useful for very short programs,
 >            which  you do not want to save within a file. If this option is
 >            given,  yabasic  will not read any code from a file. Let's say,
 >            you have forgotten some of the square numbers between 1 and 10;
@@ -314,7 +314,7 @@ But now for the documentation itself:
 >  
 >     yabasic  accepts  a  number  of  options on the commandline. All these
 >     options below may be abbreviated, as long as the abbreviation does not
->     become ambigous. For example you may write -e instead of -execute.
+>     become ambiguous. For example you may write -e instead of -execute.
 >  
 >     -help or -?
 >            Prints a short help message, which itself describes two further
@@ -352,7 +352,7 @@ But now for the documentation itself:
 >  
 >     -execute A-PROGRAM-AS-A-SINGLE-STRING
 >            With  this  option  you  may  specify  some  yabasic-code to be
->            executed  rigth  away.This  is  useful for very short programs,
+>            executed  right  away.This  is  useful for very short programs,
 >            which  you  do  not  want  to save to a file. If this option is
 >            given, yabasic will not read any code from a file. E.g.
 >  
@@ -524,7 +524,7 @@ But now for the documentation itself:
 >  
 >       * Yabasic programs may start other programs with the commands system
 >         and system$.
->       * peek  and  poke  allow to get and set internal information; either
+>       * peek and poke allow one to get and set internal information; either
 >         for the operating system (i.e. Unix or Windows) or yabasic itself.
 >       * The  current  time  or  date  can be retrieved with (guess what !)
 >         time$ and date$.
@@ -1742,7 +1742,7 @@ But now for the documentation itself:
 >  
 >  Description
 >  
->     The  data-keyword introduces a list of comma-seperated list of strings
+>     The  data-keyword introduces a list of comma-separated list of strings
 >     or numbers, which may be retrieved with the read-command.
 >  
 >     The  data-command  itself  does nothing; it just stores data. A single
@@ -1790,7 +1790,7 @@ But now for the documentation itself:
 >     The  date$-function  (which  must  be called without parantheses; i.e.
 >     date$()  would  be  an  error)  returns  a  string  containing various
 >     components  of  a date; an example would be 4-05-27-2004-Thu-May. This
->     string consists of various fields seperated by hyphens ("-"):
+>     string consists of various fields separated by hyphens ("-"):
 >       * The  day within the week as a number in the range 0 (=sunday) to 6
 >         (=saturday) (in the example above: 4, i.e. thursday).
 >       * The  month as a number in the range 1 (=january) to 12 (=december)
@@ -3274,7 +3274,7 @@ But now for the documentation itself:
 >       * The one-line-form without the keyword then:
 >  if (...) ...
 >         This  form  evaluates  the  condition  and  if  the result is true
->         executes  all commands (seperated by colons) upt to the end of the
+>         executes  all commands (separated by colons) upt to the end of the
 >         line. There is neither an endif keyword nor an else-branch.
 >       * The multi-line-form with the keyword then:
 >  if (...) then ... elsif (...) ... else ... endif
@@ -3496,7 +3496,7 @@ But now for the documentation itself:
 >     ('#'), followed by the number, under which the file has been opened.
 >  
 >     Note,  that  the  input  is split at spaces, i.e. if you enter a whole
->     line    consisting   of   many   space-seperated   word,   the   first
+>     line    consisting   of   many   space-separated   word,   the   first
 >     input-statement  will only return the first word; the other words will
 >     only  be returned on subsequent calls to input; the same applies, if a
 >     single  input  reads  multiple variables: The first variable gets only
@@ -4225,7 +4225,7 @@ But now for the documentation itself:
 >  
 >     This  example  executes  some  time consuming action within a loop (in
 >     fact, it simply sleeps) and gives the user some indication of progress
->     by displaying a turning bar (thats where the mod()-function comes into
+>     by displaying a turning bar (that's where the mod()-function comes into
 >     play).
 >  
 >  See also
@@ -5077,8 +5077,8 @@ But now for the documentation itself:
 >     Table of Contents
 >  
 >     pause - pause, sleep, wait for the specified number of seconds
->     peek - retrieve various internal informations
->     peek$ - retrieve various internal string-informations
+>     peek - retrieve various internal information
+>     peek$ - retrieve various internal string-information
 >     pi - a constant with the value 3.14159
 >     poke - change selected internals of yabasic
 >     print - Write to terminal or file
@@ -5098,7 +5098,7 @@ But now for the documentation itself:
 >  Description
 >  
 >     The pause-command has many different names: You may write pause, sleep
->     or  wait  interchangable;  whatever  you write, yabasic will always do
+>     or  wait  interchangeably;  whatever you write, yabasic will always do
 >     exactly the same.
 >  
 >     The  pause-command  will  simply  wait  for  the  specified  number of
@@ -5140,7 +5140,7 @@ But now for the documentation itself:
 >  
 >  Name
 >  
->     peek -- retrieve various internal informations
+>     peek -- retrieve various internal information
 >  
 >  Synopsis
 >  
@@ -5283,7 +5283,7 @@ But now for the documentation itself:
 >  
 >  Name
 >  
->     peek$ -- retrieve various internal string-informations
+>     peek$ -- retrieve various internal string-information
 >  
 >  Synopsis
 >  
@@ -5440,7 +5440,7 @@ But now for the documentation itself:
 >  
 >  Description
 >  
->     The  poke-command may be used to change details of yabasics behaviour.
+>     The poke-command may be used to change details of yabasic's behaviour.
 >     Like  the  related  function  peek,  poke  does many different things,
 >     depending on the arguments supplied.
 >  
@@ -6469,7 +6469,7 @@ But now for the documentation itself:
 >  Description
 >  
 >     The sleep-command has many different names: You may write pause, sleep
->     or  wait  interchangable;  whatever  you write, yabasic will always do
+>     or  wait  interchangeably;  whatever you write, yabasic will always do
 >     exactly the same.
 >  
 >     Therefore  you  should  refer  to the entry for the pause-function for
@@ -7620,7 +7620,7 @@ But now for the documentation itself:
 >  Description
 >  
 >     The  wait-command has many different names: You may write pause, sleep
->     or  wait  interchangeable;  whatever you write, yabasic will always do
+>     or  wait  interchangeably;  whatever you write, yabasic will always do
 >     exactly the same.
 >  
 >     Therefore  you  should  refer  to the entry for the pause-function for
@@ -8132,7 +8132,7 @@ But now for the documentation itself:
 >     \\"             double quote
 >     \\xHEX          chr$(HEX) (see below)
 >  
->     Note,  that  an  escape  sequences  of the form \\xHEX allows to encode
+>     Note,  that an escape sequences of the form \\xHEX allows one to encode
 >     arbitrary  characters  as  long  as  you  know  their  position  (as a
 >     hex-number) within the ascii-charset: For example \\x012 is transformed
 >     into  the  character  chr$(18)  (or  chr$(dec("12",16)).  Note that \\x

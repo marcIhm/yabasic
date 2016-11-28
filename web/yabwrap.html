@@ -76,7 +76,7 @@ close window<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;sect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title id="windows_options"&gt;Options&lt;/title&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Under Windows &lt;application&gt;yabasic&lt;/application&gt; will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the commandline options below. However, advanced users may add some of those options to the appropriate entries in the registry.&lt;/para&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;All the options below may be abbreviated, as long as the abbreviation does not become ambigous. For example, you may write &lt;literal&gt;-e&lt;/literal&gt; instead of &lt;literal&gt;-execute&lt;/literal&gt;.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;All the options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example, you may write &lt;literal&gt;-e&lt;/literal&gt; instead of &lt;literal&gt;-execute&lt;/literal&gt;.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;variablelist&gt;<br>
 	&lt;varlistentry&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;term&gt;&lt;literal&gt;-help&lt;/literal&gt; or &lt;literal&gt;-?&lt;/literal&gt;&lt;/term&gt;<br>
@@ -121,7 +121,7 @@ close window<br>
 	&lt;varlistentry&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;term&gt;&lt;literal&gt;-execute &lt;replaceable&gt;A-PROGRAM-AS-A-SINGLE-STRING&lt;/replaceable&gt;&lt;/literal&gt;&lt;/term&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;listitem&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;With this option you may specify some &lt;application&gt;yabasic&lt;/application&gt;-code to be executed rigth away.This is useful for very short programs, which you do not want to save within a file. If this option is given, &lt;application&gt;yabasic&lt;/application&gt; will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command &lt;literal&gt;yabasic -e 'for a=1 to 10:print a*a:next a'&lt;/literal&gt; will give you the answer immediately.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;With this option you may specify some &lt;application&gt;yabasic&lt;/application&gt;-code to be executed right away.This is useful for very short programs, which you do not want to save within a file. If this option is given, &lt;application&gt;yabasic&lt;/application&gt; will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command &lt;literal&gt;yabasic -e 'for a=1 to 10:print a*a:next a'&lt;/literal&gt; will give you the answer immediately.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;/listitem&gt;<br>
 	&lt;/varlistentry&gt;<br>
 
@@ -215,7 +215,7 @@ close window<br>
 <p><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;sect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title id="unix_options"&gt;Options&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;application&gt;yabasic&lt;/application&gt; accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambigous. For example you may write &lt;literal&gt;-e&lt;/literal&gt; instead of &lt;literal&gt;-execute&lt;/literal&gt;.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;application&gt;yabasic&lt;/application&gt; accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write &lt;literal&gt;-e&lt;/literal&gt; instead of &lt;literal&gt;-execute&lt;/literal&gt;.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;variablelist&gt;<br>
 	&lt;varlistentry&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;term&gt;&lt;literal&gt;-help&lt;/literal&gt; or &lt;literal&gt;-?&lt;/literal&gt;&lt;/term&gt;<br>
@@ -276,7 +276,7 @@ close window<br>
 	&lt;varlistentry&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;term&gt;&lt;literal&gt;-execute &lt;replaceable&gt;A-PROGRAM-AS-A-SINGLE-STRING&lt;/replaceable&gt;&lt;/literal&gt;&lt;/term&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;listitem&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;With this option you may specify some &lt;application&gt;yabasic&lt;/application&gt;-code to be executed rigth away.This is useful for very short programs, which you do not want to save to a file. If this option is given, &lt;application&gt;yabasic&lt;/application&gt; will not read any code from a file. E.g. &lt;programlisting&gt;yabasic -e 'for a=1 to 10:print a*a:next a'&lt;/programlisting&gt; prints the square numbers from 1 to 10.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;With this option you may specify some &lt;application&gt;yabasic&lt;/application&gt;-code to be executed right away.This is useful for very short programs, which you do not want to save to a file. If this option is given, &lt;application&gt;yabasic&lt;/application&gt; will not read any code from a file. E.g. &lt;programlisting&gt;yabasic -e 'for a=1 to 10:print a*a:next a'&lt;/programlisting&gt; prints the square numbers from 1 to 10.<br>
 &lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;/listitem&gt;<br>
 	&lt;/varlistentry&gt;<br>
@@ -375,7 +375,7 @@ yabasic*font: 9x15<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;sect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Subroutines and Libraries&lt;/title&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The best way to break any &lt;application&gt;yabasic&lt;/application&gt;-program into smaller, more manageable chunks are &lt;emphasis&gt;subroutines&lt;/emphasis&gt; and &lt;emphasis&gt;libraries&lt;/emphasis&gt;. They are &lt;application&gt;yabasic&lt;/application&gt;'s most advanced means of structuring a program.&lt;/para&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Subroutines are created with the command &lt;function&gt;&lt;link linkend="ref_sub"&gt;sub&lt;/link&gt;&lt;/function&gt;. they accept parameters and may return a value. Subroutines can be called much like any builtin function of &lt;application&gt;yabasic&lt;/application&gt;; therefore they allow to &lt;emphasis&gt;extend&lt;/emphasis&gt; the language itself.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Subroutines are created with the command &lt;function&gt;&lt;link linkend="ref_sub"&gt;sub&lt;/link&gt;&lt;/function&gt;. they accept parameters and may return a value. Subroutines can be called much like any builtin function of &lt;application&gt;yabasic&lt;/application&gt;; therefore they allow one to &lt;emphasis&gt;extend&lt;/emphasis&gt; the language itself.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a &lt;emphasis&gt;library&lt;/emphasis&gt;. Such a library is contained within a separate file and may be included in any of your programs, using the keyword &lt;function&gt;&lt;link linkend="ref_import"&gt;import&lt;/link&gt;&lt;/function&gt;.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;/sect1&gt;<br>
 
@@ -407,7 +407,7 @@ yabasic*font: 9x15<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;application&gt;Yabasic&lt;/application&gt; programs may start other programs with the commands &lt;function&gt;&lt;link linkend="ref_system"&gt;system&lt;/link&gt;&lt;/function&gt; and &lt;function&gt;&lt;link linkend="ref_system2"&gt;system$&lt;/link&gt;&lt;/function&gt;.&lt;/para&gt;	<br>
 &lt;/listitem&gt;<br>
 	&lt;listitem&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;function&gt;&lt;link linkend="ref_peek"&gt;peek&lt;/link&gt;&lt;/function&gt; and &lt;function&gt;&lt;link linkend="ref_poke"&gt;poke&lt;/link&gt;&lt;/function&gt; allow to get and set internal information; either for the operating system (i.e. Unix or Windows) or &lt;application&gt;yabasic&lt;/application&gt; itself.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;function&gt;&lt;link linkend="ref_peek"&gt;peek&lt;/link&gt;&lt;/function&gt; and &lt;function&gt;&lt;link linkend="ref_poke"&gt;poke&lt;/link&gt;&lt;/function&gt; allow one to get and set internal information; either for the operating system (i.e. Unix or Windows) or &lt;application&gt;yabasic&lt;/application&gt; itself.&lt;/para&gt;<br>
 	&lt;/listitem&gt;<br>
 	&lt;listitem&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The current time or date can be retrieved with (guess what !) &lt;function&gt;&lt;link linkend="ref_time"&gt;time$&lt;/link&gt;&lt;/function&gt; and &lt;function&gt;&lt;link linkend="ref_date"&gt;date$&lt;/link&gt;&lt;/function&gt;.&lt;/para&gt;<br>
@@ -1683,7 +1683,7 @@ read b,a$<br>
 	&lt;/refsynopsisdiv&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;data&lt;/function&gt;-keyword introduces a list of comma-seperated list of strings or numbers, which may be retrieved with the &lt;function&gt;&lt;link linkend="ref_read"&gt;read&lt;/link&gt;&lt;/function&gt;-command.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;data&lt;/function&gt;-keyword introduces a list of comma-separated list of strings or numbers, which may be retrieved with the &lt;function&gt;&lt;link linkend="ref_read"&gt;read&lt;/link&gt;&lt;/function&gt;-command.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;data&lt;/function&gt;-command itself does nothing; it just stores data. A single &lt;function&gt;data&lt;/function&gt;-command may precede an arbitrarily long list of values, in which strings or numbers may be mixed at will.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;application&gt;yabasic&lt;/application&gt; internally uses a &lt;systemitem&gt;data-pointer&lt;/systemitem&gt; to keep track of the current location within the &lt;function&gt;data&lt;/function&gt;-list; this pointer may be reset with the &lt;function&gt;&lt;link linkend="ref_restore"&gt;restore&lt;/link&gt;&lt;/function&gt;-command.&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
@@ -1724,7 +1724,7 @@ data "eleven",11,"twelve",12,"thirteen",13,"fourteen",14<br>
 	&lt;/refsynopsisdiv&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;date$&lt;/function&gt;-function (which &lt;emphasis&gt;must&lt;/emphasis&gt; be called without parantheses; i.e. &lt;function&gt;date$()&lt;/function&gt; would be an error) returns a string containing various components of a date; an example would be &lt;computeroutput&gt;4-05-27-2004-Thu-May&lt;/computeroutput&gt;. This string consists of various fields seperated by hyphens ("&lt;computeroutput&gt;-&lt;/computeroutput&gt;"):&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;date$&lt;/function&gt;-function (which &lt;emphasis&gt;must&lt;/emphasis&gt; be called without parantheses; i.e. &lt;function&gt;date$()&lt;/function&gt; would be an error) returns a string containing various components of a date; an example would be &lt;computeroutput&gt;4-05-27-2004-Thu-May&lt;/computeroutput&gt;. This string consists of various fields separated by hyphens ("&lt;computeroutput&gt;-&lt;/computeroutput&gt;"):&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;itemizedlist&gt;<br>
 	&lt;listitem&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The day within the week as a number in the range 0 (=sunday) to 6 (=saturday) (in the example above: &lt;computeroutput&gt;4&lt;/computeroutput&gt;, i.e. thursday).&lt;/para&gt;<br>
@@ -3275,7 +3275,7 @@ endif<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;There are two major forms of the &lt;function&gt;if&lt;/function&gt;-statement:&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;itemizedlist&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;listitem&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;emphasis&gt;one-line&lt;/emphasis&gt;-form &lt;emphasis&gt;without&lt;/emphasis&gt; the keyword &lt;function&gt;then&lt;/function&gt;: &lt;programlisting&gt;if (&hellip;) &hellip;&lt;/programlisting&gt; This form evaluates the condition and if the result is &lt;constant&gt;true&lt;/constant&gt; executes all commands (seperated by colons) upt to the end of the line. There is neither an &lt;function&gt;endif&lt;/function&gt; keyword nor an &lt;function&gt;else&lt;/function&gt;-branch.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;emphasis&gt;one-line&lt;/emphasis&gt;-form &lt;emphasis&gt;without&lt;/emphasis&gt; the keyword &lt;function&gt;then&lt;/function&gt;: &lt;programlisting&gt;if (&hellip;) &hellip;&lt;/programlisting&gt; This form evaluates the condition and if the result is &lt;constant&gt;true&lt;/constant&gt; executes all commands (separated by colons) upt to the end of the line. There is neither an &lt;function&gt;endif&lt;/function&gt; keyword nor an &lt;function&gt;else&lt;/function&gt;-branch.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/listitem&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;listitem&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;emphasis&gt;multi-line&lt;/emphasis&gt;-form &lt;emphasis&gt;with&lt;/emphasis&gt; the keyword &lt;function&gt;then&lt;/function&gt;: &lt;programlisting&gt;if (&hellip;) then &hellip; elsif (&hellip;) &hellip; else &hellip; endif&lt;/programlisting&gt; (where &lt;function&gt;elsif&lt;/function&gt; and &lt;function&gt;else&lt;/function&gt; are optional, whereas &lt;function&gt;endif&lt;/function&gt; is not.&lt;/para&gt;<br>
@@ -3495,7 +3495,7 @@ input #1 a$<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;&lt;function&gt;input&lt;/function&gt; reads the new contents of one or many (numeric- or string-) variables, either from the keyboard (i.e. from &lt;emphasis&gt;you&lt;/emphasis&gt;) or from a file. An optional first string-argument specifies a prompt, which will be issued before reading any contents.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;If you want to read from an open file, you need to specify a hash ('#'), followed by the number, under which the file has been opened.&lt;/para&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;Note, that the input is split at spaces, i.e. if you enter a whole line consisting of many space-seperated word, the first &lt;function&gt;input&lt;/function&gt;-statement will only return the first word; the other words will only be returned on subsequent calls to &lt;function&gt;input&lt;/function&gt;; the same applies, if a single &lt;function&gt;input&lt;/function&gt; reads multiple variables: The first variable gets only the first word, the second one the second word, and so on. If you don't like this behaviour, you may use &lt;function&gt;line input&lt;/function&gt;, which returns a whole line (including embedded spaces) at once.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;Note, that the input is split at spaces, i.e. if you enter a whole line consisting of many space-separated word, the first &lt;function&gt;input&lt;/function&gt;-statement will only return the first word; the other words will only be returned on subsequent calls to &lt;function&gt;input&lt;/function&gt;; the same applies, if a single &lt;function&gt;input&lt;/function&gt; reads multiple variables: The first variable gets only the first word, the second one the second word, and so on. If you don't like this behaviour, you may use &lt;function&gt;line input&lt;/function&gt;, which returns a whole line (including embedded spaces) at once.&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Example&lt;/title&gt;<br>
@@ -4255,7 +4255,7 @@ for a=1 to 100<br>
 &nbsp;&nbsp;print at(22,10) mid$(p$,1+mod(a,4))<br>
 next a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/programlisting&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (thats where the &lt;function&gt;mod()&lt;/function&gt;-function comes into play).&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (that's where the &lt;function&gt;mod()&lt;/function&gt;-function comes into play).&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;/informalexample&gt;<br>
 	&lt;/refsect1&gt;<br>
 	&lt;refsect1&gt;<br>
@@ -5103,7 +5103,7 @@ pause 5<br>
 	&lt;/refsynopsisdiv&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;pause&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangable; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;pause&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangeably; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;pause&lt;/function&gt;-command will simply wait for the specified number of seconds. This may be a fractional number, so you may well wait less than a second. However, if you try to pause for a smaller and smaller interval (e.g. 0.1 seconds, 0.01 seconds, 0.001 seconds and so on) you will find that at some point &lt;application&gt;yabasic&lt;/application&gt; will not wait at all. The minimal interval that can be waited depends on the system (Unix, Windows) you are using.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;pause&lt;/function&gt;-command cannot be interrupted. However, sometimes you may want the wait to be interuptible by simply pressing a key on the keyboard. In such cases you should consider using the &lt;function&gt;&lt;link linkend="ref_inkey"&gt;inkey$&lt;/link&gt;&lt;/function&gt;-function, with a number of seconds as an argument).&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
@@ -5138,7 +5138,7 @@ loop<br>
 	&lt;/refmeta&gt;<br>
 	&lt;refnamediv&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;refname&gt;peek&lt;/refname&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;refpurpose&gt;retrieve various internal informations&lt;/refpurpose&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;refpurpose&gt;retrieve various internal information&lt;/refpurpose&gt;<br>
 	&lt;/refnamediv&gt;<br>
 	&lt;refsynopsisdiv&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;synopsis&gt;<br>
@@ -5354,7 +5354,7 @@ wend<br>
 	&lt;/refmeta&gt;<br>
 	&lt;refnamediv&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;refname&gt;peek$&lt;/refname&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;refpurpose&gt;retrieve various internal string-informations&lt;/refpurpose&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;refpurpose&gt;retrieve various internal string-information&lt;/refpurpose&gt;<br>
 	&lt;/refnamediv&gt;<br>
 	&lt;refsynopsisdiv&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;synopsis&gt;<br>
@@ -6603,7 +6603,7 @@ sleep 4<br>
 	&lt;/refsynopsisdiv&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;sleep&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangable; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;sleep&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangeably; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;Therefore you should refer to the entry for the &lt;function&gt;&lt;link linkend="ref_pause"&gt;pause&lt;/link&gt;&lt;/function&gt;-function for further information.&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/refentry&gt;<br>
@@ -7081,7 +7081,7 @@ end switch<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;switch&lt;/function&gt;-statment selects one of many codepaths depending on a numerical or string expression. I.e. it takes an expression (either numeric or string) and compares it with a series of values, each wrapped within a &lt;function&gt;&lt;link linkend="ref_case"&gt;case&lt;/link&gt;&lt;/function&gt;-clause. If the expression equals the value given in a &lt;function&gt;case&lt;/function&gt;-clause, the subsequent statements are executed.&lt;/para&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;&lt;link linkend="ref_default"&gt;default&lt;/link&gt;&lt;/function&gt;-clause allows to specify commands, which should be executed, if none of &lt;function&gt;case&lt;/function&gt;-clauses matches.&lt;/para&gt; <br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;&lt;link linkend="ref_default"&gt;default&lt;/link&gt;&lt;/function&gt;-clause allows one to specify commands, which should be executed, if none of &lt;function&gt;case&lt;/function&gt;-clauses matches.&lt;/para&gt; <br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;Note, that many &lt;function&gt;case&lt;/function&gt;-clauses might be clustered (e.g. &lt;literal&gt;case "a":case "b":case "c"&lt;/literal&gt;). Or put another way: You need a &lt;function&gt;break&lt;/function&gt;-statement at the end of a &lt;function&gt;case&lt;/function&gt;-branch, if you do not want to run into the next &lt;function&gt;case&lt;/function&gt;.&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
 	&lt;refsect1&gt;<br>
@@ -7830,7 +7830,7 @@ wait 4<br>
 	&lt;/refsynopsisdiv&gt;<br>
 	&lt;refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;title&gt;Description&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;wait&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangeable; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;para&gt;The &lt;function&gt;wait&lt;/function&gt;-command has many different names: You may write &lt;function&gt;pause&lt;/function&gt;, &lt;function&gt;sleep&lt;/function&gt; or &lt;function&gt;wait&lt;/function&gt; interchangeably; whatever you write, &lt;application&gt;yabasic&lt;/application&gt; will always do exactly the same.&lt;/para&gt;<br>
 &nbsp;&nbsp;&nbsp;&lt;para&gt;Therefore you should refer to the entry for the &lt;function&gt;&lt;link linkend="ref_pause"&gt;pause&lt;/link&gt;&lt;/function&gt;-function for further information.&lt;/para&gt;<br>
 	&lt;/refsect1&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/refentry&gt;<br>
@@ -8366,7 +8366,7 @@ if (not okay) error "Wrong, wrong !"<br>
 &nbsp;&nbsp;&nbsp;&lt;/tbody&gt;<br>
 	&lt;/tgroup&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/table&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Note, that an escape sequences of the form \xHEX allows to encode arbitrary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;para&gt;Note, that an escape sequences of the form \xHEX allows one to encode arbitrary<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;characters as long as you know their position (as a hex-number) within the <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;acronym&gt;ascii&lt;/acronym&gt;-charset: <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For example \x012 is transformed into the character &lt;function&gt;chr$(18)&lt;/function&gt; (or &lt;function&gt;chr$(dec("12",16))&lt;/function&gt;. Note that \x requires a<br>

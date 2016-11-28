@@ -112,7 +112,7 @@ close window
 	<varlistentry>
 	  <term><literal>-execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
 	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed rigth away.This is useful for very short programs, which you do not want to save within a file. If this option is given, <application>yabasic</application> will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command <literal>yabasic -e 'for a=1 to 10:print a*a:next a'</literal> will give you the answer immediately.</para>
+	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away.This is useful for very short programs, which you do not want to save within a file. If this option is given, <application>yabasic</application> will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command <literal>yabasic -e 'for a=1 to 10:print a*a:next a'</literal> will give you the answer immediately.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -194,7 +194,7 @@ close window
 
     <sect1>
       <title id="unix_options">Options</title>
-      <para><application>yabasic</application> accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambigous. For example you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
+      <para><application>yabasic</application> accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
       <variablelist>
 	<varlistentry>
 	  <term><literal>-help</literal> or <literal>-?</literal></term>
@@ -248,7 +248,7 @@ close window
 	<varlistentry>
 	  <term><literal>-execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
 	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed rigth away.This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
+	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away.This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
 </para>
 	  </listitem>
 	</varlistentry>
@@ -334,7 +334,7 @@ yabasic*font: 9x15
     <sect1>
       <title>Subroutines and Libraries</title>
       <para>The best way to break any <application>yabasic</application>-program into smaller, more manageable chunks are <emphasis>subroutines</emphasis> and <emphasis>libraries</emphasis>. They are <application>yabasic</application>'s most advanced means of structuring a program.</para>
-      <para>Subroutines are created with the command <function><link linkend="ref_sub">sub</link></function>. they accept parameters and may return a value. Subroutines can be called much like any builtin function of <application>yabasic</application>; therefore they allow to <emphasis>extend</emphasis> the language itself.</para>
+      <para>Subroutines are created with the command <function><link linkend="ref_sub">sub</link></function>. they accept parameters and may return a value. Subroutines can be called much like any builtin function of <application>yabasic</application>; therefore they allow one to <emphasis>extend</emphasis> the language itself.</para>
       <para>Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a <emphasis>library</emphasis>. Such a library is contained within a separate file and may be included in any of your programs, using the keyword <function><link linkend="ref_import">import</link></function>.</para>
     </sect1>
 
@@ -362,7 +362,7 @@ yabasic*font: 9x15
 	  <para><application>Yabasic</application> programs may start other programs with the commands <function><link linkend="ref_system">system</link></function> and <function><link linkend="ref_system2">system$</link></function>.</para>	
 	</listitem>
 	<listitem>
-	  <para><function><link linkend="ref_peek">peek</link></function> and <function><link linkend="ref_poke">poke</link></function> allow to get and set internal information; either for the operating system (i.e. Unix or Windows) or <application>yabasic</application> itself.</para>
+	  <para><function><link linkend="ref_peek">peek</link></function> and <function><link linkend="ref_poke">poke</link></function> allow one to get and set internal information; either for the operating system (i.e. Unix or Windows) or <application>yabasic</application> itself.</para>
 	</listitem>
 	<listitem>
 	  <para>The current time or date can be retrieved with (guess what !) <function><link linkend="ref_time">time$</link></function> and <function><link linkend="ref_date">date$</link></function>.</para>
@@ -1348,7 +1348,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><link linkend="ref_peek">peek</link></term>
 	  <listitem>
-	    retrieve various internal informations
+	    retrieve various internal information
 	  </listitem>
 	</varlistentry>
 
@@ -1356,7 +1356,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><link linkend="ref_peek2">peek$</link></term>
 	  <listitem>
-	    retrieve various internal string-informations
+	    retrieve various internal string-information
 	  </listitem>
 	</varlistentry>
 
@@ -5302,7 +5302,7 @@ for a=1 to 100
   print at(22,10) mid$(p$,1+mod(a,4))
 next a
           </programlisting>
-	    <para>This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (thats where the <function>mod()</function>-function comes into play).</para>
+	    <para>This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (that's where the <function>mod()</function>-function comes into play).</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -6149,7 +6149,7 @@ loop
 	</refmeta>
 	<refnamediv>
 	  <refname>peek</refname>
-	  <refpurpose>retrieve various internal informations</refpurpose>
+	  <refpurpose>retrieve various internal information</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -6349,7 +6349,7 @@ wend
 	</refmeta>
 	<refnamediv>
 	  <refname>peek$</refname>
-	  <refpurpose>retrieve various internal string-informations</refpurpose>
+	  <refpurpose>retrieve various internal string-information</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -7675,7 +7675,7 @@ sleep 4
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>sleep</function>-command has many different names: You may write <function>pause</function>, <function>sleep</function> or <function>wait</function> interchangable; whatever you write, <application>yabasic</application> will always do exactly the same.</para>
+	  <para>The <function>sleep</function>-command has many different names: You may write <function>pause</function>, <function>sleep</function> or <function>wait</function> interchangeably; whatever you write, <application>yabasic</application> will always do exactly the same.</para>
 	  <para>Therefore you should refer to the entry for the <function><link linkend="ref_pause">pause</link></function>-function for further information.</para>
 	</refsect1>
       </refentry>
@@ -8147,7 +8147,7 @@ end switch
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>switch</function>-statement selects one of many codepaths depending on a numerical or string expression. I.e. it takes an expression (either numeric or string) and compares it with a series of values, each wrapped within a <function><link linkend="ref_case">case</link></function>-clause. If the expression equals the value given in a <function>case</function>-clause, the subsequent statements are executed.</para>
-	  <para>The <function><link linkend="ref_default">default</link></function>-clause allows to specify commands, which should be executed, if none of <function>case</function>-clauses matches.</para> 
+	  <para>The <function><link linkend="ref_default">default</link></function>-clause allows one to specify commands, which should be executed, if none of <function>case</function>-clauses matches.</para>
 	  <para>Note, that many <function>case</function>-clauses might be clustered (e.g. <literal>case "a":case "b":case "c"</literal>). Or put another way: You need a <function>break</function>-statement at the end of a <function>case</function>-branch, if you do not want to run into the next <function>case</function>.</para>
 	</refsect1>
 	<refsect1>
@@ -9655,7 +9655,7 @@ array would be a time (and resource) consuming operation; passing just a referen
 	  </tbody>
 	</tgroup>
       </table>
-      <para>Note, that an escape sequences of the form \xHEX allows to encode arbitrary
+      <para>Note, that an escape sequences of the form \xHEX allows one to encode arbitrary
      characters as long as you know their position (as a hex-number) within the 
      <acronym>ascii</acronym>-charset: 
      For example \x012 is transformed into the character <function>chr$(18)</function> (or <function>chr$(dec("12",16))</function>. Note that \x requires a

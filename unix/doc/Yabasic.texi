@@ -181,7 +181,7 @@ This is @i{not} the preferred way of starting yabasic ! Simply because the progr
 
 Under Windows yabasic will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the commandline options below. However, advanced users may add some of those options to the appropriate entries in the registry.
 
-All the options below may be abbreviated, as long as the abbreviation does not become ambigous. For example, you may write @samp{-e} instead of @samp{-execute}.
+All the options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example, you may write @samp{-e} instead of @samp{-execute}.
 
 @table @asis
 
@@ -195,7 +195,7 @@ Sets the position of the graphic window, that is opened by @code{open window} (t
 Name of the font, which will be used for graphic-text; can be any of @samp{decorative, dontcare, modern, roman, script, swiss}. You may append a fontsize (measured in pixels) to any of those fontnames; for example @samp{-font swiss30} chooses a swiss-type font with a size of 30 pixels.
 
 @item @samp{-execute @var{A-PROGRAM-AS-A-SINGLE-STRING}}
-With this option you may specify some yabasic-code to be executed rigth away.This is useful for very short programs, which you do not want to save within a file. If this option is given, yabasic will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command @samp{yabasic -e 'for a=1 to 10:print a*a:next a'} will give you the answer immediately.
+With this option you may specify some yabasic-code to be executed right away.This is useful for very short programs, which you do not want to save within a file. If this option is given, yabasic will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command @samp{yabasic -e 'for a=1 to 10:print a*a:next a'} will give you the answer immediately.
 
 @item @samp{-infolevel @var{INFOLEVEL}}
 Change the @i{infolevel} of yabasic, where @var{INFOLEVEL} can be one of @samp{debug}, @samp{note}, @samp{warning}, @samp{error} and @samp{fatal} (the default is @samp{warning}). This option changes the amount of debugging-information yabasic produces. However, normally only the author of yabasic (@i{me} !) would want to change this.
@@ -260,7 +260,7 @@ This is @i{not} the preferred way of starting yabasic ! Simply because the progr
 @node The yabasic-program under Unix - Options, Setting defaults, The yabasic-program under Unix - Starting yabasic, The yabasic-program under Unix
 @section Options
 
-yabasic accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambigous. For example you may write @samp{-e} instead of @samp{-execute}.
+yabasic accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write @samp{-e} instead of @samp{-execute}.
 
 @table @asis
 
@@ -283,7 +283,7 @@ Specify the @i{display}, where the graphics window of yabasic should appear. Nor
 Name of the font, which will be used for text within the graphics window.
 
 @item @samp{-execute @var{A-PROGRAM-AS-A-SINGLE-STRING}}
-With this option you may specify some yabasic-code to be executed rigth away.This is useful for very short programs, which you do not want to save to a file. If this option is given, yabasic will not read any code from a file. E.g. 
+With this option you may specify some yabasic-code to be executed right away.This is useful for very short programs, which you do not want to save to a file. If this option is given, yabasic will not read any code from a file. E.g.
 
 @example
 yabasic -e 'for a=1 to 10:print a*a:next a'
@@ -377,7 +377,7 @@ If you need more control, you may consider reading and writing one byte at a tim
 
 The best way to break any yabasic-program into smaller, more manageable chunks are @i{subroutines} and @i{libraries}. They are yabasic's most advanced means of structuring a program.
 
-Subroutines are created with the command @code{sub (@pxref{sub})}. they accept parameters and may return a value. Subroutines can be called much like any builtin function of yabasic; therefore they allow to @i{extend} the language itself.
+Subroutines are created with the command @code{sub (@pxref{sub})}. they accept parameters and may return a value. Subroutines can be called much like any builtin function of yabasic; therefore they allow one to @i{extend} the language itself.
 
 Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a @i{library}. Such a library is contained within a separate file and may be included in any of your programs, using the keyword @code{import (@pxref{import})}.
 
@@ -409,7 +409,7 @@ You may store data within your program within @code{data (@pxref{data})}-stateme
 Yabasic programs may start other programs with the commands @code{system (@pxref{system$[]})} and @code{system$ (@pxref{system[]})}.
 
 @item
-@code{peek (@pxref{peek})} and @code{poke (@pxref{poke})} allow to get and set internal information; either for the operating system (i.e. Unix or Windows) or yabasic itself.
+@code{peek (@pxref{peek})} and @code{poke (@pxref{poke})} allow one to get and set internal information; either for the operating system (i.e. Unix or Windows) or yabasic itself.
 
 @item
 The current time or date can be retrieved with (guess what !) @code{time$ (@pxref{time$})} and @code{date$ (@pxref{date$})}.
@@ -556,4 +556,4 @@ print acos(0.5),acos(cos(pi))
           
 @end example
 
-This example will print @samp{1.0472 3.14159} which are 
+This example will print @samp{1.0472 3.14159} which are
