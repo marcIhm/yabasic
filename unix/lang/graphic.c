@@ -855,7 +855,7 @@ grafinit (void)
     if (sscanf (foreground, "%d,%d,%d", &r, &g, &b) != 3 || r < 0 || r > 255
             || g < 0 || g > 255 || b < 0 || b > 255) {
         sprintf (string,
-                 "command line option -foreground must be three numbers between 0 and 255, seperated by commas (not '%s')",
+                 "command line option -foreground must be three numbers between 0 and 255, separated by commas (not '%s')",
                  foreground);
         error (ERROR, string);
         return FALSE;
@@ -870,7 +870,7 @@ grafinit (void)
     if (sscanf (background, "%d,%d,%d", &r, &g, &b) != 3 || r < 0 || r > 255
             || g < 0 || g > 255 || b < 0 || b > 255) {
         sprintf (string,
-                 "command line option -background must be three numbers between 0 and 255, seperated by commas (not '%s')",
+                 "command line option -background must be three numbers between 0 and 255, separated by commas (not '%s')",
                  background);
         error (ERROR, string);
         return FALSE;
@@ -1250,7 +1250,7 @@ change_colour (struct command *cmd)
         if (sscanf (h, "%d,%d,%d", &r, &g, &b) != 3 || r < 0 || r > 255
                 || g < 0 || g > 255 || b < 0 || b > 255) {
             sprintf (string,
-                     "string argument to command colour must be three numbers between 0 and 255, seperated by commas (not '%s')",
+                     "string argument to command colour must be three numbers between 0 and 255, separated by commas (not '%s')",
                      h);
             error (ERROR, string);
             return;
@@ -2062,7 +2062,7 @@ putbit (void)
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             if (!readrgb (NULL, &red, &green, &blue)) {
-                error (ERROR, "Invalud bitmap");
+                error (ERROR, "Invalid bitmap");
                 return;
             }
             should_pixel = rgb_to_pixel (red, green, blue);
