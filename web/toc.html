@@ -1,88 +1,86 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
 <title>Table of Contents</title>
-<link rel="stylesheet" type="text/css" href="standard.css">
 <meta name="author" content="Marc Ihm">
 <style><!--
 p { margin:0; padding:0; border-width:0; }
-A { font-weight: 500; color:black; text-decoration:none; font-family:verdana,sans-serif; font-size:13pt;}
+A { font-weight: 500; color:black; text-decoration:none; font-family:verdana,sans-serif; font-size: 8vw;}
 A.symbol { font-weight:500;}
 A.symbol:hover { font-weight:500; }
-A.sub { font-size:10pt;}
+A.sub { font-size:6vw;}
 A:hover { color:white; text-decoration:none;} 
 --></style>
 <script src="functions.js" type="text/javascript"></script>
 </head>
 <body bgcolor="#FFBD7C" text="black">
 <base target="_parent" />
-<table>
+<table style="border-collapse: collapse; border: none">
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
-<td><a href="../?download" onclick="showContentFromToc(event,this);">Download</a></td></tr>
+<td><a href="download.html" target="content" onclick="changeURL('download.html')">Download</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="download">
-<tr><td nowrap><a class="sub" href="../?download#binwin"  onclick="showContentFromToc(event,this);">Windows Binaries</a></tr>
-<tr><td nowrap><a class="sub" href="../?download#binlin"  onclick="showContentFromToc(event,this);">Linux Binaries</a></tr>
-<tr><td nowrap><a class="sub" href="../?download#sourceunix"  onclick="showContentFromToc(event,this);">Unix Sources</a></tr>
-<tr><td nowrap><a class="sub" href="../?download#sourcewin"  onclick="showContentFromToc(event,this);">Windows Sources</a></tr>
-<tr><td nowrap><a class="sub" href="../?download#git"  onclick="showContentFromToc(event,this);">The git-repository</a></tr>
+<tr><td nowrap><a class="sub" href="download.html#binwin" target="content" onclick="changeURL('download.html')">Windows Binaries</a></tr>
+<tr><td nowrap><a class="sub" href="download.html#binlin" target="content" onclick="changeURL('download.html')">Linux Binaries</a></tr>
+<tr><td nowrap><a class="sub" href="download.html#sourceunix" target="content" onclick="changeURL('download.html')">Unix Sources</a></tr>
+<tr><td nowrap><a class="sub" href="download.html#sourcewin" target="content" onclick="changeURL(event)">Windows Sources</a></tr>
+<tr><td nowrap><a class="sub" href="download.html#git" target="content" onclick="changeURL('download.html')">The git-repository</a></tr>
 <tr><td height=8pt></td></tr>
 </table>
 </td></tr>
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a>
-<td nowrap><a href="../?whatsnew" onclick="showContentFromToc(event,this);">Documentation</a></td></tr>
+<td nowrap><a href="whatsnew.html" target="content" onclick="changeURL('whatsnew.html');">Documentation</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="whatsnew">
-<tr><td nowrap><a class="sub" href="../?whatsnew" onclick="showContentFromToc(event,this);">Whats new ?</a></tr>
-<tr><td nowrap><a class="sub" href="../?whatsnew#nutshell" onclick="showContentFromToc(event,this);">Yab in a Nutshell</a></tr>
-<tr><td nowrap><a class="sub" href="../?faq" onclick="showContentFromToc(event,this);">FAQ</a></tr>
-<tr><td nowrap><a class="sub" href="../?history" onclick="showContentFromToc(event,this);">History of Yabasic</a></tr>
-<tr><td nowrap><a class="sub" href="../?log" onclick="showContentFromToc(event,this);">Log of changes</a></tr>
-<tr><td nowrap><a class="sub" href="../?yabasic" onclick="showContentFromToc(event,this);">Manual of Yabasic</a></tr>
-<tr><td nowrap><a class="sub" href="../?new_docu" onclick="showContentFromToc(event,this);">The new docu</a></tr>
-<tr><td nowrap><a class="sub" href="../?old_docu" onclick="showContentFromToc(event,this);">The old docu</a></tr>
-<tr><td nowrap><a class="sub" href="../??yabasic_old_de" onclick="showContentFromToc(event,this);">... auch auf Deutsch</a></tr>
+<tr><td nowrap><a class="sub" href="whatsnew" target="content" onclick="changeURL('whatsnew')">Whats new ?</a></tr>
+<tr><td nowrap><a class="sub" href="whatsnew#nutshell" target="content" onclick="changeURL('whatsnew')">Yab in a Nutshell</a></tr>
+<tr><td nowrap><a class="sub" href="faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
+<tr><td nowrap><a class="sub" href="history.html" target="content" onclick="changeURL('history.html')">History of Yabasic</a></tr>
+<tr><td nowrap><a class="sub" href="log.html" target="content" onclick="changeURL('log.html')">Log of changes</a></tr>
+<tr><td nowrap><a class="sub" href="yabasic.html" target="content" onclick="changeURL('yabasic.html')">Manual of Yabasic</a></tr>
+<tr><td nowrap><a class="sub" href="new_docu.html" target="content" onclick="changeURL('new_docu.html')">The new docu</a></tr>
+<tr><td nowrap><a class="sub" href="old_docu.html" target="content" onclick="changeURL('old_docu.html')">The old docu</a></tr>
+<tr><td nowrap><a class="sub" href="yabasic_old_de.html" target="content" onclick="changeURL('yabasic_old_de.html')">... auch auf Deutsch</a></tr>
 <tr><td height=8pt></td></tr></table>
 </td></tr>
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
-<td nowrap><a href="../?support" onclick="showContentFromToc(event,this);">Support</a></td></tr>
+<td nowrap><a href="support.html" target="content" onclick="changeURL('support.html')">Support</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table  class="toc-detail" id="support">
-<tr><td nowrap><a class="sub" href="../?faq" onclick="showContentFromToc(event,this);">FAQ</a></tr>
+<tr><td nowrap><a class="sub" href="faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
 <tr><td height=8pt></td></tr>
 </table>
 </td></tr>
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
-<td nowrap><a href="../?screenshots" onclick="showContentFromToc(event,this);">Screenshots</a></td></tr>
+<td nowrap><a href="screenshots.html" target="content" onclick="changeURL('screenshots.html')">Screenshots</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table  class="toc-detail" id="screenshots">
-<tr><td nowrap><a class="sub" href="../?screenshots#windows" onclick="showContentFromToc(event,this);">Windows</a></tr>
-<tr><td nowrap><a class="sub" href="../?screenshots#linux" onclick="showContentFromToc(event,this);">Linux</a></tr>
+<tr><td nowrap><a class="sub" href="screenshots.html#windows" target="content" onclick="changeURL('screenshots.html')">Windows</a></tr>
+<tr><td nowrap><a class="sub" href="screenshots#linux" target="content" onclick="changeURL('screenshots.html')">Linux</a></tr>
 <tr><td height=8pt></td></tr>
 </table>
 </td></tr>
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
-<td nowrap><a href="../?copyright" onclick="showContentFromToc(event,this);">Copyright</a></td></tr>
+<td nowrap><a href="copyright.html" target="content" onclick="changeURL('copyright.html')">Copyright</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="copyright">
-<tr><td nowrap><a class="sub" href="../?mit" onclick="showContentFromToc(event,this);">MIT License</a></tr>
+<tr><td nowrap><a class="sub" href="mit.html" target="content" onclick="changeURL('mit.html')">MIT License</a></tr>
 <tr><td height=8pt></td></tr>
 </table>
 </td></tr>
 <tr>
 <td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
-<td nowrap><a href="../?related" onclick="showContentFromToc(event,this);">Related Sites</a></td></tr>
+<td nowrap><a href="related.html" target="content" onclick="changeURL('related.html')">Related Sites</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="related">
-<tr><td nowrap><a class="sub" href="../?related#gtkserver" onclick="showContentFromToc(event,this);">GTK Grafics</a></tr>
-<tr><td nowrap><a class="sub" href="../?related#japi" onclick="showContentFromToc(event,this);">Japi</a></tr>
-<tr><td nowrap><a class="sub" href="../?related#other" onclick="showContentFromToc(event,this);">Other Basic Sites</a></tr>
+<tr><td nowrap><a class="sub" href="related.html#gtkserver" target="content" onclick="changeURL('faq.html')">GTK Grafics</a></tr>
+<tr><td nowrap><a class="sub" href="related.html#japi" target="content" onclick="changeURL('related.html')">Japi</a></tr>
+<tr><td nowrap><a class="sub" href="related.html#other" target="content" onclick="changeURL('related.html')">Other Basic Sites</a></tr>
 <tr><td height=8pt></td></tr>
 </table>
 </td></tr>
