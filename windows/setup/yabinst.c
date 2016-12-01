@@ -144,6 +144,7 @@ int MyRegs(int); /* add or delete entries to or from registry */
 /* dialog callbacks */
 BOOL CALLBACK pathdialog(HWND, UINT, WPARAM, LPARAM);/* choose installpath */
 BOOL CALLBACK progressdialog(HWND, UINT, WPARAM, LPARAM);/* show progress */
+int CALLBACK BrowseCallbackProc(HWND, UINT, LPARAM, LPARAM); /* set initial path for browse */
 
 /* registry manipulation */
 int delreg(HKEY, char *, char *); /* delete keys from Registry */
@@ -559,7 +560,9 @@ BOOL CALLBACK pathdialog(HWND handle, UINT message,
 			logit("--Pathdialog: BROWSE\n");
 			memset(&bi, 0, sizeof(bi));
 			bi.lpszTitle = "Please choose the installation directory of yabasic.";
-			bi.ulFlags = BIF_NEWDIALOGSTYLE;
+			bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_RETURNONLYFSDIRS;
+			bi.lpfn = BrowseCallbackProc;
+			bi.lParam = (LPARAM)installpath;
 			pidl=SHBrowseForFolder(&bi);
 			if (pidl!=0 && SHGetPathFromIDList(pidl, name)) {
 				SetDlgItemText(handle, IDINSTPATH, name);
@@ -572,6 +575,22 @@ BOOL CALLBACK pathdialog(HWND handle, UINT message,
 		break;
 	}
 	return FALSE;
+}
+
+static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT message, LPARAM lparam, LPARAM lpdata)
+{
+	int hpos;
+	switch (message) {
+	case BFFM_INITIALIZED:
+		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpdata);
+		break;
+	case BFFM_SELCHANGED:
+		/* This does not work yet ... */
+		hpos = SendMessage(hwnd, TVM_GETNEXTITEM, TVGN_CARET, 0); /* this always returns 0 */
+		SendMessage(hwnd, TVM_ENSUREVISIBLE, hpos, 0); 
+		break;
+	}
+	return 0;
 }
 
 BOOL CALLBACK errordialog(HWND handle, UINT message,
@@ -773,7 +792,6 @@ void end(int result) { /* display message and terminate */
 	char *msg;
 	int success = FALSE;
 	int answer;
-	int ret;
 	char string[SSLEN];          /* multi-purpose string */
 	char string2[SSLEN];
 	char *se_what = NULL;  /* target for shell execute */
@@ -882,8 +900,6 @@ void end(int result) { /* display message and terminate */
 			logit(string);
 		}
 	}
-
-silent:
 
 	/* close log-file */
 	logit(NULL);
