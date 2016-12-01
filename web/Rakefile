@@ -36,12 +36,18 @@ end
 
 desc 'Process erb templates'
 task :templates => :changelog do
-  Find.find('.') do |path|
-    if path =~ /.*\.erb$/
-      result = path.chomp('.erb')
-      File.open(result,'w') do |file|
-        file.write ERB.new(File.read(path)).result(binding)
-      end
+  %w( content_download.html.erb  head.html.erb ) do |name|
+    result = name.chomp('.erb')
+    File.open(result,'w') do |file|
+      file.write ERB.new(File.read(name)).result(binding)
+    end
+  end
+
+  structure=File.read('structure.html.erb')
+  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html ) do |name|
+    frame_html = 'content_' + name
+    File.open(name,'w') do |file|
+      file.write ERB.new(structure).result(binding)
     end
   end
 end
