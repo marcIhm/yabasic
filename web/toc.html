@@ -7,9 +7,9 @@
 <meta name="author" content="Marc Ihm">
 <style><!--
 p { margin:0; padding:0; border-width:0; }
-A { color:black; text-decoration:none; font-family:verdana,sans-serif; font-size:13pt;}
-A.symbol { font-weight:900;font-size:11pt;background-color:#C5C5C5;}
-A.symbol:hover { font-weight:900;font-size:11pt;background-color:#868686; color:white; }
+A { font-weight: 500; color:black; text-decoration:none; font-family:verdana,sans-serif; font-size:13pt;}
+A.symbol { font-weight:500;}
+A.symbol:hover { font-weight:500; }
 A.sub { font-size:10pt;}
 A:hover { color:white; text-decoration:none;} 
 --></style>
@@ -19,7 +19,7 @@ A:hover { color:white; text-decoration:none;}
 <base target="_parent" />
 <table>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a></td>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
 <td><a href="../?download" onclick="showContentFromToc(event,this);">Download</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="download">
@@ -32,7 +32,7 @@ A:hover { color:white; text-decoration:none;}
 </table>
 </td></tr>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a>
 <td nowrap><a href="../?whatsnew" onclick="showContentFromToc(event,this);">Documentation</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="whatsnew">
@@ -48,7 +48,7 @@ A:hover { color:white; text-decoration:none;}
 <tr><td height=8pt></td></tr></table>
 </td></tr>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a></td>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
 <td nowrap><a href="../?support" onclick="showContentFromToc(event,this);">Support</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table  class="toc-detail" id="support">
@@ -57,7 +57,7 @@ A:hover { color:white; text-decoration:none;}
 </table>
 </td></tr>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a></td>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
 <td nowrap><a href="../?screenshots" onclick="showContentFromToc(event,this);">Screenshots</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table  class="toc-detail" id="screenshots">
@@ -67,7 +67,7 @@ A:hover { color:white; text-decoration:none;}
 </table>
 </td></tr>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a></td>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
 <td nowrap><a href="../?copyright" onclick="showContentFromToc(event,this);">Copyright</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="copyright">
@@ -76,7 +76,7 @@ A:hover { color:white; text-decoration:none;}
 </table>
 </td></tr>
 <tr>
-<td nowrap><a href="toggle" onclick="toggleTOC(event,this);">+</a></td>
+<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);">+</a></td>
 <td nowrap><a href="../?related" onclick="showContentFromToc(event,this);">Related Sites</a></td></tr>
 <tr style="display:none;"><td></td><td>
 <table class="toc-detail" id="related">
