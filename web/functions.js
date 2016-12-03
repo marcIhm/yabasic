@@ -4,11 +4,11 @@ function toggleTOC(event,node) {
     n=n.parentNode;
     n=n.nextSibling;
     if (n.nodeType!=1) n=n.nextSibling;
-    if (node.textContent=="+") {
-	node.innerHTML="&ndash;";
+    if (n.style.display=="none") {
+	node.innerHTML='<i class="fa fa-angle-down" aria-hidden="true"></i>';
 	n.style.display="";
     } else {
-	node.textContent="+";
+	node.innerHTML='<i class="fa fa-angle-right" aria-hidden="true"></i>';
 	n.style.display="none";
     }
     var iframe=window.top.document.getElementById("toc");
