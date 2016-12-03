@@ -36,12 +36,45 @@ end
 
 desc 'Process erb templates'
 
-colors = { :toc_bg => "#FFBD7C",
-           :head_bg => "#79BD8F",
-           :head_small => "#46573B",
-           :head_bigger => "#46573B",
-           :head_biggest => "#00A388" }
-           
+# colors from https://color.adobe.com
+# Tests with browserstack.com
+
+colors_legacy = { :toc_bg => "#FFBD7C",
+                  :head_bg => "#79BD8F",
+                  :head_biggest => "#00A388",
+                  :head_small => "#46573B",
+                  :head_bigger => "#46573B"}
+
+# https://color.adobe.com/de/Neutral-Blue-color-theme-22361/
+colors_neutral_blue = { :toc_bg => "#D1DBBD",
+                        :head_bg => "#91AA9D",
+                        :head_biggest => "#3E606F", 
+                        :head_small => "#193441",
+                        :head_bigger => "#193441"}
+
+# https://color.adobe.com/de/Ocean-Sunset-color-theme-46355/
+colors_ocean_sunset = { :toc_bg => "#9C9B7A",
+                        :head_bg => "#FFD393",
+                        :head_biggest => "#FF974F",
+                        :head_small => "#F54F29",
+                        :head_bigger => "#F54F29"}
+
+#https://color.adobe.com/de/Midori-and-Madoka-color-theme-2044087/
+colors_midori_and_madoka = { :toc_bg => "#3E8C84",
+                             :head_bg => "#296B73",
+                             :head_biggest => "#194759",
+                             :head_small => "#0F2D40",
+                             :head_bigger => "#0F2D40"}
+
+#https://color.adobe.com/de/sun-splash-color-theme-1568873/
+colors_sun_splash = { :toc_bg => "#FFC861",
+                      :head_bg => "#A5C77F",
+                      :head_biggest => "#42826C",
+                      :head_small => "#002F32",
+                      :head_bigger => "#002F32"}
+                                                  
+colors = colors_legacy
+
 task :templates => :changelog do
   %w( content_download.html.erb  head.html.erb toc.html.erb ).each do |name|
     result = name.chomp('.erb')
