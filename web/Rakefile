@@ -25,8 +25,8 @@ end
 
 desc 'Check and edit changelog'
 task :changelog => :version do
-  %w( log.html whatsnew.html ).each do |name|
-    open(name) do |file|
+  %w( log.html content_whatsnew.html ).each do |name|
+    File.open(name) do |file|
       unless file.read.include?(version)
         sh "emacs -nw #{name}"
       end
@@ -35,8 +35,15 @@ task :changelog => :version do
 end
 
 desc 'Process erb templates'
+
+colors = { :toc_bg => "#FFBD7C",
+           :head_bg => "#79BD8F",
+           :head_small => "#46573B",
+           :head_bigger => "#46573B",
+           :head_biggest => "#00A388" }
+           
 task :templates => :changelog do
-  %w( content_download.html.erb  head.html.erb ) do |name|
+  %w( content_download.html.erb  head.html.erb toc.html.erb ).each do |name|
     result = name.chomp('.erb')
     File.open(result,'w') do |file|
       file.write ERB.new(File.read(name)).result(binding)
@@ -44,8 +51,8 @@ task :templates => :changelog do
   end
 
   structure=File.read('structure.html.erb')
-  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html ) do |name|
-    frame_html = 'content_' + name
+  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html ).each do |name|
+    frame_html = 'content_' + (name == 'index.html' ? 'whatsnew.html' : name)
     File.open(name,'w') do |file|
       file.write ERB.new(structure).result(binding)
     end
