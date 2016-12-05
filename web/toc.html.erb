@@ -1,102 +1,103 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
-<head>
-<title>Table of Contents</title>
-<meta name="author" content="Marc Ihm">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://use.fontawesome.com/e6ce96e4df.js"></script>
-<style>
-  p { margin:0; padding:0; border-width:0; }
-  A { font-weight: 500; color:black; text-decoration:none; font-family:verdana,sans-serif;}
-  A.symbol { font-weight:500;}
-  A.symbol:hover { font-weight:500; }
-  A:hover { color:white; text-decoration:none;}
+  <head>
+    <title>Table of Contents</title>
+    <meta name="author" content="Marc Ihm">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://use.fontawesome.com/e6ce96e4df.js"></script>
+    <style>
+      p { margin:0; padding:0; border-width:0; }
+      A { font-weight: 500; color:black; text-decoration:none; font-family:verdana,sans-serif;}
+      A.symbol { font-weight:500;}
+      A.symbol:hover { font-weight:500; }
+      A:hover { color:white; text-decoration:none;}
 
-  A { font-size: 10pt;}
-  A.sub { font-size: 8pt;}
-  
-  @media screen and (min-width: 180px) {
-  A { font-size: 12pt;}
-  A.sub { font-size: 10pt;}
-  }
+      A { font-size: 10pt;}
+      A.sub { font-size: 8pt;}
+      
+      @media screen and (min-width: 180px) {
+      A { font-size: 12pt;}
+      A.sub { font-size: 10pt;}
+      }
 
-</style>
-<script src="functions.js" type="text/javascript"></script>
-</head>
-<body bgcolor="<%= colors[:toc_bg] %>" text="black">
-  <base target="_parent" />
-<table style="border-collapse: collapse; border: none">
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a>&nbsp;</td>
-<td><a href="content_download.html" target="content" onclick="changeURL('download.html')">Download</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table class="toc-detail" id="download">
-<tr><td nowrap><a class="sub" href="content_download.html#binwin" target="content" onclick="changeURL('download.html')">Windows Binaries</a></tr>
-<tr><td nowrap><a class="sub" href="content_download.html#binlin" target="content" onclick="changeURL('download.html')">Linux Binaries</a></tr>
-<tr><td nowrap><a class="sub" href="content_download.html#sourceunix" target="content" onclick="changeURL('download.html')">Unix Sources</a></tr>
-<tr><td nowrap><a class="sub" href="content_download.html#sourcewin" target="content" onclick="changeURL(event)">Windows Sources</a></tr>
-<tr><td nowrap><a class="sub" href="content_download.html#git" target="content" onclick="changeURL('download.html')">The git-repository</a></tr>
-<tr><td height=8pt></td></tr>
-</table>
-</td></tr>
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
-<td nowrap><a href="content_whatsnew.html" target="content" onclick="changeURL('whatsnew.html');">Documentation</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table class="toc-detail" id="whatsnew">
-<tr><td nowrap><a class="sub" href="content_whatsnew" target="content" onclick="changeURL('whatsnew')">Whats new ?</a></tr>
-<tr><td nowrap><a class="sub" href="content_whatsnew#nutshell" target="content" onclick="changeURL('whatsnew')">Yab in a Nutshell</a></tr>
-<tr><td nowrap><a class="sub" href="content_faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
-<tr><td nowrap><a class="sub" href="content_history.html" target="content" onclick="changeURL('history.html')">History of Yabasic</a></tr>
-<tr><td nowrap><a class="sub" href="content_log.html" target="content" onclick="changeURL('log.html')">Log of changes</a></tr>
-<tr><td nowrap><a class="sub" href="content_yabasic.html" target="content" onclick="changeURL('yabasic.html')">Manual of Yabasic</a></tr>
-<tr><td nowrap><a class="sub" href="content_new_docu.html" target="content" onclick="changeURL('new_docu.html')">The new docu</a></tr>
-<tr><td nowrap><a class="sub" href="content_old_docu.html" target="content" onclick="changeURL('old_docu.html')">The old docu</a></tr>
-<tr><td nowrap><a class="sub" href="content_yabasic_old_de.html" target="content" onclick="changeURL('yabasic_old_de.html')">... auch auf Deutsch</a></tr>
-<tr><td height=8pt></td></tr></table>
-</td></tr>
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
-<td nowrap><a href="content_support.html" target="content" onclick="changeURL('support.html')">Support</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table  class="toc-detail" id="support">
-<tr><td nowrap><a class="sub" href="content_faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
-<tr><td height=8pt></td></tr>
-</table>
-</td></tr>
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
-<td nowrap><a href="content_screenshots.html" target="content" onclick="changeURL('screenshots.html')">Screenshots</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table  class="toc-detail" id="screenshots">
-<tr><td nowrap><a class="sub" href="content_screenshots.html#windows" target="content" onclick="changeURL('screenshots.html')">Windows</a></tr>
-<tr><td nowrap><a class="sub" href="content_screenshots#linux" target="content" onclick="changeURL('screenshots.html')">Linux</a></tr>
-<tr><td height=8pt></td></tr>
-</table>
-</td></tr>
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
-<td nowrap><a href="content_copyright.html" target="content" onclick="changeURL('copyright.html')">Copyright</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table class="toc-detail" id="copyright">
-<tr><td nowrap><a class="sub" href="content_mit.html" target="content" onclick="changeURL('mit.html')">MIT License</a></tr>
-<tr><td height=8pt></td></tr>
-</table>
-</td></tr>
-<tr>
-<td nowrap><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
-<td nowrap><a href="content_related.html" target="content" onclick="changeURL('related.html')">Related Sites</a></td></tr>
-<tr style="display:none;"><td></td><td>
-<table class="toc-detail" id="related">
-<tr><td nowrap><a class="sub" href="content_related.html#gtkserver" target="content" onclick="changeURL('faq.html')">GTK Grafics</a></tr>
-<tr><td nowrap><a class="sub" href="content_related.html#japi" target="content" onclick="changeURL('related.html')">Japi</a></tr>
-<tr><td nowrap><a class="sub" href="content_related.html#other" target="content" onclick="changeURL('related.html')">Other Basic Sites</a></tr>
-<tr><td height=8pt></td></tr>
-</table>
-</td></tr>
-<tr>
-</table>
-  
-</body>
+    </style>
+    <script src="functions.js" type="text/javascript"></script>
+  </head>
+  <body bgcolor="<%= colors[:toc_bg] %>" text="black">
+    <base target="_parent" />
+    <table style="border-collapse: collapse; border: none">
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td><a href="content_download.html" target="content" onclick="changeURL('download.html')">Download</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table class="toc-detail" id="download">
+	    <tr><td nowrap><a class="sub" href="content_download.html#binwin" target="content" onclick="changeURL('download.html')">Windows Binaries</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_download.html#binlin" target="content" onclick="changeURL('download.html')">Linux Binaries</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_download.html#sourceunix" target="content" onclick="changeURL('download.html')">Unix Sources</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_download.html#sourcewin" target="content" onclick="changeURL('dowload.html')">Windows Sources</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_download.html#git" target="content" onclick="changeURL('download.html')">The git-repository</a></tr>
+	    <tr><td height=8pt></td></tr>
+	  </table>
+      </td></tr>
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td nowrap><a href="content_whatsnew.html" target="content" onclick="changeURL('whatsnew.html');">Documentation</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table class="toc-detail" id="whatsnew">
+	    <tr><td nowrap><a class="sub" href="content_whatsnew.html" target="content" onclick="changeURL('whatsnew.html')">Whats new ?</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_whatsnew.html#nutshell" target="content" onclick="changeURL('whatsnew.html')">Yab in a Nutshell</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_history.html" target="content" onclick="changeURL('history.html')">History of Yabasic</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_log.html" target="content" onclick="changeURL('log.html')">Log of changes</a></tr>
+	    <tr><td nowrap><a class="sub" href="manual_yabasic.html" target="content" onclick="changeURL('manual_yabasic.html')">Manual of Yabasic</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_new_docu.html" target="content" onclick="changeURL('new_docu.html')">The new docu</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_old_docu.html" target="content" onclick="changeURL('old_docu.html')">The old docu</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_yabasic_old_de.html" target="content" onclick="changeURL('yabasic_old_de.html')">... auch auf Deutsch</a></tr>
+	    <tr><td height=8pt></td></tr></table>
+      </td></tr>
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td nowrap><a href="content_support.html" target="content" onclick="changeURL('support.html')">Support</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table  class="toc-detail" id="support">
+	    <tr><td nowrap><a class="sub" href="content_faq.html" target="content" onclick="changeURL('faq.html')">FAQ</a></tr>
+	    <tr><td height=8pt></td></tr>
+	  </table>
+      </td></tr>
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td nowrap><a href="content_screenshots.html" target="content" onclick="changeURL('screenshots.html')">Screenshots</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table  class="toc-detail" id="screenshots">
+	    <tr><td nowrap><a class="sub" href="content_screenshots.html#windows" target="content" onclick="changeURL('screenshots.html')">Windows</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_screenshots.html#linux" target="content" onclick="changeURL('screenshots.html')">Linux</a></tr>
+	    <tr><td height=8pt></td></tr>
+	  </table>
+      </td></tr>
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td nowrap><a href="content_copyright.html" target="content" onclick="changeURL('copyright.html')">Copyright</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table class="toc-detail" id="copyright">
+	    <tr><td nowrap><a class="sub" href="content_mit.html" target="content" onclick="changeURL('mit.html')">MIT License</a></tr>
+	    <tr><td height=8pt></td></tr>
+	  </table>
+      </td></tr>
+      <tr>
+	<td nowrap align="center"><a class="symbol" href="toggle" onclick="toggleTOC(event,this);"><i class="fa fa-angle-right" aria-hidden="true"></i></a></td>
+	<td nowrap><a href="content_related.html" target="content" onclick="changeURL('related.html')">Related Sites</a></td></tr>
+      <tr style="display:none;"><td></td><td>
+	  <table class="toc-detail" id="related">
+	    <tr><td nowrap><a class="sub" href="content_related.html#gtkserver" target="content" onclick="changeURL('faq.html')">GTK Grafics</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_related.html#japi" target="content" onclick="changeURL('related.html')">Japi</a></tr>
+	    <tr><td nowrap><a class="sub" href="content_related.html#other" target="content" onclick="changeURL('related.html')">Other Basic Sites</a></tr>
+	    <tr><td height=8pt></td></tr>
+	  </table>
+      </td></tr>
+      <tr>
+      <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td></td></tr>
+    </table>
+    
+  </body>
 </html>
 

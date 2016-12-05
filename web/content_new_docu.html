@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>What's new ?</title>
+    <link rel="stylesheet" type="text/css" href="standard.css">
+    <meta name="author" content="Marc Ihm">
+    <meta name="keywords" content="yabasic news">
+  </head>
+  <body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+    <p>Over the years the <a href="yabasic_old.html">old documentation</a> has outgrown 
+      its initial design and finally failed to satisfy the needs of beginning and advanced 
+      programmers alike. Moreover, its html-code  had become quite - 
+      umm - untidy over the years. Therefore: Both, form and content needed a rewrite.</p>
+    <p>Well the new documentation (which has become the current documentation by 
+      now) should be an improvement in both respects. The new docu is written in xml 
+      with <a href="http://www.docbook.org">docbook</a> as a dtd.</p>
+    <p>The <a href="yabasic.html">new documentation</a> is distributed as a html-document, which is generated 
+      by <a href="http://xmlsoft.org/XSLT/">xsltproc</a> with a <a href="http://docbook.sourceforge.net">html-stylesheet</a> 
+      from the xml-source <a href="yabwrap.html">yabasic.xml</a>.</p>
+    <h2>A problem ...</h2>
+    <p>Docbook can&nbsp;be easily transformed into relly nice <a href="../../../../../desktop/homepage/yabasic.html">html</a>; 
+      However I have&nbsp;problems to transform it &nbsp;into <b>nroff</b>, the format 
+      which is used for Unix <b>man</b>-pages. Of course there are numerous tools 
+      (e.g. <b>docbook-to-man</b>, <b>sgmltools</b> or <b>sgmltools-lite</b>), which 
+      claim to&nbsp;do just that; but unfortunately they either produce ill-formatted 
+      garbage (at least, when I&nbsp;used them) or they only transform the <b>refentry</b>-elements 
+      of yabasic.xml.</p>
+    <p>Currently, I have chosen to transform yabasic.xml into pure ascii-text and 
+      to embed this text <i>as-is</i> within&nbsp;the unix man-page.&nbsp;However, 
+      the result is weak (although much better than the old documentation).&nbsp;Therefore 
+      I would really appreciate any hint, on how to transform <i>all of</i> yabasic.xml 
+      into a <i>single</i> nroff-document; please <a href="mailto:mail@yabasic.de">mail 
+	me</a>, if you have any suggestions or hints.</p>
+  </body>
+</html>

@@ -1,15 +1,13 @@
 function toggleTOC(event,node) {
 
-    var n=node.parentNode;
-    n=n.parentNode;
-    n=n.nextSibling;
-    if (n.nodeType!=1) n=n.nextSibling;
-    if (n.style.display=="none") {
+    var sibling=node.parentNode.parentNode.nextSibling;
+    if (sibling.nodeType!=1) sibling=sibling.nextSibling;
+    if (sibling.style.display=="none") {
 	node.innerHTML='<i class="fa fa-angle-down" aria-hidden="true"></i>';
-	n.style.display="";
+	sibling.style.display="";
     } else {
 	node.innerHTML='<i class="fa fa-angle-right" aria-hidden="true"></i>';
-	n.style.display="none";
+	sibling.style.display="none";
     }
     var iframe=window.top.document.getElementById("toc");
 
