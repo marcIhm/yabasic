@@ -45,45 +45,11 @@ colors_legacy = { :toc_bg => "#FFBD7C",
                   :head_small => "#46573B",
                   :head_bigger => "#46573B"}
 
-# https://color.adobe.com/de/Neutral-Blue-color-theme-22361/
-colors_neutral_blue = { :toc_bg => "#D1DBBD",
-                        :head_bg => "#91AA9D",
-                        :head_biggest => "#3E606F", 
-                        :head_small => "#193441",
-                        :head_bigger => "#193441"}
-
-# https://color.adobe.com/de/Ocean-Sunset-color-theme-46355/
-colors_ocean_sunset = { :toc_bg => "#9C9B7A",
-                        :head_bg => "#FFD393",
-                        :head_biggest => "#FF974F",
-                        :head_small => "#F54F29",
-                        :head_bigger => "#F54F29"}
-
-#https://color.adobe.com/de/Midori-and-Madoka-color-theme-2044087/
-colors_midori_and_madoka = { :toc_bg => "#3E8C84",
-                             :head_bg => "#296B73",
-                             :head_biggest => "#194759",
-                             :head_small => "#0F2D40",
-                             :head_bigger => "#0F2D40"}
-
-#https://color.adobe.com/de/sun-splash-color-theme-1568873/
-colors_sun_splash = { :toc_bg => "#FFC861",
-                      :head_bg => "#A5C77F",
-                      :head_biggest => "#42826C",
-                      :head_small => "#002F32",
-                      :head_bigger => "#002F32"}
-
 colors_blueish = { :toc_bg => "#29D9C2",
                    :head_bg => "#01AEB2",
                    :head_biggest => "#29D9C2",
                    :head_small => "#FFFFA6",
                    :head_bigger => "#FFFFA6"}
-
-colors_blue = { :toc_bg => "#29D9C2",
-                :head_bg => "#01AEB2",
-                :head_biggest => "#29D9C2",
-                :head_small => "#016466",
-                :head_bigger => "#016466"}
 
 colors = colors_blueish
 
@@ -102,7 +68,7 @@ task :templates => :changelog do
     elsif name == 'index.html'
       frame_html = 'content_whatsnew.html'
     else
-      frame_html = 'content_#{name}'
+      frame_html = "content_#{name}"
     end
     
     puts "#{name} wraps #{frame_html}"
