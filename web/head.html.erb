@@ -1,26 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
-<head>
-<title>Header and Banner</title>
-<link rel="stylesheet" type="text/css" href="standard.css">
-<meta name="author" content="Marc Ihm">
-<style><!--
-.small{ font-weight:600; font-size:24vh; color:<%= colors[:head_small] %>; text-decoration:none; margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px; }
-.bigger{ font-weight:900; font-size:70vh; color:<%= colors[:head_bigger] %>; text-decoration:none; margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px; }
-.biggest{ font-weight:700; font-size:300vh; color:<%= colors[:head_biggest] %>; text-decoration:none; margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px; }
---></style>
-</head>
-
-<body bgcolor="<%= colors[:head_bg] %>" text="black" link="blue" vlink="purple" alink="red">
-
-<p><div id="layer1" style="border-width:1px; border-style:none; width:1000px; height:364px; position:absolute; left:0px; top:0px; z-index:2;">
-<table cellspacing="0" align="left" bordercolordark="black" bordercolorlight="black" cellpadding="0">
-        <tr>
-          <td align="left" valign="bottom"><p class="bigger">Yabasic</p></td>
-           <td align="left" valign="bottom"><p class="small">Yet another Basic, Version <%= version %></p></td>
-        </tr>
-    </table></div><div id="layer2" style="border-width:1px; border-style:none; width:2000px; height:229px; position:absolute; left:20px; top:-85px; z-index:1;">
-    <p class="biggest">Yabasic </p>
-</div></body>
-
+  <head>
+    <title>Header and Banner</title>
+    <link rel="stylesheet" type="text/css" href="standard.css">
+    <meta name="author" content="Marc Ihm">
+    <style>
+      div { font-family:verdana,sans-serif; text-decoration:none; margin:0px; padding:0px; position:absolute; }  
+      .small{ font-weight:600; font-size:18vh; color:<%= colors[:head_small] %>; white-space:nowrap; }
+      .bigger{ font-weight:900; font-size:70vh; color:<%= colors[:head_bigger] %>; }
+      .biggest{ font-weight:700; font-size:300vh; color:<%= colors[:head_biggest] %>; }
+    </style>
+  </head>
+  
+  <body bgcolor="<%= colors[:head_bg] %>" text="black" link="blue" vlink="purple" alink="red">
+    <div class="biggest" style="z-index:1; margin-top:-100vh;">
+      Yabasic
+    </div>
+    <div style="z-index:2;">
+      <p class="bigger" style="margin-top:-15vh; margin-bottom:-10vh; margin-left:0vh;">Yabasic</p>
+      <p class="small" style="margin-top:-10vh; margin-bottom:-10vh;">Yet another Basic, Version <%= version %></p>
+    </div>
+  </body>
 </html>
