@@ -711,7 +711,7 @@ parse_arguments (int cargc, char *cargv[])
                 }
             } else if (!print_docu && *option == '-') {
                 sprintf (string,
-                         "unknown or ambigous option '%s' " YABFORHELP,
+                         "unknown or ambiguous option '%s' " YABFORHELP,
                          option);
                 error (ERROR, string);
                 end_it ();

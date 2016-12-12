@@ -1540,7 +1540,7 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
         } else if (infolevel == FATAL) {
             return my_strdup ("fatal");
         } else {
-            return my_strdup ("unkown");
+            return my_strdup ("unknown");
         }
     } else if (!strcmp (dest, "textalign")) {
         return my_strdup (text_align);
