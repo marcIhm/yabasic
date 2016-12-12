@@ -2044,7 +2044,7 @@ next y:next x
 	</refmeta>
 	<refnamediv>
 	  <refname>backcolour</refname>
-	  <refpurpose>see <function><link linkend="ref_backcolor">backcolor</link></function></refpurpose>
+	  <refpurpose>see <function>backcolor</function></refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -2714,7 +2714,7 @@ next y:next x
 	</refmeta>
 	<refnamediv>
 	  <refname>colour</refname>
-	  <refpurpose>see <function><link linkend="ref_color">color</link></function></refpurpose>
+	  <refpurpose>see <function>color</function></refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -6799,7 +6799,7 @@ data "green","yellow","cyan","magenta"
 	</refmeta>
 	<refnamediv>
 	  <refname>print colour</refname>
-	  <refpurpose>see <function><link linkend="ref_print_color">color</link></function></refpurpose>
+	  <refpurpose>see <function>print color</function></refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
