@@ -125,11 +125,6 @@ static HBRUSH backbrush;
 static HBRUSH forebrush;
 static HPEN backpen;
 static HPEN forepen;
-static HGDIOBJ saveddevbrush;
-static HGDIOBJ saveddevpen;
-static HGDIOBJ savedbitbrush;
-static HGDIOBJ savedbitpen;
-static HGDIOBJ savedprnpen;
 HWND window;			/* handle of my window */
 #endif
 
@@ -618,30 +613,24 @@ startdraw (int clear)
 {
     /* prepare for drawing */
     RECT interior;
+
     WaitForSingleObject (drawmutex, INFINITE);
     devcon = GetDC (window);
     if (clear) {
-        saveddevpen = SelectObject (devcon, backpen);
-        savedbitpen = SelectObject (bitcon, backpen);
-    } else {
-        saveddevpen = SelectObject (devcon, forepen);
-        savedbitpen = SelectObject (bitcon, forepen);
-    }
-
-    if (!saveddevpen || !savedbitpen) {
-        error(ERROR, "could not select pen");
-    }
-
-    if (clear) {
-        saveddevbrush = SelectObject (devcon, backbrush);
-        savedbitbrush = SelectObject (bitcon, backbrush);
-    } else {
-        saveddevbrush = SelectObject (devcon, forebrush);
-        savedbitbrush = SelectObject (bitcon, forebrush);
-    }
-    if (!saveddevbrush || !savedbitbrush) {
-        error(ERROR, "could not select brush");
-    }
+        SelectObject (devcon, backpen);
+        SelectObject (bitcon, backpen);
+		SelectObject (devcon, backbrush);
+		SelectObject (bitcon, backbrush);
+		SetTextColor (devcon, backpixel);
+		SetTextColor (bitcon, backpixel);
+	} else {
+        SelectObject (devcon, forepen);
+        SelectObject (bitcon, forepen);
+		SelectObject (devcon, forebrush);
+		SelectObject (bitcon, forebrush);
+		SetTextColor (devcon, forepixel);
+		SetTextColor (bitcon, forepixel);
+	}
 
     GetClientRect (window, &interior);
     SelectClipRgn (devcon, NULL);
@@ -649,12 +638,9 @@ startdraw (int clear)
                        interior.right, interior.bottom);
     if (printer) {
         if (clear) {
-            savedprnpen = SelectObject(printer, revprinterpen);
+            SelectObject(printer, revprinterpen);
         } else {
-            savedprnpen = SelectObject(printer, printerpen);
-            if (!savedprnpen) {
-                error(ERROR, "could not select pen into printer");
-            }
+            SelectObject(printer, printerpen);
         }
     }
 }
@@ -662,13 +648,6 @@ static void
 enddraw ()
 {
     /* release drawing resources */
-    if (!SelectObject(devcon, saveddevpen) ||
-            !SelectObject(bitcon, savedbitpen) ||
-            !SelectObject(devcon, saveddevbrush) ||
-            !SelectObject(bitcon, savedbitbrush) ||
-            (printer && !SelectObject(printer, savedprnpen))) {
-        error(ERROR, "could not select one of original objects into printer, bitmap or device");
-    }
     ReleaseDC (window, devcon);
     ReleaseMutex (drawmutex);
 }
@@ -1276,24 +1255,16 @@ change_colour (struct command *cmd)
 #else /*  */
     if (cmd->type == cGCOLOUR || cmd->type == cGCOLOUR2) {
         forepixel = RGB (r, g, b);
-        DeleteObject (forebrush);
+		DeleteObject (forebrush);
         forebrush = CreateSolidBrush (forepixel);
-        SelectObject (devcon, forebrush);
-        SelectObject (bitcon, forebrush);
         DeleteObject (forepen);
         forepen = CreatePen (PS_SOLID, 0, forepixel);
-        SelectObject (devcon, forepen);
-        SelectObject (bitcon, forepen);
     } else {
         backpixel = RGB (r, g, b);
         DeleteObject (backbrush);
         backbrush = CreateSolidBrush (backpixel);
-        SelectObject (devcon, backbrush);
-        SelectObject (bitcon, backbrush);
         DeleteObject (backpen);
         backpen = CreatePen (PS_SOLID, 0, backpixel);
-        SelectObject (devcon, backpen);
-        SelectObject (bitcon, backpen);
     }
 
 #endif
