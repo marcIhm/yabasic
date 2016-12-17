@@ -24,12 +24,16 @@ task :version => :git do
 end
 
 desc 'Check and edit changelog'
+edit_files = Array.new
+version_files = %w( content_log.html content_whatsnew.html )
 task :changelog => :version do
-  %w( log.html content_whatsnew.html ).each do |name|
-    File.open(name) do |file|
-      unless file.read.include?(version)
-        sh "emacs -nw #{name}"
-      end
+  version_files.each do |name|
+    edit_files << name unless File.new(name).read.include?(version)
+  end
+  if edit_files.length > 0
+    sh "emacs -nw #{edit_files.join(' ')} ../unix/lang/NEWS"
+    version_files.each do |name|
+      fail "File #{name} still does not contain version" unless File.new(name).read.include?(version)
     end
   end
 end
