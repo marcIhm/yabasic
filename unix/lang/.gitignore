@@ -12,3 +12,4 @@ yabasic.1
 yabasic.htm
 *.rpm
 *.deb
+Makefile

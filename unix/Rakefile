@@ -12,7 +12,7 @@ task :git do
   sh "git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
-#      fail "Uncommited local changes, please fix with 'git add' etc."
+      warn "Uncommited local changes, please fix with 'git add' etc."
     end
   end
 end
@@ -24,10 +24,9 @@ file 'lang/yabasic.htm' => 'doc/yabasic.xml' do
 end
 
 desc 'Create man page'
-file 'lang/yabasic.1' => 'doc/yabasic.htm' do
-  ascii=%x{ w3m -dump -o display_charset=ascii,cols=74 yabasic.htm >/tmp/y.utf8 }
-  fail if $?.exitstatus
-  open('doc/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result}
+file 'lang/yabasic.1' => 'lang/yabasic.htm' do
+  sh 'w3m -dump -o display_charset=ascii,cols=74 lang/yabasic.htm >/tmp/y.utf8'
+  open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result}
 end
 
 desc 'Create configure'
@@ -49,7 +48,7 @@ file 'lang/Makefile' => ['lang/Makefile.in','lang/configure'] do
 end
 
 desc 'Run make'
-task :make do
+task :make => 'lang/yabasic.1' do
   cd ('lang') { sh 'make' }
 end
 
@@ -63,8 +62,13 @@ task :versions => [:git,'lang/yabasic.htm',:make,'lang/Makefile','lang/configure
   fail "Mismatch" unless (vs['yabasic'].gsub(/\.\d+$/,"").to_f-vs['yabasic.htm'].gsub(/\.\d+$/,"").to_f).abs<0.01 && vs['yabasic']==vs['configure.ac']
 end
 
+desc 'Create directory to collect products'
+task :products_dir => :versions do
+  mkdir '../products' unless Dir.exists?('../products')
+end
+
 desc 'Create tar with sources'
-task :sources => :versions do
+task :sources => :products_dir do
   cd 'lang' do
     sh 'make dist-gzip'
     mv "yabasic-#{vs['yabasic']}.tar.gz", '../../products'
@@ -72,7 +76,7 @@ task :sources => :versions do
 end
   
 desc 'Create rpm'
-task :rpm => :versions do
+task :rpm => :products_dir do
   cd "lang" do
     sh 'make install DESTDIR=pkg'
     ydir = 'pkg/usr/local/share/applications/yabasic'
