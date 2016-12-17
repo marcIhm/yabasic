@@ -1,0 +1,2 @@
+
+Hint: To advance the Version of yabasic, edit configure.ac

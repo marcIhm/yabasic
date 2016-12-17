@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Sun Sep 18 20:00:13 BST 2016"
+#define BUILD_TIME "Sat Dec 17 07:45:44 GMT 2016"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -187,7 +187,7 @@
 #define PACKAGE_NAME "yabasic"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "yabasic 2.77.1"
+#define PACKAGE_STRING "yabasic 2.77.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "yabasic"
@@ -196,7 +196,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.77.1"
+#define PACKAGE_VERSION "2.77.2"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -231,7 +231,7 @@
 #define UNIX_ARCHITECTURE "x86_64-unknown-linux-gnu"
 
 /* Version number of package */
-#define VERSION "2.77.1"
+#define VERSION "2.77.2"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */

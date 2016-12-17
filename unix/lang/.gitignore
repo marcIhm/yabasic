@@ -1,0 +1,14 @@
+*.o
+*.orig
+.deps
+config.log
+aclocal.m4
+autom4te.cache/
+stamp-h1
+yabasic
+*.tar.gz
+yabasic.xml
+yabasic.1
+yabasic.htm
+*.rpm
+*.deb
