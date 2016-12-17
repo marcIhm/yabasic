@@ -24,9 +24,10 @@ file 'lang/yabasic.htm' => 'doc/yabasic.xml' do
 end
 
 desc 'Create man page'
-file 'lang/yabasic.1' => 'lang/yabasic.htm' do
+file 'lang/yabasic.1' => ['lang/yabasic.htm','doc/yabasic.1.erb'] do
   sh 'w3m -dump -o display_charset=ascii,cols=74 lang/yabasic.htm >/tmp/y.utf8'
-  open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result}
+  ascii = File.new('/tmp/y.utf8').read
+  open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result(binding)}
 end
 
 desc 'Create configure'

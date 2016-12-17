@@ -2,6 +2,7 @@ Version 2.77.2 (December 17, 2016)
   - Fixes for coloured text under windows
   - Fixed error with missing msvcr140.dll
   - Several spelling corrections
+  - Fixed problem with empty man-page
 
 Version 2.77.1 (September 7, 2016)
   - New poke "random_seed" to initialize random number generator
