@@ -7,6 +7,8 @@ require 'erb'
 require 'rake/testtask'
 require 'matrix'
 
+yab_app_dir = '/usr/local/share/applications/yabasic'
+
 desc 'Check git'
 task :git do 
   sh "git diff --exit-code --quiet" do |ok,res|
@@ -80,10 +82,9 @@ desc 'Create rpm'
 task :rpm => :products_dir do
   cd "lang" do
     sh 'make install DESTDIR=pkg'
-    ydir = 'pkg/usr/local/share/applications/yabasic'
-    mkdir_p ydir
+    mkdir_p "pkg/#{yab_app_dir}"
     %w( demo.yab yabasic.htm ).each do |file|
-      cp file, ydir
+      cp file, "pkg/#{yab_app_dir}"
     end
     %w( rpm deb ).each do |fmt|
       sh "fpm -f -s dir -t #{fmt} -n yabasic -v #{vs['yabasic']} -C pkg"
