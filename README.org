@@ -13,3 +13,37 @@ documentation.
 
 If you want to change yabasic itself, read below.
 
+** Building with rake
+
+   Yabasic's build process relies on rake. Rake is similar to make,
+   but its Rakefiles (and the tool itself) are written in ruby.
+   Therefore you need to install ruby and rake to build yabasic.
+
+   Each of the three top-level directories (see below) has its own
+   Rakefile, and just typing 'rake' should be enough to build the
+   respective components.
+
+** The three top-level directories
+
+   Read below for an overview; some directories may contain their own
+   README.org with more details.
+
+*** unix
+
+    Here are most of the c-sources of yabasic as well as its docbook
+    documentation.
+    
+*** windows
+
+    The build process uses the c-sources from the unix-directory, so
+    here you will only find the sources for the windows-specific
+    setup-program.
+
+*** web
+
+    Html-Files and erb-templates for www.yabasic.de .
+
+    Building a new version of the website (by typing 'rake') is tested
+    under windows, but should be workable under unix too.
+
+    
