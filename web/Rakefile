@@ -91,6 +91,7 @@ task :copy => :templates do
     rm file
   end
   rm "#{todir}/Rakefile"
+  rm "#{todir}/.gitignore"
   download = "#{todir}/download"
   rm_rf download if File.exists?(download)
   mkdir download
