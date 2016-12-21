@@ -9880,7 +9880,7 @@ label overview
   print "  and any Yabasic program can be glued together to"
   print "  form a standalone executable.\n" 
   print "  Yabasic is free software, i.e. subject to the"
-  print "  GNU copyright.\n"
+  print "  MIT License.\n"
   print "\n\n\n  While you read this, I am calculating prime numbers,\n"
   print "  Press any key to return to main menu ..."
   can=1
