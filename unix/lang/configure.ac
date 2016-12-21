@@ -72,7 +72,7 @@ dnl --- architecture of build machine ---
 AC_DEFINE_UNQUOTED(UNIX_ARCHITECTURE,"$host",[architecture of build machine])
 
 dnl --- build-time, that will be displayed in banner ---
-AC_DEFINE_UNQUOTED(BUILD_TIME,"`date`",[build-time, that will be displayed in banner])
+AC_DEFINE_UNQUOTED(BUILD_TIME,"`date -u -d @$SOURCE_DATE_EPOCH 2>/dev/null || date -u -r $SOURCE_DATE_EPOCH 2>/dev/null || date -u`",[build-time, that will be displayed in banner])
 
 dnl --- write out results ---
 AC_CONFIG_HEADERS([config.h:config.h.in])
