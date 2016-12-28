@@ -14,6 +14,8 @@
 #define IDC_BUTTON_RUN_DEMO             1015
 #define IDC_BUTTON_READ_DOCU            1016
 #define IDC_BUTTON_VIEW_LOG             1017
+#define IDC_BUTTON_READ_DOCU2           1017
+#define IDC_BUTTON_VIEW_LOG2            1017
 #define IDC_ERRORTEXT                   1018
 #define IDC_SUCCESSTEXT                 1019
 

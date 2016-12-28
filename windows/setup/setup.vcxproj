@@ -151,8 +151,7 @@
     <ClCompile Include="yabinst.c" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="yabico.ico" />
-    <Image Include="..\yabico.ico" />
+    <Image Include="..\lang\yabico.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="yabinst.rc" />

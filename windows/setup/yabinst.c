@@ -2,11 +2,6 @@
 Install-Program for yabasic
 Copyright by Marc Ihm 1996 - 2016.
 
-  Date of last change:
-*/
-#define DOLC                     "November 20, 2016"
-/*
-
 This file is part of yabasic and may be copied under the terms of
 MIT License which can be found in the file LICENSE.
 
@@ -27,19 +22,6 @@ See www.yabasic.de for details.
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 /*------------ defines -------------------*/
-
-/* names and symbols for basic */
-#define BASIC_NAME "Yabasic"
-#define BASIC_DOKU "Yabasic"
-#define BASIC_EXE "yabasic.exe"
-#define BASIC_EXTENSION ".yab"
-#define BASIC_VERFILE "yabver.txt"
-#define BASIC_ICON "yabico.ico"
-#define BASIC_DEMOPROG "demo"
-#define BASIC_README "readme.txt"
-#define BASIC_SETUP "setup.exe"
-#define BASIC_LOG "yabasic-setuplog.txt"
-#define BASIC_LICENSE "LICENSE.txt"
 
 /* headings for messageboxes */
 #define INSTALL_HEADING " Installing yabasic ..."
@@ -127,12 +109,13 @@ char logfile[1000] = "undefined";      /* string containing pathname of logfile 
 int here;                /* install in current path ? */
 int install;             /* install or remove ? */
 int copied;              /* true if copy in temp-directory */
+int control_pressed;     /* true, if shift key has been down at program start or during progress dialog */
 
 int total_progress;      /* number of steps to advance progress counter */
 
 HINSTANCE this_instance; /* instance */
-
-SEMVER newversion;        /* version to be installed */
+HICON this_icon;         /* yabasic icon */
+SEMVER newversion;       /* version to be installed */
 
 /*------------ prototypes -------------------*/
 
@@ -151,11 +134,8 @@ int delreg(HKEY, char *, char *); /* delete keys from Registry */
 char *getreg(char *); /* get keys from Registry */
 int putreg(HKEY, char *, char *, char *); /* put keys into Registry */
 
-/* shell link functions */
-/* Create link: */
-HRESULT CreateShellLink(LINKINFO *, char *);
-/* delete a shell link */
-HRESULT DeleteShellLink(LINKINFO *);
+int create_shell_link(LINKINFO *, char *); /* create a shell link */
+int delete_shell_link(LINKINFO *); /* delete a shell link */
 
 /* functions dealing with progress bar */
 void progress(char *); /* show progress */
@@ -167,7 +147,7 @@ char *formatsemver(SEMVER *,char *); /* return string with formatted version num
 
 /* miscellanous functions */
 void end(int); /* display message and terminate */
-char *app(char *trail); /* append trail to installpath */
+char *append(char *); /* append tail to installpath */
 int copy_file(char *, char *, int); /* copy files */
 char *brushup(char *); /* change to upper case, add slash */
 char *enumfiles(int); /* give filenames, one after another */
@@ -175,7 +155,7 @@ LINKINFO *enumlinks(int); /* give back links, one after the other */
 void logit(char *); /* write text to logfile */
 int MyMessage(HWND, LPCSTR, LPCSTR, UINT); /* wrapper for MessageBox() */
 char *reportdir(char *); /* generate a string containing filenames in directory */
-char *last_error(); /* get last error as string */
+char *last_error(void); /* get last error as string */
 void center_dialog(HWND); /* center dialog on screen */
 
 /*------------ main program --------------*/
@@ -198,18 +178,22 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 	int answer;
 	int i;
 
-
 	/* copy intance information to global variable */
 	this_instance = _this_instance;
+	this_icon = LoadIcon(this_instance, "yabico.ico");
 
 	/* get path for temporary files */
 	GetTempPath(SSLEN, string);
 	GetLongPathName(string, string, SSLEN);
 	temppath = brushup(string);
-
-	/* write to log */
 	sprintf(logs, "--Temppath: '%s'\n", temppath);
 	logit(logs);
+
+	/* get state of control key */
+	control_pressed = (GetAsyncKeyState(VK_CONTROL) < 0);
+
+	/* initialize COM-library for creation of shell links */
+	CoInitialize(NULL);
 
 	sprintf(logs, "--Commandline='%s'\n", commandline);
 	logit(logs);
@@ -242,7 +226,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		char dirglob[SSLEN];
 
 		/* set advance for progresscount */
-		total_progress = 29;
+		total_progress = 21;
 
 		/* write contents of current directory to logfile */
 		sprintf(dirglob, "%s*.*", currentpath);
@@ -267,7 +251,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		/* get and check versions ... */
 
 		/* get new version from file */
-		sprintf(string, "%s%s", currentpath, BASIC_VERFILE);
+		sprintf(string, "%s%s", currentpath, "yabver.txt");
 		verfile = fopen(string, "r");
 		if (!verfile) {
 			sprintf(errmsg, "Could not open version number file\n\n   %s\n\nReason: %s", string, strerror(errno));
@@ -303,9 +287,11 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 			MB_YESNO | MB_ICONQUESTION | MB_SYSTEMMODAL) == IDNO)
 			end(INSTALL_CANCELLED);
 
+		control_pressed = control_pressed || (GetAsyncKeyState(VK_CONTROL) < 0);
+
 		/* check versions */
 		if (comparesemver(&oldversion, &newversion)>0) {
-			sprintf(string, "A newer Version of "BASIC_NAME
+			sprintf(string, "A newer Version of Yabasic"
 				" has already been installed:\n"
 				"  \talready installed: \t%s\n"
 				"  \tto be installed: \t%s\n"
@@ -325,6 +311,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 			MAKEINTRESOURCE(IDD_PATHDIALOG),
 			(HWND)NULL, (DLGPROC)pathdialog);
 		if (cancel) end(INSTALL_CANCELLED);
+		control_pressed = control_pressed || (GetAsyncKeyState(VK_CONTROL) < 0);
 		installpath = brushup(installpath);
 		here = !strcmp(currentpath, installpath);
 		if (oldpath && strcmp(installpath, oldpath)) {
@@ -381,8 +368,11 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		}
 
 		/* create directories */
-		progress("Creating directories.");
+		sprintf(string, "Creating directory for Installation %s", installpath);
+		progress(string);
 		CreateDirectory(installpath, NULL);
+		sprintf(string, "Creating directory for Libraries %s", librarypath);
+		progress(string);
 		CreateDirectory(librarypath, NULL);
 
 		/* copy files */
@@ -395,6 +385,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		}
 
 		/* installation successfull ! */
+		Sleep(400);
 		end(INSTALL_SUCCESS);
 	}
 	else {  /* remove yabasic */
@@ -421,12 +412,11 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 			end(REMOVE_FAILURE);
 		}
 
-		/* write to log */
 		sprintf(logs, "--Installpath: '%s'\n", installpath);
 		logit(logs);
 
 		/* set advance for progresscount */
-		total_progress = 12;
+		total_progress = 8;
 
 		here = !strcmp(currentpath, installpath);
 
@@ -437,13 +427,13 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 			char string[SSLEN]; /* multi purpose string */
 
 			GetTempPath(SSLEN, to);
-			strcat(to, BASIC_SETUP);
-			from = app(BASIC_SETUP);
+			strcat(to, "setup.exe");
+			from = append("setup.exe");
 			CopyFile(from, to, FALSE);
 
 			/* change registry, to point to new location */
 			sprintf(string, "%s %s", to, "remove");
-			putreg(LOCAL, UNINSTALL BASIC_NAME, "UninstallString", string);
+			putreg(LOCAL, UNINSTALL "Yabasic", "UninstallString", string);
 
 			/* remove library directory */
 			success = RemoveDirectory(librarypath);
@@ -492,7 +482,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 			end(REMOVE_FAILURE);
 		}
 
-		DeleteFile(app(BASIC_SETUP));
+		DeleteFile(append("setup.exe"));
 		success = RemoveDirectory(installpath);
 		if (!success) {
 			char *contents;
@@ -559,7 +549,7 @@ BOOL CALLBACK pathdialog(HWND handle, UINT message,
 		case IDC_BROWSE:
 			logit("--Pathdialog: BROWSE\n");
 			memset(&bi, 0, sizeof(bi));
-			bi.lpszTitle = "Please choose the installation directory of yabasic.";
+			bi.lpszTitle = "Please choose and create the directory, where the files of yabasic should be placed.";
 			bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_RETURNONLYFSDIRS;
 			bi.lpfn = BrowseCallbackProc;
 			bi.lParam = (LPARAM)installpath;
@@ -648,6 +638,10 @@ BOOL CALLBACK successdialog(HWND handle, UINT message,
 			logit("--Successdialog: Read docu\n");
 			EndDialog(handle, READ_DOCU);
 			return TRUE;
+		case IDC_BUTTON_VIEW_LOG2:
+			logit("--Successdialog: View Logfile\n");
+			EndDialog(handle, SHOW_LOG);
+			return TRUE;
 		case IDC_BUTTON_JUST_EXIT:
 			logit("--Successdialog: Just exit\n");
 			EndDialog(handle, JUST_EXIT);
@@ -670,7 +664,7 @@ void center_dialog(HWND handle) /* center dialog on screen */
 		((GetSystemMetrics(SM_CXSCREEN) - (rect.right - rect.left)) / 2),
 		((GetSystemMetrics(SM_CYSCREEN) - (rect.bottom - rect.top)) / 2),
 		0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
-
+	SendMessage(handle, WM_SETICON, ICON_BIG, (LPARAM)this_icon);
 }
 
 int delreg(HKEY start, char *keyname, char *subkey)
@@ -694,7 +688,7 @@ subkey  : subkey to delete
 
 char *getreg(char *name) /* get keys from Registry */
 {
-	char *keyname = "SOFTWARE\\"BASIC_NAME;
+	char *keyname = "SOFTWARE\\Yabasic";
 	HKEY key;
 	char value[SSLEN];
 	DWORD n;
@@ -711,82 +705,35 @@ char *getreg(char *name) /* get keys from Registry */
 }
 
 
-int putreg(HKEY start, char *keyname, char *name, char *content)
-/*
-put keys into Registry
-start   : one of the predefined key (e.g. HKEY_CLASSES_ROOT)
-keyname : path to the key to create
-name    : subkey to create
-content : it's content
-*/
-
+int putreg(HKEY start, char *keyname, char *name, char *content) /* put keys into Registry */
 {
 	HKEY key;
 	DWORD status;
-	DWORD istype;
-	char *iscon;
-	DWORD islen;
-	char buf[SSLEN];
 	char buf2[SSLEN];
-	char details[SSLEN];	
 	DWORD ret;
 
-	sprintf(details, "keyname='%s', name='%s', content='%s'", keyname, name, content);
-	islen = strlen(content) + 1;
-	iscon = malloc(islen);
-	if (RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS) {
-		if (RegQueryValueEx(key, name, NULL, &istype, iscon, &islen) == ERROR_SUCCESS)
-			if (!strcmp(iscon, content)) {
-				free(iscon);
-				return TRUE;
-			}
-			else {
-				RegCloseKey(key);
-				if (ret = RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &key) == ERROR_SUCCESS) {
-					ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
-					if (ret == ERROR_SUCCESS) {
-						return TRUE;
-					}
-					else {
-						FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
-						sprintf(buf2, "Could not set value for existing Registry key RegSetValueEx(%s), %s", details, buf);
-						logit(buf2);
-						return FALSE;
-					}
-				}
-				else {
-					FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
-					sprintf(buf2, "Could not open existing Registry key for writing RegOpenKeyEx(%s), %s", details, buf);
-					logit(buf2);
-					return FALSE;
-				}
-			}
-	}
-	else {
-		RegCloseKey(key);
-	}
-	sprintf(buf2, "Registry key could not be opend for reading, trying to create it RegOpenKeyEx(%s), %s", details, buf);
+	sprintf(buf2, "Going to set registry: keyname='%s', name='%s', content='%s'\n", keyname, name, content);
 	logit(buf2);
 	ret = RegCreateKeyEx(start, keyname, 0, "", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, NULL, &key, &status);
-	if (ret != ERROR_SUCCESS) {
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
-		sprintf(buf2, "Could not create Registry key RegCreateKeyEx(%s), %s", details, buf);
-		logit(buf2);
-		return FALSE;
-	}
-	free(iscon);
-	ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
+	ret = RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &key);
 	if (ret == ERROR_SUCCESS) {
-		return TRUE;
+		ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
+		if (ret == ERROR_SUCCESS) {
+			return TRUE;
+		}
+		else {
+			sprintf(buf2, "Could not set value: %d, %s", ret, last_error());
+			logit(buf2);
+			return FALSE;
+		}
 	}
 	else {
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ret, 0, buf, SSLEN, 0);
-		sprintf(buf2, "Could not set value of newly created Registry key RegSetValueEx(%s), %s", details, buf);
+		sprintf(buf2, "Could not open Registry key for writing: %d, %s", ret, last_error());
 		logit(buf2);
 		return FALSE;
 	}
 }
-
+	
 
 void end(int result) { /* display message and terminate */
 	char *msg;
@@ -799,6 +746,7 @@ void end(int result) { /* display message and terminate */
 	int se_ret = 33; /* return value okay for shell-execute*/
 	int ask_run_something = FALSE;
 	int ask_show_log = TRUE;
+	int show_log = control_pressed;
 	char *heading = INSTALL_HEADING;
 
 	switch (result) {
@@ -814,12 +762,12 @@ void end(int result) { /* display message and terminate */
 	case INSTALL_FAILURE:
 		msg = "\nInstallation failed !\n"
 			"Some garbage has been left in the system.\n\n"
-			"To clear up, you better remove "BASIC_NAME" through its entry in control-panel, section software.";
+			"To clear up, you better remove Yabasic through its entry in control-panel, section software.";
 		break;
 	case INSTALL_ABORTED:
 		msg = "\nInstallation aborted.\n"
 			"Some garbage has been left in the system !\n\n"
-			"To clean up, you better remove "BASIC_NAME" through its entry in control-panel, section software.";
+			"To clean up, you better remove Yabasic through its entry in control-panel, section software.";
 		break;
 	case INSTALL_SUCCESS:
 		msg = "\nInstallation completed successfully !\n\n"
@@ -829,18 +777,18 @@ void end(int result) { /* display message and terminate */
 		ask_show_log = FALSE;
 		break;
 	case REMOVE_SUCCESS:
-		msg = BASIC_NAME" has been removed properly !";
+		msg = "Yabasic has been removed properly !";
 		success = TRUE;
 		ask_show_log = FALSE;
 		heading = REMOVE_HEADING;
 		break;
 	case REMOVE_CANCELLED:
-		msg = "Cancelled. "BASIC_NAME" has been left intact.";
+		msg = "Cancelled. Yabasic has been left intact.";
 		ask_show_log = FALSE;
 		heading = REMOVE_HEADING;
 		break;
 	case REMOVE_FAILURE:
-		msg = "\nCouldn't remove "BASIC_NAME" properly !";
+		msg = "\nCouldn't remove Yabasic properly !";
 		heading = REMOVE_HEADING;
 		break;
 	case SILENT:
@@ -852,7 +800,7 @@ void end(int result) { /* display message and terminate */
 
 	string2[0] = '\0';
 	if (ask_run_something) {
-		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\n\n( These options are also available in the start-menu under 'Yabasic' )", msg);
+		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\nFor details on the installation you may also read the logfile.\n\n\n( These options are also available in the start-menu under 'Yabasic' )", msg);
 		answer = DialogBoxParam((HANDLE)this_instance,
 			MAKEINTRESOURCE(IDD_ON_SUCCESS),
 			(HWND)NULL, (DLGPROC)successdialog, (LPARAM) string);
@@ -865,22 +813,25 @@ void end(int result) { /* display message and terminate */
 		case READ_DOCU:
 			sprintf(string2, "%s/yabasic.htm", installpath);
 			se_what = string2;
-			sprintf(se_desc,"Show the documentation of yabasic: %s/%s", installpath, se_what);
+			sprintf(se_desc, "Show the documentation of yabasic: %s/%s", installpath, se_what);
+			break;
+		case SHOW_LOG:
+			show_log = TRUE;
 			break;
 		}
 	}
 
-	if (ask_show_log) {
+	if (!show_log && ask_show_log) {
 		sprintf(string, "%s\n\n\nDo you want to view the logfile ?\n\n\t%s\n\nYou may send it to mail@yabasic.de and I will try to help.\n", msg, logfile);
 		answer = DialogBoxParam((HANDLE)this_instance,
 			MAKEINTRESOURCE(IDD_ON_ERROR),
-			(HWND)NULL, (DLGPROC)errordialog, (LPARAM) string);
-		switch (answer) {
-		case SHOW_LOG:
-			se_what = logfile;
-			sprintf(se_desc, "Show the setup-log of yabasic: %s", logfile);
-			break;
-		}
+			(HWND)NULL, (DLGPROC)errordialog, (LPARAM)string);
+		if (answer == SHOW_LOG) show_log = TRUE;
+	}
+
+	if (show_log) {
+		se_what = logfile;
+		sprintf(se_desc, "Show the setup-log of yabasic: %s", logfile);
 	}
 
 	if (!ask_run_something && !ask_show_log && result!=SILENT) {
@@ -889,14 +840,14 @@ void end(int result) { /* display message and terminate */
 	}
 
 	if (se_what) {
-		se_ret = ShellExecute(NULL, "open", se_what, NULL, NULL, SW_SHOWNORMAL);
+		se_ret = (int) ShellExecute(NULL, "open", se_what, NULL, NULL, SW_SHOWNORMAL);
 		if (se_ret <= 32) {
 			sprintf(string, "Could not '%s': %s", se_desc, last_error());
 			MyMessage(NULL, string, "Failed to execute !", MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 			success = FALSE;
 		}
 		else {
-			sprintf(string, "Successfully executed: %s", se_desc);
+			sprintf(string, "Successfully executed: %s\n", se_desc);
 			logit(string);
 		}
 	}
@@ -910,117 +861,132 @@ void end(int result) { /* display message and terminate */
 }
 
 
-char *app(char *trail) /* append trail to installpath */
+char *append(char *tail) /* append tail to installpath */
 {
 	char *result;
 	int i, t;
 
 	i = strlen(installpath);
-	t = strlen(trail);
+	t = strlen(tail);
 
 	result = malloc(i + t + 1);
 	memcpy(result, installpath, i);
-	memcpy(result + i, trail, t);
+	memcpy(result + i, tail, t);
 	result[t + i] = '\0';
 
 	return result;
 }
 
 
-HRESULT CreateShellLink(LINKINFO *li, char *path)
-/*
-stolen from win32 SDK Help: Create a shell-link
-li    : points to LINKINFO structure containing all infos about link
-path  : Full pathname for objects
-*/
+int create_shell_link(LINKINFO *li, char *inst_path) /* Create a shell-link */
 {
-	HRESULT hres;                /* return value */
-	IShellLink* psl;             /* pointer to new shell-link */
+	HRESULT result;              /* return value from various calls */
 	LPITEMIDLIST pidl;           /* path id */
-	char PathLink[MAX_PATH];     /* path name */
+	char path[MAX_PATH];         /* path name */
+	WORD wpath[MAX_PATH];        /* string with words instead of chars */
 	char string[SSLEN];          /* multi-purpose string */
-	static int first = TRUE;
+	IPersistFile* ppf;           /* pointer to persist file structure */
+	IShellLink* psl;             /* pointer to new shell-link */
+
+	sprintf(logs, "About to create shell link: special_folder=%d, name_of_link=%s, name_of_file=%s,\n  description=%s, ", li->folder, li->link, li->file, li->desc);
+	if (li->icon[1]) {
+		sprintf(string, "name_of_icon=%s\n", li->icon);
+		strcat(logs, string);
+	}
+	else {
+		sprintf(string, "id of icon in system32.dll=%d", li->icon[0]);
+		strcat(logs, string);
+	}
+	logit(logs);
 
 	/* make filename from registry folder constant */
-	hres = SHGetSpecialFolderLocation(NULL, li->folder, &pidl);
-	if (!SUCCEEDED(hres)) return hres;
-	SHGetPathFromIDList(pidl, PathLink);
-	strcat(PathLink, "\\");
-	strcat(PathLink, li->link);
-
-	/* initialize COM-library */
-	if (first) {
-		CoInitialize(NULL);
-		first = FALSE;
+	result = SHGetSpecialFolderLocation(NULL, li->folder, &pidl);
+	if (!SUCCEEDED(result)) {
+		logit("Could not find special folder");
+		return FALSE;
 	}
+
+	SHGetPathFromIDList(pidl, path);
+	strcat(path, "\\");
+	strcat(path, li->link);
+	sprintf(logs, "Constructed path is: %s\n", path);
+	logit(logs);
 
 	/* Get a pointer to the IShellLink interface. */
-	hres = CoCreateInstance(&CLSID_ShellLink, NULL,
-		CLSCTX_INPROC_SERVER, &IID_IShellLink, &psl);
-	if (SUCCEEDED(hres)) {
-		IPersistFile* ppf;
-
-		/* Set the path to the shortcut target */
-		sprintf(string, "%s%s", path, li->file);
-		psl->lpVtbl->SetPath(psl, string);
-
-		/* add description */
-		psl->lpVtbl->SetDescription(psl, li->desc);
-
-		/* set working directory */
-		psl->lpVtbl->SetWorkingDirectory(psl, path);
-
-		/* set icon */
-		if (li->icon[1]) {
-			sprintf(string, "%s%s", path, li->icon);
-			psl->lpVtbl->SetIconLocation(psl, string, 0);
-		}
-		else {
-			GetSystemDirectory(string, SSLEN);
-			strcat(string, "\\shell32.dll");
-			psl->lpVtbl->SetIconLocation(psl, string, li->icon[0]);
-		}
-
-		/* Query IShellLink for the IPersistFile interface for saving the
-		shortcut in persistent storage. */
-		hres = psl->lpVtbl->QueryInterface(psl, &IID_IPersistFile, &ppf);
-
-		if (SUCCEEDED(hres)) {
-			WORD wsz[MAX_PATH];
-
-			/* Ensure that the string is ANSI. */
-			MultiByteToWideChar(CP_ACP, 0, PathLink, -1, wsz, MAX_PATH);
-
-			/* Save the link by calling IPersistFile::Save. */
-			hres = ppf->lpVtbl->Save(ppf, wsz, TRUE);
-			ppf->lpVtbl->Release(ppf);
-		}
-		psl->lpVtbl->Release(psl);
+	result = CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLink, &psl);
+	if (!SUCCEEDED(result)) {
+		sprintf(logs,"Could not get interface for creating shell link: %s",last_error());
+		logit(logs);
+		return FALSE;
 	}
-	return hres;
+
+	/* fill link structure */
+	sprintf(string, "%s%s", inst_path, li->file);
+	psl->lpVtbl->SetPath(psl, string);
+	psl->lpVtbl->SetDescription(psl, li->desc);
+	psl->lpVtbl->SetWorkingDirectory(psl, inst_path);
+	if (li->icon[1]) {
+		sprintf(string, "%s%s", inst_path, li->icon);
+		result = psl->lpVtbl->SetIconLocation(psl, string, 0);
+	}
+	else {
+		GetSystemDirectory(string, SSLEN);
+		strcat(string, "\\shell32.dll");
+		result = psl->lpVtbl->SetIconLocation(psl, string, li->icon[0]);
+	}
+	
+	result = psl->lpVtbl->QueryInterface(psl, &IID_IPersistFile, &ppf);
+	if (!SUCCEEDED(result)) {
+		sprintf(logs,"Could not get interface for persisting file link: %s", last_error());
+		logit(logs);
+		return FALSE;
+	}
+
+	/* Ensure that the string is ANSI. */
+	MultiByteToWideChar(CP_ACP, 0, path, -1, wpath, MAX_PATH);
+	
+	result = ppf->lpVtbl->Save(ppf, wpath, TRUE);
+	ppf->lpVtbl->Release(ppf);
+
+	if (!SUCCEEDED(result)) {
+		sprintf(logs,"Could not save shell link: %s", last_error());
+		logit(logs);
+		return FALSE;
+	}
+	psl->lpVtbl->Release(psl);
+
+	logit("Done.\n");
+	return TRUE;
 }
 
 
-HRESULT DeleteShellLink(LINKINFO *li)
-/*
-Delete a shell-link
-li    : points to LINKINFO structure containing all infos about link
-*/
+HRESULT delete_shell_link(LINKINFO *li) /* Delete a shell-link */
 {
-	HRESULT hres;                /* return value */
+	HRESULT result;              /* return value */
 	LPITEMIDLIST pidl;           /* path id */
-	char PathLink[MAX_PATH];     /* path name */
+	char path[MAX_PATH];         /* path name */
+
+	sprintf(logs, "About to delete shell link: special_folder=%d, name_of_link=%s, name_of_file=%s, description=%s\n", li->folder, li->link, li->file, li->desc);
+	logit(logs);
 
 	/* make filename from folder constant */
-	hres = SHGetSpecialFolderLocation(NULL, li->folder, &pidl);
-	if (!SUCCEEDED(hres)) return hres;
-	SHGetPathFromIDList(pidl, PathLink);
-	strcat(PathLink, "\\");
-	strcat(PathLink, li->link);
+	result = SHGetSpecialFolderLocation(NULL, li->folder, &pidl);
+	if (!SUCCEEDED(result)) {
+		logit("Could not get special folder location");
+		return FALSE;
+	}
 
-	sprintf(logs, "--Deleting '%s'\n", PathLink);
-	logit(logs);
-	return DeleteFile(PathLink);
+	SHGetPathFromIDList(pidl, path);
+	strcat(path, "\\");
+	strcat(path, li->link);
+
+	if (DeleteFile(path)) {
+		return TRUE;
+	}
+	else {
+		sprintf(logs, "Could not delete file %s: %s", path, last_error());
+		return FALSE;
+	}
 }
 
 
@@ -1039,29 +1005,35 @@ int MyLinks(int mode) /* add or remove shell links */
 		/* make filename from registry folder constant */
 		SHGetSpecialFolderLocation(NULL, CSIDL_PROGRAMS, &pidl);
 		SHGetPathFromIDList(pidl, PathLink);
-		strcat(PathLink, "\\"BASIC_NAME);
+		strcat(PathLink, "\\Yabasic");
+		progress("Creating folder in start menu");
 		res = CreateDirectory(PathLink, NULL);
+		sprintf(string, "Creating directory '%s': result = %d\n%s", PathLink, res, last_error());
+		logit(string);
 	}
 	while (li = enumlinks(NEXT)) {
-		if (mode == INSTALL && !li->removeonly) {
-			sprintf(string, "Adding %s", li->desc);
-			progress(string);
-			logit(string);
-			success = SUCCEEDED(CreateShellLink(li, installpath)) && success;
+		if (mode == INSTALL) {
+			if (!li->removeonly) {
+				sprintf(string, "Adding shell-link %s", li->desc);
+				progress(string);
+				success = create_shell_link(li, installpath) && success;
+			}
 		}
 		else {
-			sprintf(string, "removing %s", li->desc);
+			sprintf(string, "Removing shell-link desc=%s", li->desc);
 			progress(string);
-			logit(string);
-			success = SUCCEEDED(DeleteShellLink(li)) && success;
+			success = delete_shell_link(li) && success;
 		}
 	}
 	if (mode != INSTALL) {
 		/* make filename from registry folder constant */
 		SHGetSpecialFolderLocation(NULL, CSIDL_PROGRAMS, &pidl);
 		SHGetPathFromIDList(pidl, PathLink);
-		strcat(PathLink, "\\"BASIC_NAME);
+		strcat(PathLink, "\\Yabasic");
+		progress("Removing folder in start menu");
 		res = RemoveDirectory(PathLink);
+		sprintf(string, "Removing directory '%s': result = %d\n%s", PathLink, res, last_error());
+		logit(string);
 	}
 	return success;
 }
@@ -1081,7 +1053,7 @@ int MyFiles(int mode) /* copy or delete files */
 
 		while (success && (name = enumfiles(NEXT))) {
 			sprintf(string, "%s%s", currentpath, name);
-			success = copy_file(string, app(name), here) && success;
+			success = copy_file(string, append(name), here) && success;
 			sprintf(string, "Copying '%s'", name);
 			progress(string);
 		}
@@ -1090,7 +1062,7 @@ int MyFiles(int mode) /* copy or delete files */
 		enumfiles(RESET);
 
 		while (name = enumfiles(NEXT)) {
-			if (!DeleteFile(app(name))) failures++;
+			if (!DeleteFile(append(name))) failures++;
 			sprintf(string, "Deleting '%s'", name);
 			progress(string);
 		}
@@ -1115,60 +1087,48 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 	case INSTALL:
 		/* registering uninstall program */
 		progress("Registering uninstall-program");
-		success = putreg(LOCAL, UNINSTALL BASIC_NAME, "DisplayName", BASIC_NAME);
-		sprintf(string, "%s%s %s", installpath, BASIC_SETUP, "remove");
-		success = putreg(LOCAL, UNINSTALL BASIC_NAME, "UninstallString", string) && success;
-		progress(NULL);
-		progress("Adding defaults to registry.");
+		success = putreg(LOCAL, UNINSTALL "Yabasic", "DisplayName", "Yabasic");
+		sprintf(string, "%s%s %s", installpath, "setup.exe", "remove");
+		success = putreg(LOCAL, UNINSTALL "Yabasic", "UninstallString", string) && success;
 		/* make changes in registry, put in defaults */
-		success = putreg(LOCAL, SOFT BASIC_NAME, "path", installpath) && success;
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "librarypath", librarypath) && success;
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "font", DEFAULTFONT) && success;
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "foreground", DEFAULTFOREGROUND) && success;
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "background", DEFAULTBACKGROUND) && success;
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "geometry", DEFAULTGEOMETRY) && success;
+		progress("Setting registry");
+		success = putreg(LOCAL, SOFT "Yabasic", "path", installpath) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "librarypath", librarypath) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "font", DEFAULTFONT) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "foreground", DEFAULTFOREGROUND) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "background", DEFAULTBACKGROUND) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "geometry", DEFAULTGEOMETRY) && success;
 		sprintf(string, "%s", formatsemver(&newversion,buf));
-		progress(NULL);
-		success = putreg(LOCAL, SOFT BASIC_NAME, "version", string) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "version", string) && success;
 
-		progress("Registering file extension.");
-		/* change context-menue */
-		success = putreg(ROOT, BASIC_EXTENSION, "", BASIC_NAME) && success;
-		progress(NULL);
-		success = putreg(ROOT, BASIC_NAME, "", "Yabasic Program") && success;
-		progress(NULL);
-		success = putreg(ROOT, BASIC_NAME"\\DefaultIcon", "", app(BASIC_ICON)) && success;
-		progress(NULL);
-		success = putreg(ROOT, BASIC_EXTENSION"\\ShellNew", "NullFile", "") && success;
-		success = putreg(ROOT, BASIC_NAME"\\shell\\open", "", "&Execute") && success;
-		success = putreg(ROOT, BASIC_NAME"\\shell\\open\\command", "",
-			app(BASIC_EXE" \"%1\" \"%2\" \"%3\" \"%4\" \"%5\" \"%6\" \"%7\" \"%8\" \"%9\"")) && success;
+		progress("Registering file extension");
+		/* change context-menue of root window */
+		success = putreg(ROOT, ".yab", "", "Yabasic") && success;
+		progress("Setting context menu of root-window");
+		success = putreg(ROOT, "yabasic", "", "Yabasic Program") && success;
+		success = putreg(ROOT, "Yabasic\\DefaultIcon", "", append("yabico.ico")) && success;
+		success = putreg(ROOT, ".yab\\ShellNew", "NullFile", "") && success;
+		success = putreg(ROOT, "Yabasic\\shell\\open", "", "&Execute") && success;
+		success = putreg(ROOT, "Yabasic\\shell\\open\\command", "",
+			append("yabasic.exe \"%1\" \"%2\" \"%3\" \"%4\" \"%5\" \"%6\" \"%7\" \"%8\" \"%9\"")) && success;
 
-		progress("Linking to root-Menu");
-		success = putreg(ROOT, BASIC_NAME"\\shell\\New", "", "&Edit") && success;
+		success = putreg(ROOT, "Yabasic\\shell\\New", "", "&Edit") && success;
 		GetWindowsDirectory(string, SSLEN);
 		sprintf(windir, "%s%s", brushup(string), "Notepad.exe \"%1\"");
-		success = putreg(ROOT, BASIC_NAME"\\shell\\New\\command", "", windir)
+		success = putreg(ROOT, "Yabasic\\shell\\New\\command", "", windir)
 			&& success;
 		/* printing of embedded docu */
-		success = putreg(ROOT, BASIC_NAME"\\shell\\ViewDocu", "", "&View docu") && success;
-		success = putreg(ROOT, BASIC_NAME"\\shell\\ViewDocu\\command", "",
-			app(BASIC_EXE" \"-doc_%1\"")) && success;
+		success = putreg(ROOT, "Yabasic\\shell\\ViewDocu", "", "&View docu") && success;
+		success = putreg(ROOT, "Yabasic\\shell\\ViewDocu\\command", "",
+			append("yabasic.exe \"-doc_%1\"")) && success;
 
 		return success;
 	case REMOVE:
-		delreg(ROOT, BASIC_EXTENSION, "");
-		progress(NULL);
-		delreg(ROOT, BASIC_NAME, "");
-		progress(NULL);
-		delreg(LOCAL, SOFT BASIC_NAME, "");
-		progress(NULL);
-		delreg(LOCAL, UNINSTALL BASIC_NAME, "");
+		progress("Removing entries in registry");
+		delreg(ROOT, ".yab", "");
+		delreg(ROOT, "Yabasic", "");
+		delreg(LOCAL, SOFT "Yabasic", "");
+		delreg(LOCAL, UNINSTALL "Yabasic", "");
 	}
 	return success;
 }
@@ -1192,14 +1152,13 @@ BOOL CALLBACK progressdialog(HWND handle, UINT message,
 
 void progress(char *msg) /* show progress */
 {
-	int timerid;
-	MSG timermsg;
 	RECT rc;
 	static int count = 0;
 	static HWND progressbox = NULL;   /* handle of progress dialog */
 	static HWND hwndPB = NULL; /* handle of progress bar */
 	char string[SSLEN];             /* multi-purpose string */
-	int thumb;  // height of scroll bar arrow 
+	char *title_clause;
+	int thumb;  /* height of scroll bar arrow */
 
 	count++;
 
@@ -1234,14 +1193,15 @@ void progress(char *msg) /* show progress */
 		logit(logs);
 	}
 
+	control_pressed = control_pressed || (GetAsyncKeyState(VK_CONTROL) < 0);
+	title_clause = control_pressed ? ", logfile pending" : "";
+
 	/* set heading of progress window */
-	sprintf(string, "Work in progress ... step %d", count);
+	sprintf(string, "Work in progress%s ... step %d", title_clause, count);
 	SendMessage((HWND)progressbox, (UINT)WM_SETTEXT, 0, (LPARAM)(LPCTSTR)string);
 
-	/* wait a bit ... */
-	timerid = SetTimer(NULL, 0, 200, (TIMERPROC)NULL);
-	GetMessage((LPMSG)&timermsg, NULL, WM_TIMER, WM_TIMER);
-	KillTimer(NULL, timerid);
+	/* wait to let the user notice */
+	Sleep(200);
 }
 
 
@@ -1282,13 +1242,13 @@ char *enumfiles(int mode) /* give filenames, one after another */
 
 	num++;
 
-	if (num == 1) return strdup(BASIC_SETUP);
-	if (num == 2) return strdup(BASIC_ICON);
-	if (num == 3) return strdup(BASIC_EXE);
-	if (num == 4) return strdup(BASIC_DEMOPROG".yab");
-	if (num == 5) return strdup(BASIC_README);
-	if (num == 6) return strdup(BASIC_NAME".htm");
-	if (num == 7) return strdup(BASIC_LICENSE);
+	if (num == 1) return strdup("setup.exe");
+	if (num == 2) return strdup("yabico.ico");
+	if (num == 3) return strdup("yabasic.exe");
+	if (num == 4) return strdup("demo.yab");
+	if (num == 5) return strdup("readme.txt");
+	if (num == 6) return strdup("yabasic.htm");
+	if (num == 7) return strdup("LICENSE.txt");
 
 	return NULL;
 }
@@ -1297,19 +1257,16 @@ char *enumfiles(int mode) /* give filenames, one after another */
 LINKINFO *enumlinks(int mode) /* give back linkinfos, one after another */
 {
 	static int num = 0;
+
+	/* Fields of structure LINKINFO */
+	/* registry key,			name of link;				name of file;		description of link;	name of icon for link;  true, if icon should be removed but not installed */
 	static LINKINFO li[] = {
-	  {CSIDL_PROGRAMS,BASIC_NAME"\\"BASIC_NAME".LNK",BASIC_EXE,
-		"Link to "BASIC_NAME,BASIC_ICON,FALSE},
-	  {CSIDL_PROGRAMS,BASIC_NAME".LNK",BASIC_EXE,
-	  "Link to "BASIC_NAME,BASIC_ICON,TRUE},
-	  {CSIDL_PROGRAMS,BASIC_NAME"\\DEMO.LNK",BASIC_DEMOPROG".yab",
-	  "Link to "BASIC_DEMOPROG".yab","\025",FALSE},
-	  {CSIDL_DESKTOPDIRECTORY,"DEMO.LNK",BASIC_DEMOPROG".yab",
-	  "Link to "BASIC_DEMOPROG".yab",BASIC_ICON,FALSE},
-	  {CSIDL_PROGRAMS,BASIC_NAME"\\DOCU.LNK",BASIC_NAME".htm",
-	  "Link to "BASIC_NAME".htm","\026",FALSE},
-	  {CSIDL_DESKTOPDIRECTORY,"DOCU.LNK",BASIC_NAME".htm",
-	  "Link to "BASIC_NAME".htm",BASIC_ICON,FALSE}
+	 {CSIDL_PROGRAMS,			"Yabasic\\Yabasic.lnk",		"yabasic.exe",		"Link to Yabasic",		"yabico.ico",			FALSE},
+	 {CSIDL_PROGRAMS,			"Yabasic.lnk",				"yabasic.exe",		"Link to Yabasic",		"yabico.ico",			TRUE},
+	 {CSIDL_PROGRAMS,			"Yabasic\\demo.lnk",		"demo.yab",			"Link to demo.yab",		"\025",					FALSE},
+	 {CSIDL_DESKTOPDIRECTORY,	"demo.lnk",					"demo.yab",			"Link to demo.yab",		"yabico.ico",			FALSE},
+	 {CSIDL_PROGRAMS,			"Yabasic\\docu.lnk",		"Yabasic.htm",		"Link to Yabasic.htm",  "\026",					FALSE},
+	 {CSIDL_DESKTOPDIRECTORY,	"docu.lnk",					"Yabasic.htm",		"Link to Yabasic.htm",   "yabico.ico",			FALSE}
 	};
 
 	if (mode == RESET) {
@@ -1361,10 +1318,10 @@ void logit(char *text)
 
 	/* open log-file */
 	if (!log) {
-		sprintf(logfile, "%s%s", temppath, BASIC_LOG);
-		log = fopen(logfile, "a");
+		sprintf(logfile, "%s%s", temppath, "yabasic-setup.txt");
+		log = fopen(logfile, copied ? "a" : "w");
 		if (!log) {
-			sprintf(string, "Could not open log file '%s': %s", logfile, strerror(errno));
+			sprintf(string, "Could not open log file '%s': %s", logfile, last_error());
 			MyMessage(NULL, string, INSTALL_HEADING, MB_STYLE);
 			end(INSTALL_IMPOSSIBLE);
 		}
@@ -1372,8 +1329,8 @@ void logit(char *text)
 		if (log) {
 			fprintf(log, "\n\n\n---------------------------------------------------\n"
 				"Starting installation-log, "
-				"hr=%d, min=%d, sec=%d, msec=%d.\n",
-				time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
+				"hr=%d, min=%d, sec=%d, msec=%d.\n%s\n",
+				time.wHour, time.wMinute, time.wSecond, time.wMilliseconds,logfile);
 			oldtime = GetCurrentTime();
 		}
 	}
@@ -1394,7 +1351,7 @@ void logit(char *text)
 			}
 		}
 		else {  /* not text ... */
-			fprintf(log, "Closing installation-log.");
+			fprintf(log, "Closing installation-log:\n%s\n",logfile);
 			fflush(log);
 			fclose(log);
 		}

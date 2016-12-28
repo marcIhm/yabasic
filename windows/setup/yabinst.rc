@@ -62,7 +62,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "..\\yabico.ico"
+IDI_ICON1               ICON                    "..\\lang\\yabico.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -91,15 +91,16 @@ BEGIN
     CTEXT           "Static",IDC_PROGRESSTEXT,21,17,146,19,SS_CENTERIMAGE | WS_BORDER
 END
 
-IDD_ON_SUCCESS DIALOGEX 0, 0, 309, 172
+IDD_ON_SUCCESS DIALOGEX 0, 0, 355, 201
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Installation succeeded !"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "Static",IDC_SUCCESSTEXT,21,17,267,92
-    PUSHBUTTON      "Exit",IDC_BUTTON_JUST_EXIT,193,126,66,24
-    PUSHBUTTON      "Run Demo",IDC_BUTTON_RUN_DEMO,41,126,66,24,BS_MULTILINE
-    PUSHBUTTON      "Read Documentation",IDC_BUTTON_READ_DOCU,117,126,66,24,BS_MULTILINE
+    LTEXT           "Static",IDC_SUCCESSTEXT,21,17,306,122
+    PUSHBUTTON      "Exit",IDC_BUTTON_JUST_EXIT,259,151,66,24
+    PUSHBUTTON      "Run Demo",IDC_BUTTON_RUN_DEMO,16,151,66,24,BS_MULTILINE
+    PUSHBUTTON      "Read Documentation",IDC_BUTTON_READ_DOCU,92,151,66,24,BS_MULTILINE
+    PUSHBUTTON      "View Logfile",IDC_BUTTON_VIEW_LOG2,168,151,66,24,BS_MULTILINE
 END
 
 IDD_ON_ERROR DIALOGEX 0, 0, 309, 195
@@ -140,9 +141,9 @@ BEGIN
     IDD_ON_SUCCESS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 302
+        RIGHTMARGIN, 348
         TOPMARGIN, 7
-        BOTTOMMARGIN, 165
+        BOTTOMMARGIN, 194
     END
 
     IDD_ON_ERROR, DIALOG

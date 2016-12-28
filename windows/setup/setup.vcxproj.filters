@@ -20,10 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="yabico.ico">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
-    <Image Include="..\yabico.ico">
+    <Image Include="..\lang\yabico.ico">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>
