@@ -10026,7 +10026,7 @@ data "   Exit this demo          "
 
   <chapter id="chapter_copyright">
     <title>The Copyright of <application>yabasic</application></title>
-    <para><application>yabasic</application> may be copied under the terms of the <emphasis><ulink url="http://www.yabasic.de/mit.htm">MIT License</ulink></emphasis>, which is distributed with <application>yabasic</application> in the file <filename>LICENSE</filename>.</para>
+    <para><application>yabasic</application> may be copied under the terms of the <emphasis><ulink url="http://www.yabasic.de/content_mit.html">MIT License</ulink></emphasis>, which is distributed with <application>yabasic</application> in the file <filename>LICENSE</filename>.</para>
     <para>The MIT License grants extensive rights as long as you keep the copyright notice present in most files untouched. Here is a list of things that are possible under the terms of the MIT License:</para>
     <itemizedlist>
       <listitem>
