@@ -11,7 +11,19 @@
   If you want to write programs for yabasic, see http://www.yabasic.de for
   documentation.
 
-  If you want to change yabasic itself, read below.
+  If you want to modify yabasic itself and participate in its development, read below.
+
+** Table of Content     :TOC_3:
+ - [[#yabasic][Yabasic]]
+   - [[#the-three-top-level-directories][The three top-level directories]]
+     - [[#unix][unix]]
+     - [[#windows][windows]]
+     - [[#web][web]]
+   - [[#building-yabasic][Building Yabasic]]
+     - [[#building-with-rake][Building with rake]]
+     - [[#building-under-unix][Building under Unix]]
+     - [[#building-under-windows][Building under Windows]]
+     - [[#a-typical-building-sequence][A typical building sequence]]
 
 ** The three top-level directories
 
