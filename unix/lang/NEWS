@@ -1,3 +1,8 @@
+Version 2.77.3 (December 29, 2016)
+  - Fixed insecure usage of strcpy
+  - Better logging for windows installer
+  - Spelling corrections
+
 Version 2.77.2 (December 17, 2016)
   - Fixes for coloured text under windows
   - msvcr140.dll is no longer required under Windows

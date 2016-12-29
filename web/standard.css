@@ -1,9 +1,10 @@
-p,ul,h1,h2,h3 { font-family: verdana, sans-serif; }  
+p,ul,h1,h2,h3,h4 { font-family: verdana, sans-serif; }  
 p { margin-left: 20pt; font-size: 12pt; }
 ul { margin-left: 40pt; font-size: 12pt; }
 body { margin-bottom: 100vh; }
-h1,h2,h3 { margin-left: 0pt; font-weight: 800; }
+h1,h2,h3,h4 { margin-left: 0pt; font-weight: 800; }
 pre { margin-left: 60pt; font-size: 12pt; }
 h1 { font-size:22pt; }  
 h2 { font-size:20pt; }  
 h3 { font-size:18pt; }
+h4 { font-size:14pt; }
