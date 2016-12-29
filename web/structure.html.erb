@@ -7,10 +7,18 @@
 <meta name="description" content="Yabasic is a free basic interpreter for Unix and Windows">
 <meta name="keywords" content="yabasic basic free windows unix interpreter">
 <link rel="stylesheet" type="text/css" href="standard.css">
+<style>
+  #sign_name { font-size: 10pt;}
+  #sign_version { font-size: 8pt;}
+  @media screen and (min-width: 700px) {
+    #sign_name { font-size: 14pt;}
+    #sign_version { font-size: 12pt;}
+  }
+</style>
 </head>
 
 <body>
-  <p style="position: fixed; top: 3vh; left: -1vw; z-index: -1;"><span style="font-weight: 600; font-size: 4vh; background-color: <%= colors[:head_bg] %>; color: <%= colors[:head_bigger] %>">&nbsp;Yabasic&nbsp;</span><span style="font-size: 3vh; color: <%= colors[:head_bg] %>;"><br/>&nbsp;<%= version %></span></p>
+  <p style="position: fixed; top: 3vh; left: -1vw; z-index: -1;"><span id="sign_name" style="font-weight: 600; background-color: <%= colors[:head_bg] %>; color: <%= colors[:head_bigger] %>">&nbsp;Yabasic&nbsp;</span><span id="sign_version" style="color: <%= colors[:head_bg] %>;"><br/>&nbsp;<%= version %></span></p>
   <iframe id="toc" style="position: fixed; z-index: 2; left: 1vw; top: 21vh; min-height: 77vh; width: 14vw;" src="toc.html" frameborder="0" scrolling="no"></iframe>
   <div style="left: 1vw; position: absolute">
     <table style="border-collapse: collapse; padding: 0">
