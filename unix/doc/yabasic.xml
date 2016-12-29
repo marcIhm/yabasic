@@ -54,7 +54,7 @@ close window
       <para>Once, <application>yabasic</application> has been set up correctly, there are three ways to start it:</para>
       <orderedlist>
 	<listitem>
-	  <para><emphasis>Rightclick on your desktop:</emphasis> The desktop menu appears with a submenu named <emphasis>new</emphasis>. From this submenu choose <application>yabasic</application>. This will create a new icon on your desktop. If you rightclick on this icon, its <link linkend="windows_context_menu">context menu</link> will appear; choose <guilabel>Execute</guilabel> to execute the program.</para>
+	  <para><emphasis>Right click on your desktop:</emphasis> The desktop menu appears with a submenu named <emphasis>new</emphasis>. From this submenu choose <application>yabasic</application>. This will create a new icon on your desktop. If you right click on this icon, its <link linkend="windows_context_menu">context menu</link> will appear; choose <guilabel>Execute</guilabel> to execute the program.</para>
 	</listitem>
 
 	<listitem>
@@ -71,7 +71,7 @@ close window
     </sect1>
     <sect1>
       <title id="windows_options">Options</title>
-      <para>Under Windows <application>yabasic</application> will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the commandline options below. However, advanced users may add some of those options to the appropriate entries in the registry.</para>
+      <para>Under Windows <application>yabasic</application> will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the command line options below. However, advanced users may add some of those options to the appropriate entries in the registry.</para>
       <para>All the options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example, you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
       <variablelist>
 	<varlistentry>
@@ -105,7 +105,7 @@ close window
 	<varlistentry>
 	  <term><literal>-bind <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable></literal></term>
 	  <listitem>
-	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the commandline. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
+	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the command line. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -146,7 +146,7 @@ close window
 	<varlistentry>
 	  <term><guilabel>Execute</guilabel></term>
 	  <listitem>
-	    <para>This will invoke <application>yabasic</application> to execute your program. The same happens, if you <emphasis>doubleclick</emphasis> on the icon.</para>
+	    <para>This will invoke <application>yabasic</application> to execute your program. The same happens, if you <emphasis>double click</emphasis> on the icon.</para>
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
@@ -194,7 +194,7 @@ close window
 
     <sect1>
       <title id="unix_options">Options</title>
-      <para><application>yabasic</application> accepts a number of options on the commandline. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
+      <para><application>yabasic</application> accepts a number of options on the command line. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
       <variablelist>
 	<varlistentry>
 	  <term><literal>-help</literal> or <literal>-?</literal></term>
@@ -213,14 +213,14 @@ close window
 	<varlistentry>
 	  <term><literal>-fg <replaceable>FOREGROUND-COLOR</replaceable></literal> or <literal>-foreground <replaceable>FOREGROUND-COLOR</replaceable></literal></term>
 	  <listitem>
-	    <para>Define the foreground color for the graphics-window (that will be opened with <function><link linkend="ref_open_window">open window</link></function>). The usual X11 colornames, like <emphasis>red</emphasis>, <emphasis>green</emphasis>, &hellip; are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
+	    <para>Define the foreground color for the graphics-window (that will be opened with <function><link linkend="ref_open_window">open window</link></function>). The usual X11 color names, like <emphasis>red</emphasis>, <emphasis>green</emphasis>, &hellip; are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
 	  <term><literal>-bg <replaceable>BACKGROUND-COLOR</replaceable></literal> or <literal>-background <replaceable>BACKGROUND-COLOR</replaceable></literal></term>
 	  <listitem>
-	    <para>Define the background color for the graphics-window. The usual X11 colornames are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
+	    <para>Define the background color for the graphics-window. The usual X11 color names are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -256,7 +256,7 @@ close window
 	<varlistentry>
 	  <term><literal>-bind <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable></literal></term>
 	  <listitem>
-	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the commandline. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
+	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the command line. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -1656,7 +1656,7 @@ print abs(-2),abs(2)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>acos</function> is the arcus cosine-function, i.e. the inverse of the <link linkend="ref_cos"><function>cos</function></link>-function. Or, more elaborate: It Returns the angle (in radian, not degree !), which, fed to the cosine-function will produce the argument passed to the <function>acos</function>-function.</para>
+	  <para><function>acos</function> is the arcus cosine-function, i.e. the inverse of the <link linkend="ref_cos"><function>cos</function></link>-function. Or, more elaborate: It Returns the angle (in radians, not degrees !), which, fed to the cosine-function will produce the argument passed to the <function>acos</function>-function.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -1901,7 +1901,7 @@ print "The letter after ",a$," is ",chr$(asc(a$)+1)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>acos</function> is the arcus sine-function, i.e. the inverse of the <link linkend="ref_sin"><function>sin</function></link>-function. Or, more elaborate: It Returns the angle (in radian, not degree !), which, fed to the sine-function will produce the argument passed to the <function>asin</function>-function.</para>
+	  <para><function>acos</function> is the arcus sine-function, i.e. the inverse of the <link linkend="ref_sin"><function>sin</function></link>-function. Or, more elaborate: It Returns the angle (in radians, not degrees !), which, fed to the sine-function will produce the argument passed to the <function>asin</function>-function.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -1974,7 +1974,7 @@ angle=atan(a)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>atan</function> is the arctangent-function, i.e. the inverse of the <link linkend="ref_tan"><function>tan</function></link>-function. Or, more elaborate: It Returns the angle (in radian, not degree !), which, fed to the <function>tan</function>-function will produce the argument passed to the <function>atan</function>-function.</para>
+	  <para><function>atan</function> is the arctangent-function, i.e. the inverse of the <link linkend="ref_tan"><function>tan</function></link>-function. Or, more elaborate: It Returns the angle (in radians, not degrees !), which, fed to the <function>tan</function>-function will produce the argument passed to the <function>atan</function>-function.</para>
 	  <para>The <function>atan</function>-function has a second form, which accepts two arguments: <function>atan(a,b)</function> which is (mostly) equivalent to <function>atan(a/b)</function> <emphasis>except</emphasis> for the fact, that the two-argument-form returns an angle in the range -&pgr; to &pgr;, whereas the one-argument-form returns an angle in the range -&pgr;/2 to &pgr;/2. To understand this you have to be good at math.</para>
 	</refsect1>
 	<refsect1>
@@ -2015,7 +2015,7 @@ backcolour "red,green,blue"
 	  <title>Description</title>
 	  <para>Change the color, that becomes visible, if any portion of the window is erased, e.g. after <function><link linkend="ref_clear_window">clear window</link></function> or <function><link linkend="ref_clear">clear line</link></function>. Note however, that parts of the window, that display the old background color will not change.</para>
 <para>
-As with the <function><link linkend="ref_color">color</link></function>-command, the new background color can either be specified as a triple of three numbers or as a single string, that contains those three numbers sperated by commas.
+As with the <function><link linkend="ref_color">color</link></function>-command, the new background color can either be specified as a triple of three numbers or as a single string, that contains those three numbers separated by commas.
 </para>
 	</refsect1>
 	<refsect1>
@@ -2182,7 +2182,7 @@ print "Hello World !"
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>, the <link linkend="ref_peek"><function>peek</function></link>-function and the commandline options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
+	  <para>The section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
 	</refsect1>
       </refentry>
 
@@ -2809,7 +2809,7 @@ x=cos(angle)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>cos</function>-function expects an angle (in radian) and returns its cosine.</para>
+	  <para>The <function>cos</function>-function expects an angle (in radians) and returns its cosine.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -2890,7 +2890,7 @@ data "eleven",11,"twelve",12,"thirteen",13,"fourteen",14
 	  <para>The <function>date$</function>-function (which <emphasis>must</emphasis> be called without parentheses; i.e. <function>date$()</function> would be an error) returns a string containing various components of a date; an example would be <computeroutput>4-05-27-2004-Thu-May</computeroutput>. This string consists of various fields separated by hyphens ("<computeroutput>-</computeroutput>"):</para>
 	  <itemizedlist>
 	    <listitem>
-	      <para>The day within the week as a number in the range 0 (=Sunday) to 6 (=Saturday) (in the example above: <computeroutput>4</computeroutput>, i.e. thursday).</para>
+	      <para>The day within the week as a number in the range 0 (=Sunday) to 6 (=Saturday) (in the example above: <computeroutput>4</computeroutput>, i.e. Thursday).</para>
 	    </listitem>
 	    <listitem>
 	      <para>The month as a number in the range 1 (=January) to 12 (=December) (in the example: <computeroutput>5</computeroutput> which stands for May).</para>
@@ -3063,7 +3063,7 @@ sub printmatrix(ar())
   next q
 end sub
           </programlisting>
-	    <para>This example creates a 2-dimenional array (i.e. a <emphasis>matrix</emphasis>) with the <function>dim</function>-statement and fills it with random numbers. The second <function>dim</function>-statement enlarges the array, all new elements are filled with 0.</para>
+	    <para>This example creates a 2-dimensional array (i.e. a <emphasis>matrix</emphasis>) with the <function>dim</function>-statement and fills it with random numbers. The second <function>dim</function>-statement enlarges the array, all new elements are filled with 0.</para>
 	    <para>The subroutine <function>printmatrix</function> just does, what its name says.</para>
 	  </informalexample>
 	</refsect1>
@@ -3126,7 +3126,7 @@ docu  This is another comment
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>Introduces a comment, which spans up to the end of the line. But other than the <link linkend="ref_rem"><function>rem</function></link>-comment, any <function>docu</function>-comment is collected within the special <function><link linkend="ref_docu">docu$</link></function>-array and might be retrieved later on. Moreover you might invoke <application>yabasic -docu foo.yab</application> on the <emphasis>commandline</emphasis> to retrieve the embedded documentation within the program <literal>foo.yab</literal>.</para>
+	  <para>Introduces a comment, which spans up to the end of the line. But other than the <link linkend="ref_rem"><function>rem</function></link>-comment, any <function>docu</function>-comment is collected within the special <function><link linkend="ref_docu">docu$</link></function>-array and might be retrieved later on. Moreover you might invoke <application>yabasic -docu foo.yab</application> on the <emphasis>command line</emphasis> to retrieve the embedded documentation within the program <literal>foo.yab</literal>.</para>
 	  <para>Instead of <function>doc</function> you may just as well write <function>docu</function> or even <function>documentation</function>.</para>
 	</refsect1>
 	<refsect1>
@@ -3977,7 +3977,7 @@ next a
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>for</function>-loop lets its numerical variable (<function>a</function> in the synopsis) assume all values within the given range. The optional <function>step</function>-clause may specify a value (default: 1) by which the variable will be incremented (or decremented, if <function>step</function> is negative).</para>
-	  <para>Any <function>for</function>-statement can be replaced by a set of <function>if</function>s and <function>goto</function>s; as you may infer from the example below this is normally not feasible. However if you want to know in detail how the <function>for</function>-statement works, you should study this example, which presents a <function>for</function>-statement and an <emphasis>exactly equivalant</emphasis> series of <function>if</function>s and <function>goto</function>s.</para>
+	  <para>Any <function>for</function>-statement can be replaced by a set of <function>if</function>s and <function>goto</function>s; as you may infer from the example below this is normally not feasible. However if you want to know in detail how the <function>for</function>-statement works, you should study this example, which presents a <function>for</function>-statement and an <emphasis>exactly equivalent</emphasis> series of <function>if</function>s and <function>goto</function>s.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4371,7 +4371,7 @@ endif
 	      <para>According to the requirements of your program, you may specify:</para>
 	      <itemizedlist>
 		<listitem>
-		  <para><function>elsif(&hellip;)</function>, which specifies a condition, that will be evaluated only if the condition(s) whithin <function>if</function> or any preceding <function>elsif</function> did not match.</para>
+		  <para><function>elsif(&hellip;)</function>, which specifies a condition, that will be evaluated only if the condition(s) within <function>if</function> or any preceding <function>elsif</function> did not match.</para>
 		</listitem>
 		<listitem>
 		  <para><function>else</function>, which introduces a sequence of commands, that will be executed, if none of the conditions above did match. </para>
@@ -4501,7 +4501,7 @@ inkey$(bar)
 	  <title>Description</title>
 	  <para>The <function>inkeys$</function>-function waits, until the user presses a key on the keyboard or a button of his mouse, and returns this very key. An optional argument specifies the number of seconds to wait; if omitted, <function>inkey$</function> will wait indefinitely.</para>
 	  <para><function>inkey$</function> may only be used, if <function><link linkend="ref_clear_screen">clear screen</link></function> has been called at least once.</para>
-	  <para>For normal keys, <application>yabasic</application> simply returns the key, e.g. <computeroutput>a</computeroutput>, <computeroutput>1</computeroutput> or <computeroutput>!</computeroutput>. For function keys you will get <computeroutput>f1</computeroutput>, <computeroutput>f2</computeroutput> and so on. Other special keys will return these strings respectively: <computeroutput>enter</computeroutput>, <computeroutput>backspace</computeroutput>, <computeroutput>del</computeroutput>, <computeroutput>esc</computeroutput>, <computeroutput>scrnup</computeroutput> (for <emphasis>screen up</emphasis>), <computeroutput>scrndown</computeroutput> and <computeroutput>tab</computeroutput>. Modifier keys (e.g. <computeroutput>ctrl</computeroutput>, <computeroutput>alt</computeroutput> or <computeroutput>shift</computeroutput>) by themselves can <emphasis>not</emphasis> be detected (however, if you press <computeroutput>shift</computeroutput> and e.g. <computeroutput>a</computeroutput> simultaniously, <function>inkey$</function> will return the letter <computeroutput>A</computeroutput> instead of <computeroutput>a</computeroutput> of course).</para>
+	  <para>For normal keys, <application>yabasic</application> simply returns the key, e.g. <computeroutput>a</computeroutput>, <computeroutput>1</computeroutput> or <computeroutput>!</computeroutput>. For function keys you will get <computeroutput>f1</computeroutput>, <computeroutput>f2</computeroutput> and so on. Other special keys will return these strings respectively: <computeroutput>enter</computeroutput>, <computeroutput>backspace</computeroutput>, <computeroutput>del</computeroutput>, <computeroutput>esc</computeroutput>, <computeroutput>scrnup</computeroutput> (for <emphasis>screen up</emphasis>), <computeroutput>scrndown</computeroutput> and <computeroutput>tab</computeroutput>. Modifier keys (e.g. <computeroutput>ctrl</computeroutput>, <computeroutput>alt</computeroutput> or <computeroutput>shift</computeroutput>) by themselves can <emphasis>not</emphasis> be detected (e.g. if you simultaneously press <computeroutput>shift</computeroutput> and '<computeroutput>a</computeroutput>', <function>inkey$</function> will return the letter '<computeroutput>A</computeroutput>' instead of '<computeroutput>a</computeroutput>' of course).</para>
 	  <para>If a graphical window has been opened (via <function>open window</function>) any mouseclick within this window will be returned by <function>inkey$</function> too. The string returned (e.g. <computeroutput>MB1d+0:0028,0061</computeroutput>, <computeroutput>MB2u+0:0028,0061</computeroutput> or <computeroutput>MB1d+1:0028,0061</computeroutput>) is constructed as follows: </para>
 	  <itemizedlist>
 	    <listitem>
@@ -6159,7 +6159,7 @@ a=peek(#1)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>peek</function>-function has many different and mostly unrelated uses. It is a kind of grabbag for retrieving all kinds of numerical information, internal to <application>yabasic</application>. The meaning of the numbers returned be the <function>peek</function>-function depends on the string or number passed as an argument.</para>
+	  <para>The <function>peek</function>-function has many different and mostly unrelated uses. It is a kind of grab-bag for retrieving all kinds of numerical information, internal to <application>yabasic</application>. The meaning of the numbers returned be the <function>peek</function>-function depends on the string or number passed as an argument.</para>
 	  <para><function>peek</function> always returns a number, however the closely related <function><link linkend="ref_peek2">peek$</link></function>-function exists, which may be used to retrieve string information from among the internals of <application>yabasic</application>. Finally note, that some of the values which are retrieved with <function>peek</function> may even be changed, using the <function><link linkend="ref_poke">poke</link></function>-function.</para>
 	  <para>There are two variants of the <function>peek</function>-function: One expects an integer, positive number and is described within the first entry of the list below. The other variant expects one of a well defined set of strings as described in the second and all the following entries of the list below.</para>
 
@@ -6168,7 +6168,7 @@ a=peek(#1)
 	    <varlistentry>
 	      <term><function>peek("argument")</function></term>
 	      <listitem>
-		<para>Return the number of arguments, that have been passed to <application>yabasic</application> at invocation time. E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then <function>peek("argument")</function> will return 2. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to the program, which are passed on the commandline. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return 0.</para>
+		<para>Return the number of arguments, that have been passed to <application>yabasic</application> at invocation time. E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then <function>peek("argument")</function> will return 2. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to the program, which are passed on the command line. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return 0.</para>
 		<para>The function <function>peek("argument")</function> can be written as <function>peek("arguments")</function> too.</para>
 		<para>You will want to check out the corresponding function <function><link linkend="ref_peek2">peek$("argument")</link></function> to actually <emphasis>retrieve</emphasis> the arguments. <emphasis>Note</emphasis>, that each call to <function>peek$("argument")</function> reduces the number returned by <function>peek("argument")</function>.</para>
 	      </listitem>
@@ -6358,7 +6358,7 @@ print peek$("foo")
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>peek$</function>-function has many different and unrelated uses. It is a kind of grabbag for retrieving all kinds of string information, internal to <application>yabasic</application>; the exact nature of the strings returned be the <function>peek$</function>-function depends on the string passed as an argument.</para>
+	  <para>The <function>peek$</function>-function has many different and unrelated uses. It is a kind of grab-bag for retrieving all kinds of string information, internal to <application>yabasic</application>; the exact nature of the strings returned be the <function>peek$</function>-function depends on the string passed as an argument.</para>
 	  <para><function>peek$</function> always returns a string, however the closely related <function><link linkend="ref_peek">peek</link></function>-function exists, which may be used to retrieve numerical information from among the internals of <application>yabasic</application>. Finally note, that some of the values which are retrieved with <function>peek$</function> may even be changed, using the <function><link linkend="ref_poke">poke</link></function>-function.</para>
 	  <para>The following list shows all possible arguments to <function>peek$</function>:</para>
 
@@ -6367,7 +6367,7 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("infolevel")</function></term>
 	      <listitem>
-		<para>Returns either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>, depending on the current infolevel. This value can be specified with an option (either under <link linkend="windows_options">windows</link> or <link linkend="unix_options">unix</link>) on the commandline or changed during the execution of the program with the corresponding <function><link linkend="ref_poke">poke</link></function>; however, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this from its default value <literal>"warning"</literal>.</para>
+		<para>Returns either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>, depending on the current infolevel. This value can be specified with an option (either under <link linkend="windows_options">windows</link> or <link linkend="unix_options">unix</link>) on the command line or changed during the execution of the program with the corresponding <function><link linkend="ref_poke">poke</link></function>; however, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this from its default value <literal>"warning"</literal>.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -6425,14 +6425,14 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("env","<replaceable>NAME</replaceable>")</function></term>
 	      <listitem>
-		<para>Return the environment variable specified by <replaceable>NAME</replaceable> (which may be any string expression). Which kind of environment variables are available on your system depends, as well as their meaning, on your system; however typing <command>env</command> on the commandline will produce a list (for Windows and Unix alike). Note, that <function>peek$("env",...)</function> can be written as <function>peek$("environment",...)</function> too.</para>
+		<para>Return the environment variable specified by <replaceable>NAME</replaceable> (which may be any string expression). Which kind of environment variables are available on your system depends, as well as their meaning, on your system; however typing <command>env</command> on the command line will produce a list (for Windows and Unix alike). Note, that <function>peek$("env",...)</function> can be written as <function>peek$("environment",...)</function> too.</para>
 	      </listitem>
 	    </varlistentry>
 
 	    <varlistentry>
 	      <term><function>peek$("argument")</function></term>
 	      <listitem>
-		<para>Return one of the arguments, that have been passed to <application>yabasic</application> at invocation time (the next call will return the the second argument, and so on). E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then the first call to <function>peek$("argument")</function> will return <literal>bar</literal>. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to this program, which are passed on the commandline. The second call to <function>peek$("argument")</function> will return <literal>baz</literal>. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return the empty string.</para>
+		<para>Return one of the arguments, that have been passed to <application>yabasic</application> at invocation time (the next call will return the the second argument, and so on). E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then the first call to <function>peek$("argument")</function> will return <literal>bar</literal>. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to this program, which are passed on the command line. The second call to <function>peek$("argument")</function> will return <literal>baz</literal>. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return the empty string.</para>
 		<para>Note, that <function>peek$("argument")</function> can be written as <function>peek$("arguments")</function>.</para>
 		<para>Finally you will want to check out the corresponding function <function><link linkend="ref_peek">peek("argument")</link></function>.</para>
 
@@ -6452,7 +6452,7 @@ while(peek("argument"))
   print peek("argument"),peek$("argument")
 wend
           </programlisting>
-	    <para>If you save this program in a file <filename>foo.yab</filename> and execute it via <userinput>yabasic t.yab a b c</userinput> (for windows users: please use the commandline for this), your will get this output:</para>
+	    <para>If you save this program in a file <filename>foo.yab</filename> and execute it via <userinput>yabasic t.yab a b c</userinput> (for windows users: please use the command line for this), your will get this output:</para>
 	    <screen>
 3a
 2b
@@ -6971,7 +6971,7 @@ do
   print color(col$(mod(i,8))) at(x,y) "*";
 loop
           </programlisting>
-	    <para>This example will print a coloured bell-curve.</para>
+	    <para>This example will print a colored bell-curve.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -7046,7 +7046,7 @@ clear fill rectangle 60,60,40,40
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>rectangle</function>-command (also known as <function>box</function> or <function>rect</function>, for short) draws a rectangle; it accepts four parameters: The x- and y-coordinates of two facing cornerpoints of the rectangle. With the optional clauses <function>clear</function> and <function>fill</function> (which may appear both and in any sequence) the rectangle can be cleared and filled respectively.</para>
+	  <para>The <function>rectangle</function>-command (also known as <function>box</function> or <function>rect</function>, for short) draws a rectangle; it accepts four parameters: The x- and y-coordinates of two facing corners of the rectangle. With the optional clauses <function>clear</function> and <function>fill</function> (which may appear together and in any sequence) the rectangle can be cleared and filled respectively.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -7263,7 +7263,7 @@ end sub
 	  <title>Description</title>
 	  <para>The <function>return</function>-statement serves two different (albeit somewhat related) purposes. The probably more important use of <function>return</function> is to return control from within a subroutine to the place in your program, where the subroutine has been called. If the subroutine is declared to return a value, the <function>return</function>-statement might be accompanied by a string or number, which constitutes the <emphasis>return value</emphasis> of the subroutine.</para>
 	  <para>However, even if the subroutine should return a value, the <function>return</function>-statement need not carry a value; in that case the subroutine will return 0 or the empty string (depending on the type of the subroutine). Moreover, feel free to place multiple <function>return</function>-statements within your subroutine; it's a nice way of controlling the flow of execution.</para>
-	  <para>The second (but historicially first) use of <function>return</function> is to return to the position, where a prior <function><link linkend="ref_gosub">gosub</link></function> has left off. In that case <function>return</function> may <emphasis>not</emphasis> carry a value.</para>
+	  <para>The second (but historically first) use of <function>return</function> is to return to the position, where a prior <function><link linkend="ref_gosub">gosub</link></function> has left off. In that case <function>return</function> may <emphasis>not</emphasis> carry a value.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -7638,7 +7638,7 @@ y=sin(angle)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>sin</function>-function expects an angle (in radian, <emphasis>not</emphasis> degree) and returns its sine.</para>
+	  <para>The <function>sin</function>-function expects an angle (in radians, <emphasis>not</emphasis> degrees) and returns its sine.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -7703,7 +7703,7 @@ num=split(a$,w$(),s$)
 
 	  <para>normally (i.e. if you omit the third, which is the delimiter-argument) the function will regard <emphasis>space</emphasis> or <emphasis>tab</emphasis> as delimiters for tokens; however by supplying a third argument, you may split at <emphasis>any single</emphasis> of the characters within this string. E.g. if you supply <literal>":;"</literal> as the third argument, then colon (<literal>:</literal>) or semicolon (<literal>;</literal>) will delimit tokens.</para>
 	  <para>Note, that a sequence of separator-characters will produce a sequence of empty tokens; that way, the number of tokens returned will always be one plus the number of separator characters contained within the string. Refer to the closely related <function><link linkend="ref_token">token</link></function>-function, if you do not like this behaviour. In some way, the <function>split</function>-function focuses on the separators (other than the <function>token</function>-function, which focuses on the <emphasis>tokens</emphasis>), hence its name.</para>
-	  <para>The second argument is a <link linkend="ref_array_references">reference</link> on a string-array, where the tokens will be stored; this array will be expanded (or shrinked) to have room for all tokens, if necessary.</para>
+	  <para>The second argument is a <link linkend="ref_array_references">reference</link> on a string-array, where the tokens will be stored; this array will be expanded (or shrunk) to have room for all tokens, if necessary.</para>
 	  <para>The first argument finally contains the text, that will be split into tokens. The <function>split</function>-function returns the number of tokens that have been found.</para>
 	  <para>Please see the examples below for some hints on the exact behaviour of the <function>split</function>-function and how it differs from the <function>token</function>-function:</para>
 	</refsect1>
@@ -8007,13 +8007,13 @@ b$=str$(x,"###,###.##","_.")
 		<row>
 		  <entry><literal>##,###.##</literal> and an <emphasis>additional</emphasis> argument of <literal>".,"</literal></entry>
 		  <entry><literal>x3.141,59</literal></entry>
-		  <entry>Similar to the example above, but colon and dot are replaced with dot and colon respectivly.</entry>
+		  <entry>Similar to the example above, but colon and dot are replaced with dot and colon respectively.</entry>
 		</row>
 
 		<row>
 		  <entry><literal>##,###.##</literal> and an <emphasis>additional</emphasis> argument of <literal>"_,"</literal></entry>
 		  <entry><literal>x3_141,59</literal></entry>
-		  <entry>Similar to the example above, but colon and dot are replaced with underscore and colon respectivly.</entry>
+		  <entry>Similar to the example above, but colon and dot are replaced with underscore and colon respectively.</entry>
 		</row>
 
 		<row>
@@ -8260,7 +8260,7 @@ endif
 	</refmeta>
 	<refnamediv>
 	  <refname>tan()</refname>
-	  <refpurpose>return the tangens of its argument</refpurpose>
+	  <refpurpose>return the tangent of its argument</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -8269,7 +8269,7 @@ foo=tan(bar)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>tan</function>-function computes the tangens of its arguments (which should be specified in radian).</para>
+	  <para>The <function>tan</function>-function computes the tangent of its arguments (which should be specified in radians).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -8279,7 +8279,7 @@ for a=0 to 45
   print tan(a*pi/180)
 next a
           </programlisting>
-	    <para>This example simply prints the tangens of all angles between 0 and 45 degree.</para>
+	    <para>This example simply prints the tangent of all angles between 0 and 45 degrees.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -8531,7 +8531,7 @@ num=token(a$,w$(),s$)
 	  <para>The <function>token</function>-function regards its first argument as a list of <emphasis>tokens</emphasis> separated by <emphasis>delimiters</emphasis> and it will store the list of tokens within the array-reference that has been supplied. Note, that the array, which is passed as a reference (<literal>w$()</literal> in the synopsis), will be resized accordingly, so that you don't have to figure out the number of tokens in advance. The element at position zero (i.e. <literal>w$(0)</literal>) will not be used.</para>
 	  <para>Normally (i.e. if you omit the third, the delimiter-argument) the function will regard <emphasis>space</emphasis> or <emphasis>tab</emphasis> as delimiters for tokens; however by supplying a third argument, you may split at <emphasis>any single</emphasis> of the characters within this string. E.g. if you supply <literal>":;"</literal> as the third argument, then colon (<literal>:</literal>) or semicolon (<literal>;</literal>) will delimit tokens.</para>
 	  <para>Note, that <function>token</function> will never produce empty tokens, even if two or more separators follow in sequence. Refer to the closely related <function><link linkend="ref_token">split</link></function>-function, if you do not like this behaviour. In some way, the <function>token</function>-function focuses on the tokens and not on the separators (other than the <function>split</function>-function, which focuses on the separators).</para>
-	  <para>The second argument is a <link linkend="ref_array_references">reference</link> on a string-array, where the tokens will be stored; this array will be expanded (or shrinked) as necessary to have room for all tokens.</para>
+	  <para>The second argument is a <link linkend="ref_array_references">reference</link> on a string-array, where the tokens will be stored; this array will be expanded (or shrunk) as necessary to have room for all tokens.</para>
 	  <para>The first argument finally contains the text, that will be split into tokens. The <function>token</function>-function returns the number of tokens, that have been found.</para>
 	  <para>Please see the examples below for some hints on the exact behaviour of the <function>token</function>-function and how it differs from the <function>split</function>-function:</para>
 	</refsect1>
@@ -8662,7 +8662,7 @@ a$=trim$(b$)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>trim$</function>-function removes all whitespaces from the left and from the right end of a string and returns the result. Calling <function>trim$</function> is equivalent to calling <function>rtrim$(ltrim$())</function>.</para>
+	  <para>The <function>trim$</function>-function removes all whitespace from the left and from the right end of a string and returns the result. Calling <function>trim$</function> is equivalent to calling <function>rtrim$(ltrim$())</function>.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -8799,7 +8799,7 @@ else
   print "Thanks."
 endif
           </programlisting>
-	    <para>This program asks for a sentence and marks the first (if any) occurrence of the letter 'e' by coverting it to upper case (in contrast to the rest of the sentence, which is converted to lower case).</para>
+	    <para>This program asks for a sentence and marks the first (if any) occurrence of the letter 'e' by converting it to upper case (in contrast to the rest of the sentence, which is converted to lower case).</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -9681,9 +9681,9 @@ array would be a time (and resource) consuming operation; passing just a referen
 	  <para>The special <function><link linkend="ref_peek">peek("isbound")</link></function>, which may be used to check, if the <application>yabasic</application>-program containing this <function>peek</function> is bound to the interpreter as part of a standalone program.</para>
 	</listitem>
       </itemizedlist>
-      <para>With these bits you know enough to create a standalone-program. Actually there are two ways to do this: on the commandline and from within your program.</para>
+      <para>With these bits you know enough to create a standalone-program. Actually there are two ways to do this: on the command line and from within your program.</para>
       <sect3>
-	<title>Creating a standalone-program from the commandline</title>
+	<title>Creating a standalone-program from the command line</title>
 	<para>Let's say you have the following <emphasis>very</emphasis> simple program within the file <filename>foo.yab</filename>:</para>
 	<informalexample>
 	  <programlisting>
@@ -9735,7 +9735,7 @@ print "Hello World !"
       </sect3>
       <sect3>
 	<title>See also</title>
-	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the commandline options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
+	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
       </sect3>
     </sect1>
 
