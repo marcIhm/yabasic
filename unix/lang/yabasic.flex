@@ -454,7 +454,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
   /* search local */
   trail=".yab";
   for(i=0;i<2;i++) {
-    strcpy(full,name);
+    strncpy(full,name);
     if (!strchr(full,'.')) strcat(full,trail);
     lib=fopen(full,"r");
     if (lib) return lib;
@@ -465,7 +465,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
   /* search in global location */
   trail=".yab";
   for(i=0;i<2;i++) {
-    strcpy(full,library_path);
+    strncpy(full,library_path,200);
     if (full[0] && !strchr("\\/",full[strlen(full)-1])) {
 #ifdef UNIX
       strcat(full,"/");

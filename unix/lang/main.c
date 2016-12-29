@@ -1899,15 +1899,15 @@ dotify (char *name, int addfun)	/* add library name, if not already present */
 {
     static char buff[200];
     if (!strchr (name, '.')) {
-        strcpy (buff, currlib->s);
-        strcat (buff, ".");
-        strcat (buff, name);
+	strncpy (buff, currlib->s, 200);
+        strncat (buff, ".", 200-1-strlen(buff));
+        strncat (buff, name, 200-1-strlen(buff));
     } else {
-        strcpy (buff, name);
+        strncpy (buff, name, 200);
     }
     if (addfun && !strchr (name, '@')) {
-        strcat (buff, "@");
-        strcat (buff, current_function);
+        strncat (buff, "@", 200-1-strlen(buff));
+        strncat (buff, current_function, 200-1-strlen(buff));
     }
     return buff;
 }
@@ -1924,9 +1924,9 @@ strip (char *name)		/* strip down to minimal name */
     }
     dot = strchr (name, '.');
     if (dot) {
-        strcpy (buff, dot + 1);
+        strncpy (buff, dot + 1, 300);
     } else {
-        strcpy (buff, name);
+        strncpy (buff, name, 300);
     }
     at = strchr (buff, '@');
     if (at) {
