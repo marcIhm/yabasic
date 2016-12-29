@@ -502,7 +502,7 @@ man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
-TESTS = tests/simple.yab tests/grammar.yab tests/io.yab tests/bugs.yab tests/break.yab
+TESTS = tests/simple.yab tests/grammar.yab tests/io.yab tests/bugs.yab tests/break.yab tests/long_variable_name.yab
 AUTOMAKE_OPTIONS = check-news subdir-objects
 
 # flags for flex (-d for debugging)
@@ -915,6 +915,13 @@ tests/bugs.yab.log: tests/bugs.yab
 tests/break.yab.log: tests/break.yab
 	@p='tests/break.yab'; \
 	b='tests/break.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/long_variable_name.yab.log: tests/long_variable_name.yab
+	@p='tests/long_variable_name.yab'; \
+	b='tests/long_variable_name.yab'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

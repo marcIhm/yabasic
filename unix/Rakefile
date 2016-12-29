@@ -55,9 +55,14 @@ task :make => 'lang/yabasic.1' do
   cd ('lang') { sh 'make' }
 end
 
+desc 'Run tests'
+task :tests => :make do
+  cd ('lang') {sh 'make check' }
+end
+
 vs=Hash.new
 desc 'Collect Versions'
-task :versions => [:git,'lang/yabasic.htm',:make,'lang/Makefile','lang/configure'] do
+task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure'] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
   vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
   vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/version\s+(\d\.\d+\.\d+)/)[1]
@@ -105,7 +110,7 @@ def compare_semver one,two
 end
 
 def cleanup glob
-  Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| puts "==== rm #{x}"}
+  Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| rm x}
 end
 
 desc 'Cleanup, sync and show products'

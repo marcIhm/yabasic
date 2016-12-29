@@ -13,3 +13,6 @@ yabasic.htm
 *.rpm
 *.deb
 Makefile
+test-suite.log
+tests/*.trs
+tests/*.log

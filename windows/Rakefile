@@ -49,7 +49,22 @@ task :pack => :versions do
   sh 'iexpress /N yabasic-setup.SED'
 end
 
-desc 'Show products'
+def compare_semver one,two
+  vers = [one, two].map do |x|
+    md = x.match(/(\d+)\.(\d+)\.(\d+)/)
+    fail "Argument '#{x}' does not contain a semantic version number" unless md
+    [md[1],md[2],md[3]]
+  end.transpose
+
+  vers.inject(0) {|s,x| 2*s+(x[0]<=>x[1])} <=> 0
+end
+
+def cleanup glob
+  Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| rm x}
+end
+
+desc 'Cleanup and Show products'
 task :default => :pack do
+  cleanup "../products/yabasic-*-setup.exe"
   sh 'ls -l ../products ' + binaries.values.join(" ")
 end
