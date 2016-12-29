@@ -1,5 +1,3 @@
-* Yabasic
-
   A simple Basic interpreter for Unix and Windows.
 
   Yabasic implements the most common and simple elements of the basic
@@ -13,17 +11,7 @@
 
   If you want to modify yabasic itself and participate in its development, read below.
 
-** Table of Content     :TOC_3:
- - [[#yabasic][Yabasic]]
-   - [[#the-three-top-level-directories][The three top-level directories]]
-     - [[#unix][unix]]
-     - [[#windows][windows]]
-     - [[#web][web]]
-   - [[#building-yabasic][Building Yabasic]]
-     - [[#building-with-rake][Building with rake]]
-     - [[#building-under-unix][Building under Unix]]
-     - [[#building-under-windows][Building under Windows]]
-     - [[#a-typical-building-sequence][A typical building sequence]]
+** Table of Content 						      :TOC_3:
 
 ** The three top-level directories
 
