@@ -27,12 +27,6 @@ See www.yabasic.de for details.
 #define INSTALL_HEADING " Installing yabasic ..."
 #define REMOVE_HEADING " Removing yabasic ..."
 
-/* basic-defaults */
-#define DEFAULTFONT "swiss13"
-#define DEFAULTBACKGROUND "255,255,255"
-#define DEFAULTFOREGROUND "0,0,0"
-#define DEFAULTGEOMETRY "+10+10"
-
 /* shortcuts for end-message */
 #define INSTALL_CANCELLED 1
 #define INSTALL_IMPOSSIBLE 2
@@ -894,7 +888,7 @@ int create_shell_link(LINKINFO *li, char *inst_path) /* Create a shell-link */
 		strcat(logs, string);
 	}
 	else {
-		sprintf(string, "id of icon in system32.dll=%d", li->icon[0]);
+		sprintf(string, "id of icon in system32.dll=%d\n", li->icon[0]);
 		strcat(logs, string);
 	}
 	logit(logs);
@@ -1092,14 +1086,15 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 		success = putreg(LOCAL, UNINSTALL "Yabasic", "UninstallString", string) && success;
 		/* make changes in registry, put in defaults */
 		progress("Setting registry");
-		success = putreg(LOCAL, SOFT "Yabasic", "path", installpath) && success;
-		success = putreg(LOCAL, SOFT "Yabasic", "librarypath", librarypath) && success;
-		success = putreg(LOCAL, SOFT "Yabasic", "font", DEFAULTFONT) && success;
-		success = putreg(LOCAL, SOFT "Yabasic", "foreground", DEFAULTFOREGROUND) && success;
-		success = putreg(LOCAL, SOFT "Yabasic", "background", DEFAULTBACKGROUND) && success;
-		success = putreg(LOCAL, SOFT "Yabasic", "geometry", DEFAULTGEOMETRY) && success;
-		sprintf(string, "%s", formatsemver(&newversion,buf));
-		success = putreg(LOCAL, SOFT "Yabasic", "version", string) && success;
+		sprintf(string, "%s", formatsemver(&newversion, buf));
+		
+		success = putreg(LOCAL, SOFT "Yabasic", "path",			installpath) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "librarypath",	librarypath) && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "font",			"swiss13") && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "foreground",	"0,0,0") && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "background",	"255,255,255") && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "geometry",		"+10+10") && success;
+		success = putreg(LOCAL, SOFT "Yabasic", "version",		string) && success;
 
 		progress("Registering file extension");
 		/* change context-menue of root window */
