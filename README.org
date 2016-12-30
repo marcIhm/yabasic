@@ -1,4 +1,4 @@
-  Yabasic - A simple Basic interpreter for Unix and Windows.
+****  Yabasic - A simple Basic interpreter for Unix and Windows.
 
   Yabasic implements the most common and simple elements of the basic
   language. It comes with goto/gosub, with various loops, with user
@@ -13,9 +13,9 @@
 
 ** Table of Content 						      :TOC_3:
    - [[#the-three-top-level-directories][The three top-level directories]]
-     - [[#unix][unix]]
-     - [[#windows][windows]]
-     - [[#web][web]]
+     - [[#the-directory-unix][The directory 'unix']]
+     - [[#the-directory-windows][The directory 'windows']]
+     - [[#the-directory-web][The directory 'web']]
    - [[#building-yabasic][Building Yabasic]]
      - [[#building-with-rake][Building with rake]]
      - [[#building-under-unix][Building under Unix]]
@@ -31,7 +31,7 @@
    installable artifacts, which are created during the various build
    steps.
 
-*** unix
+*** The directory 'unix'
 
     Here are most of the c-sources of yabasic as well as the input
     files for flex and bison, which describe yabasics grammer. 
@@ -39,13 +39,13 @@
     Also find the documentation, which is written in docbook-xml and
     transfromed into html or man.
     
-*** windows
+*** The directory 'windows'
 
     The build process uses the c-sources from the unix-directory, so
     here you will only find the sources for the windows-specific
     setup-program.
 
-*** web
+*** The directory 'web'
 
     The html-Files and erb-templates for www.yabasic.de.
 

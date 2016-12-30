@@ -4059,7 +4059,7 @@ a$=getbit$(10,10 to 20,20)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The function <function>getbit</function> returns a string, which contains the encoded bit-pattern of a rectangle within graphic window; the four arguments represent the borders of the rectangle. The string returned might later be fed to the <function><link linkend="ref_putbit">putbit</link></function>-command. </para>
+	  <para>The function <function>getbit</function> returns a string, which contains the encoded bit-pattern of a rectangle within graphic window; the four arguments specify two opposite corners of the rectangle. The string returned might later be fed to the <function><link linkend="ref_putbit">putbit</link></function>-command. </para>
 	  <para>The <function>getbit$</function>-function might be used for simple animations (as in the example below).</para>
 	</refsect1>
 	<refsect1>
@@ -4100,7 +4100,7 @@ a$=getscreen$(2,2,20,20)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>getscreen$</function> function returns a string representing the area of the screen as specified by its four arguments (which specify two corners). I.e. everything you have printed within this rectangle will be encoded in the string returned (including any colour-information).</para>	  
+	  <para>The <function>getscreen$</function> function returns a string representing the area of the screen as specified by its four arguments (which specify two opposite corners). I.e. everything you have printed within this rectangle will be encoded in the string returned (including any colour-information).</para>	  
 	  <para>Like most other commands dealing with advanced text output, <function>getscreen$</function> requires, that you have called <function>clear screen</function> before.</para>
 	</refsect1>
 	<refsect1>
@@ -6834,9 +6834,8 @@ putbit a$,30,30,"or"
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>putbit</function>-command is the counterpart of the <function><link linkend="ref_getbit">getbit</link></function>-function. <function>putbit</function> requires a string as returned by the <function><link linkend="ref_getbit">getbit</link></function>-function. Such a string contains a rectangle from the graphic window; the <function>putbit</function>-function puts such a rectangular region back into the graphic-window.</para>
-	  <para>Note, that the <function>putbit</function>-command currently accepts a third argument. However only the string value <literal>"or"</literal> is supported here. The effect is, that only those pixel, which are set in the string will be set in the graphic window. Those pixels, which are not set in the string, will not change in the window (as opposed to being cleared).</para>
-	  <para>Note, that the format of the string returned by this function is due to change as soon as <application>yabasic</application> will learn, how to deal with colors.</para>
+	  <para>The <function>putbit</function>-command is the counterpart of the <function><link linkend="ref_getbit">getbit$</link></function>-function. <function>putbit</function> requires a string as returned by the <function><link linkend="ref_getbit">getbit</link></function>-function. Such a string contains a rectangle from the graphic window; the <function>putbit</function>-function puts such a rectangular region back into the graphic-window.</para>
+	  <para>Note, that the <function>putbit</function>-command currently accepts a fourth argument. However only the string value <literal>"or"</literal> is supported here. The effect is, that only those pixel, which are set in the string will be set in the graphic window. Those pixels, which are not set in the string, will not change in the window (as opposed to being cleared).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
