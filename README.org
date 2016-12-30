@@ -1,4 +1,4 @@
-****  Yabasic - A simple Basic interpreter for Unix and Windows.
+***  Yabasic - A simple Basic interpreter for Unix and Windows.
 
   Yabasic implements the most common and simple elements of the basic
   language. It comes with goto/gosub, with various loops, with user
@@ -11,89 +11,89 @@
 
   If you want to modify yabasic itself and participate in its development, read below.
 
-** Table of Content 						      :TOC_3:
-   - [[#the-three-top-level-directories][The three top-level directories]]
-     - [[#directory-unix][Directory 'unix']]
-     - [[#directory-windows][Directory 'windows']]
-     - [[#directory-web][Directory 'web']]
-   - [[#building-yabasic][Building Yabasic]]
-     - [[#building-with-rake][Building with rake]]
-     - [[#building-under-unix][Building under Unix]]
-     - [[#building-under-windows][Building under Windows]]
-     - [[#a-typical-building-sequence][A typical building sequence]]
+* Table of Content						      :TOC_2:
+  - [[#the-three-top-level-directories][The three top-level directories]]
+    - [[#directory-unix][Directory 'unix']]
+    - [[#directory-windows][Directory 'windows']]
+    - [[#directory-web][Directory 'web']]
+  - [[#building-yabasic][Building Yabasic]]
+    - [[#building-with-rake][Building with rake]]
+    - [[#building-under-unix][Building under Unix]]
+    - [[#building-under-windows][Building under Windows]]
+    - [[#a-typical-building-sequence][A typical building sequence]]
 
-** The three top-level directories
+* The three top-level directories
 
-   Read below for an overview; some directories may contain their own
-   README.org with more details.
+  Read below for an overview; some directories may contain their own
+  README.org with more details.
 
-   An additional top-level directory 'products' is created for the
-   installable artifacts, which are created during the various build
-   steps.
+  An additional top-level directory 'products' is created for the
+  installable artifacts, which are created during the various build
+  steps.
 
-*** Directory 'unix'
+** Directory 'unix'
 
-    Here are most of the c-sources of yabasic as well as the input
-    files for flex and bison, which describe yabasics grammer. 
-    
-    Also find the documentation, which is written in docbook-xml and
-    transfromed into html or man.
-    
-*** Directory 'windows'
+   Here are most of the c-sources of yabasic as well as the input
+   files for flex and bison, which describe yabasics grammer. 
+   
+   Also find the documentation, which is written in docbook-xml and
+   transfromed into html or man.
+   
+** Directory 'windows'
 
-    The build process uses the c-sources from the unix-directory, so
-    here you will only find the sources for the windows-specific
-    setup-program.
+   The build process uses the c-sources from the unix-directory, so
+   here you will only find the sources for the windows-specific
+   setup-program.
 
-*** Directory 'web'
+** Directory 'web'
 
-    The html-Files and erb-templates for www.yabasic.de.
+   The html-Files and erb-templates for www.yabasic.de.
 
-    Building a new version of the website (by typing 'rake') is tested
-    under windows, but should be workable under unix too.
+   Building a new version of the website (by typing 'rake') is tested
+   under windows, but should be workable under unix too.
 
-** Building Yabasic
+* Building Yabasic
 
-*** Building with rake
+** Building with rake
 
-    Yabasic's build process relies on rake. Rake is similar to make,
-    but its Rakefiles (and the tool itself) are written in ruby.
-    Therefore you need to install ruby and rake to build yabasic.
+   Yabasic's build process relies on rake. Rake is similar to make,
+   but its Rakefiles (and the tool itself) are written in ruby.
+   Therefore you need to install ruby and rake to build yabasic.
 
-    Each of the three top-level directories (see above) has its own
-    Rakefile, and just typing 'rake' should be enough to build the
-    respective components.
+   Each of the three top-level directories (see above) has its own
+   Rakefile, and just typing 'rake' should be enough to build the
+   respective components.
 
-*** Building under Unix
+** Building under Unix
 
-    Yabasic can be build on any system with these tools: autoconf,
-    bison, flex, gcc, ruby.
+   Yabasic can be build on any system with these tools: autoconf,
+   bison, flex, gcc, ruby.
 
-    The last step of the building process moves the artefacts into the
-    folder /work/yabasic/prodcts . If you have a machine with both
-    linux and windows, this folder can be usedully shared between both
-    operating systems.
-    
-*** Building under Windows
-    
-    Yabasic can be compiled with Visual Studio 2015, which can be
-    installed free of charge.
+   The last step of the building process moves the artefacts into the
+   folder /work/yabasic/prodcts . If you have a machine with both
+   linux and windows, this folder can be usedully shared between both
+   operating systems.
+   
+** Building under Windows
+   
+   Yabasic can be compiled with Visual Studio 2015, which can be
+   installed free of charge.
 
-    The project files assume 'C:\work\yabasic' as the git checkout
-    directory.
+   The project files assume 'C:\work\yabasic' as the git checkout
+   directory.
 
-    The rest of the windows-toolchain relies on the presence a fairly
-    complete cygwin-installation, including ruby. The git-directory
-    should be /work/yabasic.
-    
-*** A typical building sequence
+   The rest of the windows-toolchain relies on the presence a fairly
+   complete cygwin-installation, including ruby. The git-directory
+   should be /work/yabasic.
+   
+** A typical building sequence
 
-    To build yabasic, go through the stages in this sequence:
+   To build yabasic, go through the stages in this sequence:
 
-    - Build under Unix in directory unix
-    - Build under Windows in directory windows
-    - Build under Windows in directory web
+   - Build under Unix in directory unix
+   - Build under Windows in directory windows
+   - Build under Windows in directory web
 
-      
-    Depending on your changes and desired products, you do not need to
-    build on all stages however.
+     
+   Depending on your changes and desired products, you do not need to
+   build on all stages however.

@@ -9,6 +9,8 @@ require 'matrix'
 require_relative '../windows/utils.rb'
 
 yab_app_dir = '/usr/local/share/applications/yabasic'
+vs=Hash.new
+vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
 
 desc 'Check git'
 task :git do 
@@ -17,6 +19,14 @@ task :git do
       sh "git status"
       warn "Uncommited local changes, please fix with 'git add' etc."
     end
+  end
+end
+
+desc 'Put version into documentation'
+file 'doc/yabasic.xml' => 'doc/yabasic.xml.erb' do
+  version_short = vs['configure.ac'].gsub(/\.\d+$/,"")
+  File.open('doc/yabasic.xml','w') do |file|
+    file.write ERB.new(File.read('doc/yabasic.xml.erb')).result(binding)
   end
 end
 
@@ -61,14 +71,13 @@ task :tests => :make do
   run_tests './lang/tests', '../yabasic'
 end
 
-vs=Hash.new
 desc 'Collect Versions'
 task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure'] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
-  vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
-  vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/version\s+(\d\.\d+\.\d+)/)[1]
+  vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
   pp vs
-  fail "Mismatch" unless (vs['yabasic'].gsub(/\.\d+$/,"").to_f-vs['yabasic.htm'].gsub(/\.\d+$/,"").to_f).abs<0.01 && vs['yabasic']==vs['configure.ac']
+  fail "Mismatch between versions of 'yabasic' and 'yabasic.htm'" if (vs['yabasic'].to_f-vs['yabasic.htm'].to_f).abs >= 0.01
+  fail "Mismatch between versions of 'yabasic' and 'configure.ac'" if vs['yabasic'] != vs['configure.ac']
 end
 
 desc 'Create directory to collect products'
