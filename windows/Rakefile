@@ -4,6 +4,7 @@ require 'pp'
 require 'fileutils'
 include FileUtils
 require 'erb'
+require_relative 'utils'
 
 start_time = Time.now
 binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe', :wrapper => 'wrapper/Release/wrapper.exe' }
@@ -39,28 +40,19 @@ task :versions => :build do
   puts "Version = " + version
 end
 
+desc 'Run tests for windows'
+task :tests => :versions do
+  run_tests './lang/Release/yabasic.exe', './lang/tests'
+end
+
 desc 'Pack binaries'
-task :pack => :versions do
+task :pack => :tests do
   cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp/LICENSE.txt'
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
   end
   File.open('resources/yabver.txt','w') { |f| f.puts version }
   sh 'iexpress /N yabasic-setup.SED'
-end
-
-def compare_semver one,two
-  vers = [one, two].map do |x|
-    md = x.match(/(\d+)\.(\d+)\.(\d+)/)
-    fail "Argument '#{x}' does not contain a semantic version number" unless md
-    [md[1],md[2],md[3]]
-  end.transpose
-
-  vers.inject(0) {|s,x| 2*s+(x[0]<=>x[1])} <=> 0
-end
-
-def cleanup glob
-  Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| rm x}
 end
 
 desc 'Cleanup and Show products'
