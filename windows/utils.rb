@@ -12,25 +12,27 @@ def cleanup glob
   Dir[glob].sort {|x,y| compare_semver x,y }[0..-2].each {|x| rm x}
 end
 
-def run_tests executable, dir
-  glob = "#{dir}/*.yab"
-  maxlen = Dir[glob].map(&:length).max
-  total = failed = 0
-  puts "\nRunning tests in #{dir}:"
-  Dir[glob].each do |file|
-    sh (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + file do |ok,res|
-      total += 1
-      print "Test #{file}".ljust(maxlen+8,".")
-      if ok
-        puts "\e[32mpassed.\e[0m"
-      else
-        puts "\e[31mFAILED !\e[0m"
-        failed += 1
+def run_tests dir, executable
+  maxlen = Dir["#{dir}/*.yab"].map(&:length).max
+  total = Dir["#{dir}/*.yab"].length
+  failed = 0
+  puts "\nRunning #{total} tests in #{dir} with relative path to executable #{executable}:"
+  cd dir do
+    Dir["*.yab"].each do |file|
+      sh (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + file do |ok,res|
+        print "Test #{file}".ljust(maxlen+8,".")
+        if ok
+          puts "\e[32mpassed.\e[0m"
+        else
+          puts "\e[31mFAILED !\e[0m"
+          failed += 1
+        end
       end
     end
-    printf "Total number of tests:  %4d\n",total
-    printf "Number of failed tests: %4d\n",failed
-    fail "Some tests failed !" if failed > 0
-    puts
   end
+  printf "Total number of tests:  %4d\n",total
+  printf "Number of failed tests: %4d\n",failed
+  fail "Some tests failed !" if failed > 0
+  fail "Did not find any tests !" if total == 0
+  puts
 end
