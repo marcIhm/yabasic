@@ -12,15 +12,15 @@
   If you want to modify yabasic itself and participate in its development, read below.
 
 * Table of Content						      :TOC_2:
-  - [[#the-three-top-level-directories][The three top-level directories]]
-    - [[#directory-unix][Directory 'unix']]
-    - [[#directory-windows][Directory 'windows']]
-    - [[#directory-web][Directory 'web']]
-  - [[#building-yabasic][Building Yabasic]]
-    - [[#building-with-rake][Building with rake]]
-    - [[#building-under-unix][Building under Unix]]
-    - [[#building-under-windows][Building under Windows]]
-    - [[#a-typical-building-sequence][A typical building sequence]]
+ - [[#the-three-top-level-directories][The three top-level directories]]
+   - [[#directory-unix][Directory 'unix']]
+   - [[#directory-windows][Directory 'windows']]
+   - [[#directory-web][Directory 'web']]
+ - [[#building-yabasic][Building Yabasic]]
+   - [[#building-with-rake][Building with rake]]
+   - [[#building-under-unix][Building under Unix]]
+   - [[#building-under-windows][Building under Windows]]
+   - [[#a-typical-building-sequence][A typical building sequence]]
 
 * The three top-level directories
 
@@ -63,6 +63,19 @@
    Each of the three top-level directories (see above) has its own
    Rakefile, and just typing 'rake' should be enough to build the
    respective components.
+
+*** A Note on .erb-Files
+
+    In some directories you will find files with the ending '.erb'
+    (e.g. the documentation 'yabasic.xml.erb'); these files contain
+    tiny snippets of ruby code ('erb' stands for 'embedded ruby') and
+    are processed by one of the Rakefiles to generate the matching
+    file without '.erb' ('yabasic.xml' is generated this way).
+
+    So if you intend to edit any of those files, make sure, that you
+    rather edit the corresponding '.erb' file; because otherwise your
+    changes will be overwritten by the next Rakefile-processing.
+
 
 ** Building under Unix
 
