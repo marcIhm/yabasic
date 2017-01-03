@@ -39,7 +39,7 @@ end
 desc 'Create man page'
 file 'lang/yabasic.1' => ['lang/yabasic.htm','doc/yabasic.1.erb'] do
   sh 'w3m -dump -o display_charset=ascii,cols=74 lang/yabasic.htm >/tmp/y.utf8'
-  ascii = File.new('/tmp/y.utf8').read
+  ascii = File.new('/tmp/y.utf8').read.lines.map {|x| " " + x}.join
   open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result(binding)}
 end
 
@@ -75,9 +75,13 @@ desc 'Collect Versions'
 task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure'] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
   vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
+  vs['NEWS']=File.new('lang/NEWS').read.match(/Version\s+(\d\.\d+.\d+)/)[1]
+  vs['ChangeLog']=File.new('lang/ChangeLog').read.match(/Version\s+(\d\.\d+.\d+)/)[1]
   pp vs
   fail "Mismatch between versions of 'yabasic' and 'yabasic.htm'" if (vs['yabasic'].to_f-vs['yabasic.htm'].to_f).abs >= 0.01
   fail "Mismatch between versions of 'yabasic' and 'configure.ac'" if vs['yabasic'] != vs['configure.ac']
+  fail "Mismatch between versions of 'NEWS' and 'configure.ac'" if vs['NEWS'] != vs['configure.ac']
+  fail "Mismatch between versions of 'NEWS' and 'ChangeLog'" if vs['NEWS'] != vs['ChangeLog']
 end
 
 desc 'Create directory to collect products'
