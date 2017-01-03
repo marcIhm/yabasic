@@ -16,12 +16,3 @@ Version 2.77.1 (September 7, 2016)
   - Switched to semantic Versioning (e.g. 2.77.1 instead of 2.771)
   - Adopted a development workflow based on git and github
 
-Version 2.769 (June 29, 2015)
-  - print color under windows handles single argument correctly
-
-Version 2.768 (May 25, 2014)
-  - Fixed some memory issue related with grafics, which could lead to abnormal
-    termination under Linux
-  - Fixed problems with embedded newlines within the Windows console
-  - Keys pressed within grafic window are now reliably reported by inkey$
-    (Windows-Version)
