@@ -454,7 +454,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
   /* search local */
   trail=".yab";
   for(i=0;i<2;i++) {
-    strncpy(full,name);
+    strncpy(full,name,200);
     if (!strchr(full,'.')) strcat(full,trail);
     lib=fopen(full,"r");
     if (lib) return lib;
