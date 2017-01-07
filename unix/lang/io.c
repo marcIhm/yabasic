@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     io.c --- code for screen and file i/o
@@ -955,12 +955,12 @@ push_switch(struct command *cmd)	/* push current stream on stack and switch to n
         error(DEBUG, string);
     }
     oldstream = stream;
-    myswitch(stream);
+    mystream(stream);
 }
 
 
 void
-pop_switch(void)		/* pop current stream from stack and switch to it */
+pop_stream(void)		/* pop stream from stack and switch to it */
 {
     int stream;
 
@@ -969,12 +969,12 @@ pop_switch(void)		/* pop current stream from stack and switch to it */
         sprintf(string, "popping %d from stack, switching to it", stream);
         error(DEBUG, string);
     }
-    myswitch(stream);
+    mystream(stream);
 }
 
 
 void
-myswitch(int stream)		/* switch to specified stream */
+mystream(int stream)		/* switch to specified stream */
 {
     int stdio, input;
 

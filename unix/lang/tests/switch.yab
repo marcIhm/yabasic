@@ -1,0 +1,37 @@
+
+sub test_switch(num)
+  switch num
+    case 0:return 0:break
+    case 1:return 1:break
+    case 2:case 3:case 4:return 2:break
+    case 5:return 5:break
+    default: return 6
+  end switch
+end sub
+
+sub test_switch2(num)
+  switch num
+    case 0: return 0
+    case 1: goto outside
+    case 2: return 2
+  end switch
+  label outside
+  return 1
+end sub
+
+if (test_switch(0)!=0) exit 1
+if (test_switch(1)!=1) exit 2
+if (test_switch(2)!=2) exit 3
+if (test_switch(3)!=2) exit 4
+if (test_switch(4)!=2) exit 5
+if (test_switch(5)!=5) exit 6
+if (test_switch(6)!=6) exit 7
+if (test_switch(7)!=6) exit 8
+
+if (test_switch2(0)!=0) exit 9
+if (test_switch2(1)!=1) exit 10
+if (test_switch2(2)!=2) exit 11
+
+poke "__assert_stack_size",0
+
+exit 0

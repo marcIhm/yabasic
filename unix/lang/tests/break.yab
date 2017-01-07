@@ -12,6 +12,7 @@ case 2:continue
 end switch
 next a
 if a<>4 error "2"
+poke "__assert_stack_size",0
 
 a=0
 while(a<=3)
@@ -22,6 +23,7 @@ case 2:continue
 end switch
 wend
 if a<>4 error "3"
+poke "__assert_stack_size",0
 
 a=0
 repeat
@@ -32,6 +34,7 @@ case 2:continue
 end switch
 until(a=4)
 if a<>4 error "4"
+poke "__assert_stack_size",0
 
 a=0
 do
@@ -43,6 +46,7 @@ end switch
 if a=4 break
 loop
 if a<>4 error "5"
+poke "__assert_stack_size",0
 
 exit 0
 

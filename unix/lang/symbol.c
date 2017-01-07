@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     symbol.c --- code for control structures, symbol and stack management
@@ -47,7 +47,6 @@ extern char *current_function;	/* name of currently defined function */
 struct command *lastref;	/* last command in UDS referencing a symbol */
 struct command *firstref;	/* first command in UDS referencing a symbol */
 int labelcount = 0;		/* count self-generated labels */
-int switchtick = 0;             /* change in and out of switch-statements *
 
 
 /* ------------- subroutines ---------------- */
@@ -620,7 +619,7 @@ pushlabel ()			/* bison: generate goto and push label on stack */
     st = (char *) my_malloc (sizeof (char) * 20);
     sprintf (st, "***%d", labelcount);
     labelcount++;
-    create_goto (st);
+    create_goto (st, -1);
     en = push ();
     en->type = stLABEL;
     en->pointer = st;
@@ -630,7 +629,7 @@ pushlabel ()			/* bison: generate goto and push label on stack */
 void
 poplabel ()			/* bison: pops a label and generates the matching command */
 {
-    create_label (pop (stLABEL)->pointer, cLABEL);	/* and create it */
+    create_label (pop (stLABEL)->pointer, cLABEL, -1);	/* and create it */
 }
 
 
@@ -643,7 +642,7 @@ pushgoto ()			/* bison: generate label and push goto on stack */
     st = (char *) my_malloc (sizeof (char) * 20);
     sprintf (st, "***%d", labelcount);
     labelcount++;
-    create_label (st, cLABEL);
+    create_label (st, cLABEL, -1);
     en = push ();
     en->type = stGOTO;
     en->pointer = st;
@@ -653,7 +652,7 @@ pushgoto ()			/* bison: generate label and push goto on stack */
 void
 popgoto ()			/* bison: pops a goto and generates the matching command */
 {
-    create_goto (pop (stGOTO)->pointer);	/* and create it */
+    create_goto (pop (stGOTO)->pointer, -1);	/* and create it */
 }
 
 
@@ -675,7 +674,7 @@ storelabel ()			/* bison: push label on stack */
 void
 matchgoto ()			/* bison: generate goto matching label on stack */
 {
-    create_goto (stackhead->prev->pointer);
+    create_goto (stackhead->prev->pointer, -1);
 }
 
 
@@ -1112,7 +1111,7 @@ pushstr (struct command *cmd)
 
 
 void
-duplicate (void)		/* duplicate topmost element of stack */
+duplicate (void)		/* duplicate topmost number on stack */
 {
     struct stackentry *s;
     double actual;
@@ -1125,13 +1124,14 @@ duplicate (void)		/* duplicate topmost element of stack */
 
 
 void
-create_goto (char *label)	/* creates command goto */
+create_goto (char *label, int switch_id)	/* creates command goto */
 {
     struct command *cmd;
 
     cmd = add_command (cGOTO, NULL);
     /* specific info */
     cmd->pointer = my_strdup (label);
+    cmd->tag = switch_id;
 }
 
 
@@ -1270,13 +1270,16 @@ jump (struct command *cmd)
     }
 
     /* check, if goto enters or leaves a switch_statement */
-    if (cmd->type == cQGOTO) {
-        if (label->switchtick && !cmd->switchtick) {
-            error (ERROR, "cannot jump into switch-statement");
-        } else if (!label->switchtick && cmd->switchtick) {
-            error (ERROR, "cannot jump out of switch-statement");
-        } else if (label->switchtick != cmd->switchtick) {
-            error (ERROR, "cannot jump between switch statements");
+    if (cmd->type == cQGOTO && cmd->tag >= 0) {
+	if (label->tag < 0) error (FATAL, "internal error: named goto jumps to anonymous goto");
+	if (cmd->tag == label->tag) {
+	    /* do nothing */
+	} else if (cmd->tag == 0 && label->tag > 0) {
+	    error (ERROR,"cannot jump into a switch-statement");
+	} else if (cmd->tag > 0 && label->tag == 0) {
+	    do_pop_switch_state(0,FALSE,TRUE);
+	} else {
+            error (ERROR, "cannot jump between switch-statements");
         }
     }
 }
@@ -1353,7 +1356,7 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
 
 
 void
-create_label (char *label, int type)	/* creates command label */
+create_label (char *label, int type, int switch_id)	/* creates command label */
 {
     struct command *cmd;
 
@@ -1366,9 +1369,9 @@ create_label (char *label, int type)	/* creates command label */
     }
 
     cmd = add_command (type, NULL);
-    /* store label */
     cmd->pointer = my_strdup (label);
     link_label (cmd);
+    cmd->type = switch_id;
 }
 
 
@@ -1839,70 +1842,82 @@ resetskiponce (struct command *cmd)	/* find and reset next skip */
 }
 
 void
-push_switch_mark (void)		/* push a switch mark */
+push_switch_state (void)		/* push value to store switch state */
 {
-    push ()->type = stSWITCH_MARK;
+    struct stackentry *s;
+    s = push();
+    s->type = stSWITCH_STATE;
+    s->value = 0.;
 }
 
 
 void
-create_clean_switch_mark (int keep, int ret)	/* add command clean_switch_mark */
+create_pop_switch_state (int keep, int is_ret)	/* add command pop_switch_state; see there for the parameters keep and is_ret  */
 {
     struct command *cmd;
 
-    cmd = add_command (cCLEAN_SWITCH_MARK, NULL);
+    cmd = add_command (cPOP_SWITCH_STATE, NULL);
+    if (keep!=0 || keep!=stSTRING || keep!=stNUMBER) {
+	error (FATAL,"Parameter to create_pop_switch_state can only be 0 or stSTRING or stNUMBER");
+    }
     cmd->args = keep;
-    cmd->tag = ret;
+    cmd->tag = is_ret; 
 }
 
 
 void
-clean_switch_mark (struct command *cmd)	/* pop everything up to (and including) first switch_mark from stack */
+pop_switch_state (struct command *cmd) /* remove switch state from stack, possibly keeping return value */
 {
-    struct stackentry *t, *tt, *b, *bb, *s;
-    int keep, k, ret;
+    int keep, is_ret;
 
-    k = keep = cmd->args;
-    ret = cmd->tag;
-    s = stackhead->prev;
-    while (k && s != stackroot) {
-        k--;
-        s = s->prev;
-    }
-    t = s;
-    tt = s->next;
-    while (((ret && s->type != stRETADDCALL)
-            || (!ret && s->type != stSWITCH_MARK)) && s != stackroot) {
-        s = s->prev;
-    }
+    keep = cmd->args;
+    is_ret = cmd->tag;
 
-    if (!ret) {
-        while (s != stackroot && s->prev!=stackroot && s->prev->prev!=stackroot && s->prev->prev->type==stSWITCH_MARK) {
-            s = s->prev->prev;
-        }
-    }
+    do_pop_switch_state(keep, is_ret, FALSE);
+}
 
-    if (ret) {
-        bb = s;
-        b = s->next;
+void
+do_pop_switch_state (int keep, int is_ret, int pop_all) /* do the work for pop_switch_state */
+{
+    int wanted_type;
+    char *kept_string;
+    double kept_value;
+    int kept_type;
+    int num_switch_states;
+    struct stackentry *popped,*kept,*s;
+
+    if (pop_all) {
+	s=stackhead;
+	num_switch_states = 0;
+	while (s != stackroot) {
+	    if (s->type == stSWITCH_STATE) num_switch_states++;
+	}
     } else {
-        b = s;
-        bb = s->prev;
+	num_switch_states = 1;
     }
-
-
-    /* cut part between (and including both) b and t out of stack */
-    bb->next = tt;
-    tt->prev = bb;
-    /* insert cut-out part between stackhead and stackhead->prev */
-    stackhead->prev->next = b;
-    b->prev = stackhead->prev;
-    t->next = stackhead;
-    stackhead->prev = t;
+    
     if (keep) {
-        stackhead = tt->next;
-    } else {
-        stackhead = bb->next;
+	kept = pop (keep);
+	if (keep==stSTRING) {
+	    kept_string=my_strdup((char *)kept->pointer);
+	} else {
+	    kept_value=kept->value;
+	}
+    }
+
+    wanted_type= is_ret ? stRETADDCALL : stSWITCH_STATE;
+    popped = pop(stANY);
+    while(popped->type!=wanted_type) popped=pop(stANY);
+    if (wanted_type==stSWITCH_STATE) pop(stANY);
+
+    if (keep) {
+	kept=push();
+	kept->type=keep;
+	if (keep==stSTRING) {
+	    kept->pointer = kept_string;
+	} else {
+	    kept->value = kept_value;
+	}
     }
 }
 

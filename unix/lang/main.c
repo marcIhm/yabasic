@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     main.c --- main() and auxilliary functions
@@ -354,8 +354,8 @@ std_diag (char *head, int type, char *name)	/* produce standard diagnostic */
                 case stRETADDCALL:
                     sprintf (s, "retaddcall%n", &n);
                     break;
-                case stSWITCH_MARK:
-                    sprintf (s, "switch_mark%n", &n);
+                case stSWITCH_STATE:
+                    sprintf (s, "switch_state%n", &n);
                     break;
                 case stFREE:
                     sprintf (s, "free%n", &n);
@@ -406,9 +406,9 @@ add_command (int type, char *name)
     }
     commandcount++;
     cmdhead->pointer = NULL;	/* no data yet */
+    cmdhead->tag = 0;
     cmdhead->jump = NULL;
     cmdhead->nextassoc = NULL;
-    cmdhead->switchtick = switchtick;
     if (!currlib->datapointer && cmdhead->type == cDATA) {
         currlib->firstdata = currlib->datapointer = cmdhead;
     }
@@ -473,7 +473,7 @@ dump_commands (char *dumpfilename)
 
     for (cmd=cmdroot; cmd; cmd=cmd->next) {
         sprintf(string,"");
-        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, stk %d, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,explanation[cmd->type],cmd->lib->s,cmd->switchtick,cmd->pointer,cmd->tag,string);
+        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,explanation[cmd->type],cmd->lib->s,cmd->pointer,cmd->tag,string);
         if (cmd->type==cEND) {
             break;
         }
@@ -884,7 +884,7 @@ end_it (void)			/* perform shutdown-operations */
 #else
     if (!Commandline && endreason != erREQUEST) {
 #endif
-        myswitch (STDIO_STREAM);
+        mystream (STDIO_STREAM);
         onestring ("---Program done, press RETURN---\n");
 #ifdef WINDOWS
         SetConsoleMode (ConsoleInput, InitialConsole & (~ENABLE_ECHO_INPUT));
@@ -1165,10 +1165,10 @@ initialize (void)
     explanation[cFORINCREMENT] = "FORINCREMENT";
     explanation[cBEGIN_SWITCH_MARK] = "BEGIN_SWITCH_MARK";
     explanation[cEND_SWITCH_MARK] = "END_SWITCH_MARK";
+    explanation[cPOP_SWITCH_STATE] = "POP_SWITCH_STATE";
     explanation[cBEGIN_LOOP_MARK] = "BEGIN_LOOP_MARK";
     explanation[cEND_LOOP_MARK] = "END_LOOP_MARK";
-    explanation[cPUSH_SWITCH_MARK] = "PUSH_SWITCH_MARK";
-    explanation[cCLEAN_SWITCH_MARK] = "CLEAN_SWITCH_MARK";
+    explanation[cPUSH_SWITCH_STATE] = "PUSH_SWITCH_STATE";
     explanation[cSWITCH_COMPARE] = "SWITCH_COMPARE";
     explanation[cNEXT_CASE] = "NEXT_CASE";
     explanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
@@ -1348,11 +1348,8 @@ run_it ()
             case cSWITCH_COMPARE:
                 switch_compare ();
                 DONE;
-            case cPUSH_SWITCH_MARK:
-                push_switch_mark ();
-                DONE;
-            case cCLEAN_SWITCH_MARK:
-                clean_switch_mark (current);
+            case cPUSH_SWITCH_STATE:
+                push_switch_state ();
                 DONE;
             case cCONTINUE:
                 mycontinue (current);
@@ -1360,6 +1357,9 @@ run_it ()
             case cFINDNOP:
                 findnop ();
                 DONE;
+	    case cPOP_SWITCH_STATE:
+		pop_switch_state (current);
+		DONE;
             case cFUNCTION_OR_ARRAY:
             case cSTRINGFUNCTION_OR_ARRAY:
                 function_or_array (current);
@@ -1502,7 +1502,7 @@ run_it ()
                 push_switch (current);
                 DONE;
             case cPOPSTREAM:
-                pop_switch ();
+                pop_stream ();
                 DONE;
             case cCHKPROMPT:
                 chkprompt ();

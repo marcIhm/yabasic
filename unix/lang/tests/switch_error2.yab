@@ -1,0 +1,9 @@
+
+#--ERROR: cannot jump into a switch-statement
+
+goto other
+
+switch 0
+  case 0: label other
+end switch
+

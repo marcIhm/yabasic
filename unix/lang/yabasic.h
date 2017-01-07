@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -119,7 +119,7 @@ extern int stream_modes[];	/* modes for streams */
 extern int curinized;		/* true, if curses has been initialized */
 extern int badstream (int, int);	/* test for valid stream id */
 void myseek (struct command *);	/* reposition file pointer */
-void myswitch (int);		/* switch to specified stream */
+void mystream (int);		/* switch to specified stream */
 #ifdef WINDOWS
 extern HANDLE gotwinkey;		/* mutex to signal key reception */
 extern char conkeybuff[]; /* Key received from console */
@@ -197,7 +197,6 @@ extern void query_array (struct command *cmd);	/* query array */
 extern struct command *lastref;	/* last command in UDS referencing a symbol */
 extern struct command *firstref;	/* first command in UDS referencing a symbol */
 extern int labelcount;		/* count self-generated labels */
-extern int switchtick;         /* change in and out of switch-statements */
 
 /* flex.c */
 extern int include_stack_ptr;	/* Lex buffer for any imported file */
@@ -214,8 +213,6 @@ extern char *current_function;	/* name of currently parsed function */
 extern int yydebug;
 extern int missing_endif;
 extern int missing_endif_line;
-extern int in_loop;
-extern int in_switch;
 
 /*-------------------------- defs and undefs ------------------------*/
 
@@ -308,9 +305,8 @@ enum cmd_type {
 
     cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK, 	/* break-continue-switch */
     cCONTINUE, cBREAK_HERE, cCONTINUE_HERE,
-    cPUSH_SWITCH_MARK, cCLEAN_SWITCH_MARK,
+    cPUSH_SWITCH_STATE, cPOP_SWITCH_STATE,
     cBEGIN_LOOP_MARK, cEND_LOOP_MARK, cBEGIN_SWITCH_MARK, cEND_SWITCH_MARK,
-
 
     cDBLADD, cDBLMIN, cDBLMUL, cDBLDIV, cDBLPOW,	/* double operations */
     cNEGATE, cPUSHDBLSYM, cPOP, cPOPDBLSYM, cPUSHDBL,
@@ -346,7 +342,7 @@ enum stackentries {
     stGOTO, stSTRING, stSTRINGARRAYREF, stNUMBER, stNUMBERARRAYREF, stLABEL,
     stRETADD, stRETADDCALL, stFREE, stROOT,
     stANY, stSTRING_OR_NUMBER, stSTRING_OR_NUMBER_ARRAYREF,	/* these will never appear on stack but are used to check with pop */
-    stSWITCH_MARK,		/* used to clean up stack after switch-statement */
+    stSWITCH_STATE,		/* used to store state of switch-statement */
     stSWITCH_STRING, stSWITCH_NUMBER	/* only used in switch statement, compares true to every string or number */
 };
 
@@ -437,7 +433,6 @@ struct command {
     int tag;			/* char/int to pass some information */
     int line;			/* line this command has been created for */
     struct libfile_name *lib;	/* associated library */
-    int switchtick;		/* TRUE, if in switch, FALSE else; used to check gotos */
 };
 
 struct array {
@@ -510,7 +505,7 @@ void testeof (struct command *);	/* close the specified stream */
 void myclose ();		/* close the specified stream */
 void create_pps (int, int);	/* create command pushswitch or popswitch */
 void push_switch (struct command *);	/* push current stream on stack and switch to new one */
-void pop_switch (void);		/* pop current stream from stack and switch to it */
+void pop_stream (void);		/* pop stream from stack and switch to it */
 void mymove ();			/* move to specific position on screen */
 void clearscreen ();		/* clear entire screen */
 char *inkey (double);		/* gets char from keyboard, blocks and doesn´t print */
@@ -614,10 +609,10 @@ void pushstrptr (struct command *);	/* push string-pointer onto stack */
 void forcheck (void);		/* check, if for-loop is done */
 void forincrement (void);	/* increment value on stack */
 void startfor (void);		/* compute initial value of for-variable */
-void create_goto (char *);	/* creates command goto */
+void create_goto (char *, int);	/* creates command goto */
 void create_gosub (char *);	/* creates command gosub */
 void create_call (char *);	/* creates command function call */
-void create_label (char *, int);	/* creates command label */
+void create_label (char *, int, int);	/* creates command label */
 void create_sublink (char *);	/* create link to subroutine */
 void pushgoto (void);		/* generate label and push goto on stack */
 void popgoto (void);		/* pops a goto and generates the matching command */
@@ -654,7 +649,10 @@ struct command *search_label (char *, int);	/* search label */
 void reshufflestack (struct stackentry *);	/* reorganize stack for function call */
 void push_switch_mark (void);	/* push a switch mark */
 void create_clean_switch_mark (int, int);	/* add command clean_switch_mark */
-void clean_switch_mark (struct command *);	/* pop everything up to (and including) first switch_mark from stack */
+void pop_switch_state (struct command *); /* remove switch state from stack, possibly keeping return value */
+void push_switch_state (void);		/* push value to store switch state */
+void do_pop_switch_state (int, int, int);       /* do the work for pop_switch_state */
+void create_pop_switch_state (int , int);	/* add command pop_switch_state; see there for the parameters keep and is_ret  */
 void mybreak (struct command *);	/* find break_here statement */
 void mycontinue (struct command *cmd);	/* find continue_here statement */
 void next_case (struct command *);		/* go to next case in switch statement */

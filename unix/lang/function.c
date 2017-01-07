@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     function.c --- code for functions
@@ -1361,6 +1361,8 @@ poke (struct command *cmd)	/* poke into internals */
     char *dest, *s, c;
     char *sarg = NULL;
     double darg;
+    struct stackentry *stack;
+    int count;
 
     if (cmd->tag == 's') {
         sarg = pop (stSTRING)->pointer;
@@ -1425,6 +1427,17 @@ poke (struct command *cmd)	/* poke into internals */
         fputs (sarg, stdout);
     } else if (!strcmp (dest, "random_seed") && !sarg) {
         srand((unsigned int) darg);
+    } else if (!strcmp (dest, "__assert_stack_size") && !sarg) {
+	count = 0;
+	stack = stackhead;
+	while ( stack != stackroot) {
+	    count++;
+	    stack = stack->prev;
+	}
+	if (count != (int) darg) {
+	    sprintf (string, "assertion failed for number of entries on stack; expected = %d, actual = %d",(int) darg,count);
+	    error (FATAL, string);
+	}
     } else if (dest[0] == '#') {
         error (ERROR, "don't use quotes when poking into file");
     } else {
@@ -1892,29 +1905,46 @@ strrelop (struct command *type)	/* compare topmost string-values */
 void
 switch_compare (void)		/* compare topmost values for switch statement */
 {
-    struct stackentry *result, *first, *second;
+    struct stackentry *result, *first, *second, *state;
     double r = 0.;
 
+    /* get switch_state from stack */
+    state = stackhead;
+    while ( state->type != stSWITCH_STATE ) {
+	state = state->prev;
+	if ( state == stackroot) error (FATAL, "did not find switch state");
+    }
+    
     first = pop (stANY);
     second = stackhead->prev;
-    if ((second->type == stSWITCH_STRING || second->type == stSTRING)
-            && first->type == stSTRING) {
-        if (second->type == stSWITCH_STRING) {
-            r = 1.;
-        } else {
-            r = (strcmp (first->pointer, second->pointer) == 0) ? 1. : 0.;
-        }
-    } else if ((second->type == stSWITCH_NUMBER || second->type == stNUMBER)
-               && first->type == stNUMBER) {
-        if (second->type == stSWITCH_NUMBER) {
-            r = 1.;
-        } else {
-            r = (first->value == second->value);
-        }
+
+    /* maybe override result of comparison with switch_state and store result there; this allows batching of case-clauses */
+    if ( state->value == 1. ) {
+	error (DEBUG, "overriding result of comparison with stored state TRUE");
+	r = 1.;
     } else {
-        error (ERROR,
-               "Cannot mix strings and numbers in a single switch statement");
+	if ((second->type == stSWITCH_STRING || second->type == stSTRING)
+            && first->type == stSTRING) {
+	    if (second->type == stSWITCH_STRING) {
+		r = 1.;
+	    } else {
+		r = (strcmp (first->pointer, second->pointer) == 0) ? 1. : 0.;
+	    }
+	} else if ((second->type == stSWITCH_NUMBER || second->type == stNUMBER)
+		   && first->type == stNUMBER) {
+	    if (second->type == stSWITCH_NUMBER) {
+		r = 1.;
+	    } else {
+		r = (first->value == second->value);
+	    }
+	} else {
+	    error (ERROR,
+		   "mixing strings and numbers in a single switch statement is not allowed");
+	}
+	state->value = r;
     }
+
+				
     result = push ();
     result->type = stNUMBER;
     result->value = r;
