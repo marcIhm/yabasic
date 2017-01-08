@@ -267,7 +267,7 @@ create_retval (int is, int should)	/* create command 'cRETVAL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cRETVAL, NULL);
+    cmd = add_command (cRETVAL, NULL, NULL);
     cmd->args = is;
     cmd->tag = should;
 }
@@ -320,7 +320,7 @@ create_endfunction (void)	/* create command cEND_FUNCTION */
 {
     struct command *cmd;
 
-    cmd = add_command (cEND_FUNCTION, NULL);
+    cmd = add_command (cEND_FUNCTION, NULL, NULL);
     link_label (cmd);
 }
 
@@ -428,11 +428,11 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
 {
     struct command *fu;
 
-    fu = search_label (cmd->name, smSUB | smLINK);
+    fu = search_label (cmd->symname, smSUB | smLINK);
     if (fu) {
         cmd->type = cCALL;
-        cmd->pointer = cmd->name;
-        cmd->name = NULL;
+        cmd->pointer = cmd->symname;
+        cmd->symname = NULL;
         error (DEBUG, "converting FUNCTION_OR_ARRAY to FUNCTION");
     } else {
         if (cmd->type == cFUNCTION_OR_ARRAY) {
@@ -683,7 +683,7 @@ create_pushdbl (double value)	/* create command 'cPUSHDBL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHDBL, NULL);
+    cmd = add_command (cPUSHDBL, NULL, NULL);
     cmd->pointer = my_malloc (sizeof (double));
     *(double *) (cmd->pointer) = value;
 }
@@ -708,12 +708,12 @@ pushdblsym (struct command *cmd)
     struct stackentry *p;
 
     p = push ();
-    if (!cmd->name) {
+    if (!cmd->symname) {
         error (WARNING, "invalid pushdblsym");
     }
 
     if (!cmd->symbol) {
-        cmd->symbol = &(get_sym (cmd->name, syNUMBER, amADD_GLOBAL)->value);
+        cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
     }
     p->value = *(double *) cmd->symbol;
     p->type = stNUMBER;
@@ -727,7 +727,7 @@ popdblsym (struct command *cmd)	/* pop double from stack */
 
     d = pop (stNUMBER)->value;
     if (!cmd->symbol) {
-        cmd->symbol = &(get_sym (cmd->name, syNUMBER, amADD_GLOBAL)->value);
+        cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
     }
     *(double *) (cmd->symbol) = d;
 }
@@ -738,7 +738,7 @@ create_makelocal (char *name, int type)	/* create command 'cMAKELOCAL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cMAKELOCAL, name);
+    cmd = add_command (cMAKELOCAL, name, NULL);
     cmd->args = type;
 }
 
@@ -746,14 +746,14 @@ create_makelocal (char *name, int type)	/* create command 'cMAKELOCAL' */
 void
 makelocal (struct command *cmd)	/* makes symbol local */
 {
-    if (get_sym (cmd->name, cmd->args, amSEARCH_VERY_LOCAL)) {
+    if (get_sym (cmd->symname, cmd->args, amSEARCH_VERY_LOCAL)) {
         sprintf (string,
                  "local variable '%s' already defined within this subroutine",
-                 strip (cmd->name));
+                 strip (cmd->symname));
         error (ERROR, string);
         return;
     }
-    get_sym (cmd->name, cmd->args, amADD_LOCAL);
+    get_sym (cmd->symname, cmd->args, amADD_LOCAL);
 }
 
 
@@ -764,7 +764,7 @@ create_numparam (void)		/* create command 'cNUMPARAM' */
 
     /* dotifying numparams at compiletime (as opposed to runtime) is essential,
        because the function name is not known at runtime */
-    cmd = add_command (cNUMPARAM, dotify ("numparams", FALSE));
+    cmd = add_command (cNUMPARAM, dotify ("numparams", FALSE), NULL);
 }
 
 
@@ -773,7 +773,7 @@ numparam (struct command *cmd)	/* count number of function parameters */
 {
     struct symbol *sym;
 
-    sym = get_sym (cmd->name, syNUMBER, amADD_LOCAL);
+    sym = get_sym (cmd->symname, syNUMBER, amADD_LOCAL);
     sym->value = abs (count_args (FALSE));
 }
 
@@ -783,7 +783,7 @@ create_makestatic (char *name, int type)	/* create command 'cMAKESTATIC' */
 {
     struct command *cmd;
 
-    cmd = add_command (cMAKESTATIC, name);
+    cmd = add_command (cMAKESTATIC, name, NULL);
     cmd->args = type;
 }
 
@@ -796,14 +796,14 @@ makestatic (struct command *cmd)	/* makes symbol static */
 
 
     /* mask function name */
-    if ((at = strchr (cmd->name, '@')) != NULL) {
+    if ((at = strchr (cmd->symname, '@')) != NULL) {
         *at = '\0';
     }
 
-    if (get_sym (cmd->name, cmd->args, amSEARCH_VERY_LOCAL)) {
+    if (get_sym (cmd->symname, cmd->args, amSEARCH_VERY_LOCAL)) {
         sprintf (string,
                  "static variable '%s' already defined within this subroutine",
-                 strip (cmd->name));
+                 strip (cmd->symname));
         error (ERROR, string);
         return;
     }
@@ -812,13 +812,13 @@ makestatic (struct command *cmd)	/* makes symbol static */
     if (at) {
         *at = '@';
     }
-    g = get_sym (cmd->name, cmd->args, amADD_GLOBAL);
+    g = get_sym (cmd->symname, cmd->args, amADD_GLOBAL);
     if (at) {
         *at = '\0';
     }
 
     /* create local variable */
-    l = get_sym (cmd->name, cmd->args, amADD_LOCAL);
+    l = get_sym (cmd->symname, cmd->args, amADD_LOCAL);
     if (at) {
         *at = '@';
     }
@@ -832,7 +832,7 @@ create_arraylink (char *name, int type)	/* create command 'cARRAYLINK' */
 {
     struct command *cmd;
 
-    cmd = add_command (cARRAYLINK, name);
+    cmd = add_command (cARRAYLINK, name, NULL);
     cmd->pointer = current_function;
     cmd->args = type;
 }
@@ -844,16 +844,16 @@ arraylink (struct command *cmd)	/* link a local symbol to a global array */
     struct symbol *l, *g;
     struct array *ar;
 
-    if (get_sym (cmd->name, cmd->args, amSEARCH_VERY_LOCAL)) {
+    if (get_sym (cmd->symname, cmd->args, amSEARCH_VERY_LOCAL)) {
         sprintf (string, "'%s()' already defined within this subroutine",
-                 strip (cmd->name));
+                 strip (cmd->symname));
         error (ERROR, string);
         return;
     }
     /* get globally defined array */
     g = get_sym (pop (cmd->args)->pointer, syARRAY, amSEARCH_PRE);
     /* create local array */
-    l = get_sym (cmd->name, syARRAY, amADD_LOCAL);
+    l = get_sym (cmd->symname, syARRAY, amADD_LOCAL);
     if (!l) {
         return;
     }
@@ -864,7 +864,7 @@ arraylink (struct command *cmd)	/* link a local symbol to a global array */
         l->pointer = ar;
         if (infolevel >= DEBUG) {
             sprintf (string, "creating 0-dimensional dummy array '%s()'",
-                     cmd->name);
+                     cmd->symname);
             error (DEBUG, string);
         }
     } else {
@@ -879,7 +879,7 @@ create_pusharrayref (char *name, int type)	/* create command 'cPUSHARRAYREF' */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHARRAYREF, name);
+    cmd = add_command (cPUSHARRAYREF, name, NULL);
     cmd->args = type;
 }
 
@@ -890,7 +890,7 @@ pusharrayref (struct command *cmd)	/* push an array reference onto stack */
     struct stackentry *s;
     s = push ();
     s->type = cmd->args;
-    s->pointer = my_strdup (cmd->name);
+    s->pointer = my_strdup (cmd->symname);
 }
 
 
@@ -899,7 +899,7 @@ create_require (int type)	/* create command 'cREQUIRE' */
 {
     struct command *cmd;
 
-    cmd = add_command (cREQUIRE, NULL);
+    cmd = add_command (cREQUIRE, NULL, NULL);
     cmd->args = type;
 }
 
@@ -973,19 +973,19 @@ create_dblbin (char c)		/* create command for binary double operation */
 {
     switch (c) {
     case '+':
-        add_command (cDBLADD, NULL);
+        add_command (cDBLADD, NULL, NULL);
         break;
     case '-':
-        add_command (cDBLMIN, NULL);
+        add_command (cDBLMIN, NULL, NULL);
         break;
     case '*':
-        add_command (cDBLMUL, NULL);
+        add_command (cDBLMUL, NULL, NULL);
         break;
     case '/':
-        add_command (cDBLDIV, NULL);
+        add_command (cDBLDIV, NULL, NULL);
         break;
     case '^':
-        add_command (cDBLPOW, NULL);
+        add_command (cDBLPOW, NULL, NULL);
         break;
     }
     /* no specific information needed */
@@ -1048,7 +1048,7 @@ pushstrptr (struct command *cmd)	/* push string-pointer onto stack */
 
     p = push ();
     if (!cmd->symbol) {
-        cmd->symbol = &(get_sym (cmd->name, sySTRING, amADD_GLOBAL)->pointer);
+        cmd->symbol = &(get_sym (cmd->symname, sySTRING, amADD_GLOBAL)->pointer);
     }
     p->pointer = *(char **) cmd->symbol;
     if (!p->pointer) {
@@ -1065,7 +1065,7 @@ pushstrsym (struct command *cmd)	/* push string-symbol onto stack */
 
     p = push ();
     if (!cmd->symbol) {
-        cmd->symbol = &(get_sym (cmd->name, sySTRING, amADD_GLOBAL)->pointer);
+        cmd->symbol = &(get_sym (cmd->symname, sySTRING, amADD_GLOBAL)->pointer);
     }
     p->pointer = my_strdup (*(char **) cmd->symbol);
     p->type = stSTRING;
@@ -1075,11 +1075,11 @@ pushstrsym (struct command *cmd)	/* push string-symbol onto stack */
 void
 popstrsym (struct command *cmd)	/* pop string from stack */
 {
-    if (!cmd->name) {
+    if (!cmd->symname) {
         return;
     }
     if (!cmd->symbol) {
-        cmd->symbol = &(get_sym (cmd->name, sySTRING, amADD_GLOBAL)->pointer);
+        cmd->symbol = &(get_sym (cmd->symname, sySTRING, amADD_GLOBAL)->pointer);
     }
     if (*(char **) cmd->symbol != NULL) {
         my_free (*(char **) cmd->symbol);
@@ -1093,7 +1093,7 @@ create_pushstr (char *s)	/* creates command pushstr */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHSTR, NULL);
+    cmd = add_command (cPUSHSTR, NULL, s);
     cmd->pointer = my_strdup (s);	/* store string */
 }
 
@@ -1128,7 +1128,7 @@ create_goto (char *label, int switch_id)	/* creates command goto */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOTO, NULL);
+    cmd = add_command (cGOTO, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
     cmd->tag = switch_id;
@@ -1140,7 +1140,7 @@ create_gosub (char *label)	/* creates command gosub */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOSUB, NULL);
+    cmd = add_command (cGOSUB, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -1151,7 +1151,7 @@ create_call (char *label)	/* creates command function call */
 {
     struct command *cmd;
 
-    cmd = add_command (cCALL, NULL);
+    cmd = add_command (cCALL, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -1277,7 +1277,7 @@ jump (struct command *cmd)
 	} else if (cmd->tag == 0 && label->tag > 0) {
 	    error (ERROR,"cannot jump into a switch-statement");
 	} else if (cmd->tag > 0 && label->tag == 0) {
-	    do_pop_switch_state(0,FALSE,TRUE);
+	    //	    do_pop_switch_state(0,FALSE,TRUE);
 	} else {
             error (ERROR, "cannot jump between switch-statements");
         }
@@ -1368,7 +1368,7 @@ create_label (char *label, int type, int switch_id)	/* creates command label */
         return;
     }
 
-    cmd = add_command (type, NULL);
+    cmd = add_command (type, NULL, label);
     cmd->pointer = my_strdup (label);
     link_label (cmd);
     cmd->type = switch_id;
@@ -1396,7 +1396,7 @@ create_sublink (char *label)	/* create link to subroutine */
         return;
     }
 
-    cmd = add_command (cSUBLINK, NULL);
+    cmd = add_command (cSUBLINK, NULL, label);
     /* store label */
     cmd->pointer = my_strdup (global);
     link_label (cmd);
@@ -1418,7 +1418,7 @@ create_dim (char *name, char type)	/* create command 'dim' */
 {
     struct command *cmd;
 
-    cmd = add_command (cDIM, name);
+    cmd = add_command (cDIM, name, name);
     cmd->tag = type;		/* type: string or double */
     cmd->args = -1;
 }
@@ -1442,10 +1442,10 @@ dim (struct command *cmd)	/* get room for array */
         error (ERROR, "only numerical indices allowed for arrays");
         return;
     }
-    s = get_sym (cmd->name, syARRAY, local ? amADD_LOCAL : amADD_GLOBAL);
-    if (search_label (cmd->name, smSUB | smLINK)) {
+    s = get_sym (cmd->symname, syARRAY, local ? amADD_LOCAL : amADD_GLOBAL);
+    if (search_label (cmd->symname, smSUB | smLINK)) {
         sprintf (string, "array '%s()' conflicts with user subroutine",
-                 strip (cmd->name));
+                 strip (cmd->symname));
         error (ERROR, string);
         return;
     }
@@ -1461,7 +1461,7 @@ dim (struct command *cmd)	/* get room for array */
         if (cmd->args != oar->dimension) {
             sprintf (string,
                      "cannot change dimension of '%s()' from %d to %d",
-                     strip (cmd->name), oar->dimension, cmd->args);
+                     strip (cmd->symname), oar->dimension, cmd->args);
             error (ERROR, string);
         }
     }
@@ -1634,7 +1634,7 @@ create_doarray (char *symbol, int command)	/* creates array-commands */
 {
     struct command *cmd;
 
-    cmd = add_command (cDOARRAY, symbol);
+    cmd = add_command (cDOARRAY, symbol, symbol);
     cmd->tag = command;		/* operation to perform */
     cmd->args = -1;
 }
@@ -1653,10 +1653,10 @@ doarray (struct command *cmd)	/* call an array */
 
 
     if (!cmd->symbol) {
-        sym = get_sym (cmd->name, syARRAY, amSEARCH);
+        sym = get_sym (cmd->symname, syARRAY, amSEARCH);
         if (!sym || !sym->pointer) {
             sprintf (string, "'%s()' is neither array nor subroutine",
-                     strip (cmd->name));
+                     strip (cmd->symname));
             error (ERROR, string);
             return;
         }
@@ -1681,7 +1681,7 @@ doarray (struct command *cmd)	/* call an array */
         } else {
             stack->type = stSTRINGARRAYREF;
         }
-        stack->pointer = my_strdup (cmd->name);
+        stack->pointer = my_strdup (cmd->symname);
         return;
     }
 
@@ -1689,13 +1689,13 @@ doarray (struct command *cmd)	/* call an array */
 
     if (!ar->dimension) {
         sprintf (string, "array parameter '%s()' has not been supplied",
-                 strip (cmd->name));
+                 strip (cmd->symname));
         error (ERROR, string);
         return;
     }
     if (cmd->args != ar->dimension) {
         sprintf (string, "%d indices supplied, %d expected for '%s()'",
-                 cmd->args, ar->dimension, strip (cmd->name));
+                 cmd->args, ar->dimension, strip (cmd->symname));
         error (ERROR, string);
         return;
     }
@@ -1856,8 +1856,8 @@ create_pop_switch_state (int keep, int is_ret)	/* add command pop_switch_state; 
 {
     struct command *cmd;
 
-    cmd = add_command (cPOP_SWITCH_STATE, NULL);
-    if (keep!=0 || keep!=stSTRING || keep!=stNUMBER) {
+    cmd = add_command (cPOP_SWITCH_STATE, NULL, NULL);
+    if (keep!=0 && keep!=stSTRING && keep!=stNUMBER) {
 	error (FATAL,"Parameter to create_pop_switch_state can only be 0 or stSTRING or stNUMBER");
     }
     cmd->args = keep;
@@ -1873,7 +1873,7 @@ pop_switch_state (struct command *cmd) /* remove switch state from stack, possib
     keep = cmd->args;
     is_ret = cmd->tag;
 
-    do_pop_switch_state(keep, is_ret, FALSE);
+    //    do_pop_switch_state(keep, is_ret, FALSE);
 }
 
 void

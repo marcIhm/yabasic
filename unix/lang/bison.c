@@ -3024,31 +3024,31 @@ yyreduce:
 
   case 13:
 
-    {add_command(cERROR,NULL);}
+    {add_command(cERROR,NULL,NULL);}
 
     break;
 
   case 19:
 
-    {add_command(cBREAK,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+    {add_command(cBREAK,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
 
     break;
 
   case 20:
 
-    {if (switch_nesting) create_pop_switch_state(0,FALSE);add_command(cCONTINUE,NULL);if (!loop_nesting) error(ERROR,"continue outside loop");}
+    {if (switch_nesting) create_pop_switch_state(0,FALSE);add_command(cCONTINUE,NULL,NULL);if (!loop_nesting) error(ERROR,"continue outside loop");}
 
     break;
 
   case 22:
 
-    {create_call((yyvsp[0].symbol));add_command(cPOP,NULL);}
+    {create_call((yyvsp[0].symbol));add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 23:
 
-    {create_call((yyvsp[0].symbol));add_command(cPOP,NULL);}
+    {create_call((yyvsp[0].symbol));add_command(cPOP,NULL,NULL);}
 
     break;
 
@@ -3090,25 +3090,25 @@ yyreduce:
 
   case 34:
 
-    {add_command(cSKIPPER,NULL);}
+    {add_command(cSKIPPER,NULL,NULL);}
 
     break;
 
   case 35:
 
-    {add_command(cNOP,NULL);}
+    {add_command(cNOP,NULL,NULL);}
 
     break;
 
   case 36:
 
-    {add_command(cSKIPPER,NULL);}
+    {add_command(cSKIPPER,NULL,NULL);}
 
     break;
 
   case 37:
 
-    {add_command(cNOP,NULL);}
+    {add_command(cNOP,NULL,NULL);}
 
     break;
 
@@ -3120,37 +3120,37 @@ yyreduce:
 
   case 39:
 
-    {add_command(cCHECKOPEN,NULL);}
+    {add_command(cCHECKOPEN,NULL,NULL);}
 
     break;
 
   case 40:
 
-    {add_command(cCLOSE,NULL);}
+    {add_command(cCLOSE,NULL,NULL);}
 
     break;
 
   case 41:
 
-    {add_command(cCHECKSEEK,NULL);}
+    {add_command(cCHECKSEEK,NULL,NULL);}
 
     break;
 
   case 42:
 
-    {add_command(cCOMPILE,NULL);}
+    {add_command(cCOMPILE,NULL,NULL);}
 
     break;
 
   case 43:
 
-    {create_execute(0);add_command(cPOP,NULL);add_command(cPOP,NULL);}
+    {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 44:
 
-    {create_execute(1);add_command(cPOP,NULL);add_command(cPOP,NULL);}
+    {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
 
     break;
 
@@ -3186,25 +3186,25 @@ yyreduce:
 
   case 52:
 
-    {add_command(cGCOLOUR,NULL);}
+    {add_command(cGCOLOUR,NULL,NULL);}
 
     break;
 
   case 53:
 
-    {add_command(cGCOLOUR2,NULL);}
+    {add_command(cGCOLOUR2,NULL,NULL);}
 
     break;
 
   case 54:
 
-    {add_command(cGBACKCOLOUR,NULL);}
+    {add_command(cGBACKCOLOUR,NULL,NULL);}
 
     break;
 
   case 55:
 
-    {add_command(cGBACKCOLOUR2,NULL);}
+    {add_command(cGBACKCOLOUR2,NULL,NULL);}
 
     break;
 
@@ -3224,25 +3224,25 @@ yyreduce:
 
     {if (switch_nesting) create_pop_switch_state(0,TRUE);
              if (function_type!=ftNONE) {
-	       add_command(cCLEARREFS,NULL);lastcmd->nextref=firstref;
-	       add_command(cPOPSYMLIST,NULL);
+	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
+	       add_command(cPOPSYMLIST,NULL,NULL);
                create_retval(ftNONE,function_type);
-               add_command(cRET_FROM_FUN,NULL);
+               add_command(cRET_FROM_FUN,NULL,NULL);
             } else {
-               add_command(cRETURN,NULL);
+               add_command(cRETURN,NULL,NULL);
             }}
 
     break;
 
   case 61:
 
-    {if (switch_nesting) create_pop_switch_state(stNUMBER,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL);}
+    {if (switch_nesting) create_pop_switch_state(stNUMBER,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
 
     break;
 
   case 62:
 
-    {if (switch_nesting) create_pop_switch_state(stSTRING,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL);}
+    {if (switch_nesting) create_pop_switch_state(stSTRING,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
 
     break;
 
@@ -3260,19 +3260,19 @@ yyreduce:
 
   case 66:
 
-    {add_command(cMOVEORIGIN,NULL);}
+    {add_command(cMOVEORIGIN,NULL,NULL);}
 
     break;
 
   case 67:
 
-    {add_command(cDOT,NULL);}
+    {add_command(cDOT,NULL,NULL);}
 
     break;
 
   case 68:
 
-    {add_command(cDOT,NULL);putindrawmode(dmCLEAR);}
+    {add_command(cDOT,NULL,NULL);putindrawmode(dmCLEAR);}
 
     break;
 
@@ -3314,19 +3314,19 @@ yyreduce:
 
   case 75:
 
-    {add_command(cPUTBIT,NULL);}
+    {add_command(cPUTBIT,NULL,NULL);}
 
     break;
 
   case 76:
 
-    {create_pushstr("solid"); add_command(cPUTBIT,NULL);}
+    {create_pushstr("solid"); add_command(cPUTBIT,NULL,NULL);}
 
     break;
 
   case 77:
 
-    {add_command(cPUTCHAR,NULL);}
+    {add_command(cPUTCHAR,NULL,NULL);}
 
     break;
 
@@ -3344,55 +3344,55 @@ yyreduce:
 
   case 80:
 
-    {add_command(cCIRCLE,NULL);putindrawmode(0);}
+    {add_command(cCIRCLE,NULL,NULL);putindrawmode(0);}
 
     break;
 
   case 81:
 
-    {add_command(cTRIANGLE,NULL);putindrawmode(0);}
+    {add_command(cTRIANGLE,NULL,NULL);putindrawmode(0);}
 
     break;
 
   case 82:
 
-    {add_command(cTEXT1,NULL);}
+    {add_command(cTEXT1,NULL,NULL);}
 
     break;
 
   case 83:
 
-    {add_command(cTEXT2,NULL);}
+    {add_command(cTEXT2,NULL,NULL);}
 
     break;
 
   case 84:
 
-    {add_command(cTEXT3,NULL);}
+    {add_command(cTEXT3,NULL,NULL);}
 
     break;
 
   case 85:
 
-    {add_command(cRECT,NULL);putindrawmode(0);}
+    {add_command(cRECT,NULL,NULL);putindrawmode(0);}
 
     break;
 
   case 86:
 
-    {add_command(cCLOSEWIN,NULL);}
+    {add_command(cCLOSEWIN,NULL,NULL);}
 
     break;
 
   case 87:
 
-    {add_command(cCLEARWIN,NULL);}
+    {add_command(cCLEARWIN,NULL,NULL);}
 
     break;
 
   case 88:
 
-    {add_command(cCLEARSCR,NULL);}
+    {add_command(cCLEARSCR,NULL,NULL);}
 
     break;
 
@@ -3410,44 +3410,44 @@ yyreduce:
 
   case 91:
 
-    {add_command(cCLOSEPRN,NULL);}
+    {add_command(cCLOSEPRN,NULL,NULL);}
 
     break;
 
   case 92:
 
-    {add_command(cWAIT,NULL);}
+    {add_command(cWAIT,NULL,NULL);}
 
     break;
 
   case 93:
 
-    {add_command(cBELL,NULL);}
+    {add_command(cBELL,NULL,NULL);}
 
     break;
 
   case 94:
 
-    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL);}
+    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 95:
 
-    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL);}
+    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 96:
 
-    {create_function(fINKEY);add_command(cPOP,NULL);}
+    {create_function(fINKEY);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 97:
 
     {create_function(fSYSTEM2);
-	add_command(cPOP,NULL);}
+	add_command(cPOP,NULL,NULL);}
 
     break;
 
@@ -3477,19 +3477,19 @@ yyreduce:
 
   case 102:
 
-    {add_command(cEND,NULL);}
+    {add_command(cEND,NULL,NULL);}
 
     break;
 
   case 103:
 
-    {create_pushdbl(0);add_command(cEXIT,NULL);}
+    {create_pushdbl(0);add_command(cEXIT,NULL,NULL);}
 
     break;
 
   case 104:
 
-    {add_command(cEXIT,NULL);}
+    {add_command(cEXIT,NULL,NULL);}
 
     break;
 
@@ -3501,7 +3501,7 @@ yyreduce:
 
   case 106:
 
-    {add_command(cBIND,NULL);}
+    {add_command(cBIND,NULL,NULL);}
 
     break;
 
@@ -3537,7 +3537,7 @@ yyreduce:
 
   case 112:
 
-    {add_command(cPOPSTRSYM,dotify((yyvsp[-2].symbol),FALSE));}
+    {add_command(cPOPSTRSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
 
     break;
 
@@ -3591,31 +3591,31 @@ yyreduce:
 
   case 123:
 
-    {add_command(cSWAP,NULL);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+    {add_command(cSWAP,NULL,NULL);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
 
     break;
 
   case 124:
 
-    {add_command(cSWAP,NULL);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+    {add_command(cSWAP,NULL,NULL);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
 
     break;
 
   case 125:
 
-    {add_command(cSEEK,NULL);}
+    {add_command(cSEEK,NULL,NULL);}
 
     break;
 
   case 126:
 
-    {add_command(cSEEK2,NULL);}
+    {add_command(cSEEK2,NULL,NULL);}
 
     break;
 
   case 127:
 
-    {add_command(cPUSHSTRPTR,dotify((yyvsp[0].symbol),FALSE));}
+    {add_command(cPUSHSTRPTR,dotify((yyvsp[0].symbol),FALSE),NULL);}
 
     break;
 
@@ -3627,13 +3627,13 @@ yyreduce:
 
   case 129:
 
-    {add_command(cPUSHSTRSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {add_command(cPUSHSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
 
     break;
 
   case 131:
 
-    {add_command(cSTRINGFUNCTION_OR_ARRAY,(yyvsp[0].symbol));}
+    {add_command(cSTRINGFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
 
     break;
 
@@ -3645,7 +3645,7 @@ yyreduce:
 
   case 133:
 
-    {add_command(cCONCAT,NULL);}
+    {add_command(cCONCAT,NULL,NULL);}
 
     break;
 
@@ -3789,25 +3789,25 @@ yyreduce:
 
   case 158:
 
-    {add_command(cTOKENALT2,NULL);}
+    {add_command(cTOKENALT2,NULL,NULL);}
 
     break;
 
   case 159:
 
-    {add_command(cTOKENALT,NULL);}
+    {add_command(cTOKENALT,NULL,NULL);}
 
     break;
 
   case 160:
 
-    {add_command(cSPLITALT2,NULL);}
+    {add_command(cSPLITALT2,NULL,NULL);}
 
     break;
 
   case 161:
 
-    {add_command(cSPLITALT,NULL);}
+    {add_command(cSPLITALT,NULL,NULL);}
 
     break;
 
@@ -3837,13 +3837,13 @@ yyreduce:
 
   case 166:
 
-    {create_execute(1);add_command(cSWAP,NULL);add_command(cPOP,NULL);}
+    {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 167:
 
-    {add_command(cPOPDBLSYM,dotify((yyvsp[-2].symbol),FALSE));}
+    {add_command(cPOPDBLSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
 
     break;
 
@@ -3855,7 +3855,7 @@ yyreduce:
 
   case 169:
 
-    {add_command(cORSHORT,NULL);pushlabel();}
+    {add_command(cORSHORT,NULL,NULL);pushlabel();}
 
     break;
 
@@ -3867,7 +3867,7 @@ yyreduce:
 
   case 171:
 
-    {add_command(cANDSHORT,NULL);pushlabel();}
+    {add_command(cANDSHORT,NULL,NULL);pushlabel();}
 
     break;
 
@@ -3921,13 +3921,13 @@ yyreduce:
 
   case 180:
 
-    {add_command(cTESTEOF,NULL);}
+    {add_command(cTESTEOF,NULL,NULL);}
 
     break;
 
   case 181:
 
-    {add_command(cGLOB,NULL);}
+    {add_command(cGLOB,NULL,NULL);}
 
     break;
 
@@ -3939,37 +3939,37 @@ yyreduce:
 
   case 183:
 
-    {add_command(cARDIM,"");}
+    {add_command(cARDIM,"",NULL);}
 
     break;
 
   case 184:
 
-    {add_command(cARDIM,"");}
+    {add_command(cARDIM,"",NULL);}
 
     break;
 
   case 185:
 
-    {add_command(cARSIZE,"");}
+    {add_command(cARSIZE,"",NULL);}
 
     break;
 
   case 186:
 
-    {add_command(cARSIZE,"");}
+    {add_command(cARSIZE,"",NULL);}
 
     break;
 
   case 187:
 
-    {add_command(cFUNCTION_OR_ARRAY,(yyvsp[0].symbol));}
+    {add_command(cFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
 
     break;
 
   case 188:
 
-    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
 
     break;
 
@@ -4005,7 +4005,7 @@ yyreduce:
 
   case 194:
 
-    {add_command(cNEGATE,NULL);}
+    {add_command(cNEGATE,NULL,NULL);}
 
     break;
 
@@ -4353,31 +4353,31 @@ yyreduce:
 
   case 255:
 
-    {add_command(cTOKEN2,NULL);}
+    {add_command(cTOKEN2,NULL,NULL);}
 
     break;
 
   case 256:
 
-    {add_command(cTOKEN,NULL);}
+    {add_command(cTOKEN,NULL,NULL);}
 
     break;
 
   case 257:
 
-    {add_command(cSPLIT2,NULL);}
+    {add_command(cSPLIT2,NULL,NULL);}
 
     break;
 
   case 258:
 
-    {add_command(cSPLIT,NULL);}
+    {add_command(cSPLIT,NULL,NULL);}
 
     break;
 
   case 259:
 
-    {create_execute(0);add_command(cSWAP,NULL);add_command(cPOP,NULL);}
+    {create_execute(0);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
 
     break;
 
@@ -4497,7 +4497,7 @@ yyreduce:
 
   case 279:
 
-    {add_command(cPUSHFREE,NULL);}
+    {add_command(cPUSHFREE,NULL,NULL);}
 
     break;
 
@@ -4510,20 +4510,20 @@ yyreduce:
   case 287:
 
     {if (exported) create_sublink((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION,curr_switch_id);
-	               add_command(cPUSHSYMLIST,NULL);add_command(cCLEARREFS,NULL);firstref=lastref=lastcmd;
+	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
 		       create_numparam();}
 
     break;
 
   case 288:
 
-    {create_require(stFREE);add_command(cPOP,NULL);}
+    {create_require(stFREE);add_command(cPOP,NULL,NULL);}
 
     break;
 
   case 289:
 
-    {add_command(cCLEARREFS,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL);create_retval(ftNONE,function_type);function_type=ftNONE;add_command(cRET_FROM_FUN,NULL);lastref=NULL;create_endfunction();poplabel();}
+    {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNONE,function_type);function_type=ftNONE;add_command(cRET_FROM_FUN,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
 
     break;
 
@@ -4625,13 +4625,13 @@ yyreduce:
 
   case 313:
 
-    {create_require(stNUMBER);create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_require(stNUMBER);create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
 
     break;
 
   case 314:
 
-    {create_require(stSTRING);create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_require(stSTRING);create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
 
     break;
 
@@ -4649,33 +4649,33 @@ yyreduce:
 
   case 317:
 
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL);missing_next++;missing_next_line=mylineno;}
+    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=mylineno;}
 
     break;
 
   case 318:
 
-    {pushname(dotify((yyvsp[-1].symbol),FALSE)); /* will be used by next_symbol to check equality */
-	     add_command(cRESETSKIPONCE,NULL);
-	     pushgoto();add_command(cCONTINUE_HERE,NULL);}
+    {pushname(dotify((yyvsp[-1].symbol),FALSE)); /* will be used by next_symbol to check equality,NULL */
+	     add_command(cRESETSKIPONCE,NULL,NULL);
+	     pushgoto();add_command(cCONTINUE_HERE,NULL,NULL);}
 
     break;
 
   case 319:
 
     { /* pushes another expression */
-	     add_command(cSKIPONCE,NULL);
+	     add_command(cSKIPONCE,NULL,NULL);
 	     pushlabel();
-	     add_command(cSTARTFOR,NULL);
-	     add_command(cPOPDBLSYM,dotify((yyvsp[-6].symbol),FALSE));
+	     add_command(cSTARTFOR,NULL,NULL);
+	     add_command(cPOPDBLSYM,dotify((yyvsp[-6].symbol),FALSE),NULL);
 	     poplabel();
 
-	     add_command(cPUSHDBLSYM,dotify((yyvsp[-6].symbol),FALSE));
-	     add_command(cFORINCREMENT,NULL);
-	     add_command(cPOPDBLSYM,dotify((yyvsp[-6].symbol),FALSE));
-	     add_command(cPUSHDBLSYM,dotify((yyvsp[-6].symbol),FALSE));
-	     add_command(cFORCHECK,NULL);
-	     add_command(cDECIDE,NULL);
+	     add_command(cPUSHDBLSYM,dotify((yyvsp[-6].symbol),FALSE),NULL);
+	     add_command(cFORINCREMENT,NULL,NULL);
+	     add_command(cPOPDBLSYM,dotify((yyvsp[-6].symbol),FALSE),NULL);
+	     add_command(cPUSHDBLSYM,dotify((yyvsp[-6].symbol),FALSE),NULL);
+	     add_command(cFORCHECK,NULL,NULL);
+	     add_command(cDECIDE,NULL,NULL);
              pushlabel();}
 
     break;
@@ -4689,7 +4689,7 @@ yyreduce:
 
   case 321:
 
-    {add_command(cBREAK_HERE,NULL);add_command(cEND_LOOP_MARK,NULL);loop_nesting--;}
+    {add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
 
     break;
 
@@ -4727,13 +4727,13 @@ yyreduce:
 
   case 328:
 
-    {switch_nesting++;curr_switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL);add_command(cPUSH_SWITCH_STATE,NULL);}
+    {switch_nesting++;curr_switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);add_command(cPUSH_SWITCH_STATE,NULL,NULL);}
 
     break;
 
   case 329:
 
-    {add_command(cBREAK_HERE,NULL);create_pop_switch_state(0,FALSE);add_command(cEND_SWITCH_MARK,NULL);switch_nesting--;curr_switch_id=0;}
+    {add_command(cBREAK_HERE,NULL,NULL);create_pop_switch_state(0,FALSE);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;curr_switch_id=0;}
 
     break;
 
@@ -4751,25 +4751,25 @@ yyreduce:
 
   case 335:
 
-    {add_command(cSWITCH_COMPARE,NULL);add_command(cDECIDE,NULL);add_command(cNEXT_CASE,NULL);}
+    {add_command(cSWITCH_COMPARE,NULL,NULL);add_command(cDECIDE,NULL,NULL);add_command(cNEXT_CASE,NULL,NULL);}
 
     break;
 
   case 336:
 
-    {add_command(cNEXT_CASE_HERE,NULL);}
+    {add_command(cNEXT_CASE_HERE,NULL,NULL);}
 
     break;
 
   case 338:
 
-    {if ((yyvsp[0].sep)>=0) mylineno+=(yyvsp[0].sep); add_command(cNEXT_CASE_HERE,NULL);}
+    {if ((yyvsp[0].sep)>=0) mylineno+=(yyvsp[0].sep); add_command(cNEXT_CASE_HERE,NULL,NULL);}
 
     break;
 
   case 340:
 
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL);add_command(cCONTINUE_HERE,NULL);missing_loop++;missing_loop_line=mylineno;pushgoto();}
+    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_loop++;missing_loop_line=mylineno;pushgoto();}
 
     break;
 
@@ -4781,19 +4781,19 @@ yyreduce:
 
   case 343:
 
-    {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL);add_command(cEND_LOOP_MARK,NULL);loop_nesting--;}
+    {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
 
     break;
 
   case 344:
 
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL);add_command(cCONTINUE_HERE,NULL);missing_wend++;missing_wend_line=mylineno;pushgoto();}
+    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_wend++;missing_wend_line=mylineno;pushgoto();}
 
     break;
 
   case 345:
 
-    {add_command(cDECIDE,NULL);
+    {add_command(cDECIDE,NULL,NULL);
 	      pushlabel();}
 
     break;
@@ -4806,13 +4806,13 @@ yyreduce:
 
   case 348:
 
-    {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL);add_command(cEND_LOOP_MARK,NULL);loop_nesting--;}
+    {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
 
     break;
 
   case 349:
 
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL);add_command(cCONTINUE_HERE,NULL);missing_until++;missing_until_line=mylineno;pushgoto();}
+    {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_until++;missing_until_line=mylineno;pushgoto();}
 
     break;
 
@@ -4824,13 +4824,13 @@ yyreduce:
 
   case 352:
 
-    {missing_until--;add_command(cDECIDE,NULL);popgoto();add_command(cBREAK_HERE,NULL);add_command(cEND_LOOP_MARK,NULL);loop_nesting--;}
+    {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
 
     break;
 
   case 353:
 
-    {add_command(cDECIDE,NULL);storelabel();pushlabel();}
+    {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel();}
 
     break;
 
@@ -4866,7 +4866,7 @@ yyreduce:
 
   case 360:
 
-    {fi_pending++;add_command(cDECIDE,NULL);pushlabel();}
+    {fi_pending++;add_command(cDECIDE,NULL,NULL);pushlabel();}
 
     break;
 
@@ -4878,7 +4878,7 @@ yyreduce:
 
   case 365:
 
-    {add_command(cDECIDE,NULL);pushlabel();}
+    {add_command(cDECIDE,NULL,NULL);pushlabel();}
 
     break;
 
@@ -4890,13 +4890,13 @@ yyreduce:
 
   case 371:
 
-    {add_command(cCHKPROMPT,NULL);}
+    {add_command(cCHKPROMPT,NULL,NULL);}
 
     break;
 
   case 373:
 
-    {create_myread('d',tileol);add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_myread('d',tileol);add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);}
 
     break;
 
@@ -4908,7 +4908,7 @@ yyreduce:
 
   case 375:
 
-    {create_myread('s',tileol);add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_myread('s',tileol);add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);}
 
     break;
 
@@ -4920,7 +4920,7 @@ yyreduce:
 
   case 379:
 
-    {create_readdata('d');add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_readdata('d');add_command(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);}
 
     break;
 
@@ -4932,7 +4932,7 @@ yyreduce:
 
   case 381:
 
-    {create_readdata('s');add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE));}
+    {create_readdata('s');add_command(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);}
 
     break;
 
@@ -4998,7 +4998,7 @@ yyreduce:
 
   case 395:
 
-    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE));create_pps(cPUSHSTREAM,1);}
+    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);create_pps(cPUSHSTREAM,1);}
 
     break;
 
@@ -5034,7 +5034,7 @@ yyreduce:
 
   case 401:
 
-    {add_command(cMOVE,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
+    {add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
 
     break;
 
@@ -5076,7 +5076,7 @@ yyreduce:
 
   case 408:
 
-    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE));create_pps(cPUSHSTREAM,0);}
+    {add_command(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),FALSE);create_pps(cPUSHSTREAM,0);}
 
     break;
 
@@ -5112,67 +5112,67 @@ yyreduce:
 
   case 414:
 
-    {add_command(cMOVE,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 415:
 
-    {add_command(cMOVE,NULL);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {add_command(cMOVE,NULL,NULL);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 416:
 
-    {add_command(cMOVE,NULL);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {add_command(cMOVE,NULL,NULL);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 417:
 
-    {add_command(cMOVE,NULL);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {add_command(cMOVE,NULL,NULL);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 418:
 
-    {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE,NULL);}
+    {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE,NULL,NULL);}
 
     break;
 
   case 419:
 
-    {create_colour(2);add_command(cMOVE,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {create_colour(2);add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 420:
 
-    {create_colour(3);add_command(cMOVE,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+    {create_colour(3);add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
 
     break;
 
   case 423:
 
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL);}
+    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
 
     break;
 
   case 424:
 
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL);}
+    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
 
     break;
 
   case 425:
 
-    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL);}
+    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL,NULL);}
 
     break;
 
   case 426:
 
-    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL);}
+    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL,NULL);}
 
     break;
 

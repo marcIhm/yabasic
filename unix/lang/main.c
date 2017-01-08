@@ -238,7 +238,7 @@ main (int argc, char **argv)
         create_docu_array ();
     }
 
-    add_command (cEND, NULL);
+    add_command (cEND, NULL, NULL);
     sprintf (string, "read %d line(s) and generated %d command(s)", mylineno,
              commandcount);
     error (NOTE, string);
@@ -292,129 +292,131 @@ main (int argc, char **argv)
 
 
 void
-std_diag (char *head, int type, char *name)	/* produce standard diagnostic */
+std_diag (char *head, int type, char *symname, char *diag)	/* produce standard diagnostic */
 {
     int n, i;
-    char *s;
+    char *dest = string;
     struct stackentry *sp;
 
-    if (infolevel >= DEBUG) {
-        s = string;
-        if (type > cLAST_COMMAND || type < cFIRST_COMMAND) {
-            sprintf (s, "%s Illegal %d %n", head, type, &n);
-        } else {
-            if (name)
-                sprintf (s, "%s '%s' (%s) %n", head, explanation[type],
-                         name ? name : "NULL", &n);
-            else {
-                sprintf (s, "%s '%s' %n", head, explanation[type], &n);
-            }
-        }
-        s += n;
-        if (stackhead->prev != stackroot) {
-            sprintf (s, "t[");
-            s += 2;
-            sp = stackhead;
-            for (i = 0; TRUE; i++) {
-                sp = sp->prev;
-                if (sp == stackroot) {
-                    break;
-                }
-                if (i >= 5) {
-                    continue;
-                }
-                if (i > 0) {
-                    sprintf (s, ",");
-                    s++;
-                }
-                switch (sp->type) {
-                case stGOTO:
-                    sprintf (s, "goto%n", &n);
-                    break;
-                case stSTRINGARRAYREF:
-                case stNUMBERARRAYREF:
-                    if (sp->pointer) {
-                        sprintf (s, "%s()%n", (char *) sp->pointer, &n);
-                    } else {
-                        sprintf (s, "ARRAY()%n", &n);
-                    }
-                    break;
-                case stSTRING:
-                    sprintf (s, "'%s'%n", (char *) sp->pointer, &n);
-                    break;
-                case stNUMBER:
-                    sprintf (s, "%g%n", sp->value, &n);
-                    break;
-                case stLABEL:
-                    sprintf (s, "label%n", &n);
-                    break;
-                case stRETADD:
-                    sprintf (s, "retadd%n", &n);
-                    break;
-                case stRETADDCALL:
-                    sprintf (s, "retaddcall%n", &n);
-                    break;
-                case stSWITCH_STATE:
-                    sprintf (s, "switch_state%n", &n);
-                    break;
-                case stFREE:
-                    sprintf (s, "free%n", &n);
-                    break;
-                case stROOT:
-                    sprintf (s, "root%n", &n);
-                    break;
-                case stSWITCH_STRING:
-                    sprintf (s, "switch_string%n", &n);
-                    break;
-                case stSWITCH_NUMBER:
-                    sprintf (s, "switch_number%n", &n);
-                    break;
-                default:
-                    sprintf (s, "unknown%n", &n);
-                    break;
-                }
-                s += n;
-            }
-            if (i > 5) {
-                sprintf (s, ";+%d%n", i - 5, &n);
-                s += n;
-            }
-            strcat (s, "]b");
-        }
-        error (DEBUG, string);
+    if (type > cLAST_COMMAND || type < cFIRST_COMMAND) {
+	sprintf (dest, "%s Illegal %d %n", head, type, &n);
+    } else {
+	if (symname)
+	    sprintf (dest, "%s '%s' (%s) %n", head, explanation[type],
+		     symname, &n);
+	else {
+	    sprintf (dest, "%s '%s' %n", head, explanation[type], &n);
+	}
+	dest += n;
+	if (diag) {
+	    sprintf (dest, "%s %n", diag, &n);
+	    dest += n;
+	}
     }
+    dest += n;
+    if (stackhead->prev != stackroot) {
+	sprintf (dest, "t[");
+	dest += 2;
+	sp = stackhead;
+	for (i = 0; TRUE; i++) {
+	    sp = sp->prev;
+	    if (sp == stackroot) {
+		break;
+	    }
+	    if (i >= 5) {
+		continue;
+	    }
+	    if (i > 0) {
+		sprintf (dest, ",");
+		dest++;
+	    }
+	    switch (sp->type) {
+	    case stGOTO:
+		sprintf (dest, "goto%n", &n);
+		break;
+	    case stSTRINGARRAYREF:
+	    case stNUMBERARRAYREF:
+		if (sp->pointer) {
+		    sprintf (dest, "%s()%n", (char *) sp->pointer, &n);
+		} else {
+		    sprintf (dest, "ARRAY()%n", &n);
+		}
+		break;
+	    case stSTRING:
+		sprintf (dest, "'%s'%n", (char *) sp->pointer, &n);
+		break;
+	    case stNUMBER:
+		sprintf (dest, "%g%n", sp->value, &n);
+		break;
+	    case stLABEL:
+		sprintf (dest, "label%n", &n);
+		break;
+	    case stRETADD:
+		sprintf (dest, "retadd%n", &n);
+		break;
+	    case stRETADDCALL:
+		sprintf (dest, "retaddcall%n", &n);
+		break;
+	    case stSWITCH_STATE:
+		sprintf (dest, "switch_state%n", &n);
+		break;
+	    case stFREE:
+		sprintf (dest, "free%n", &n);
+		break;
+	    case stROOT:
+		sprintf (dest, "root%n", &n);
+		break;
+	    case stSWITCH_STRING:
+		sprintf (dest, "switch_string%n", &n);
+		break;
+	    case stSWITCH_NUMBER:
+		sprintf (dest, "switch_number%n", &n);
+		break;
+	    default:
+		sprintf (dest, "unknown%n", &n);
+		break;
+	    }
+	    dest += n;
+	}
+	if (i > 5) {
+	    sprintf (dest, ";+%d%n", i - 5, &n);
+	    dest += n;
+	}
+	strcat (dest, "]b");
+    }
+    error (DEBUG, string);
 }
 
-
 struct command *
-add_command (int type, char *name)
+add_command (int type, char *symname, char *diag)
 /* get room for new command, and make a link from old one */
 {
     struct command *new;
 
     if (infolevel >= DEBUG) {
-        std_diag ("creating", type, name);
+        std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
     cmdhead->line = mylineno;
     cmdhead->lib = currlib;
     cmdhead->cnt = commandcount;
-    if (!name || !*name) {
-        cmdhead->name = NULL;
+    if (!symname || !*symname) {
+        cmdhead->symname = NULL;
     } else {
-        cmdhead->name = my_strdup (name);
+        cmdhead->symname = my_strdup (symname);
     }
     commandcount++;
     cmdhead->pointer = NULL;	/* no data yet */
     cmdhead->tag = 0;
     cmdhead->jump = NULL;
     cmdhead->nextassoc = NULL;
+    cmdhead->diag = my_strdup(diag);
     if (!currlib->datapointer && cmdhead->type == cDATA) {
         currlib->firstdata = currlib->datapointer = cmdhead;
     }
 
     /* link into chain of commands referencing a symbol */
-    if (name) {
+    if (symname) {
         if (lastref) {
             lastref->nextref = cmdhead;
         }
@@ -430,7 +432,7 @@ add_command (int type, char *name)
     new->symbol = NULL;
     new->nextref = NULL;
     new->nextassoc = NULL;
-    new->name = NULL;
+    new->symname = NULL;
 
     cmdhead->next = new;
     lastcmd = cmdhead;
@@ -1291,7 +1293,7 @@ run_it ()
         while (current != cmdhead) {
             if (current->type == cDOCU) {
                 if (infolevel >= DEBUG) {
-                    std_diag ("executing", current->type, current->name);
+                    std_diag ("executing", current->type, current->symname, current->diag);
                 }
                 printf ("%s\n", (char *) current->pointer);
                 l++;
@@ -1301,7 +1303,7 @@ run_it ()
                 }
             } else {
                 if (infolevel >= DEBUG) {
-                    std_diag ("skipping", current->type, current->name);
+                    std_diag ("skipping", current->type, current->symname, current->diag);
                 }
             }
             current = current->next;
@@ -1316,7 +1318,7 @@ run_it ()
     } else {
         while (current != cmdhead && endreason == erNONE) {
             if (infolevel >= DEBUG) {
-                std_diag ("executing", current->type, current->name);
+                std_diag ("executing", current->type, current->symname, current->diag);
             }
             switch (current->type) {
             case cGOTO:
@@ -1962,7 +1964,7 @@ compile ()			/* create s subroutine at runtime */
 {
     open_string (pop (stSTRING)->pointer);
     yyparse ();
-    add_command (cEND, NULL);
+    add_command (cEND, NULL, NULL);
 }
 
 
@@ -1971,7 +1973,7 @@ create_execute (int string)	/* create command 'cEXECUTESUB' */
 {
     struct command *cmd;
 
-    cmd = add_command (string ? cEXECUTE2 : cEXECUTE, NULL);
+    cmd = add_command (string ? cEXECUTE2 : cEXECUTE, NULL, NULL);
     cmd->pointer = my_strdup (dotify ("", FALSE));
 }
 
@@ -2035,7 +2037,7 @@ create_docu (char *doc)		/* create command 'docu' */
     if (inlib) {
         return;
     }
-    cmd = add_command (cDOCU, NULL);
+    cmd = add_command (cDOCU, NULL, NULL);
     cmd->pointer = doc;
     if (previous) {
         previous->nextassoc = cmd;

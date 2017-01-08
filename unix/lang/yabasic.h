@@ -425,7 +425,7 @@ struct command {
     void *pointer;		/* pointer to data */
     void *symbol;			/* pointer to symbol (or data within symbol) associated with command */
     struct command *jump;		/* pointer to jump destination */
-    char *name;			/* name of symbol associated with command */
+    char *symname;			/* name of symbol associated with command */
     struct command *nextref;	/* next cmd within function referencing a symbol */
     struct command *nextassoc;	/* next cmd within within chain of associated commands */
     int args;			/* number of arguments for function/array call */
@@ -433,6 +433,7 @@ struct command {
     int tag;			/* char/int to pass some information */
     int line;			/* line this command has been created for */
     struct libfile_name *lib;	/* associated library */
+    char *diag;                 /* optional text for diagnostics */
 };
 
 struct array {
@@ -467,11 +468,11 @@ struct libfile_name {
 /* main.c */
 void error (int, char *);	/* reports an error and possibly exits */
 void error_with_line (int, char *, int);	/* reports an error and possibly exits */
-void std_diag (char *, int, char *);	/* produce standard diagnostic */
+void std_diag (char *, int, char *, char *);	/* produce standard diagnostic */
 void *my_malloc (unsigned);	/* my own version of malloc */
 void my_free (void *);		/* free memory */
 char *my_strerror (int);	/* return description of error messages */
-struct command *add_command (int, char *);	/* get room for new command */
+struct command *add_command (int, char *, char *);	/* get room for new command */
 void dump_commands (char *);         /* dump commands into given file */
 void signal_handler (int);	/* handle various signals */
 char *my_strdup (char *);	/* my own version of strdup */

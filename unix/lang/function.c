@@ -288,7 +288,7 @@ create_changestring (int type)	/* create command 'changestring' */
 {
     struct command *cmd;
 
-    cmd = add_command (cCHANGESTRING, FALSE);
+    cmd = add_command (cCHANGESTRING, FALSE, NULL);
     cmd->args = type;
 }
 
@@ -374,7 +374,7 @@ create_function (int type)	/* create command 'function' */
 {
     struct command *cmd;
 
-    cmd = add_command (cFUNCTION, FALSE);
+    cmd = add_command (cFUNCTION, FALSE, NULL);
     cmd->args = type;
 }
 
@@ -1347,9 +1347,9 @@ create_poke (char flag)		/* create Command 'cPOKE' */
     struct command *cmd;
 
     if (flag == 'S' || flag == 'D') {
-        cmd = add_command (cPOKEFILE, FALSE);
+        cmd = add_command (cPOKEFILE, FALSE, NULL);
     } else {
-        cmd = add_command (cPOKE, FALSE);
+        cmd = add_command (cPOKE, FALSE, NULL);
     }
     cmd->tag = flag;
 }
@@ -1611,7 +1611,7 @@ create_exception (int flag)	/* create command 'exception' */
 {
     struct command *cmd;
 
-    cmd = add_command (cEXCEPTION, FALSE);
+    cmd = add_command (cEXCEPTION, FALSE, NULL);
     cmd->args = flag;
 }
 
@@ -1657,7 +1657,7 @@ create_restore (char *label)	/* create command 'restore' */
 {
     struct command *c;
 
-    c = add_command (cRESTORE, FALSE);
+    c = add_command (cRESTORE, FALSE, label);
     c->pointer = my_strdup (label);
 }
 
@@ -1705,7 +1705,7 @@ create_dbldata (double value)	/* create command dbldata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE);
+    c = add_command (cDATA, FALSE, NULL);
     c->pointer = my_malloc (sizeof (double));
     if (lastdata) {
         lastdata->nextassoc = c;
@@ -1721,7 +1721,7 @@ create_strdata (char *value)	/* create command strdata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE);
+    c = add_command (cDATA, FALSE, NULL);
     if (lastdata) {
         lastdata->nextassoc = c;
     }
@@ -1736,7 +1736,7 @@ create_readdata (char type)	/* create command readdata */
 {
     struct command *cmd;
 
-    cmd = add_command (cREADDATA, FALSE);
+    cmd = add_command (cREADDATA, FALSE, NULL);
     cmd->tag = type;
 }
 
@@ -1801,7 +1801,7 @@ create_dblrelop (char c)	/* create command dblrelop */
         type = cGE;
         break;
     }
-    add_command (type, FALSE);
+    add_command (type, FALSE, NULL);
 }
 
 
@@ -1864,7 +1864,7 @@ create_strrelop (char c)	/* create command strrelop */
         type = cSTRGE;
         break;
     }
-    add_command (type, FALSE);
+    add_command (type, FALSE, NULL);
 }
 
 
@@ -1910,16 +1910,16 @@ switch_compare (void)		/* compare topmost values for switch statement */
 
     /* get switch_state from stack */
     state = stackhead;
-    while ( state->type != stSWITCH_STATE ) {
-	state = state->prev;
-	if ( state == stackroot) error (FATAL, "did not find switch state");
-    }
+    //    while ( state->type != stSWITCH_STATE ) {
+    //	state = state->prev;
+    //	if ( state == stackroot) error (FATAL, "did not find switch state");
+    //    }
     
     first = pop (stANY);
     second = stackhead->prev;
 
     /* maybe override result of comparison with switch_state and store result there; this allows batching of case-clauses */
-    if ( state->value == 1. ) {
+    if ( 0 && state->value == 1. ) {
 	error (DEBUG, "overriding result of comparison with stored state TRUE");
 	r = 1.;
     } else {
@@ -1986,7 +1986,7 @@ create_boole (char c)		/* create command boole */
         type = cNOT;
         break;
     }
-    add_command (type, FALSE);
+    add_command (type, FALSE, NULL);
 }
 
 

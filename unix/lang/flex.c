@@ -1415,14 +1415,13 @@ char *yytext;
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2016
+    written by Marc Ihm 1995-2017
     more info at www.yabasic.de
 
     FLEX part
      
     This file is part of yabasic and may be copied under the terms of
-    MIT License which can be found in the file LICENSE or by invoking 
-    'yabasic --help-license'.
+    MIT License which can be found in the file LICENSE.
 
 */
 
@@ -3762,7 +3761,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
   /* search local */
   trail=".yab";
   for(i=0;i<2;i++) {
-    strcpy(full,name);
+    strncpy(full,name,200);
     if (!strchr(full,'.')) strcat(full,trail);
     lib=fopen(full,"r");
     if (lib) return lib;
@@ -3773,7 +3772,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
   /* search in global location */
   trail=".yab";
   for(i=0;i<2;i++) {
-    strcpy(full,library_path);
+    strncpy(full,library_path,200);
     if (full[0] && !strchr("\\/",full[strlen(full)-1])) {
 #ifdef UNIX
       strcat(full,"/");
