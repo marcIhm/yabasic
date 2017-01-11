@@ -922,7 +922,7 @@ myseek(struct command *cmd)	/* reposition file pointer */
 
 
 void
-create_pps(int type, int input)	/* create command pushswitch or popswitch */
+create_pps(int type, int input)	/* create command push_stream or pop_stream */
 {
     struct command *cmd;
 
@@ -932,7 +932,7 @@ create_pps(int type, int input)	/* create command pushswitch or popswitch */
 
 
 void
-push_switch(struct command *cmd)	/* push current stream on stack and switch to new one */
+push_stream(struct command *cmd)	/* push current stream on stack and switch to new one */
 {
     static int oldstream = STDIO_STREAM;
     struct stackentry *s;

@@ -150,7 +150,7 @@ create_openwin (int fnt)
     /* create Command 'openwin' */
     struct command *cmd;
 
-    cmd = add_command (cOPENWIN, FALSE);
+    cmd = add_command (cOPENWIN, NULL, NULL);
     cmd->args = fnt;
 }
 
@@ -1086,7 +1086,7 @@ create_line (int numpoints)
     /* create Command 'line' */
     struct command *cmd;
 
-    cmd = add_command (cLINE, FALSE);
+    cmd = add_command (cLINE, NULL, NULL);
     cmd->args = numpoints;
     cmd->tag = dmNORMAL;
 }
@@ -2219,7 +2219,7 @@ create_openprinter (int num)
     /* create command 'openprinter' */
     struct command *cmd;
 
-    cmd = add_command (cOPENPRN, FALSE);
+    cmd = add_command (cOPENPRN, NULL, NULL);
     cmd->args = num;
 }
 
