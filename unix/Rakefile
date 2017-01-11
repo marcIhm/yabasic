@@ -6,7 +6,7 @@ include FileUtils
 require 'erb'
 require 'rake/testtask'
 require 'matrix'
-require_relative '../windows/utils.rb'
+require_relative 'utils'
 
 yab_app_dir = '/usr/local/share/applications/yabasic'
 vs=Hash.new

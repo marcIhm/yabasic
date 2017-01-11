@@ -1,5 +1,4 @@
-
-#--ERROR: cannot jump between switch-statements
+#---Error in switch_error.yab, line 8: GOTO between switch-statements
 
 switch 0
   case 0: goto other

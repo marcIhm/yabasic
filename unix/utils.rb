@@ -13,20 +13,28 @@ def cleanup glob
 end
 
 def run_tests dir, executable
-  maxlen = Dir["#{dir}/*.yab"].map(&:length).max
   total = Dir["#{dir}/*.yab"].length
   failed = 0
   puts "\nRunning #{total} tests in #{dir} with relative path to executable #{executable}:"
   cd dir do
-    Dir["*.yab"].each do |file|
-      sh (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + file do |ok,res|
-        print "Test #{file}".ljust(maxlen+8,".")
-        if ok
-          puts "\e[32mpassed.\e[0m"
-        else
-          puts "\e[31mFAILED !\e[0m"
-          failed += 1
+    maxlen = Dir["*.yab"].map(&:length).max
+    Dir["*.yab"].each do |fname|
+      command = (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + fname
+      expected_error = File.readlines(fname).select{ |l| l.start_with?("#---Error")}.first
+      result = 
+      if expected_error
+        result = !! %x( #{command} 2>&1 ).lines.select {|l| l.start_with?(expected_error[1..-1])}.first
+      else
+        sh command do |ok,res|
+          result = ok
         end
+      end
+      print "\e[35m" + "Test #{fname}".ljust(maxlen+8,".") + "\e[0m"
+      if result
+        puts "\e[32mpassed.\e[0m"
+      else
+        puts "\e[31mFAILED !\e[0m"
+        failed += 1
       end
     end
   end
