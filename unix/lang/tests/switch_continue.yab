@@ -1,0 +1,14 @@
+
+do
+i=i+1
+  switch i
+    case 0: case 1: case 2:continue
+    case 3: break
+  end
+loop
+
+poke "__assert_stack_size",0
+
+if (i <> 3) exit 1
+
+exit 0
