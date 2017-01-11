@@ -517,14 +517,16 @@ pop (int etype)
             (etype == stSTRING_OR_NUMBER
              && (ftype == stNUMBER || ftype == stSTRING))
             || (etype == stSTRING_OR_NUMBER_ARRAYREF
-                && (ftype == stSTRINGARRAYREF || ftype == stNUMBERARRAYREF))) {
+                && (ftype == stSTRINGARRAYREF || ftype == stNUMBERARRAYREF))
+	|| (etype == stSTRING && ftype == stSWITCH_STRING)
+	|| (etype == stNUMBER && ftype == stSWITCH_NUMBER)) {
         return stackhead;    /* this is your value; use it quickly ! */
     }
 
     /* expected and found don't match */
     stackdesc (etype, expected);
     stackdesc (ftype, found);
-    sprintf (string, "expected %s but found %s", expected, found);
+    sprintf (string, "expected '%s' but found '%s'", expected, found);
     if (etype == stNUMBER || etype == stSTRING
             || etype == stSTRING_OR_NUMBER) {
         s = push ();
@@ -588,10 +590,10 @@ stackdesc (int type, char *desc)	/* give back string describing stackentry */
         strcpy (desc, "reference to a string or an array");
         break;
     case stSWITCH_STRING:
-        strcpy (desc, "number for switch");
+        strcpy (desc, "string for switch");
         break;
     case stSWITCH_NUMBER:
-        strcpy (desc, "string for switch");
+        strcpy (desc, "number for switch");
         break;
     default:
         sprintf (desc, "type %d", type);
