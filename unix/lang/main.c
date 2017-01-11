@@ -302,15 +302,14 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	sprintf (dest, "%s Illegal %d %n", head, type, &n);
     } else {
 	if (symname)
-	    sprintf (dest, "%s '%s' (%s) %n", head, explanation[type],
+	    sprintf (dest, "%s %s (%s) %n", head, explanation[type],
 		     symname, &n);
 	else {
-	    sprintf (dest, "%s '%s' %n", head, explanation[type], &n);
+	    sprintf (dest, "%s %s %n", head, explanation[type], &n);
 	}
-	dest += n;
-	if (diag) {
-	    sprintf (dest, "%s %n", diag, &n);
+	if (diag && *diag) {
 	    dest += n;
+	    sprintf (dest, "'%s' %n", diag, &n);
 	}
     }
     dest += n;
@@ -357,9 +356,6 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	    case stRETADDCALL:
 		sprintf (dest, "retaddcall%n", &n);
 		break;
-	    case stSWITCH_STATE:
-		sprintf (dest, "switch_state%n", &n);
-		break;
 	    case stFREE:
 		sprintf (dest, "free%n", &n);
 		break;
@@ -382,7 +378,9 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	    sprintf (dest, ";+%d%n", i - 5, &n);
 	    dest += n;
 	}
-	strcat (dest, "]b");
+	strcpy (dest, "]b");
+    } else {
+	strcpy (dest, "t[]b");
     }
     error (DEBUG, string);
 }
@@ -1031,7 +1029,7 @@ initialize (void)
 
     /* array with explanation */
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
-        explanation[i] = "???";
+        explanation[i] = NULL;
     }
     explanation[cFIRST_COMMAND] = "FIRST_COMMAND";
     explanation[cFINDNOP] = "FINDNOP";
@@ -1105,6 +1103,10 @@ initialize (void)
     explanation[cNE] = "NE";
     explanation[cSTREQ] = "STREQ";
     explanation[cSTRNE] = "STRNE";
+    explanation[cSTRLT] = "STRLT";
+    explanation[cSTRLE] = "STRLE";
+    explanation[cSTRGT] = "STRGT";
+    explanation[cSTRGE] = "STRGE";
     explanation[cPUSHSTRSYM] = "PUSHSTRSYM";
     explanation[cPOPSTRSYM] = "POPSTRSYM";
     explanation[cPUSHSTR] = "PUSHSTR";
@@ -1167,10 +1169,8 @@ initialize (void)
     explanation[cFORINCREMENT] = "FORINCREMENT";
     explanation[cBEGIN_SWITCH_MARK] = "BEGIN_SWITCH_MARK";
     explanation[cEND_SWITCH_MARK] = "END_SWITCH_MARK";
-    explanation[cPOP_SWITCH_STATE] = "POP_SWITCH_STATE";
     explanation[cBEGIN_LOOP_MARK] = "BEGIN_LOOP_MARK";
     explanation[cEND_LOOP_MARK] = "END_LOOP_MARK";
-    explanation[cPUSH_SWITCH_STATE] = "PUSH_SWITCH_STATE";
     explanation[cSWITCH_COMPARE] = "SWITCH_COMPARE";
     explanation[cNEXT_CASE] = "NEXT_CASE";
     explanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
@@ -1178,12 +1178,14 @@ initialize (void)
     explanation[cCONTINUE] = "CONTINUE";
     explanation[cBREAK_HERE] = "BREAK_HERE";
     explanation[cCONTINUE_HERE] = "CONTINUE_HERE";
+    explanation[cPOP_SWITCH_VALUE] = "POP_SWITCH_VALUE";
+    explanation[cCHKPROMPT] = "CHKPROMPT";
     explanation[cLAST_COMMAND] = "???";
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
-        if (explanation[i][0] == '?') {
-            sprintf (string, "??? command %d ???", i);
-            explanation[i] = my_strdup (string);
-        }
+	if (!explanation[i]) {
+	    sprintf (string, "command %d has no description (command after %s)", i, explanation[i-1]);
+	    error(ERROR,string);
+	}
     }
 
     ykey[kERR] = "error";
@@ -1350,8 +1352,8 @@ run_it ()
             case cSWITCH_COMPARE:
                 switch_compare ();
                 DONE;
-            case cPUSH_SWITCH_STATE:
-                push_switch_state ();
+            case cPOP_SWITCH_VALUE:
+                pop_switch_value (current);
                 DONE;
             case cCONTINUE:
                 mycontinue (current);
@@ -1359,9 +1361,6 @@ run_it ()
             case cFINDNOP:
                 findnop ();
                 DONE;
-	    case cPOP_SWITCH_STATE:
-		pop_switch_state (current);
-		DONE;
             case cFUNCTION_OR_ARRAY:
             case cSTRINGFUNCTION_OR_ARRAY:
                 function_or_array (current);
@@ -1501,7 +1500,7 @@ run_it ()
                 myseek (current);
                 DONE;
             case cPUSHSTREAM:
-                push_switch (current);
+                push_stream (current);
                 DONE;
             case cPOPSTREAM:
                 pop_stream ();
@@ -2022,7 +2021,7 @@ execute (struct command *cmd)	/* execute a subroutine */
     ret = push ();
     ret->pointer = current;
     ret->type = stRETADDCALL;
-    reshufflestack (ret);
+    reshuffle_stack_for_call (ret);
     current = newcurr;
     free (fullname);
 }
