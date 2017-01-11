@@ -57,7 +57,7 @@ int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
 int max_switch_id=1;
-int curr_switch_id=0;
+int switch_id=0;
 
 void report_missing(int severity,char *text) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -165,7 +165,7 @@ statement:  /* empty */
   | while_loop
   | do_loop
   | tBREAK {add_command(cBREAK,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tCONTINUE {if (switch_nesting) create_pop_switch_state(0,FALSE);add_command(cCONTINUE,NULL,NULL);if (!loop_nesting) error(ERROR,"continue outside loop");}
+  | tCONTINUE {create_continue;if (!loop_nesting) error(ERROR,"continue outside loop");}
   | function_definition
   | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
   | stringfunction_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
@@ -173,7 +173,7 @@ statement:  /* empty */
   | tSTATIC {if (function_type==ftNONE) error(ERROR,"no use for 'static' outside functions");} static_list
   | if_clause
   | short_if
-  | tGOTO symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($2,TRUE):$2,curr_switch_id);}
+  | tGOTO symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($2,TRUE):$2);}
   | tGOSUB symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($2,TRUE):$2);}
   | tON tINTERRUPT tBREAK {create_exception(TRUE);}
   | tON tINTERRUPT tCONTINUE {create_exception(FALSE);}
@@ -181,7 +181,7 @@ statement:  /* empty */
     goto_list {add_command(cNOP,NULL,NULL);}
   | tON expression tGOSUB {add_command(cSKIPPER,NULL,NULL);} 
     gosub_list {add_command(cNOP,NULL,NULL);}
-  | tLABEL symbol_or_lineno {create_label((function_type!=ftNONE)?dotify($2,TRUE):$2,cLABEL,curr_switch_id);}
+  | tLABEL symbol_or_lineno {create_label((function_type!=ftNONE)?dotify($2,TRUE):$2,cLABEL);}
   | open_clause {add_command(cCHECKOPEN,NULL,NULL);}
   | tCLOSE hashed_number {add_command(cCLOSE,NULL,NULL);}
   | seek_clause {add_command(cCHECKSEEK,NULL,NULL);}
@@ -201,8 +201,7 @@ statement:  /* empty */
   | tDATA datalist
   | tRESTORE {create_restore("");}
   | tRESTORE symbol_or_lineno {create_restore((function_type!=ftNONE)?dotify($2,TRUE):$2);}
-  | tRETURN {if (switch_nesting) create_pop_switch_state(0,TRUE);
-             if (function_type!=ftNONE) {
+  | tRETURN {if (function_type!=ftNONE) {
 	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
                create_retval(ftNONE,function_type);
@@ -210,8 +209,8 @@ statement:  /* empty */
             } else {
                add_command(cRETURN,NULL,NULL);
             }}
-  | tRETURN expression {if (switch_nesting) create_pop_switch_state(stNUMBER,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
-  | tRETURN string_expression {if (switch_nesting) create_pop_switch_state(stSTRING,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
+  | tRETURN expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
+  | tRETURN string_expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
@@ -485,7 +484,7 @@ call_item: string_expression
   ;
  
 function_definition: export tSUB {missing_endsub++;missing_endsub_line=mylineno;pushlabel();report_missing(WARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {error(ERROR,"nested functions not allowed");YYABORT;}}
-	function_name {if (exported) create_sublink($4); create_label($4,cUSER_FUNCTION,curr_switch_id);
+	function_name {if (exported) create_sublink($4); create_label($4,cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
 		       create_numparam();}
 	'(' paramlist ')' {create_require(stFREE);add_command(cPOP,NULL,NULL);}
@@ -576,8 +575,8 @@ next_symbol:  {pop(stSTRING);}/* can be omitted */
            }
   ;
 
-switch_number_or_string: tSWITCH {switch_nesting++;curr_switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);add_command(cPUSH_SWITCH_STATE,NULL,NULL);} 
-                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);create_pop_switch_state(0,FALSE);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;curr_switch_id=0;}
+switch_number_or_string: tSWITCH {switch_nesting++;switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);} 
+                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;switch_id=0;}
   ;
 
 sep_list: tSEP {if ($1>=0) mylineno+=$1;} 
@@ -736,8 +735,8 @@ printintro: /* may be empty */ {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTR
 hashed_number: '#' expression
   | expression;
 
-goto_list: symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($1,TRUE):$1,curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
-  | goto_list ',' symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($3,TRUE):$3,curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
+goto_list: symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP,NULL,NULL);}
+  | goto_list ',' symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP,NULL,NULL);}
   ;
 
 gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP,NULL,NULL);}

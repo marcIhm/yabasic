@@ -122,7 +122,7 @@ int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
 int max_switch_id=1;
-int curr_switch_id=0;
+int switch_id=0;
 
 void report_missing(int severity,char *text) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -689,43 +689,43 @@ static const yytype_uint16 yyrline[] =
      176,   177,   178,   179,   180,   180,   182,   182,   184,   185,
      186,   187,   188,   189,   190,   191,   192,   193,   194,   194,
      195,   195,   196,   197,   198,   199,   200,   201,   202,   203,
-     204,   213,   214,   215,   216,   217,   219,   220,   221,   222,
-     223,   224,   225,   226,   227,   228,   229,   230,   231,   232,
-     233,   234,   235,   236,   237,   238,   239,   240,   241,   242,
-     243,   244,   245,   246,   247,   248,   249,   250,   252,   253,
-     254,   255,   256,   257,   258,   259,   260,   264,   265,   266,
-     267,   268,   272,   273,   274,   275,   276,   277,   280,   281,
-     284,   285,   286,   287,   288,   291,   292,   295,   296,   299,
-     300,   301,   302,   303,   304,   307,   308,   309,   310,   311,
-     312,   313,   314,   315,   316,   317,   318,   319,   320,   321,
-     322,   323,   324,   325,   326,   327,   328,   329,   330,   331,
-     332,   333,   334,   335,   336,   337,   338,   341,   342,   345,
-     345,   346,   346,   347,   348,   349,   350,   351,   352,   353,
-     354,   355,   356,   357,   358,   359,   360,   361,   362,   363,
-     364,   365,   366,   367,   368,   369,   370,   371,   372,   373,
-     374,   375,   376,   379,   382,   385,   388,   389,   390,   391,
-     392,   393,   394,   395,   396,   397,   398,   399,   400,   401,
-     402,   403,   404,   405,   406,   407,   408,   409,   410,   411,
-     412,   413,   414,   415,   416,   417,   418,   419,   420,   421,
-     422,   423,   424,   425,   426,   427,   428,   429,   430,   431,
-     432,   433,   434,   435,   436,   437,   438,   439,   440,   441,
-     442,   443,   444,   445,   446,   447,   450,   451,   452,   455,
-     456,   459,   460,   463,   464,   465,   466,   469,   472,   475,
-     475,   478,   479,   480,   483,   484,   487,   488,   491,   487,
-     496,   497,   500,   501,   504,   505,   506,   507,   510,   511,
-     514,   515,   516,   517,   520,   521,   524,   525,   526,   527,
-     530,   531,   532,   535,   536,   537,   538,   541,   542,   546,
-     560,   541,   565,   566,   569,   570,   573,   574,   579,   579,
-     583,   584,   587,   588,   592,   594,   593,   598,   599,   599,
-     603,   603,   609,   610,   614,   615,   614,   621,   622,   626,
-     626,   631,   632,   636,   637,   637,   639,   636,   643,   644,
-     647,   647,   651,   652,   655,   657,   659,   656,   663,   664,
-     667,   668,   668,   671,   672,   674,   675,   679,   680,   683,
-     684,   686,   687,   691,   692,   693,   694,   697,   698,   699,
-     700,   701,   704,   705,   706,   709,   709,   710,   710,   711,
-     711,   712,   712,   713,   713,   716,   717,   720,   721,   722,
-     723,   724,   725,   726,   727,   728,   729,   730,   731,   732,
-     733,   736,   737,   739,   740,   743,   744
+     204,   212,   213,   214,   215,   216,   218,   219,   220,   221,
+     222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
+     232,   233,   234,   235,   236,   237,   238,   239,   240,   241,
+     242,   243,   244,   245,   246,   247,   248,   249,   251,   252,
+     253,   254,   255,   256,   257,   258,   259,   263,   264,   265,
+     266,   267,   271,   272,   273,   274,   275,   276,   279,   280,
+     283,   284,   285,   286,   287,   290,   291,   294,   295,   298,
+     299,   300,   301,   302,   303,   306,   307,   308,   309,   310,
+     311,   312,   313,   314,   315,   316,   317,   318,   319,   320,
+     321,   322,   323,   324,   325,   326,   327,   328,   329,   330,
+     331,   332,   333,   334,   335,   336,   337,   340,   341,   344,
+     344,   345,   345,   346,   347,   348,   349,   350,   351,   352,
+     353,   354,   355,   356,   357,   358,   359,   360,   361,   362,
+     363,   364,   365,   366,   367,   368,   369,   370,   371,   372,
+     373,   374,   375,   378,   381,   384,   387,   388,   389,   390,
+     391,   392,   393,   394,   395,   396,   397,   398,   399,   400,
+     401,   402,   403,   404,   405,   406,   407,   408,   409,   410,
+     411,   412,   413,   414,   415,   416,   417,   418,   419,   420,
+     421,   422,   423,   424,   425,   426,   427,   428,   429,   430,
+     431,   432,   433,   434,   435,   436,   437,   438,   439,   440,
+     441,   442,   443,   444,   445,   446,   449,   450,   451,   454,
+     455,   458,   459,   462,   463,   464,   465,   468,   471,   474,
+     474,   477,   478,   479,   482,   483,   486,   487,   490,   486,
+     495,   496,   499,   500,   503,   504,   505,   506,   509,   510,
+     513,   514,   515,   516,   519,   520,   523,   524,   525,   526,
+     529,   530,   531,   534,   535,   536,   537,   540,   541,   545,
+     559,   540,   564,   565,   568,   569,   572,   573,   578,   578,
+     582,   583,   586,   587,   591,   593,   592,   597,   598,   598,
+     602,   602,   608,   609,   613,   614,   613,   620,   621,   625,
+     625,   630,   631,   635,   636,   636,   638,   635,   642,   643,
+     646,   646,   650,   651,   654,   656,   658,   655,   662,   663,
+     666,   667,   667,   670,   671,   673,   674,   678,   679,   682,
+     683,   685,   686,   690,   691,   692,   693,   696,   697,   698,
+     699,   700,   703,   704,   705,   708,   708,   709,   709,   710,
+     710,   711,   711,   712,   712,   715,   716,   719,   720,   721,
+     722,   723,   724,   725,   726,   727,   728,   729,   730,   731,
+     732,   735,   736,   738,   739,   742,   743
 };
 #endif
 
@@ -3036,7 +3036,7 @@ yyreduce:
 
   case 20:
 
-    {if (switch_nesting) create_pop_switch_state(0,FALSE);add_command(cCONTINUE,NULL,NULL);if (!loop_nesting) error(ERROR,"continue outside loop");}
+    {create_continue;if (!loop_nesting) error(ERROR,"continue outside loop");}
 
     break;
 
@@ -3066,7 +3066,7 @@ yyreduce:
 
   case 30:
 
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);}
+    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
 
     break;
 
@@ -3114,7 +3114,7 @@ yyreduce:
 
   case 38:
 
-    {create_label((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),cLABEL,curr_switch_id);}
+    {create_label((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),cLABEL);}
 
     break;
 
@@ -3222,8 +3222,7 @@ yyreduce:
 
   case 60:
 
-    {if (switch_nesting) create_pop_switch_state(0,TRUE);
-             if (function_type!=ftNONE) {
+    {if (function_type!=ftNONE) {
 	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
                create_retval(ftNONE,function_type);
@@ -3236,13 +3235,13 @@ yyreduce:
 
   case 61:
 
-    {if (switch_nesting) create_pop_switch_state(stNUMBER,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
+    {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
 
     break;
 
   case 62:
 
-    {if (switch_nesting) create_pop_switch_state(stSTRING,TRUE); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
+    {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
 
     break;
 
@@ -4509,7 +4508,7 @@ yyreduce:
 
   case 287:
 
-    {if (exported) create_sublink((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION,curr_switch_id);
+    {if (exported) create_sublink((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
 		       create_numparam();}
 
@@ -4727,13 +4726,13 @@ yyreduce:
 
   case 328:
 
-    {switch_nesting++;curr_switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);add_command(cPUSH_SWITCH_STATE,NULL,NULL);}
+    {switch_nesting++;switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);}
 
     break;
 
   case 329:
 
-    {add_command(cBREAK_HERE,NULL,NULL);create_pop_switch_state(0,FALSE);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;curr_switch_id=0;}
+    {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;switch_id=0;}
 
     break;
 
@@ -5154,13 +5153,13 @@ yyreduce:
 
   case 423:
 
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
+    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL,NULL);}
 
     break;
 
   case 424:
 
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),curr_switch_id);add_command(cFINDNOP,NULL,NULL);}
+    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP,NULL,NULL);}
 
     break;
 

@@ -1428,7 +1428,7 @@ poke (struct command *cmd)	/* poke into internals */
     } else if (!strcmp (dest, "random_seed") && !sarg) {
         srand((unsigned int) darg);
     } else if (!strcmp (dest, "__assert_stack_size") && !sarg) {
-	count = 0;
+	count = -1;
 	stack = stackhead;
 	while ( stack != stackroot) {
 	    count++;
@@ -1441,7 +1441,8 @@ poke (struct command *cmd)	/* poke into internals */
     } else if (dest[0] == '#') {
         error (ERROR, "don't use quotes when poking into file");
     } else {
-        error (ERROR, "invalid poke");
+	sprintf(string,"invalid poke: '%s'",dest);
+        error (ERROR, string);
     }
     return;
 }
@@ -1905,46 +1906,38 @@ strrelop (struct command *type)	/* compare topmost string-values */
 void
 switch_compare (void)		/* compare topmost values for switch statement */
 {
-    struct stackentry *result, *first, *second, *state;
+    struct stackentry *result, *first, *second;
     double r = 0.;
-
-    /* get switch_state from stack */
-    state = stackhead;
-    //    while ( state->type != stSWITCH_STATE ) {
-    //	state = state->prev;
-    //	if ( state == stackroot) error (FATAL, "did not find switch state");
-    //    }
     
     first = pop (stANY);
     second = stackhead->prev;
 
-    /* maybe override result of comparison with switch_state and store result there; this allows batching of case-clauses */
-    if ( 0 && state->value == 1. ) {
-	error (DEBUG, "overriding result of comparison with stored state TRUE");
-	r = 1.;
-    } else {
-	if ((second->type == stSWITCH_STRING || second->type == stSTRING)
-            && first->type == stSTRING) {
-	    if (second->type == stSWITCH_STRING) {
-		r = 1.;
-	    } else {
-		r = (strcmp (first->pointer, second->pointer) == 0) ? 1. : 0.;
-	    }
-	} else if ((second->type == stSWITCH_NUMBER || second->type == stNUMBER)
-		   && first->type == stNUMBER) {
-	    if (second->type == stSWITCH_NUMBER) {
-		r = 1.;
-	    } else {
-		r = (first->value == second->value);
-	    }
+    /* stSWITCH_STRING and stSWITCH_NUMBER compare true to any string or number */
+    if ((second->type == stSWITCH_STRING || second->type == stSTRING)
+	&& first->type == stSTRING) {
+	if (second->type == stSWITCH_STRING) {
+	    r = 1.;
 	} else {
-	    error (ERROR,
-		   "mixing strings and numbers in a single switch statement is not allowed");
+	    r = (strcmp (first->pointer, second->pointer) == 0) ? 1. : 0.;
 	}
-	state->value = r;
+    } else if ((second->type == stSWITCH_NUMBER || second->type == stNUMBER)
+	       && first->type == stNUMBER) {
+	if (second->type == stSWITCH_NUMBER) {
+	    r = 1.;
+	} else {
+	    r = (first->value == second->value) ? 1. : 0.;
+	}
+    } else {
+	error (ERROR,
+	       "mixing strings and numbers in a single switch statement is not allowed");
     }
 
-				
+    /* if comparison was successful once, remember this for all future comparisons */
+    if (r == 1.) {
+	if (second->type == stNUMBER) second->type=stSWITCH_NUMBER;
+	if (second->type == stSTRING) second->type=stSWITCH_STRING;
+    }
+
     result = push ();
     result->type = stNUMBER;
     result->value = r;
