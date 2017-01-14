@@ -438,6 +438,16 @@ add_command (int type, char *symname, char *diag)
     return lastcmd;
 }
 
+struct command *
+add_command_with_switch_state (int type)	/* same as add_command, but add switch_state too */
+{
+    struct command *cmd;
+
+    cmd = add_command (type, NULL, NULL);
+    add_switch_state(cmd);
+}
+
+
 void
 dump_commands (char *dumpfilename)
 /* dump commands into given file */
@@ -1175,6 +1185,7 @@ initialize (void)
     explanation[cNEXT_CASE] = "NEXT_CASE";
     explanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
     explanation[cBREAK] = "BREAK";
+    explanation[cBREAK_MULTI] = "BREAK_MULTI";
     explanation[cCONTINUE] = "CONTINUE";
     explanation[cBREAK_HERE] = "BREAK_HERE";
     explanation[cCONTINUE_HERE] = "CONTINUE_HERE";
@@ -1344,6 +1355,7 @@ run_it ()
                 resetskiponce (current);
                 DONE;
             case cBREAK:
+            case cBREAK_MULTI:
                 mybreak (current);
                 DONE;
             case cNEXT_CASE:

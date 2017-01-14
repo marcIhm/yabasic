@@ -303,7 +303,7 @@ enum cmd_type {
     cSPLIT, cSPLIT2, cSPLITALT, cSPLITALT2,
     cSTARTFOR, cFORCHECK, cFORINCREMENT,	/* for for-loops */
 
-    cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK, 	/* break-continue-switch */
+    cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK, cBREAK_MULTI, 	/* break-continue-switch */
     cCONTINUE, cBREAK_HERE, cCONTINUE_HERE, cPOP_SWITCH_VALUE,
     cBEGIN_LOOP_MARK, cEND_LOOP_MARK, cBEGIN_SWITCH_MARK, cEND_SWITCH_MARK,
 
@@ -476,7 +476,8 @@ void std_diag (char *, int, char *, char *);	/* produce standard diagnostic */
 void *my_malloc (unsigned);	/* my own version of malloc */
 void my_free (void *);		/* free memory */
 char *my_strerror (int);	/* return description of error messages */
-struct command *add_command (int, char *, char *);	/* get room for new command */
+struct command *add_command (int, char *, char *);	/* create new command and add some data */
+struct command *add_command_with_switch_state(int);     /* same as add_command, but add switch_state too */
 void dump_commands (char *);         /* dump commands into given file */
 void signal_handler (int);	/* handle various signals */
 char *my_strdup (char *);	/* my own version of strdup */
@@ -619,7 +620,7 @@ void create_gosub (char *);	/* creates command gosub */
 void create_call (char *);	/* creates command function call */
 void create_label (char *, int);	/* creates command label */
 void create_sublink (char *);	/* create link to subroutine */
-void create_continue (void);	/* creates command continue */
+struct command *add_switch_state(struct command *); /* add switch state to a newly created command */
 void pushgoto (void);		/* generate label and push goto on stack */
 void popgoto (void);		/* pops a goto and generates the matching command */
 void jump (struct command *);	/* jump to specific Label */

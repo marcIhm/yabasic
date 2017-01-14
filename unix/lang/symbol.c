@@ -1922,6 +1922,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
 	    }
 	    if (curr->type == cBEGIN_SWITCH_MARK) {
 		switch_nesting++;
+		left_switch--
 	    }
 	    if (curr->type == cEND_SWITCH_MARK) {
 		switch_nesting--;
