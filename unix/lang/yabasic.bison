@@ -165,7 +165,8 @@ statement:  /* empty */
   | while_loop
   | do_loop
   | tBREAK {add_command(cBREAK,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tCONTINUE {create_continue;if (!loop_nesting) error(ERROR,"continue outside loop");}
+  | tBREAK expression {add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+  | tCONTINUE {add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
   | function_definition
   | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
   | stringfunction_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
@@ -540,7 +541,7 @@ paramitem: tSYMBOL {create_require(stNUMBER);create_makelocal(dotify($1,FALSE),s
 for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=mylineno;} tSYMBOL tEQU 
             {pushname(dotify($3,FALSE)); /* will be used by next_symbol to check equality,NULL */
 	     add_command(cRESETSKIPONCE,NULL,NULL);
-	     pushgoto();add_command(cCONTINUE_HERE,NULL,NULL);}
+	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
 	  expression tTO expression 
 	  step_part { /* pushes another expression */
 	     add_command(cSKIPONCE,NULL,NULL);
@@ -599,7 +600,7 @@ default: /* empty */
   ;
 
 
-do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_loop++;missing_loop_line=mylineno;pushgoto();}
+do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=mylineno;pushgoto();}
 	      statement_list
             loop
   ;
@@ -610,7 +611,7 @@ loop: tEOPROG {if (missing_loop) {sprintf(string,"%d loop(s) are missing (last a
   ;
 
 
-while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_wend++;missing_wend_line=mylineno;pushgoto();} '(' expression ')'
+while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=mylineno;pushgoto();} '(' expression ')'
 	      {add_command(cDECIDE,NULL,NULL);
 	      pushlabel();}
 	      statement_list
@@ -622,7 +623,7 @@ wend: tEOPROG {if (missing_wend) {sprintf(string,"%d wend(s) are missing (last a
   ;
 
 
-repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command(cCONTINUE_HERE,NULL,NULL);missing_until++;missing_until_line=mylineno;pushgoto();} 
+repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=mylineno;pushgoto();} 
 	       statement_list
 	     until
   ;

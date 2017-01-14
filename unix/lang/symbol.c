@@ -717,7 +717,11 @@ pushdblsym (struct command *cmd)
 
     if (!cmd->symbol) {
         cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
+    } else if (infolevel >= DEBUG) {
+    	sprintf(string, "reading symbol '%s'", cmd->symname);
+	error (DEBUG, string);
     }
+
     p->value = *(double *) cmd->symbol;
     p->type = stNUMBER;
 }
@@ -731,7 +735,11 @@ popdblsym (struct command *cmd)	/* pop double from stack */
     d = pop (stNUMBER)->value;
     if (!cmd->symbol) {
         cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
+    } else if (infolevel >= DEBUG) {
+	sprintf(string, "writing symbol '%s'", cmd->symname);
+	error (DEBUG, string);
     }
+	
     *(double *) (cmd->symbol) = d;
 }
 
@@ -1132,12 +1140,8 @@ create_goto (char *label)	/* creates command goto */
     struct command *cmd;
 
     cmd = add_command (cGOTO, NULL, label);
-
-    cmd->switch_state = my_malloc (sizeof (struct switch_state));
-    cmd->switch_state->id = switch_id;
-    cmd->switch_state->nesting = switch_nesting;
-
     cmd->pointer = my_strdup (label);
+    add_switch_state(cmd);
 }
 
 
@@ -1162,19 +1166,14 @@ create_call (char *label)	/* creates command function call */
     cmd->pointer = my_strdup (label);
 }
 
-
-void
-create_continue ()	/* creates command continue */
+struct command *
+add_switch_state(struct command *cmd) /* add switch state to a newly created command */
 {
-    struct command *cmd;
-
-    cmd = add_command (cCONTINUE, NULL, NULL);
-
     cmd->switch_state = my_malloc (sizeof (struct switch_state));
     cmd->switch_state->id = switch_id;
     cmd->switch_state->nesting = switch_nesting;
+    cmd;
 }
-
 
 static void
 link_label (struct command *cmd)	/* link label into list of labels */
@@ -1390,9 +1389,7 @@ create_label (char *label, int type)	/* creates command label */
 
     cmd = add_command (type, NULL, label);
     cmd->pointer = my_strdup (label);
-    cmd->switch_state = my_malloc (sizeof (struct switch_state));
-    cmd->switch_state->id = switch_id;
-    cmd->switch_state->nesting = switch_nesting;
+    add_switch_state(cmd);
 
     link_label (cmd);
 }
@@ -1431,6 +1428,9 @@ decide ()			/*  skips next command, if not 0 on stack */
 {
     if (pop (stNUMBER)->value != 0) {
         current = current->next;    /* skip one command */
+	std_diag ("skipping", current->type, current->symname, current->diag);
+    } else {
+	if (infolevel >= DEBUG)	error (DEBUG, "(no command skipped)");
     }
 }
 
@@ -1900,26 +1900,39 @@ mybreak (struct command *cmd)	/* find break_here statement */
     struct command *curr;
     int loop_nesting = 0;
     int switch_nesting = 0;
+    int to_break;
 
+    if (cmd->type == cBREAK_MULTI) {
+	to_break = (int) pop(stNUMBER)->value;
+	if (to_break > 3 || to_break < 1) {
+	    sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",to_break);
+	    error(ERROR,string);
+	}
+    } else {
+	to_break = 1;
+    }
     curr = cmd;
-    while (curr->type != cBREAK_HERE || loop_nesting || switch_nesting) {
-        if (curr->type == cBEGIN_LOOP_MARK) {
-            loop_nesting++;
-        }
-        if (curr->type == cEND_LOOP_MARK) {
-            loop_nesting--;
-        }
-        if (curr->type == cBEGIN_SWITCH_MARK) {
-            switch_nesting++;
-        }
-        if (curr->type == cEND_SWITCH_MARK) {
-            switch_nesting--;
-        }
-        curr = curr->next;
-        if (!curr) {
-            sprintf(string,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-            error (FATAL, string);
-        }
+    while (to_break) {
+	while (curr->type != cBREAK_HERE || loop_nesting || switch_nesting) {
+	    if (curr->type == cBEGIN_LOOP_MARK) {
+		loop_nesting++;
+	    }
+	    if (curr->type == cEND_LOOP_MARK) {
+		loop_nesting--;
+	    }
+	    if (curr->type == cBEGIN_SWITCH_MARK) {
+		switch_nesting++;
+	    }
+	    if (curr->type == cEND_SWITCH_MARK) {
+		switch_nesting--;
+	    }
+	    curr = curr->next;
+	    if (!curr) {
+		sprintf(string,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+		error (FATAL, string);
+	    }
+	}
+	to_break--;
     }
     cmd->type = cQGOTO;
     if (infolevel >= DEBUG) {
