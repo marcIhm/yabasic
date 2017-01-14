@@ -16,3 +16,4 @@ Makefile
 test-suite.log
 tests/*.trs
 tests/*.log
+bison.output
