@@ -1,6 +1,6 @@
 
 bin_PROGRAMS = yabasic
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flex.c bison.c yabasic.h bison.h
+yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c yabasic.h bison.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX

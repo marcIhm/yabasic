@@ -105,8 +105,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_yabasic_OBJECTS = main.$(OBJEXT) function.$(OBJEXT) io.$(OBJEXT) \
-	graphic.$(OBJEXT) symbol.$(OBJEXT) flex.$(OBJEXT) \
-	bison.$(OBJEXT)
+	graphic.$(OBJEXT) symbol.$(OBJEXT) flow.$(OBJEXT) \
+	flex.$(OBJEXT) bison.$(OBJEXT)
 yabasic_OBJECTS = $(am_yabasic_OBJECTS)
 yabasic_LDADD = $(LDADD)
 yabasic_DEPENDENCIES =
@@ -321,7 +321,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flex.c bison.c yabasic.h bison.h
+yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c yabasic.h bison.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
@@ -442,6 +442,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bison.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/graphic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io.Po@am__quote@

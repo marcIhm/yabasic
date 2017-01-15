@@ -304,7 +304,7 @@ enum cmd_type {
     cSTARTFOR, cFORCHECK, cFORINCREMENT,	/* for for-loops */
 
     cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK, cBREAK_MULTI, 	/* break-continue-switch */
-    cCONTINUE, cBREAK_HERE, cCONTINUE_HERE, cPOP_SWITCH_VALUE,
+    cCONTINUE, cBREAK_HERE, cCONTINUE_HERE, cPOP_MULTI, cPOP_SWITCH_VALUE,
     cBEGIN_LOOP_MARK, cEND_LOOP_MARK, cBEGIN_SWITCH_MARK, cEND_SWITCH_MARK,
 
     cDBLADD, cDBLMIN, cDBLMUL, cDBLDIV, cDBLPOW,	/* double operations */
@@ -598,8 +598,6 @@ void pusharrayref (struct command *);	/* push an array reference onto stack */
 void arraylink (struct command *);	/* link a local symbol to a global array */
 void makestatic (struct command *);	/* makes symbol static */
 void makelocal (struct command *);	/* makes symbol local */
-void create_numparam (void);	/* create command 'cNUMPARAM' */
-void numparam (struct command *);	/* count number of function parameters */
 void pushdblsym (struct command *);	/* push double symbol onto stack */
 void popdblsym (struct command *);	/* pop double from stack */
 void create_pushdbl (double);	/* create command 'pushdbl' */
@@ -612,6 +610,29 @@ void create_pushstr (char *);	/* creates command pushstr */
 void pushstr (struct command *);	/* push string onto stack */
 void pushname (char *);		/* push a name on stack */
 void pushstrptr (struct command *);	/* push string-pointer onto stack */
+void logical_shortcut (struct command *type);	/* shortcut and/or if possible */
+void create_doarray (char *, int);	/* creates array-commands */
+void doarray (struct command *);	/* call an array */
+void create_dim (char *, char);	/* create command 'dim' */
+void dim (struct command *);	/* get room for array */
+void swap (void);		/*swap topmost elements on stack */
+struct stackentry *push (void);	/* push element on stack and enlarge it */
+struct stackentry *pop (int);	/* pops element to memory */
+void pop_multi (struct command *); /* pop and discard multiple values from stack */
+struct symbol *get_sym (char *, int, int);	/* find and/or add a symbol */
+void link_symbols (struct symbol *, struct symbol *);	/* link one symbol to the other */
+void pushsymlist (void);	/* push a new list on symbol stack */
+void popsymlist (void);		/* pop list of symbols and free symbol contents */
+void dump_sym ();		/* dump the stack of lists of symbols */
+void dump_sub (int);		/* dump the stack of subroutine calls */
+void function_or_array (struct command *);	/* decide whether to do perform function or array */
+int count_args (int);	/* count number of arguments on stack */
+
+
+/* flow.c */
+void link_label (struct command *);	/* link label into list of labels */
+void create_numparam (void);	/* create command 'cNUMPARAM' */
+void numparam (struct command *);	/* count number of function parameters */
 void forcheck (void);		/* check, if for-loop is done */
 void forincrement (void);	/* increment value on stack */
 void startfor (void);		/* compute initial value of for-variable */
@@ -630,28 +651,13 @@ void skipper (void);		/* used for on_goto/gosub, skip commands */
 void skiponce (struct command *);	/* skip next command once */
 void resetskiponce (struct command *);	/* find and reset next skip */
 void decide (void);		/*  skips next command, if not 0 on stack */
-void logical_shortcut (struct command *type);	/* shortcut and/or if possible */
-void create_doarray (char *, int);	/* creates array-commands */
-void doarray (struct command *);	/* call an array */
-void create_dim (char *, char);	/* create command 'dim' */
-void dim (struct command *);	/* get room for array */
 void pushlabel (void);		/* generate goto and push label on stack */
 void poplabel (void);		/* pops a label and generates the matching command */
 void storelabel ();		/* push label on stack */
 void matchgoto ();		/* generate goto matching label on stack */
-void swap (void);		/*swap topmost elements on stack */
-struct stackentry *push (void);	/* push element on stack and enlarge it */
-struct stackentry *pop (int);	/* pops element to memory */
-struct symbol *get_sym (char *, int, int);	/* find and/or add a symbol */
-void link_symbols (struct symbol *, struct symbol *);	/* link one symbol to the other */
-void pushsymlist (void);	/* push a new list on symbol stack */
-void popsymlist (void);		/* pop list of symbols and free symbol contents */
-void dump_sym ();		/* dump the stack of lists of symbols */
-void dump_sub (int);		/* dump the stack of subroutine calls */
 void create_retval (int, int);	/* create command 'cRETVAL' */
 void retval (struct command *);	/* check return value of function */
 void create_endfunction (void);	/* create command cEND_FUNCTION */
-void function_or_array (struct command *);	/* decide whether to do perform function or array */
 struct command *search_label (char *, int);	/* search label */
 void reshuffle_stack_for_call (struct stackentry *);	/* reorganize stack for function call */
 void mybreak (struct command *);	/* find break_here statement */
