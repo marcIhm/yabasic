@@ -810,7 +810,7 @@ function (struct command *current)	/* performs a function */
         if (badstream (i, 0)) {
             return;
         }
-        if (!(stream_modes[i] & (smREAD | smWRITE))) {
+        if (!(stream_modes[i] & (stmREAD | stmWRITE))) {
             sprintf (string, "stream %d not opened", i);
             error (ERROR, string);
             value = 0;
@@ -1466,7 +1466,7 @@ pokefile (struct command *cmd)	/* poke into file */
         return;
     }
 
-    if (!(stream_modes[stream] & smWRITE)) {
+    if (!(stream_modes[stream] & stmWRITE)) {
         sprintf (string, "Stream %d not open for writing", stream);
         error (ERROR, string);
         return;
@@ -1525,7 +1525,7 @@ peekfile (int stream)		/* read a byte from stream */
     if (stream && badstream (stream, 0)) {
         return 0;
     }
-    if (stream && !(stream_modes[stream] & smREAD)) {
+    if (stream && !(stream_modes[stream] & stmREAD)) {
         sprintf (string, "stream %d not open for reading", stream);
         error (ERROR, string);
         return 0;
@@ -1676,7 +1676,7 @@ restore (struct command *cmd)	/* reset data pointer to given label */
             /* no label, restore to first command */
             label = cmd->lib->firstdata;
         } else {
-            label = search_label (cmd->pointer, smLABEL | smGLOBAL);
+            label = search_label (cmd->pointer, srmLABEL | srmGLOBAL);
             if (!label) {
                 /* did not find label */
                 sprintf (string, "can't find label '%s'",

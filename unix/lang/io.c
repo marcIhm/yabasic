@@ -694,7 +694,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
     char **pmode;
     static char *valid_modes[] = { "r", "w", "a", "rb", "wb", "ab", "" };
     static int smodes[] =
-    { smREAD, smWRITE, smWRITE, smREAD, smWRITE, smWRITE };
+    { stmREAD, stmWRITE, stmWRITE, stmREAD, stmWRITE, stmWRITE };
     int smode;
     struct stackentry *p;
     int has_mode, has_stream, printer;
@@ -720,7 +720,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
     } else {
         stream = 0;
         for (i = 1; i < FOPEN_MAX - 4; i++) {
-            if (stream_modes[i] == smCLOSED) {
+            if (stream_modes[i] == stmCLOSED) {
                 stream = i;
                 break;
             }
@@ -748,7 +748,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
         errorcode = 9;
         goto open_done;
     }
-    if (stream_modes[stream] != smCLOSED) {
+    if (stream_modes[stream] != stmCLOSED) {
         sprintf(errorstring, "stream already in use");
         errorcode = 2;
         goto open_done;
@@ -845,7 +845,7 @@ myclose(void)			/* close the specified stream */
     if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
         return;
     }
-    if (stream_modes[s] == smCLOSED) {
+    if (stream_modes[s] == stmCLOSED) {
         sprintf(string, "stream %d already closed", s);
         error(WARNING, string);
         return;
@@ -865,7 +865,7 @@ myclose(void)			/* close the specified stream */
         fclose(streams[s]);
     }
     streams[s] = NULL;
-    stream_modes[s] = smCLOSED;
+    stream_modes[s] = stmCLOSED;
 }
 
 
@@ -906,7 +906,7 @@ myseek(struct command *cmd)	/* reposition file pointer */
     if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
         return;
     }
-    if (!(stream_modes[s] & (smREAD | smWRITE))) {
+    if (!(stream_modes[s] & (stmREAD | stmWRITE))) {
         sprintf(errorstring, "stream %d not open", s);
         errorcode = 11;
         return;
@@ -1011,13 +1011,13 @@ checkstream(void)		/* test if currst is still valid */
     input = (currstr > 0);
 
     if (!stdio) {
-        if (input && !(stream_modes[abs(currstr)] & smREAD)) {
+        if (input && !(stream_modes[abs(currstr)] & stmREAD)) {
             sprintf(string, "stream %d not open for reading",
                     abs(currstr));
             error(ERROR, string);
             return FALSE;
         }
-        if (!input && !(stream_modes[abs(currstr)] & (smWRITE | smPRINT))) {
+        if (!input && !(stream_modes[abs(currstr)] & (stmWRITE | stmPRINT))) {
             sprintf(string, "stream %d not open for writing or printing",
                     abs(currstr));
             error(ERROR, string);
@@ -1040,7 +1040,7 @@ testeof(struct command *cmd)	/* close the specified stream */
     }
     result = push();
     result->type = stNUMBER;
-    if (s && !(stream_modes[s] & smREAD)) {
+    if (s && !(stream_modes[s] & stmREAD)) {
         result->value = 1.;
         return;
     }

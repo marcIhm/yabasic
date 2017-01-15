@@ -249,14 +249,14 @@ enum error {
     FATAL, ERROR, INFO, DUMP, WARNING, NOTE, DEBUG
 };
 
-enum endreasons {
+enum end_reasons {
     /* ways to end the program */
     erNONE, erERROR, erREQUEST, erEOF
 };
 
-enum streammodes {
+enum stream_modes {
     /* ways to access a stream */
-    smCLOSED = 0, smREAD = 1, smWRITE = 2, smPRINT = 4
+    stmCLOSED = 0, stmREAD = 1, stmWRITE = 2, stmPRINT = 4
 };
 
 enum functions {
@@ -293,7 +293,7 @@ enum cmd_type {
     /* type of command */
     cFIRST_COMMAND,		/* no command, just marks start of list */
 
-    cLABEL, cSUBLINK, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN,	/* flow control */
+    cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
     cORSHORT, cSKIPONCE, cRESETSKIPONCE, cCOMPILE, cEXECUTE, cEXECUTE2,
@@ -310,9 +310,9 @@ enum cmd_type {
     cDBLADD, cDBLMIN, cDBLMUL, cDBLDIV, cDBLPOW,	/* double operations */
     cNEGATE, cPUSHDBLSYM, cPOP, cPOPDBLSYM, cPUSHDBL,
 
-    cREQUIRE, cPUSHFREE, cMAKELOCAL, cMAKESTATIC, cNUMPARAM,	/* functions and procedures */
-    cCALL, cQCALL, cPUSHSYMLIST, cPOPSYMLIST, cRET_FROM_FUN,
-    cUSER_FUNCTION, cRETVAL, cEND_FUNCTION,
+    cREQUIRE, cPUSHFREE, cMAKELOCAL, cMAKESTATIC, cCOUNT_PARAMS,	/* functions and procedures */
+    cCALL, cQCALL, cPUSHSYMLIST, cPOPSYMLIST, cRETURN_FROM_CALL,
+    cUSER_FUNCTION, cCHECK_RETURN_VALUE, cEND_FUNCTION, cREORDER_STACK_AFTER_CALL,
     cFUNCTION_OR_ARRAY, cSTRINGFUNCTION_OR_ARRAY,
 
     cPOKE, cPOKEFILE, cSWAP, cDUPLICATE, cDOCU,	/* internals */
@@ -339,7 +339,7 @@ enum cmd_type {
 enum stackentries {
     /* different types of stackentries */
     stGOTO, stSTRING, stSTRINGARRAYREF, stNUMBER, stNUMBERARRAYREF, stLABEL,
-    stRETADD, stRETADDCALL, stFREE, stROOT,
+    stRET_ADDR, stRET_ADDR_CALL, stFREE, stROOT,
     stANY, stSTRING_OR_NUMBER, stSTRING_OR_NUMBER_ARRAYREF,	/* these will never appear on stack but are used to check with pop */
     stSWITCH_STRING, stSWITCH_NUMBER	/* only used in switch statement, compares true to every string or number */
 };
@@ -372,9 +372,9 @@ enum yabkeys {
     kBACKSPACE, kSCRNDOWN, kSCRNUP, kENTER, kESC, kTAB, kLASTKEY
 };
 
-enum searchmodes {
+enum search_modes {
     /* modes for searching labels */
-    smSUB = 1, smLINK = 2, smLABEL = 4, smGLOBAL = 8
+    srmSUBR = 1, srmLINK = 2, srmLABEL = 4, srmGLOBAL = 8
 };
 
 /* ------------- global types ---------------- */
@@ -631,8 +631,8 @@ int count_args (int);	/* count number of arguments on stack */
 
 /* flow.c */
 void link_label (struct command *);	/* link label into list of labels */
-void create_numparam (void);	/* create command 'cNUMPARAM' */
-void numparam (struct command *);	/* count number of function parameters */
+void create_count_params (void);	/* create command 'cCOUNT_PARAMS' */
+void count_params (struct command *);	/* count number of function parameters */
 void forcheck (void);		/* check, if for-loop is done */
 void forincrement (void);	/* increment value on stack */
 void startfor (void);		/* compute initial value of for-variable */
@@ -640,7 +640,7 @@ void create_goto (char *);	/* creates command goto */
 void create_gosub (char *);	/* creates command gosub */
 void create_call (char *);	/* creates command function call */
 void create_label (char *, int);	/* creates command label */
-void create_sublink (char *);	/* create link to subroutine */
+void create_subr_link (char *);	/* create link to subroutine */
 struct command *add_switch_state(struct command *); /* add switch state to a newly created command */
 void pushgoto (void);		/* generate label and push goto on stack */
 void popgoto (void);		/* pops a goto and generates the matching command */
@@ -655,11 +655,13 @@ void pushlabel (void);		/* generate goto and push label on stack */
 void poplabel (void);		/* pops a label and generates the matching command */
 void storelabel ();		/* push label on stack */
 void matchgoto ();		/* generate goto matching label on stack */
-void create_retval (int, int);	/* create command 'cRETVAL' */
-void retval (struct command *);	/* check return value of function */
+void create_check_return_value (int, int);	/* create command 'cCHECK_RETURN_VALUE' */
+void check_return_value (struct command *);	/* check return value of function */
 void create_endfunction (void);	/* create command cEND_FUNCTION */
 struct command *search_label (char *, int);	/* search label */
-void reshuffle_stack_for_call (struct stackentry *);	/* reorganize stack for function call */
+void reorder_stack_before_call (struct stackentry *);	/* reorganize stack for function call */
+void create_reorder_stack_after_call (int);  /* create reorder_stack_after_call */
+void reorder_stack_after_call (struct command *);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
 void mybreak (struct command *);	/* find break_here statement */
 void mycontinue (struct command *cmd);	/* find continue_here statement */
 void next_case (struct command *);		/* go to next case in switch statement */
