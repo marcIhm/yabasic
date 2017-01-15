@@ -440,10 +440,10 @@ stackdesc (int type, char *desc)	/* give back string describing stackentry */
     case stLABEL:
         strcpy (desc, "a label");
         break;
-    case stRETADD:
+    case stRET_ADDR:
         strcpy (desc, "a return address for gosub");
         break;
-    case stRETADDCALL:
+    case stRET_ADDR_CALL:
         strcpy (desc, "a return address for a subroutine");
         break;
     case stFREE:
@@ -961,105 +961,6 @@ duplicate (void)		/* duplicate topmost number on stack */
 }
 
 
-
-void
-reshuffle_stack_for_call (struct stackentry *ret)	/* reorganize stack for function call */
-{
-    struct stackentry *a, *b, *c;
-    struct stackentry *top, *bot;
-    struct stackentry *ttop, *bbot;
-    int args;
-
-
-    /* this is a function call; revert stack and shuffle return address to bottom */
-    /* push address below parameters */
-    args = 0;
-    top = a = ret->prev;
-    while (a->type != stFREE) {
-        a = a->prev;
-        args++;
-    }
-    bot = a->next;
-    b = a->prev;
-    /* remove ret */
-    ret->prev->next = ret->next;
-    ret->next->prev = ret->prev;
-    /* squeeze ret between a and b */
-    ret->next = a;
-    a->prev = ret;
-    b->next = ret;
-    ret->prev = b;
-    /* revert stack between top and bot */
-    if (args > 1) {
-        a = bot;
-        b = a->next;
-        bbot = bot->prev;
-        ttop = top->next;
-        for (; args > 1; args--) {
-            a->prev = b;
-            c = b->next;
-            b->next = a;
-            a = b;
-            b = c;
-        }
-        bot->next = ttop;
-        bot->next->prev = bot;
-        top->prev = bbot;
-        top->prev->next = top;
-    }
-}
-
-
-void
-myreturn (struct command *cmd)	/* return from gosub of function call */
-{
-    struct stackentry *address;
-
-    address = pop (stANY);
-    if (cmd->type == cRET_FROM_FUN) {
-        if (address->type != stRETADDCALL) {
-            error (FATAL, "RETURN from a subroutine without CALL");
-            return;
-        }
-    } else {
-        if (address->type != stRETADD) {
-            error (FATAL, "RETURN without GOSUB");
-            return;
-        }
-    }
-    current = (struct command *) address->pointer;
-    return;
-}
-
-
-void
-create_sublink (char *label)	/* create link to subroutine */
-{
-    char global[200];
-    char *dot;
-    struct command *cmd;
-
-    if (!inlib) {
-        return;
-    }
-    dot = strchr (label, '.');
-    strcpy (global, "main");
-    strcat (global, dot);
-
-    /* check, if label is duplicate */
-    if (search_label (global, smSUB | smLINK | smLABEL)) {
-        sprintf (string, "duplicate subroutine '%s'", strip (global));
-        error (ERROR, string);
-        return;
-    }
-
-    cmd = add_command (cSUBLINK, NULL, label);
-    /* store label */
-    cmd->pointer = my_strdup (global);
-    link_label (cmd);
-}
-
-
 void
 create_dim (char *name, char type)	/* create command 'dim' */
 /* type can be 's'=string or 'd'=double Array */
@@ -1091,7 +992,7 @@ dim (struct command *cmd)	/* get room for array */
         return;
     }
     s = get_sym (cmd->symname, syARRAY, local ? amADD_LOCAL : amADD_GLOBAL);
-    if (search_label (cmd->symname, smSUB | smLINK)) {
+    if (search_label (cmd->symname, srmSUBR | srmLINK)) {
         sprintf (string, "array '%s()' conflicts with user subroutine",
                  strip (cmd->symname));
         error (ERROR, string);

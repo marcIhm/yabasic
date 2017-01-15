@@ -37,18 +37,18 @@ static struct command *labelhead = NULL;	/* last label seen so far */
 /* ------------- subroutines ---------------- */
 
 void
-create_retval (int is, int should)	/* create command 'cRETVAL' */
+create_check_return_value (int is, int should)	/* create command 'cCHECK_RETURN_VALUE' */
 {
     struct command *cmd;
 
-    cmd = add_command (cRETVAL, NULL, NULL);
+    cmd = add_command (cCHECK_RETURN_VALUE, NULL, NULL);
     cmd->args = is;
     cmd->tag = should;
 }
 
 
 void
-retval (struct command *cmd)	/* check return value of function */
+check_return_value (struct command *cmd)	/* check return value of function */
 {
     int is, should;
     struct stackentry *s;
@@ -85,8 +85,151 @@ retval (struct command *cmd)	/* check return value of function */
                      s->type);
         error (DEBUG, string);
     }
-    swap ();
 }
+
+
+void
+create_reorder_stack_after_call (int switch_nesting)  /* create reorder_stack_after_call */
+{
+    struct command *cmd;
+
+    cmd = add_command (cREORDER_STACK_AFTER_CALL, NULL, NULL);
+    cmd->tag = switch_nesting;
+}
+
+
+void
+reorder_stack_after_call (struct command *cmd) /* reorganize stack after function call: keep return value and remove switch value (if any) */
+{
+    struct stackentry *keep, *kept;
+    char *kept_string;
+    double kept_value;
+    int kept_type;
+    int switch_nesting = cmd->tag;
+
+    keep = pop (stANY);
+    kept_type = keep->type;
+    if (keep->type==stSTRING) {
+	kept_string=my_strdup((char *)keep->pointer);
+    } else if (keep->type==stNUMBER) {
+	kept_value=keep->value;
+    } else {
+	error (FATAL, "expecting only string or number on stack");
+    }
+
+    while (switch_nesting) { /* discard switch values */
+	pop (stANY);
+	switch_nesting--;
+    }
+
+    /* push back kept value */
+    kept=push();
+    if (kept_type==stSTRING) {
+	kept->pointer = kept_string;
+    } else {
+	kept->value = kept_value;
+    }
+
+    swap (); /* move return address to top */
+}
+
+
+void
+reorder_stack_before_call (struct stackentry *ret)	/* reorganize stack before function call */
+{
+    struct stackentry *a, *b, *c;
+    struct stackentry *top, *bot;
+    struct stackentry *ttop, *bbot;
+    int args;
+
+
+    /* this is a function call; revert stack and shuffle return address to bottom */
+    /* push address below parameters */
+    args = 0;
+    top = a = ret->prev;
+    while (a->type != stFREE) {
+        a = a->prev;
+        args++;
+    }
+    bot = a->next;
+    b = a->prev;
+    /* remove ret */
+    ret->prev->next = ret->next;
+    ret->next->prev = ret->prev;
+    /* squeeze ret between a and b */
+    ret->next = a;
+    a->prev = ret;
+    b->next = ret;
+    ret->prev = b;
+    /* revert stack between top and bot */
+    if (args > 1) {
+        a = bot;
+        b = a->next;
+        bbot = bot->prev;
+        ttop = top->next;
+        for (; args > 1; args--) {
+            a->prev = b;
+            c = b->next;
+            b->next = a;
+            a = b;
+            b = c;
+        }
+        bot->next = ttop;
+        bot->next->prev = bot;
+        top->prev = bbot;
+        top->prev->next = top;
+    }
+}
+
+
+void
+myreturn (struct command *cmd)	/* return from gosub of function call */
+{
+    struct stackentry *address;
+
+    address = pop (stANY);
+    if (cmd->type == cRETURN_FROM_CALL) {
+        if (address->type != stRET_ADDR_CALL) {
+            error (FATAL, "RETURN from a subroutine without CALL");
+            return;
+        }
+    } else {
+        if (address->type != stRET_ADDR) {
+            error (FATAL, "RETURN without GOSUB");
+            return;
+        }
+    }
+    current = (struct command *) address->pointer;
+}
+
+
+void
+create_subr_link (char *label)	/* create link to subroutine */
+{
+    char global[200];
+    char *dot;
+    struct command *cmd;
+
+    if (!inlib) {
+        return;
+    }
+    dot = strchr (label, '.');
+    strcpy (global, "main");
+    strcat (global, dot);
+
+    /* check, if label is duplicate */
+    if (search_label (global, srmSUBR | srmLINK | srmLABEL)) {
+        sprintf (string, "duplicate subroutine '%s'", strip (global));
+        error (ERROR, string);
+        return;
+    }
+
+    cmd = add_command (cLINK_SUBR, NULL, label);
+    /* store label */
+    cmd->pointer = my_strdup (global);
+    link_label (cmd);
+}
+
 
 
 void
@@ -104,7 +247,7 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
 {
     struct command *fu;
 
-    fu = search_label (cmd->symname, smSUB | smLINK);
+    fu = search_label (cmd->symname, srmSUBR | srmLINK);
     if (fu) {
         cmd->type = cCALL;
         cmd->pointer = cmd->symname;
@@ -154,18 +297,18 @@ makelocal (struct command *cmd)	/* makes symbol local */
 
 
 void
-create_numparam (void)		/* create command 'cNUMPARAM' */
+create_count_params (void)		/* create command 'cCOUNT_PARAMS' */
 {
     struct command *cmd;
 
     /* dotifying numparams at compiletime (as opposed to runtime) is essential,
        because the function name is not known at runtime */
-    cmd = add_command (cNUMPARAM, dotify ("numparams", FALSE), NULL);
+    cmd = add_command (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
 }
 
 
 void
-numparam (struct command *cmd)	/* count number of function parameters */
+count_params (struct command *cmd)	/* count number of function parameters */
 {
     struct symbol *sym;
 
@@ -181,7 +324,7 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
     struct command *cmd;
     int first = TRUE;
     do {
-        if (st->type == stRETADDCALL) {
+        if (st->type == stRET_ADDR_CALL) {
             cmd = st->pointer;
             if (cmd->type == cCALL || cmd->type == cQCALL) {
                 char *dot;
@@ -271,22 +414,22 @@ search_label (char *name, int type)  	/* search label */
     char *at = NULL;
 
     curr = labelroot;
-    if (type & smGLOBAL) {
+    if (type & srmGLOBAL) {
         at = strchr (name, '@');
         if (at) *at = '\0';
     }
     while (curr) {
-        if ((type & smSUB) && curr->type == cUSER_FUNCTION
+        if ((type & srmSUBR) && curr->type == cUSER_FUNCTION
                 && !strcmp (curr->pointer, name)) {
             if (at) *at = '@';
             return curr;
         }
-        if ((type & smLINK) && curr->type == cSUBLINK
+        if ((type & srmLINK) && curr->type == cLINK_SUBR
                 && !strcmp (curr->pointer, name)) {
             if (at) *at = '@';
             return curr->next;
         }
-        if ((type & smLABEL) && curr->type == cLABEL
+        if ((type & srmLABEL) && curr->type == cLABEL
                 && !strcmp (curr->pointer, name)) {
             if (at) *at = '@';
             return curr;
@@ -312,10 +455,10 @@ jump (struct command *cmd)
         ret = push ();
         ret->pointer = current;
         if (type == cGOSUB || type == cQGOSUB) {
-            ret->type = stRETADD;
+            ret->type = stRET_ADDR;
         } else {
-            ret->type = stRETADDCALL;
-            reshuffle_stack_for_call (ret);
+            ret->type = stRET_ADDR_CALL;
+            reorder_stack_before_call (ret);
         }
     }
 
@@ -323,11 +466,11 @@ jump (struct command *cmd)
         current = (struct command *) cmd->jump;	/* use remembered address */
         return;
     }
-    label = search_label (cmd->pointer, smSUB | smLINK | smLABEL);
+    label = search_label (cmd->pointer, srmSUBR | srmLINK | srmLABEL);
     if (!label && type == cCALL && (dot = strchr (cmd->pointer, '.'))) {
         strcpy (string, "main");
         strcat (string, dot);
-        label = search_label (string, smLINK);
+        label = search_label (string, srmLINK);
     }
     if (label) {
         /* found right label */
@@ -374,17 +517,20 @@ jump (struct command *cmd)
 
   There are four ways to leave a switch-statement: return, continue,
   break and goto; each one has its own method to clean up left-over
-  switch-values, and the case of nested switch-statements needs to be
-  handled too (e.g. by removing more than one switch-value). Moreover,
-  most of these commands are converted during their first execution;
-  e.g. cBREAK is converted to cQGOTO, if it has been executed once. So
-  any logic within the function break (which implements the command
-  cBRAK) is executed only once. Therefore, cBREAK is preceded by
-  cPOP_MULTI and cBREAD (before beeing converted to cQGOTO) stores the
-  right number of values to be popped in cPOP_MULTI.
+  switch-values. And the case of nested switch-statements needs to be
+  handled too (e.g. by removing more than one switch-value). Finally,
+  most of these commands are converted during their first execution
+  into a faster variant (e.g. cQGOTO), which needs to care for the
+  stack too; and tests should be executed twice, to test the converted
+  form too.
 
-  return: Simply remove all values up to the return address
-
+  return: May or may not return a value; this needs to be kept (stored
+    away); then remove all switch-values up to the return
+    address. Nested switch-statements are not a special problem. The
+    variable switch_nesting cannot be helpful here because a gosub
+    might happen from within an outer switch-statement, and return
+    happens from an inner one; in that case only one switch-value can
+    be removed. The switch-values are removed in reorder_stack_after_call.
   
  */
 
@@ -415,7 +561,7 @@ create_label (char *label, int type)	/* creates command label */
     struct command *cmd;
 
     /* check, if label is duplicate */
-    if (search_label (label, smSUB | smLINK | smLABEL)) {
+    if (search_label (label, srmSUBR | srmLINK | srmLABEL)) {
         sprintf (string, "duplicate %s '%s'",
                  (type == cLABEL) ? "label" : "subroutine", strip (label));
         error (ERROR, string);
@@ -486,35 +632,6 @@ resetskiponce (struct command *cmd)	/* find and reset next skip */
 }
 
 void
-pop_switch_value (struct command *cmd) /* remove switch value from stack, keeping return value */
-{
-    struct stackentry *keep, *kept;
-    char *kept_string;
-    double kept_value;
-    int kept_type;
-
-    keep = pop (stANY);
-    kept_type = keep->type;
-    if (keep->type==stSTRING) {
-	kept_string=my_strdup((char *)keep->pointer);
-    } else if (keep->type==stNUMBER) {
-	kept_value=keep->value;
-    } else {
-	error (FATAL, "expecting only string or number on stack");
-    }
-
-    pop (stANY); /* discard switch value */
-
-    /* push back kept value */
-    kept=push();
-    if (kept_type==stSTRING) {
-	kept->pointer = kept_string;
-    } else {
-	kept->value = kept_value;
-    }
-}
-
-void
 pop_multi (struct command *cmd) /* pop and discard multiple values from stack */
 {
     int to_pop = cmd->tag;
@@ -551,14 +668,10 @@ mybreak (struct command *cmd)	/* find break_here statement */
     int to_break;
     int to_pop = 0;
 
-    if (cmd->type == cBREAK_MULTI) {
-	to_break = (int) pop(stNUMBER)->value;
-	if (to_break > 3 || to_break < 1) {
-	    sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",to_break);
-	    error(ERROR,string);
-	}
-    } else {
-	to_break = 1;
+    to_break = (int) pop(stNUMBER)->value;
+    if (to_break > 3 || to_break < 1) {
+	sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",to_break);
+	error(ERROR,string);
     }
     curr = cmd;
     while (to_break) {
@@ -587,7 +700,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
     }
     cmd->type = cQGOTO;
     if (infolevel >= DEBUG) {
-	sprintf(errorstring, "converting '%s' to '%s'",explanation[cBREAK],explanation[cQGOTO]);
+	sprintf(errorstring, "converting '%s' to '%s'",explanation[cBREAK_MULTI],explanation[cQGOTO]);
         error (DEBUG, errorstring);
     }
     load_pop_multi(cmd, to_pop);

@@ -164,8 +164,8 @@ statement:  /* empty */
   | repeat_loop
   | while_loop
   | do_loop
-  | tBREAK {add_command(cBREAK,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tBREAK expression {add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(1);add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(atoi($2));add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
   | tCONTINUE {add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
   | function_definition
   | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
@@ -205,13 +205,15 @@ statement:  /* empty */
   | tRETURN {if (function_type!=ftNONE) {
 	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
-               create_retval(ftNONE,function_type);
-               add_command(cRET_FROM_FUN,NULL,NULL);
+               create_check_return_value(ftNONE,function_type);
+	       create_reorder_stack_after_call(switch_nesting);
+               add_command(cRETURN_FROM_CALL,NULL,NULL);
             } else {
-               add_command(cRETURN,NULL,NULL);
+	       create_reorder_stack_after_call(switch_nesting);
+               add_command(cRETURN_FROM_GOSUB,NULL,NULL);
             }}
-  | tRETURN expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNUMBER,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
-  | tRETURN string_expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftSTRING,function_type);add_command(cRET_FROM_FUN,NULL,NULL);}
+  | tRETURN expression {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN string_expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
@@ -485,12 +487,12 @@ call_item: string_expression
   ;
  
 function_definition: export tSUB {missing_endsub++;missing_endsub_line=mylineno;pushlabel();report_missing(WARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {error(ERROR,"nested functions not allowed");YYABORT;}}
-	function_name {if (exported) create_sublink($4); create_label($4,cUSER_FUNCTION);
+	function_name {if (exported) create_subr_link($4); create_label($4,cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
-		       create_numparam();}
+		       create_count_params();}
 	'(' paramlist ')' {create_require(stFREE);add_command(cPOP,NULL,NULL);}
 	statement_list
-	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_retval(ftNONE,function_type);function_type=ftNONE;add_command(cRET_FROM_FUN,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
+	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
   ;
 
 endsub: tEOPROG {if (missing_endsub) {sprintf(string,"%d end-sub(s) are missing (last at line %d)",missing_endsub,missing_endsub_line);error(ERROR,string);} YYABORT;}

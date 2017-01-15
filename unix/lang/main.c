@@ -350,10 +350,10 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	    case stLABEL:
 		sprintf (dest, "label%n", &n);
 		break;
-	    case stRETADD:
+	    case stRET_ADDR:
 		sprintf (dest, "retadd%n", &n);
 		break;
-	    case stRETADDCALL:
+	    case stRET_ADDR_CALL:
 		sprintf (dest, "retaddcall%n", &n);
 		break;
 	    case stFREE:
@@ -1029,10 +1029,10 @@ initialize (void)
     /* file stuff */
     for (i = 1; i <= 9; i++) {
         streams[i] = NULL;
-        stream_modes[i] = smCLOSED;
+        stream_modes[i] = stmCLOSED;
     }
     streams[0] = stdin;
-    stream_modes[0] = smREAD | smWRITE;
+    stream_modes[0] = stmREAD | stmWRITE;
 #ifdef UNIX
     printerfile = NULL;		/* no ps-file yet */
 #endif
@@ -1045,7 +1045,7 @@ initialize (void)
     explanation[cFINDNOP] = "FINDNOP";
     explanation[cEXCEPTION] = "EXCEPTION";
     explanation[cLABEL] = "LABEL";
-    explanation[cSUBLINK] = "cSUBLINK";
+    explanation[cLINK_SUBR] = "cLINK_SUBR";
     explanation[cTOKEN] = "TOKEN";
     explanation[cTOKEN2] = "TOKEN2";
     explanation[cTOKENALT] = "TOKENALT";
@@ -1060,9 +1060,9 @@ initialize (void)
     explanation[cQGOSUB] = "QGOSUB";
     explanation[cCALL] = "CALL";
     explanation[cQCALL] = "QCALL";
-    explanation[cRETURN] = "RETURN";
-    explanation[cRET_FROM_FUN] = "RET_FROM_FUN";
-    explanation[cRETVAL] = "RETVAL";
+    explanation[cRETURN_FROM_GOSUB] = "RETURN_FROM_GOSUB";
+    explanation[cRETURN_FROM_CALL] = "RETURN_FROM_CALL";
+    explanation[cCHECK_RETURN_VALUE] = "CHECK_RETURN_VALUE";
     explanation[cSWAP] = "SWAP";
     explanation[cDECIDE] = "DECIDE";
     explanation[cANDSHORT] = "ANDSHORT";
@@ -1087,7 +1087,7 @@ initialize (void)
     explanation[cPUSHSYMLIST] = "PUSHSYMLIST";
     explanation[cPOPSYMLIST] = "POPSYMLIST";
     explanation[cMAKELOCAL] = "MAKELOCAL";
-    explanation[cNUMPARAM] = "NUMPARAM";
+    explanation[cCOUNT_PARAMS] = "COUNT_PARAMS";
     explanation[cMAKESTATIC] = "MAKESTATIC";
     explanation[cARRAYLINK] = "ARRAYLINK";
     explanation[cPUSHARRAYREF] = "PUSHARRAYREF";
@@ -1184,12 +1184,11 @@ initialize (void)
     explanation[cSWITCH_COMPARE] = "SWITCH_COMPARE";
     explanation[cNEXT_CASE] = "NEXT_CASE";
     explanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
-    explanation[cBREAK] = "BREAK";
     explanation[cBREAK_MULTI] = "BREAK_MULTI";
     explanation[cCONTINUE] = "CONTINUE";
     explanation[cBREAK_HERE] = "BREAK_HERE";
     explanation[cCONTINUE_HERE] = "CONTINUE_HERE";
-    explanation[cPOP_SWITCH_VALUE] = "POP_SWITCH_VALUE";
+    explanation[cPOP_MULTI] = "POP_MULTI";
     explanation[cCHKPROMPT] = "CHKPROMPT";
     explanation[cLAST_COMMAND] = "???";
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
@@ -1354,7 +1353,6 @@ run_it ()
             case cRESETSKIPONCE:
                 resetskiponce (current);
                 DONE;
-            case cBREAK:
             case cBREAK_MULTI:
                 mybreak (current);
                 DONE;
@@ -1363,9 +1361,6 @@ run_it ()
                 DONE;
             case cSWITCH_COMPARE:
                 switch_compare ();
-                DONE;
-            case cPOP_SWITCH_VALUE:
-                pop_switch_value (current);
                 DONE;
             case cCONTINUE:
                 mycontinue (current);
@@ -1381,7 +1376,7 @@ run_it ()
             case cDATA:
             case cNOP:
             case cUSER_FUNCTION:
-            case cSUBLINK:
+            case cLINK_SUBR:
             case cEND_FUNCTION:
             case cDOCU:
             case cBREAK_HERE:
@@ -1402,12 +1397,12 @@ run_it ()
             case cEXECUTE2:
                 execute (current);
                 DONE;
-            case cRETURN:
-            case cRET_FROM_FUN:
+            case cRETURN_FROM_GOSUB:
+            case cRETURN_FROM_CALL:
                 myreturn (current);
                 DONE;
-            case cRETVAL:
-                retval (current);
+            case cCHECK_RETURN_VALUE:
+                check_return_value (current);
                 DONE;
             case cPUSHDBLSYM:
                 pushdblsym (current);
@@ -1420,6 +1415,9 @@ run_it ()
                 DONE;
             case cPOP:
                 pop (stANY);
+                DONE;
+            case cPOP_MULTI:
+                pop_multi (current);
                 DONE;
             case cPOPSTRSYM:
                 popstrsym (current);
@@ -1445,8 +1443,8 @@ run_it ()
             case cMAKELOCAL:
                 makelocal (current);
                 DONE;
-            case cNUMPARAM:
-                numparam (current);
+            case cCOUNT_PARAMS:
+                count_params (current);
                 DONE;
             case cMAKESTATIC:
                 makestatic (current);
@@ -1958,7 +1956,7 @@ do_error (struct command *cmd)	/* issue user defined error */
 
     s = stackhead;
     while (s != stackroot) {
-        if (s->type == stRETADDCALL) {
+        if (s->type == stRET_ADDR_CALL) {
             r = s->pointer;
             cmd->line = r->line;
             cmd->lib = r->lib;
@@ -2024,7 +2022,7 @@ execute (struct command *cmd)	/* execute a subroutine */
     strcat (fullname, shortname);
     free (st->pointer);
     st->type = stFREE;
-    newcurr = search_label (fullname, smSUB);
+    newcurr = search_label (fullname, srmSUBR);
     if (!newcurr) {
         sprintf (string, "subroutine '%s' not defined", fullname);
         error (ERROR, string);
@@ -2032,8 +2030,8 @@ execute (struct command *cmd)	/* execute a subroutine */
     }
     ret = push ();
     ret->pointer = current;
-    ret->type = stRETADDCALL;
-    reshuffle_stack_for_call (ret);
+    ret->type = stRET_ADDR_CALL;
+    reorder_stack_before_call (ret);
     current = newcurr;
     free (fullname);
 }
