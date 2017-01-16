@@ -1,0 +1,17 @@
+
+for r=1 to 2
+  do
+    i=i+1
+    print i
+    switch i
+      case 0: case 1: case 2:continue
+      case 3: break 2
+    end switch
+    poke "__assert_stack_size",0
+  loop
+
+  poke "__assert_stack_size",0
+  if (i <> 3) exit 1
+next r
+
+exit 0

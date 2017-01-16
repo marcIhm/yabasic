@@ -1,0 +1,18 @@
+
+
+for i=1 to 2
+  switch i
+    case 1: case 2:
+    for j=1 to 2
+      gosub sw
+      continue
+      label sw
+      switch j
+      case 1: case 2
+        poke "__assert_stack_size",2
+        return
+      end switch
+    next j
+  end switch
+next i
+poke "__assert_stack_size",0

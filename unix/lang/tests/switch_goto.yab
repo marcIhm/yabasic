@@ -1,0 +1,9 @@
+
+
+for i=1 to 2
+  switch i
+    case 1: goto out
+  end switch
+  label out
+next i
+poke "__assert_stack_size",0
