@@ -689,43 +689,43 @@ static const yytype_uint16 yyrline[] =
      176,   177,   178,   179,   180,   181,   181,   183,   183,   185,
      186,   187,   188,   189,   190,   191,   192,   193,   194,   195,
      195,   196,   196,   197,   198,   199,   200,   201,   202,   203,
-     204,   205,   215,   216,   217,   218,   219,   221,   222,   223,
-     224,   225,   226,   227,   228,   229,   230,   231,   232,   233,
-     234,   235,   236,   237,   238,   239,   240,   241,   242,   243,
-     244,   245,   246,   247,   248,   249,   250,   251,   252,   254,
-     255,   256,   257,   258,   259,   260,   261,   262,   266,   267,
-     268,   269,   270,   274,   275,   276,   277,   278,   279,   282,
-     283,   286,   287,   288,   289,   290,   293,   294,   297,   298,
-     301,   302,   303,   304,   305,   306,   309,   310,   311,   312,
-     313,   314,   315,   316,   317,   318,   319,   320,   321,   322,
-     323,   324,   325,   326,   327,   328,   329,   330,   331,   332,
-     333,   334,   335,   336,   337,   338,   339,   340,   343,   344,
-     347,   347,   348,   348,   349,   350,   351,   352,   353,   354,
-     355,   356,   357,   358,   359,   360,   361,   362,   363,   364,
-     365,   366,   367,   368,   369,   370,   371,   372,   373,   374,
-     375,   376,   377,   378,   381,   384,   387,   390,   391,   392,
-     393,   394,   395,   396,   397,   398,   399,   400,   401,   402,
-     403,   404,   405,   406,   407,   408,   409,   410,   411,   412,
-     413,   414,   415,   416,   417,   418,   419,   420,   421,   422,
-     423,   424,   425,   426,   427,   428,   429,   430,   431,   432,
-     433,   434,   435,   436,   437,   438,   439,   440,   441,   442,
-     443,   444,   445,   446,   447,   448,   449,   452,   453,   454,
-     457,   458,   461,   462,   465,   466,   467,   468,   471,   474,
-     477,   477,   480,   481,   482,   485,   486,   489,   490,   493,
-     489,   498,   499,   502,   503,   506,   507,   508,   509,   512,
-     513,   516,   517,   518,   519,   522,   523,   526,   527,   528,
-     529,   532,   533,   534,   537,   538,   539,   540,   543,   544,
-     548,   562,   543,   567,   568,   571,   572,   575,   576,   581,
-     581,   585,   586,   589,   590,   594,   596,   595,   600,   601,
-     601,   605,   605,   611,   612,   616,   617,   616,   623,   624,
-     628,   628,   633,   634,   638,   639,   639,   641,   638,   645,
-     646,   649,   649,   653,   654,   657,   659,   661,   658,   665,
-     666,   669,   670,   670,   673,   674,   676,   677,   681,   682,
-     685,   686,   688,   689,   693,   694,   695,   696,   699,   700,
-     701,   702,   703,   706,   707,   708,   711,   711,   712,   712,
-     713,   713,   714,   714,   715,   715,   718,   719,   722,   723,
-     724,   725,   726,   727,   728,   729,   730,   731,   732,   733,
-     734,   735,   738,   739,   741,   742,   745,   746
+     204,   205,   213,   214,   215,   216,   217,   219,   220,   221,
+     222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
+     232,   233,   234,   235,   236,   237,   238,   239,   240,   241,
+     242,   243,   244,   245,   246,   247,   248,   249,   250,   252,
+     253,   254,   255,   256,   257,   258,   259,   260,   264,   265,
+     266,   267,   268,   272,   273,   274,   275,   276,   277,   280,
+     281,   284,   285,   286,   287,   288,   291,   292,   295,   296,
+     299,   300,   301,   302,   303,   304,   307,   308,   309,   310,
+     311,   312,   313,   314,   315,   316,   317,   318,   319,   320,
+     321,   322,   323,   324,   325,   326,   327,   328,   329,   330,
+     331,   332,   333,   334,   335,   336,   337,   338,   341,   342,
+     345,   345,   346,   346,   347,   348,   349,   350,   351,   352,
+     353,   354,   355,   356,   357,   358,   359,   360,   361,   362,
+     363,   364,   365,   366,   367,   368,   369,   370,   371,   372,
+     373,   374,   375,   376,   379,   382,   385,   388,   389,   390,
+     391,   392,   393,   394,   395,   396,   397,   398,   399,   400,
+     401,   402,   403,   404,   405,   406,   407,   408,   409,   410,
+     411,   412,   413,   414,   415,   416,   417,   418,   419,   420,
+     421,   422,   423,   424,   425,   426,   427,   428,   429,   430,
+     431,   432,   433,   434,   435,   436,   437,   438,   439,   440,
+     441,   442,   443,   444,   445,   446,   447,   450,   451,   452,
+     455,   456,   459,   460,   463,   464,   465,   466,   469,   472,
+     475,   475,   478,   479,   480,   483,   484,   487,   488,   491,
+     487,   496,   497,   500,   501,   504,   505,   506,   507,   510,
+     511,   514,   515,   516,   517,   520,   521,   524,   525,   526,
+     527,   530,   531,   532,   535,   536,   537,   538,   541,   542,
+     546,   560,   541,   565,   566,   569,   570,   573,   574,   579,
+     579,   583,   584,   587,   588,   592,   594,   593,   598,   599,
+     599,   603,   603,   609,   610,   614,   615,   614,   621,   622,
+     626,   626,   631,   632,   636,   637,   637,   639,   636,   643,
+     644,   647,   647,   651,   652,   655,   657,   659,   656,   663,
+     664,   667,   668,   668,   671,   672,   674,   675,   679,   680,
+     683,   684,   686,   687,   691,   692,   693,   694,   697,   698,
+     699,   700,   701,   704,   705,   706,   709,   709,   710,   710,
+     711,   711,   712,   712,   713,   713,   716,   717,   720,   721,
+     722,   723,   724,   725,   726,   727,   728,   729,   730,   731,
+     732,   733,   736,   737,   739,   740,   743,   744
 };
 #endif
 
@@ -3040,13 +3040,13 @@ yyreduce:
 
   case 19:
 
-    {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(1);add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
 
     break;
 
   case 20:
 
-    {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(atoi((yyvsp[0].digits)));add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
 
     break;
 
@@ -3242,10 +3242,8 @@ yyreduce:
 	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
                create_check_return_value(ftNONE,function_type);
-	       create_reorder_stack_after_call(switch_nesting);
                add_command(cRETURN_FROM_CALL,NULL,NULL);
             } else {
-	       create_reorder_stack_after_call(switch_nesting);
                add_command(cRETURN_FROM_GOSUB,NULL,NULL);
             }}
 
@@ -3253,13 +3251,13 @@ yyreduce:
 
   case 62:
 
-    {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+    {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
 
     break;
 
   case 63:
 
-    {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+    {if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
 
     break;
 

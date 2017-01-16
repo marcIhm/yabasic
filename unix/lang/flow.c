@@ -89,23 +89,12 @@ check_return_value (struct command *cmd)	/* check return value of function */
 
 
 void
-create_reorder_stack_after_call (int switch_nesting)  /* create reorder_stack_after_call */
+reorder_stack_after_call (void) /* reorganize stack after function call: keep return value and remove switch value (if any) */
 {
-    struct command *cmd;
-
-    cmd = add_command (cREORDER_STACK_AFTER_CALL, NULL, NULL);
-    cmd->tag = switch_nesting;
-}
-
-
-void
-reorder_stack_after_call (struct command *cmd) /* reorganize stack after function call: keep return value and remove switch value (if any) */
-{
-    struct stackentry *keep, *kept;
+    struct stackentry *keep, *kept, *discarded;
     char *kept_string;
     double kept_value;
     int kept_type;
-    int switch_nesting = cmd->tag;
 
     keep = pop (stANY);
     kept_type = keep->type;
@@ -117,9 +106,8 @@ reorder_stack_after_call (struct command *cmd) /* reorganize stack after functio
 	error (FATAL, "expecting only string or number on stack");
     }
 
-    while (switch_nesting) { /* discard switch values */
+    while (stackhead->prev->type!=stRET_ADDR && stackhead->prev->type!=stRET_ADDR_CALL) { /* discard switch values */
 	pop (stANY);
-	switch_nesting--;
     }
 
     /* push back kept value */
@@ -187,6 +175,8 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
 {
     struct stackentry *address;
 
+    reorder_stack_after_call();
+    
     address = pop (stANY);
     if (cmd->type == cRETURN_FROM_CALL) {
         if (address->type != stRET_ADDR_CALL) {
@@ -517,9 +507,9 @@ jump (struct command *cmd)
 
   There are four ways to leave a switch-statement: return, continue,
   break and goto; each one has its own method to clean up left-over
-  switch-values. And the case of nested switch-statements needs to be
-  handled too (e.g. by removing more than one switch-value). Finally,
-  most of these commands are converted during their first execution
+  switch-values. Especially two tasks have to be handled: Nested
+  switch-statements, e.g. by removing more than one switch-value.
+  Most of these commands are converted during their first execution
   into a faster variant (e.g. cQGOTO), which needs to care for the
   stack too; and tests should be executed twice, to test the converted
   form too.
@@ -529,9 +519,32 @@ jump (struct command *cmd)
     address. Nested switch-statements are not a special problem. The
     variable switch_nesting cannot be helpful here because a gosub
     might happen from within an outer switch-statement, and return
-    happens from an inner one; in that case only one switch-value can
-    be removed. The switch-values are removed in reorder_stack_after_call.
+    from an inner one; in that case only one switch-value can be
+    removed. The switch-values are removed in
+    reorder_stack_after_call.
   
+  continue: Leave a loop; the destination is found by scanning the
+    list of commands backward (so each command on the way can be
+    examined for cBEGIN_SWITCH_MARK or cEND_SWITCH_MARK); during that
+    process the number of left switch-statments is counted and stored
+    within the preceding cPOP_MULTI-command; this is done in
+    mycontinue with the help of load_pop_multi.
+
+  break: Very similar to continue, but scans the list of commands
+    forward. Accepts a numeric argument so it may need to leave
+    multiple switch-statements or loops. Is handled within mybreak
+    with load_pop_multi.
+
+  goto: Might try to jump out of nested switch-statements into other
+    nested switch-statements; however the commands between start and
+    end of the jump are not scanned sequentially (rather with
+    search_label); so this cannot be handled like continue or
+    break. To allow some checking of a goto-statement, the parser (in
+    yabasic.bison) records for each goto and label a switch_id and a
+    switch_nesting. These are used to echeck some constellations of
+    goto in check_leave_switch; other cases (e.g. goto from one
+    switch-statement into another) are disallowed.
+
  */
 
 void
@@ -659,6 +672,22 @@ void load_pop_multi (struct command *cmd, int to_pop) /* put correct value into 
     pop_multi(cmd->prev);
 }
 
+
+void
+create_mybreak(int depth) /* create command mybreak */
+{
+    struct command *cmd;
+
+    if (depth > 3 || depth < 1) {
+	sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",depth);
+	error(ERROR,string);
+    }
+
+    cmd = add_command (cBREAK_MULTI, NULL, NULL);
+    cmd->tag=depth;
+}
+
+
 void
 mybreak (struct command *cmd)	/* find break_here statement */
 {
@@ -668,11 +697,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
     int to_break;
     int to_pop = 0;
 
-    to_break = (int) pop(stNUMBER)->value;
-    if (to_break > 3 || to_break < 1) {
-	sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",to_break);
-	error(ERROR,string);
-    }
+    to_break = cmd->tag;
     curr = cmd;
     while (to_break) {
 	while (curr->type != cBREAK_HERE || loop_nesting || switch_nesting) {
@@ -741,9 +766,7 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
 	sprintf( errorstring, "converting '%s' to '%s'",explanation[cCONTINUE],explanation[cQGOTO]);
 	error (DEBUG, errorstring);
     }
-
-    check_leave_switch ("CONTINUE", cmd, curr);
-    
+    load_pop_multi(cmd, to_pop);
     cmd->jump = current = curr;
 }
 

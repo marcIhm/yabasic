@@ -379,10 +379,7 @@ pop (int etype)
     struct stackentry *s;
 
     /* test if there is something on the stack */
-    if (stackhead == stackroot) {
-        error (FATAL, "Popped too much.");
-        return stackhead;
-    }
+    if (stackhead == stackroot) error (FATAL, "Popped too much.");
     stackhead = stackhead->prev;	/* move down in stack */
     ftype = stackhead->type;
     if (etype == ftype || etype == stANY ||
