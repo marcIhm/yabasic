@@ -303,8 +303,8 @@ enum cmd_type {
     cSPLIT, cSPLIT2, cSPLITALT, cSPLITALT2,
     cSTARTFOR, cFORCHECK, cFORINCREMENT,	/* for for-loops */
 
-    cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK, cBREAK_MULTI, 	/* break-continue-switch */
-    cCONTINUE, cBREAK_HERE, cCONTINUE_HERE, cPOP_MULTI, cPOP_SWITCH_VALUE,
+    cSWITCH_COMPARE, cNEXT_CASE, cNEXT_CASE_HERE, cBREAK_MULTI, 	/* break-continue-switch */
+    cCONTINUE, cBREAK_HERE, cCONTINUE_HERE, cPOP_MULTI,
     cBEGIN_LOOP_MARK, cEND_LOOP_MARK, cBEGIN_SWITCH_MARK, cEND_SWITCH_MARK,
 
     cDBLADD, cDBLMIN, cDBLMUL, cDBLDIV, cDBLPOW,	/* double operations */
@@ -312,7 +312,7 @@ enum cmd_type {
 
     cREQUIRE, cPUSHFREE, cMAKELOCAL, cMAKESTATIC, cCOUNT_PARAMS,	/* functions and procedures */
     cCALL, cQCALL, cPUSHSYMLIST, cPOPSYMLIST, cRETURN_FROM_CALL,
-    cUSER_FUNCTION, cCHECK_RETURN_VALUE, cEND_FUNCTION, cREORDER_STACK_AFTER_CALL,
+    cUSER_FUNCTION, cCHECK_RETURN_VALUE, cEND_FUNCTION,
     cFUNCTION_OR_ARRAY, cSTRINGFUNCTION_OR_ARRAY,
 
     cPOKE, cPOKEFILE, cSWAP, cDUPLICATE, cDOCU,	/* internals */
@@ -660,8 +660,8 @@ void check_return_value (struct command *);	/* check return value of function */
 void create_endfunction (void);	/* create command cEND_FUNCTION */
 struct command *search_label (char *, int);	/* search label */
 void reorder_stack_before_call (struct stackentry *);	/* reorganize stack for function call */
-void create_reorder_stack_after_call (int);  /* create reorder_stack_after_call */
-void reorder_stack_after_call (struct command *);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
+void reorder_stack_after_call (void);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
+void create_mybreak(int); /* create command mybreak */
 void mybreak (struct command *);	/* find break_here statement */
 void mycontinue (struct command *cmd);	/* find continue_here statement */
 void next_case (struct command *);		/* go to next case in switch statement */

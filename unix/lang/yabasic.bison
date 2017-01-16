@@ -164,8 +164,8 @@ statement:  /* empty */
   | repeat_loop
   | while_loop
   | do_loop
-  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(1);add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_pushdbl(atoi($2));add_command(cBREAK_MULTI,NULL,NULL);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
+  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi($2));if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
   | tCONTINUE {add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
   | function_definition
   | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
@@ -206,14 +206,12 @@ statement:  /* empty */
 	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
                create_check_return_value(ftNONE,function_type);
-	       create_reorder_stack_after_call(switch_nesting);
                add_command(cRETURN_FROM_CALL,NULL,NULL);
             } else {
-	       create_reorder_stack_after_call(switch_nesting);
                add_command(cRETURN_FROM_GOSUB,NULL,NULL);
             }}
-  | tRETURN expression {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
-  | tRETURN string_expression {if (switch_nesting) add_command(cPOP_SWITCH_VALUE,NULL,NULL); if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);create_reorder_stack_after_call(switch_nesting);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN expression {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN string_expression {if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
