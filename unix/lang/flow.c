@@ -685,6 +685,8 @@ create_mybreak(int depth) /* create command mybreak */
 
     cmd = add_command (cBREAK_MULTI, NULL, NULL);
     cmd->tag=depth;
+    sprintf(string,"%d",depth);
+    cmd->diag=my_strdup(string);
 }
 
 
@@ -699,29 +701,26 @@ mybreak (struct command *cmd)	/* find break_here statement */
 
     to_break = cmd->tag;
     curr = cmd;
-    while (to_break) {
-	while (curr->type != cBREAK_HERE || loop_nesting || switch_nesting) {
-	    if (curr->type == cBEGIN_LOOP_MARK) {
-		loop_nesting++;
-	    }
-	    if (curr->type == cEND_LOOP_MARK) {
-		loop_nesting--;
-	    }
-	    if (curr->type == cBEGIN_SWITCH_MARK) {
-		switch_nesting++;
-		to_pop--;
-	    }
-	    if (curr->type == cEND_SWITCH_MARK) {
-		switch_nesting--;
-		to_pop++;
-	    }
-	    curr = curr->next;
-	    if (!curr) {
-		sprintf(string,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-		error (FATAL, string);
-	    }
+    while (curr->type != cBREAK_HERE || 1-loop_nesting-switch_nesting != to_break) {
+	if (curr->type == cBEGIN_LOOP_MARK) {
+	    loop_nesting++;
 	}
-	to_break--;
+	if (curr->type == cEND_LOOP_MARK) {
+	    loop_nesting--;
+	}
+	if (curr->type == cBEGIN_SWITCH_MARK) {
+	    switch_nesting++;
+	    to_pop--;
+	}
+	if (curr->type == cEND_SWITCH_MARK) {
+	    switch_nesting--;
+	    to_pop++;
+	}
+	curr = curr->next;
+	if (!curr) {
+	    sprintf(string,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+	    error (FATAL, string);
+	}
     }
     cmd->type = cQGOTO;
     if (infolevel >= DEBUG) {

@@ -1,5 +1,5 @@
-
 for r=1 to 2
+  i=0
   do
     i=i+1
     print i

@@ -3052,7 +3052,7 @@ yyreduce:
 
   case 21:
 
-    {add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
+    {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
 
     break;
 
