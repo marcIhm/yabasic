@@ -23,17 +23,17 @@ task :git do
 end
 
 desc 'Put version into documentation'
-file 'doc/yabasic.xml' => 'doc/yabasic.xml.erb' do
+file 'doc/_yabasic.xml' => 'doc/yabasic.xml.erb' do
   version_short = vs['configure.ac'].gsub(/\.\d+$/,"")
-  File.open('doc/yabasic.xml','w') do |file|
+  File.open('doc/_yabasic.xml','w') do |file|
     file.write ERB.new(File.read('doc/yabasic.xml.erb')).result(binding)
   end
 end
 
 desc 'Create html doc from xml'
-file 'lang/yabasic.htm' => 'doc/yabasic.xml' do
+file 'lang/yabasic.htm' => 'doc/_yabasic.xml' do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
-  sh 'xsltproc doc/mystyle.xsl doc/yabasic.xml >lang/yabasic.htm'
+  sh 'xsltproc doc/mystyle.xsl doc/_yabasic.xml >lang/yabasic.htm'
 end
 
 desc 'Create man page'

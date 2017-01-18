@@ -16,7 +16,7 @@
       as well as the language (which is, of course, a sort of
 <acronym>basic</acronym>) itself.<para>
     </para>
-      This document applies to version <%= version_short %> of <application>yabasic</application></para>
+      This document applies to version 2.77 of <application>yabasic</application></para>
       <para>
       However, this document does not contain the latest news about <application>yabasic</application> or a FAQ.
       As such information tends to change rapidly, it is presented online only 
@@ -2220,7 +2220,7 @@ See the <function><link linkend="ref_rectangle">rectangle</link></function>-comm
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>break</function> transfers control immediately outside the enclosing loop or switch statement. This is the preferred way of leaving a such a statement (rather than <function>goto</function>, which is still possible in most cases). An optional digit allows to break out of multiple levels, e.g. to leave a loop from within a switch statement. Please note, that only a literal (e.g. 2) is allowed at this location.</para>
+	  <para><function>break</function> transfers control immediately outside the enclosing loop or switch statement. This is the preferred way of leaving a such a statement (rather than <function>goto</function>, which is still possible in most cases). An optional number allows to break out of multiple levels, e.g. to leave a loop from within a switch statement.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
