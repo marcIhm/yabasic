@@ -1007,6 +1007,9 @@ initialize (void)
     cmdhead = cmdroot; /* list of commands */ ;
     commandcount = 0;
 
+    /* initialize switch_id stack */
+    initialize_switch_id_stack();
+    
     /* add internal string variables */
     s = get_sym ("yabos$", sySTRING, amADD_GLOBAL);
     if (s->pointer) {

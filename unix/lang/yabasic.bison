@@ -56,8 +56,6 @@ int missing_loop=0;
 int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
-int max_switch_id=1;
-int switch_id=0;
 
 void report_missing(int severity,char *text) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -576,8 +574,8 @@ next_symbol:  {pop(stSTRING);}/* can be omitted */
            }
   ;
 
-switch_number_or_string: tSWITCH {switch_nesting++;switch_id=max_switch_id++;add_command(cBEGIN_SWITCH_MARK,NULL,NULL);} 
-                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);switch_nesting--;switch_id=0;}
+switch_number_or_string: tSWITCH {push_switch_id();add_command(cBEGIN_SWITCH_MARK,NULL,NULL);} 
+                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);pop_switch_id();}
   ;
 
 sep_list: tSEP {if ($1>=0) mylineno+=$1;} 

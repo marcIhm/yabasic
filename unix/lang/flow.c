@@ -23,7 +23,6 @@
 extern int mylineno;		/* current line number */
 extern int yyparse ();		/* call bison parser */
 extern int switch_nesting;
-extern int switch_id;
 
 /* ------------- local functions ---------------- */
 
@@ -32,6 +31,8 @@ extern int switch_id;
 /* ------------- global variables ---------------- */
 static struct command *labelroot = NULL;	/* first label among commands */
 static struct command *labelhead = NULL;	/* last label seen so far */
+int switch_id_stack[100];
+int max_switch_id=0;
 
 
 /* ------------- subroutines ---------------- */
@@ -89,21 +90,23 @@ check_return_value (struct command *cmd)	/* check return value of function */
 
 
 void
-reorder_stack_after_call (void) /* reorganize stack after function call: keep return value and remove switch value (if any) */
+reorder_stack_after_call (int keep_topmost) /* reorganize stack after function call: keep return value and remove switch value (if any) */
 {
     struct stackentry *keep, *kept, *discarded;
     char *kept_string;
     double kept_value;
     int kept_type;
 
-    keep = pop (stANY);
-    kept_type = keep->type;
-    if (keep->type==stSTRING) {
-	kept_string=my_strdup((char *)keep->pointer);
-    } else if (keep->type==stNUMBER) {
-	kept_value=keep->value;
-    } else {
-	error (FATAL, "expecting only string or number on stack");
+    if (keep_topmost) {
+	keep = pop (stANY);
+	kept_type = keep->type;
+	if (keep->type==stSTRING) {
+	    kept_string=my_strdup((char *)keep->pointer);
+	} else if (keep->type==stNUMBER) {
+	    kept_value=keep->value;
+	} else {
+	    error (FATAL, "expecting only string or number on stack");
+	}
     }
 
     while (stackhead->prev->type!=stRET_ADDR && stackhead->prev->type!=stRET_ADDR_CALL) { /* discard switch values */
@@ -111,14 +114,15 @@ reorder_stack_after_call (void) /* reorganize stack after function call: keep re
     }
 
     /* push back kept value */
-    kept=push();
-    if (kept_type==stSTRING) {
-	kept->pointer = kept_string;
-    } else {
-	kept->value = kept_value;
+    if (keep_topmost) {
+	kept=push();
+	if (kept_type==stSTRING) {
+	    kept->pointer = kept_string;
+	} else {
+	    kept->value = kept_value;
+	}
+	swap (); /* move return address to top */
     }
-
-    swap (); /* move return address to top */
 }
 
 
@@ -175,7 +179,7 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
 {
     struct stackentry *address;
 
-    reorder_stack_after_call();
+    reorder_stack_after_call(cmd->type == cRETURN_FROM_CALL);
     
     address = pop (stANY);
     if (cmd->type == cRETURN_FROM_CALL) {
@@ -183,7 +187,7 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
             error (FATAL, "RETURN from a subroutine without CALL");
             return;
         }
-    } else {
+    } else { /* cRETURN_FROM_GOSUB */
         if (address->type != stRET_ADDR) {
             error (FATAL, "RETURN without GOSUB");
             return;
@@ -380,10 +384,38 @@ struct command *
 add_switch_state(struct command *cmd) /* add switch state to a newly created command */
 {
     cmd->switch_state = my_malloc (sizeof (struct switch_state));
-    cmd->switch_state->id = switch_id;
+    cmd->switch_state->id = switch_id_stack[switch_nesting];
     cmd->switch_state->nesting = switch_nesting;
     cmd;
 }
+
+
+void
+initialize_switch_id_stack(void) /* initialize stack of switch_ids */
+{
+    switch_id_stack[0]=max_switch_id;
+}
+    
+
+void
+push_switch_id(void)		/* generate a new switch id on top of stack */
+{
+    if (switch_nesting>=100) error(FATAL, "more than 100 nested switch statements");
+
+    switch_nesting++;
+    max_switch_id++;
+    switch_id_stack[switch_nesting]=max_switch_id;
+}
+    
+
+void
+pop_switch_id (void)		/* pop last switch_id */
+{
+    if (switch_nesting<=0) error(FATAL, "no more switch ids to pop");
+    
+    switch_nesting--;
+}
+
 
 void
 link_label (struct command *cmd)	/* link label into list of labels */
@@ -470,6 +502,7 @@ jump (struct command *cmd)
         switch (cmd->type) {
         case cGOTO:
             cmd->type = cQGOTO;
+	    check_leave_switch (cmd, label);
             break;
         case cGOSUB:
             cmd->type = cQGOSUB;
@@ -487,9 +520,6 @@ jump (struct command *cmd)
             strcat (string, " (not in this sub)");
         }
         error (ERROR, string);
-    }
-    if (cmd->type == cQGOTO ) {
-	check_leave_switch ("GOTO", cmd, label);
     }
 }
 
@@ -548,7 +578,7 @@ jump (struct command *cmd)
  */
 
 void
-check_leave_switch (char *name, struct command *from, struct command *to)   /* check, if goto or continue enters or leaves a switch_statement */
+check_leave_switch (struct command *from, struct command *to)   /* check, if goto or continue enters or leaves a switch_statement */
 {
     if (from->switch_state->id == to->switch_state->id) {
 	/* okay, move within a single switch statement or jump and land outside of switch statement */
@@ -556,13 +586,10 @@ check_leave_switch (char *name, struct command *from, struct command *to)   /* c
 	/* okay, move out of single switch statement */
 	pop(stANY);
     } else if (from->switch_state->id == 0 && to->switch_state->id != 0) {
-	sprintf(string, "%s into a switch-statement", name);
-	error (ERROR, string);
+	error (ERROR, "GOTO into a switch-statement");
     } else if (from->switch_state->nesting != 0 && to->switch_state->nesting == 0) {
-	sprintf (string, "%s out of multiple switch-statements", name);
-	error (ERROR, string);
+	error (ERROR, "GOTO out of multiple switch-statements");
     } else {
-	sprintf (string, "%s out of multiple switch-statements", name);
 	error (ERROR, "GOTO between switch-statements");
     }
 }
@@ -856,3 +883,5 @@ startfor (void)			/* compute initial value of for-variable */
 
     return;
 }
+
+

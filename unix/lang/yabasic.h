@@ -660,13 +660,16 @@ void check_return_value (struct command *);	/* check return value of function */
 void create_endfunction (void);	/* create command cEND_FUNCTION */
 struct command *search_label (char *, int);	/* search label */
 void reorder_stack_before_call (struct stackentry *);	/* reorganize stack for function call */
-void reorder_stack_after_call (void);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
+void reorder_stack_after_call (int);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
 void create_mybreak(int); /* create command mybreak */
 void mybreak (struct command *);	/* find break_here statement */
 void mycontinue (struct command *cmd);	/* find continue_here statement */
 void next_case (struct command *);		/* go to next case in switch statement */
-void check_leave_switch (char *, struct command *, struct command *);    /* check, if goto or continue enters or leaves a switch_statement */
+void check_leave_switch (struct command *, struct command *);    /* check, if goto or continue enters or leaves a switch_statement */
 void pop_switch_value (struct command *); /* remove switch state from stack, keeping return value */
+void initialize_switch_id_stack(void); /* initialize stack of switch_ids */
+void push_switch_id (void);		  /* generate a new switch id on top of stack */
+void pop_switch_id (void);  		  /* pop last switch_id */
 
 
 /* flex.c */
