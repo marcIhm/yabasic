@@ -2,7 +2,6 @@ for r=1 to 2
   i=0
   do
     i=i+1
-    print i
     switch i
       case 0: case 1: case 2:continue
       case 3: break 2

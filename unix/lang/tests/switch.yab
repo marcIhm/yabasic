@@ -25,4 +25,27 @@ next i
 poke "__assert_stack_size",0
 
 
-error "The same with strings"
+for i=1 to 2
+  for j=1 to 8
+    x$=""
+    switch j
+      case 1:x$="1":poke "__assert_stack_size",1:break
+      case 2:x$="2":break
+      case 3:case 4:case 5:x$="3":break
+      case 6:x$="4":break
+      default:x$="5"
+    end switch
+  next j
+  poke "__assert_stack_size",0
+  if (x$="") exit -1
+  if (j=1 and x$<>"1") exit 1
+  if (j=2 and x$<>"1") exit 2
+  if (j=3 and x$<>"3") exit 3
+  if (j=4 and x$<>"3") exit 4
+  if (j=5 and x$<>"3") exit 5
+  if (j=6 and x$<>"4") exit 6
+  if (j=7 and x$<>"5") exit 7
+  if (j=8 and x$<>"5") exit 8
+next i
+poke "__assert_stack_size",0
+

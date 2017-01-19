@@ -9,10 +9,12 @@ for i=1 to 2
       label sw
       switch j
       case 1: case 2
-        poke "__assert_stack_size",2
+        poke "__assert_stack_size",3
+	tested=tested+1
         return
       end switch
     next j
   end switch
 next i
 poke "__assert_stack_size",0
+if (!tested=4) error "Stacksize not tested enough: "+str$(tested)

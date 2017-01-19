@@ -15,15 +15,18 @@ end
 def run_tests dir, executable
   total = Dir["#{dir}/*.yab"].length
   failed = 0
-  puts "\nRunning #{total} tests in #{dir} with relative path to executable #{executable}:"
+  puts "\n\e[33mRunning #{total} tests in #{dir} with relative path to executable #{executable}:\e[0m"
   cd dir do
     maxlen = Dir["*.yab"].map(&:length).max
     Dir["*.yab"].each do |fname|
       command = (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + fname
-      expected_error = File.readlines(fname).select{ |l| l.start_with?("#---Error")}.first
-      result = 
+      expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
       if expected_error
-        result = !! %x( #{command} 2>&1 ).lines.select {|l| l.start_with?(expected_error[1..-1])}.first
+        expected_error.chomp!
+        puts "(Expecting error: '" + expected_error + "')"
+        output = %x( #{command} 2>&1 )
+        puts output
+        result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
       else
         sh command do |ok,res|
           result = ok
@@ -38,9 +41,16 @@ def run_tests dir, executable
       end
     end
   end
-  printf "Total number of tests:  %4d\n",total
-  printf "Number of failed tests: %4d\n",failed
-  fail "Some tests failed !" if failed > 0
-  fail "Did not find any tests !" if total == 0
-  puts
+  printf "\e[33mTotal number of tests:  %4d\e[0m\n",total
+  if total==0
+    fail "\e[31mDid not find any tests !\e[0m" if total == 0
+  else
+    if failed > 0
+      printf "\e[31mNumber of failed tests: %4d\e[0m\n",failed
+      fail "\e[31mSome tests failed !\e[0m" if failed > 0
+    else
+      printf "\e[32mNumber of failed tests: %4d\e[0m\n",failed
+      printf "\e[32mAll tests passed.\e[0m\n",failed
+    end
+  end
 end
