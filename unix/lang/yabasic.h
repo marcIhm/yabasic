@@ -188,6 +188,7 @@ extern int backpid;		/* pid of process waiting for redraw events */
 
 /* function.c */
 extern struct command *datapointer;	/* current location for read-command */
+extern char *last_inkey; /* last result of inkey */
 void switch_compare (void);	/* compare topmost values for switch statement */
 
 /* symbol.c */

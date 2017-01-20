@@ -47,7 +47,7 @@ struct command *lastdata = NULL;	/* used to associate all data-commands with eac
 static struct buff_chain *buffroot;	/* start of sys-input buffer */
 static struct buff_chain **buffcurr;	/* current entry in buff_chain */
 static int buffcount;		/* number of filled buffers */
-
+char *last_inkey;         /* last result of inkey$ */
 
 /* ------------- subroutines ---------------- */
 
@@ -568,6 +568,7 @@ function (struct command *current)	/* performs a function */
         break;
     case fINKEY:
         pointer = inkey (a1->value);
+	strcpy(last_inkey, pointer);
         result = stSTRING;
         break;
     case fAND:
@@ -1034,6 +1035,7 @@ getmousexybm (char *s, int *px, int *py, int *pb, int *pm)	/* get mouse coordina
     int x = 0, y = 0, b = 0, m = 0;
     char c;
 
+    if (!*s) s=last_inkey;
     if (*s) {
         sscanf (s, "MB%d%c+%d:%04d,%04d", &b, &c, &m, &x, &y);
         if (px) {

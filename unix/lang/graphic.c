@@ -82,7 +82,7 @@ int winwidth, winheight;	/* size of window */
 static int winx, winy;		/* position of window */
 
 /* mouse and keyboard */
-int mousex = 0, mousey = 0, mouseb = 0, mousemod = 0;	/* last know mouse coordinates */
+int mousex = 0, mousey = 0, mouseb = 0, mousemod = 0;	/* last known mouse coordinates */
 char *ykey[kLASTKEY + 1];	/* keys returned by inkey */
 #ifdef UNIX
 #else

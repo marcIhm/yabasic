@@ -207,6 +207,8 @@ main (int argc, char **argv)
 #endif
 
     time (&compilation_start);
+    last_inkey=my_malloc(INBUFFLEN);
+    last_inkey[0]='\0';
     error (DEBUG, "this is yabasic " VERSION);
     initialize ();
     program_state = INITIALIZED;

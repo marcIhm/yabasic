@@ -298,7 +298,7 @@ curinit(void)			/* initialize curses */
 
 
 char *
-inkey(double maxtime)		/* get char from keyboard */
+inkey (double maxtime)		/* get char from keyboard */
 {
     char retkey[100];
     long int max, now, start, left;
@@ -374,7 +374,7 @@ inkey(double maxtime)		/* get char from keyboard */
         /* already got key ? */
 #ifdef UNIX
         if (winopened && display && XPending(display)) {
-            getwinkey(retkey);
+            getwinkey (retkey);
             if (retkey[0]) {
                 break;
             }
@@ -431,7 +431,7 @@ inkey(double maxtime)		/* get char from keyboard */
         if (FD_ISSET(termfd, &readfds)) {
             gettermkey(retkey);
         } else if (FD_ISSET(winfd, &readfds)) {
-            getwinkey(retkey);
+            getwinkey (retkey);
         }
 #elif WINDOWS
         if (wait_result == WAIT_OBJECT_0 + 1) {
