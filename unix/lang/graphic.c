@@ -883,7 +883,7 @@ change_font (char *fname)
                 XUnloadFont (display, myfont->fid);
             }
         }
-        my_free(fontname);
+        if (fontname!=fname) my_free(fontname);
     }
     fontname = my_strdup (fname);
     myfont = XLoadQueryFont (display, fontname);
