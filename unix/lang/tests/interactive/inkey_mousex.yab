@@ -1,0 +1,9 @@
+open window 200,200
+#clear screen
+print "Please click anywhere in the grafics window"
+print inkey$
+print mousex
+if (mousex=0) error "mousex"
+if (mousey=0) error "mousey"
+if (mouseb=0) error "mouseb"
+print "Okay: mousex, mousey and mouseb remember last inkey"

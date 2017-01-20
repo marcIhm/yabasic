@@ -53,4 +53,9 @@ def run_tests dir, executable
       printf "\e[32mAll tests passed.\e[0m\n",failed
     end
   end
+  interactive_tests = Dir["#{dir}/interactive/*.yab"]
+  if interactive_tests.length>0
+    puts "\e[33mRemark: There are #{interactive.length} interactive tests, that could be run if appropriate:\e[0m\n"
+    interactive_tests.each {|t| puts "   \e[33m#{t}\e[0m\n"}
+  end
 end
