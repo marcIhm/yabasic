@@ -38,8 +38,6 @@ task :changelog => :version do
   end
 end
 
-desc 'Process erb templates'
-
 # colors from https://color.adobe.com
 # Tests with browserstack.com
 
@@ -57,9 +55,13 @@ colors_blueish = { :toc_bg => "#29D9C2",
 
 colors = colors_blueish
 
+generated_html = Array.new
+
+desc 'Process erb templates'
 task :templates => :changelog do
   %w( content_download.html.erb  head.html.erb toc.html.erb ).each do |name|
     result = name.chomp('.erb')
+    generated_html << result
     File.open(result,'w') do |file|
       file.write ERB.new(File.read(name)).result(binding)
     end
@@ -76,6 +78,7 @@ task :templates => :changelog do
     end
     
     puts "#{name} wraps #{frame_html}"
+    generated_html << name
     File.open(name,'w') do |file|
       file.write ERB.new(structure).result(binding)
     end
@@ -105,8 +108,8 @@ end
 
 desc 'Remove generated html-files'
 task :remove => :copy do
-  Dir["*.html"].each do |file|
-    rm file if File.exists?(file + ".erb")
+  generated_html.each do |file|
+    rm file
   end
 end
 
