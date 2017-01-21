@@ -1,3 +1,8 @@
+Version 2.78.0 (January 21, 2017)
+  - Allowed for numeric argument after break
+  - Fixed format of manpage
+  - Reworked the switch-statement, added tests
+
 Version 2.77.3 (December 29, 2016)
   - Fixed insecure usage of strcpy
   - Better logging for windows installer
