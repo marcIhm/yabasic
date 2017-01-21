@@ -4,7 +4,7 @@ require 'pp'
 require 'fileutils'
 include FileUtils
 require 'erb'
-require_relative '../windows/utils.rb'
+require_relative '../unix/utils.rb'
 
 start_time = Time.now
 binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe', :wrapper => 'wrapper/Release/wrapper.exe' }
