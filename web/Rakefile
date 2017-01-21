@@ -98,7 +98,7 @@ task :copy => :templates do
   download = "#{todir}/download"
   rm_rf download if File.exists?(download)
   mkdir download
-  %w( *.gz *.deb *.rpm *.exe ).each do |glob|
+  %w( *.gz *.deb *.rpm *.exe *.zip ).each do |glob|
     Dir["../products/#{glob}"].each do |file|
       cp file, download
     end
