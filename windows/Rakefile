@@ -55,8 +55,30 @@ task :pack => :tests do
   sh 'iexpress /N yabasic-setup.SED'
 end
 
+desc 'Create zip-file, e.g. for Windows XP'
+task :zip => :pack do
+  zipdir = 'yabasic-zip'
+  yabdir = '/cygdrive/c/work/yabasic/windows'
+  zipfile = "../products/yabasic-#{version}.zip"
+  rm_r zipdir if File.exist?(zipdir)
+  rm_r zipfile if File.exist?(zipfile)
+  mkdir zipdir
+  [ "#{yabdir}/lang/Release/yabasic.exe",
+    "#{yabdir}/setup/Release/setup.exe",
+    "#{yabdir}/resources/README.txt",
+    "#{yabdir}/resources/yabver.txt",
+    "#{yabdir}/resources/yabico.ico",
+    "#{yabdir}/../products/yabasic.htm",
+    "#{yabdir}/../unix/lang/demo.yab",
+    "/cygdrive/c/Windows/Temp/LICENSE.txt" ].each {|file|
+    cp file, zipdir
+  }
+  sh "zip #{zipfile} #{zipdir}/*"
+  rm_r zipdir if File.exist?(zipdir)
+end
+
 desc 'Cleanup and Show products'
-task :default => :pack do
+task :default => :zip do
   cleanup "../products/yabasic-*-setup.exe"
   sh 'ls -l ../products ' + binaries.values.join(" ")
 end

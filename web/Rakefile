@@ -103,6 +103,13 @@ task :copy => :templates do
   cp '../products/yabasic.htm', todir
 end
 
+desc 'Remove generated html-files'
+task :remove => :copy do
+  Dir["*.html"].each do |file|
+    rm file if File.exists?(file + ".erb")
+  end
+end
+
 desc 'Invoke site'
-task :default => :copy do
+task :default => :remove do
 end
