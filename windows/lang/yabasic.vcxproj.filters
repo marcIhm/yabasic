@@ -57,5 +57,8 @@
     <ClCompile Include="..\..\unix\lang\symbol.c">
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\unix\lang\flow.c">
+      <Filter>Quellcodedateien</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
