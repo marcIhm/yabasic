@@ -27,7 +27,7 @@
 </ul>
 <p>To <b>remove</b> yabasic, go to the control-panel and click on the software-icon: 
 You will find an entry for deleting yabasic. </p>
-<p>If anything goes wrong please send me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</a></adress></p>
+<p>If anything goes wrong please send me a mail:&nbsp;<a href="mailto:mail@yabasic.de">mail@yabasic.de</a></p>
 
 <h1><a name="zipwin">Zip-file for Windows XP</a></h1>
 <p>For Windows XP you may install yabasic from its zip-file:</p>
@@ -46,36 +46,36 @@ You will find an entry for deleting yabasic. </p>
   <p>For redhat-based systems (e.g. fedora, redhat, suse, centos) you need the <strong>rpm</strong> package (see below).<br>
   For debian-based systems (e.g. ubuntu, debian) you need the <strong>deb</strong> package (see below).</p>
   <ul type="disc">
-    <li>Download <a href="download/yabasic-<%= version %>-1.x86_64.rpm">yabasic-<%= version %>-1.x86_64.rpm</a> or <a href="download/yabasic_<%= version %>_amd64.deb">yabasic_<%= version %>_amd64.deb</a>. 
-    <li>Type <strong>sudo rpm -i yabasic-<%= version %>-1.i586.rpm</strong> or <strong>sudo dpkg -i yabasic_<%= version %>_amd64.deb</strong>. 
-    <li>Read the man-page of yabasic: <strong>man yabasic</strong>.
-    <li>Or read the html-Documentation under <strong>/usr/local/share/applications/yabasic/yabasic.htm</strong>
-    <li>Try the demos under <strong>/usr/local/share/applications/yabasic/demo.yab</strong>
-    </ul>
+    <li>Download <a href="download/yabasic-<%= version %>-1.x86_64.rpm">yabasic-<%= version %>-1.x86_64.rpm</a> or <a href="download/yabasic_<%= version %>_amd64.deb">yabasic_<%= version %>_amd64.deb</a>. </li>
+    <li>Yabasic requires the ncurses libraries to be installed; <strong>sudo yum install ncurses</strong> or <strong>sudo apt-get install ncurses</strong> should be enough.</li>
+    <li>Type <strong>sudo rpm -i yabasic-<%= version %>-1.i586.rpm</strong> or <strong>sudo dpkg -i yabasic_<%= version %>_amd64.deb</strong>. </li>
+    <li>Read the man-page of yabasic: <strong>man yabasic</strong>.</li>
+    <li>Or read the html-Documentation under <strong>/usr/local/share/applications/yabasic/yabasic.htm</strong></li>
+    <li>Try the demos under <strong>/usr/local/share/applications/yabasic/demo.yab</strong></li>
+  </ul>
 <p>To remove yabasic type <strong>sudo rpm -e yabasic</strong> or <strong>sudo dpkg --remove yabasic</strong>.</p>
-<p>If you have any problems, please send me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</a></adress>.</p>
+<p>If you have any problems, please send me a mail:&nbsp;<a href="mailto:mail@yabasic.de">mail@yabasic.de</a>.</p>
 <h1><a name="sourceunix">Compile the sources for Unix</a></h1>
-<p>Compiling yabasic requires a C-Compiler and the libraries for ncurses and
-X-Windows. To compile yabasic in your home-directory proceed like this:
+<p>Compiling yabasic requires a C-Compiler (typically gcc) as well as the libraries and header-files for ncurses and x11 (typically named <strong>ncurses</strong>, <strong>ncurses-devel</strong> and <strong>xorg-x11-devel</strong>). To compile yabasic in your home-directory proceed like this:
 
 <ul type="disc">
-    <li>Click here to download <a href="download/yabasic-<%= version %>.tar.gz">yabasic-<%= version %>.tar.gz</a>, the tar-file of yabasic. 
-    <li>Uncompress the tar-file: <b>gunzip yabasic-<%= version %>.tar.gz</b>. 
+    <li>Click here to download <a href="download/yabasic-<%= version %>.tar.gz">yabasic-<%= version %>.tar.gz</a>, the tar-file of yabasic. </li>
+    <li>Uncompress the tar-file: <b>gunzip yabasic-<%= version %>.tar.gz</b>. </li>
     <li><b>tar xf yabasic-<%= version %>.tar</b>, this unpacks the tar-file, giving you 
-    a directory named <strong>yabasic-<%= version %></strong>.
-    <li><b>cd yabasic-<%= version %></b> 
+    a directory named <strong>yabasic-<%= version %></strong>.</li>
+    <li><b>cd yabasic-<%= version %></b> </li>
     <li><b>./runme</b> starts a shell script which builts the executable 
     program. (Alternatively you may type: <b>./configure &amp;&amp; make &amp;&amp; 
-    make check</b>) 
+    make check</b>) </li>
     <li>If you have root privileges, you may type <strong>make install</strong> 
-    to install yabasic in your system. 
+    to install yabasic in your system. </li>
 </ul>
 <p>Yabasic compiles under HPux, Solaris and linux, but chances are high, that users of other mainstream Unixes 
-will have no problems. If anything goes wrong please send me a mail:&nbsp;<adress><a href="mailto:mail@yabasic.de">mail@yabasic.de</a></adress>, 
+will have no problems. If anything goes wrong please send me a mail:&nbsp;<a href="mailto:mail@yabasic.de">mail@yabasic.de</a>, 
 including: 
 <ul type="disc">
-    <li>the sort of <b>system</b> you are working on and 
-    <li>the file <b>runme.log</b> which is written during execution of the script <b>runme</b> 
+    <li>the sort of <b>system</b> you are working on and </li>
+    <li>the file <b>runme.log</b> which is written during execution of the script <b>runme</b> </li>
 </ul>
 <p>Then I will try to find and fix the problem.</p>
 <h1><a name="sourcewin">Sources for Windows</a></h1>
