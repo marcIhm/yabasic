@@ -147,6 +147,7 @@ char *brushup(char *); /* change to upper case, add slash */
 char *enumfiles(int); /* give filenames, one after another */
 LINKINFO *enumlinks(int); /* give back links, one after the other */
 void logit(char *); /* write text to logfile */
+char *current_time(void); /* get current time as string */
 int MyMessage(HWND, LPCSTR, LPCSTR, UINT); /* wrapper for MessageBox() */
 char *reportdir(char *); /* generate a string containing filenames in directory */
 char *last_error(void); /* get last error as string */
@@ -1212,7 +1213,7 @@ int copy_file(char *name, char *dest, int here) /* copy files */
 	else
 		ret = CopyFile(name, dest, FALSE);
 	if (!ret) {
-		sprintf(string, "Failed to copy '%s' !", name);
+	  sprintf(string, "Failed to copy '%s': %s", name, last_error());
 		MyMessage(NULL, string, INSTALL_HEADING, MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 	}
 	return ret;
@@ -1307,7 +1308,6 @@ void logit(char *text)
 /* write text to log-file */
 {
 	static FILE *log = NULL;   /* file for logging */
-	SYSTEMTIME time;         /* time */
 	char string[SSLEN];
 	static int oldtime;
 
@@ -1316,25 +1316,21 @@ void logit(char *text)
 		sprintf(logfile, "%s%s", temppath, "yabasic-setup.txt");
 		log = fopen(logfile, copied ? "a" : "w");
 		if (!log) {
-			sprintf(string, "Could not open log file '%s': %s", logfile, last_error());
+			sprintf(string, "Could not open logfile '%s': %s", logfile, last_error());
 			MyMessage(NULL, string, INSTALL_HEADING, MB_STYLE);
 			end(INSTALL_IMPOSSIBLE);
 		}
-		GetSystemTime(&time);
 		if (log) {
 			fprintf(log, "\n\n\n---------------------------------------------------\n"
-				"Starting installation-log, "
-				"hr=%d, min=%d, sec=%d, msec=%d.\n%s\n",
-				time.wHour, time.wMinute, time.wSecond, time.wMilliseconds,logfile);
+				"Starting installation-log: %s\n%s\n\n",
+				current_time(), logfile);
 			oldtime = GetCurrentTime();
 		}
 	}
 
 	if (log) {
-		GetSystemTime(&time);
 		if (GetCurrentTime() - oldtime > 10000) {
-			fprintf(log, "Timestamp: hr=%d, min=%d, sec=%d, msec=%d\n",
-				time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
+			fprintf(log, "Timestamp: %s\n", current_time());
 			oldtime = GetCurrentTime();
 		}
 		if (text) {
@@ -1346,12 +1342,26 @@ void logit(char *text)
 			}
 		}
 		else {  /* not text ... */
-			fprintf(log, "Closing installation-log:\n%s\n",logfile);
+   		        fprintf(log, "Closing installation-log: %s\n%s\n",current_time(), logfile);
 			fflush(log);
 			fclose(log);
 		}
 	}
 	if (log) fflush(log);
+}
+
+
+char *current_time() /* get current time as string */
+{
+	SYSTEMTIME time;         /* time */
+	static char text[SSLEN];
+
+	GetLocalTime(&time);
+	sprintf(text, "%d-%02d-%02d, %02d:%02d:%02d:%03d",
+		time.wYear, time.wMonth, time.wDay,
+		time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
+	
+	return text;
 }
 
 
