@@ -795,7 +795,7 @@ void end(int result) { /* display message and terminate */
 
 	string2[0] = '\0';
 	if (ask_run_something) {
-		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\nFor details on the installation you may also read the logfile.\n\n\n( These options are also available in the start-menu under 'Yabasic' )", msg);
+		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\nFor details on the installation you may also read the logfile.\n\n\nNote: These options are also available in the start-menu under 'Yabasic'", msg);
 		answer = DialogBoxParam((HANDLE)this_instance,
 			MAKEINTRESOURCE(IDD_ON_SUCCESS),
 			(HWND)NULL, (DLGPROC)successdialog, (LPARAM) string);
@@ -1085,6 +1085,9 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 		success = putreg(LOCAL, UNINSTALL "Yabasic", "DisplayName", "Yabasic");
 		sprintf(string, "%s%s %s", installpath, "setup.exe", "remove");
 		success = putreg(LOCAL, UNINSTALL "Yabasic", "UninstallString", string) && success;
+		sprintf(string,"%d.%d.%d",newversion.major, newversion.minor, newversion.patch);
+		success = putreg(LOCAL, UNINSTALL "Yabasic", "DisplayVersion", string) && success;		
+		success = putreg(LOCAL, UNINSTALL "Yabasic", "Publisher", "Marc Ihm") && success;		
 		/* make changes in registry, put in defaults */
 		progress("Setting registry");
 		sprintf(string, "%s", formatsemver(&newversion, buf));
@@ -1213,7 +1216,7 @@ int copy_file(char *name, char *dest, int here) /* copy files */
 	else
 		ret = CopyFile(name, dest, FALSE);
 	if (!ret) {
-	  sprintf(string, "Failed to copy '%s': %s", name, last_error());
+	  sprintf(string, "Failed to copy '%s' to '%s': %s", name, dest, last_error());
 		MyMessage(NULL, string, INSTALL_HEADING, MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 	}
 	return ret;
