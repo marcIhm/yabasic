@@ -1212,6 +1212,10 @@ change_colour (struct command *cmd)
 #else
 #endif
 
+    if (!winopened) {
+        error (ERROR, "Got no window to draw");
+        return;
+    }
     if (cmd->type == cGCOLOUR || cmd->type == cGBACKCOLOUR) {
         b = (int) pop (stNUMBER)->value;
         g = (int) pop (stNUMBER)->value;
