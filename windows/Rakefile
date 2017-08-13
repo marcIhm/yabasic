@@ -79,6 +79,7 @@ end
 
 desc 'Cleanup and Show products'
 task :default => :zip do
+  cleanup "../products/yabasic-*.zip"
   cleanup "../products/yabasic-*-setup.exe"
   sh 'ls -l ../products ' + binaries.values.join(" ")
 end
