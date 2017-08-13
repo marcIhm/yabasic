@@ -21,7 +21,7 @@
 /* ------------- defines ---------------- */
 
 #define DONE {current=current->next;break;}	/* reduces type-work */
-#define COPYRIGHT "Copyright 1995-2016 by Marc Ihm, according to the MIT License"
+#define COPYRIGHT "Copyright 1995-2017 by Marc Ihm, according to the MIT License"
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\nbuilt on "\
 ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
