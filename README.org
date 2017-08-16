@@ -82,11 +82,15 @@
    Yabasic can be build on any system with these tools: autoconf,
    bison, flex, gcc, ruby.
 
+   All steps are automated with rake (ruby make); so typically you
+   just need to invoke rake, which e.g. invokes autoconf and make in
+   turn.
+
    The last step of the building process moves the artefacts into the
    folder /work/yabasic/prodcts . If you have a machine with both
    linux and windows, this folder can be usedully shared between both
    operating systems.
-   
+
 ** Building under Windows
    
    Yabasic can be compiled with Visual Studio 2015, which can be
@@ -98,6 +102,11 @@
    The rest of the windows-toolchain relies on the presence a fairly
    complete cygwin-installation, including ruby. The git-directory
    should be /work/yabasic.
+
+   All steps are automated with rake (ruby make); so typically you
+   just need to invoke rake, which e.g. invokes the Visual Studio
+   C-Compiler in turn.
+
    
 ** A typical building sequence
 
@@ -106,7 +115,11 @@
    - Build under Unix in directory unix
    - Build under Windows in directory windows
    - Build under Windows in directory web
-
      
    Depending on your changes and desired products, you do not need to
    build on all stages however.
+
+   The tern "build" in the above list refers to these subtasks:
+   - "git pull/add/commit/push" as all changes between the directories
+     unix, windows and web are only propagated by git
+   - "rake" as (almost) all tasks are automated within the Rakefile
