@@ -59,3 +59,33 @@ def run_tests dir, executable
     interactive_tests.each {|t| puts "   \e[33m#{t}\e[0m\n"}
   end
 end
+
+class News
+  
+  attr_reader :version
+  
+  def initialize fname
+    lines = File.readlines(fname)
+    fail "Cannot parse first line of '#{fname}': #{lines[0]}" unless lines[0]=~/^Version (\d\.\d+\.\d+) \(([^,]+), (20\d+\d)\)\s*$/;
+    @version = $1
+    @month_day = $2
+    @year = $3
+    @lines = []
+    lines.drop(1).each do |l|
+      fail "Cannot parse line of '#{fname}': #{l}" unless l=~/^\s+-\s+(.*?)\s*$/
+      @lines << $1
+    end
+  end
+  
+  def as_text
+    "Version #{@version} (#{@month_day}, #{@year})\n" + @lines.map {|l| "  - #{l}\n"}.join
+  end
+
+  def as_html indent
+    fill = " " * indent
+    fill + "<h4>Version #{@version}, #{@month_day}, #{@year}</h4>\n" +
+      fill + "<ul>\n" +
+      @lines.map {|l| fill + "  <li>#{l}</li>\n"}.join +
+      fill + "</ul>\n"
+  end
+end

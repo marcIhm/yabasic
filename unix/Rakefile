@@ -13,7 +13,8 @@ vs=Hash.new
 vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
 
 desc 'Check git'
-task :git do 
+task :git do
+  news = News.new('lang/NEWS')
   sh "git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
@@ -76,16 +77,29 @@ task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configur
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
   vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
   vs['NEWS']=File.new('lang/NEWS').read.match(/Version\s+(\d\.\d+.\d+)/)[1]
-  vs['ChangeLog']=File.new('lang/ChangeLog').read.match(/Version\s+(\d\.\d+.\d+)/)[1]
   pp vs
   fail "Mismatch between versions of 'yabasic' and 'yabasic.htm'" if (vs['yabasic'].to_f-vs['yabasic.htm'].to_f).abs >= 0.01
   fail "Mismatch between versions of 'yabasic' and 'configure.ac'" if vs['yabasic'] != vs['configure.ac']
   fail "Mismatch between versions of 'NEWS' and 'configure.ac'" if vs['NEWS'] != vs['configure.ac']
-  fail "Mismatch between versions of 'NEWS' and 'ChangeLog'" if vs['NEWS'] != vs['ChangeLog']
+end
+
+desc 'Propagate News'
+task :news => :versions do
+  news = News.new('lang/NEWS')
+  cl_content = File.read('lang/ChangeLog')
+  if cl_content.include?("Version #{news.version}")
+    puts "ChangeLog already up to date"
+  else
+    File.open('lang/ChangeLog','w') do |f|
+      f.write news.as_text + "\n"
+      f.write cl_content
+      puts "Updated ChangeLog"
+    end
+  end
 end
 
 desc 'Create directory to collect products'
-task :products_dir => :versions do
+task :products_dir => :news do
   mkdir '../products' unless Dir.exists?('../products')
 end
 
