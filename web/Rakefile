@@ -25,7 +25,7 @@ task :version => :git do
   version = File.read('../windows/resources/yabver.txt').chomp.strip
   puts "Version #{version}"
   news = News.new('../unix/lang/NEWS')
-  fail "Versions from NEWS and yabver.txt do not match" if News.version != version
+  fail "Versions from NEWS and yabver.txt do not match" if news.version != version
   html_with_latest_news = news.as_html(4)
   fragname = "fragment_log.html"
   frag = File.new(fragname).read
