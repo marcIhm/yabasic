@@ -93,20 +93,19 @@
 
 ** Building under Windows
    
-   Yabasic can be compiled with Visual Studio 2015, which can be
+   Yabasic is be compiled with Visual Studio 2015, which can be
    installed free of charge.
 
    The project files assume 'C:\work\yabasic' as the git checkout
    directory.
 
-   The rest of the windows-toolchain relies on the presence a fairly
-   complete cygwin-installation, including ruby. The git-directory
-   should be /work/yabasic.
+   The rest of the windows-toolchain relies on the presence of a
+   fairly complete cygwin-installation, including ruby. The
+   git-directory should be symlinked to /work/yabasic.
 
    All steps are automated with rake (ruby make); so typically you
    just need to invoke rake, which e.g. invokes the Visual Studio
    C-Compiler in turn.
-
    
 ** A typical building sequence
 
@@ -120,6 +119,6 @@
    build on all stages however.
 
    The tern "build" in the above list refers to these subtasks:
-   - "git pull/add/commit/push" as all changes between the directories
-     unix, windows and web are only propagated by git
+   - "git pull/add/commit/push" as all changes between the platforms
+     unix and windows are only propagated by git
    - "rake" as (almost) all tasks are automated within the Rakefile
