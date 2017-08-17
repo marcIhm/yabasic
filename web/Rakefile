@@ -4,7 +4,7 @@ require 'pp'
 require 'fileutils'
 include FileUtils
 require 'erb'
-require 'find'
+require_relative '../unix/utils.rb'
 
 desc 'Check git'
 task :git do 
@@ -17,29 +17,27 @@ task :git do
 end
 
 version = nil
-desc 'Update versions'
+html_with_latest_news = nil
+html_with_all_news = nil
+
+desc 'Collect news'
 task :version => :git do
   version = File.read('../windows/resources/yabver.txt').chomp.strip
   puts "Version #{version}"
-end
-
-desc 'Check and edit changelog'
-edit_files = Array.new
-version_files = %w( content_log.html content_whatsnew.html )
-task :changelog => :version do
-  version_files.each do |name|
-    edit_files << name unless File.new(name).read.include?(version)
+  news = News.new('../unix/lang/NEWS')
+  fail "Versions from NEWS and yabver.txt do not match" if News.version != version
+  html_with_latest_news = news.as_html(4)
+  fragname = "fragment_log.html"
+  frag = File.new(fragname).read
+  unless frag.include?("Version #{version}")
+    frag = news.as_html(6) + "\n" + frag
+    File.new(fragname,"w").write(frag)
+    puts "Wrote #{fragname}"
   end
-  if edit_files.length > 0
-    sh "emacs -nw #{edit_files.join(' ')} ../unix/lang/NEWS"
-    version_files.each do |name|
-      fail "File #{name} still does not contain version" unless File.new(name).read.include?(version)
-    end
-  end
+  html_with_all_news = frag
 end
 
 # colors from https://color.adobe.com
-# Tests with browserstack.com
 
 colors_legacy = { :toc_bg => "#FFBD7C",
                   :head_bg => "#79BD8F",
@@ -58,11 +56,11 @@ colors = colors_blueish
 generated_html = Array.new
 
 desc 'Process erb templates'
-task :templates => :changelog do
-  %w( content_download.html.erb  head.html.erb toc.html.erb ).each do |name|
-    result = name.chomp('.erb')
-    generated_html << result
-    File.open(result,'w') do |file|
+task :templates => :version do
+  %w( content_download.html.erb  content_whatsnew.html.erb content_log.html.erb head.html.erb toc.html.erb ).each do |name|
+    generated = name.chomp('.erb')
+    generated_html << generated
+    File.open(generated,'w') do |file|
       file.write ERB.new(File.read(name)).result(binding)
     end
   end

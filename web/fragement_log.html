@@ -1,0 +1,353 @@
+      <h4>Version 2.78.1, August 13, 2017</h4>
+      <ul>
+	<li>No more dump when using color without window open</li>
+	<li>Processing of yabasic.xml finds hellip-entity</li>
+      </ul>
+      
+      <h4>Version 2.78.0, January 21, 2017</h4>
+      <ul>
+	<li>Allowed for numeric argument after break</li>
+	<li>Fixed format of manpage (unix)</li>
+	<li>Reworked the switch-statement, added tests</li>
+      </ul>
+      
+      <h4>Version 2.77.3, December 29, 2016</h4>
+      <ul>
+	<li>Fixed insecure usage of strcpy</li>
+	<li>Better logging for windows installer</li>
+	<li>Spelling corrections</li>
+      </ul>
+
+      <h4>Version 2.77.2, December 17, 2016</h4>
+      <ul>
+	<li>Fixes for coloured text under windows as reported by TheMeq</li>
+	<li>msvcr140.dll is no longer required under Windows</li>
+	<li>Several spelling corrections contributed by ginggs</li>
+	<li>Updated and fixed man-page under linux</li>
+      </ul>
+
+      <h4>Version 2.77.1, November 13, 2016</h4>
+      <ul>
+	<li>Adopted the <a href="mit.html">MIT License</a> for yabasic</li>
+	<li>Switched to semantic versioning; the new schema is MajorRelease.MinorRelease.Patchlevel</li>
+	<li>New peek$ for version, documented all peeks</li>
+	<li>Various bugfixes</li>
+	<li>Setup program now offers to start the demo</li>
+	<li>Redid the development process for yabasic; you may now participate in the development <em>of</em> yabasic itself via github: <a href="https://github.com/marcIhm/yabasic" target="_top">https://github.com/marcIhm/yabasic</a>. However, the main site for programming <em>in</em> yabasic is still <a href="https://www.yabasic.de">https://www.yabasic.de</a></li>
+      </ul>
+
+      <h4>Version 2.769, July 4, 2015</h4>
+      <ul>
+	<li>print color under windows handles single argument correctly</li>
+	<li>cpu extension sse2 is no longer required, so yabasic should run again on older hardware</li>
+      </ul>
+
+      <h4>Version 2.768, May 25, 2014</h4>
+      <ul>
+	<li>Core dump e.g. under Linux mint related with grafics</li>
+	<li>Problems with embedded newlines within the Windows console</li>
+	<li>Keys pressed within grafic window are not always reported to inkey$ (Windows-Version)</li>
+	<li>Spurios problems with colors under Windows and linux (reported but not fixed yet)</li>
+      </ul>
+
+      <h4>Version 2.767, March 15, 2014</h4>
+      <ul>
+	<li>Fixed a bug which caused yabasic under Windows to freeze on syntax errors</li>
+      </ul>
+
+      <h4>Version 2.766, March 15, 2014</h4>
+      <ul>
+	<li>Fixed some bugs related with ncurses under linux</li>
+      </ul>
+
+      <h4>Version 2.765, January 30, 2014</h4>
+      <ul>
+	<li>Added support for later versions of ncurses and 64 bit Systems</li>
+        <li>Avoided forks for inkey$ under Unix</li>
+        <li>Fixed a bug related with break and continue</li>
+      </ul>
+
+      <h4>Older Versions</h4>
+      <ul>
+	<li><b>2.760 (July 27, 2005)<br></b></li>
+	<ul><li>
+	    Finally full colour support !</li>
+          <li>Multiple fonts for the text-command.</li>
+          <li>Triangles with the new triangle-command.</li>
+          <li>Furthermore, the 
+	    Windows-Installer gives better diagnosis in case of an error.</li>
+          <li>The configuration-process 
+	    for Unix has been updated to the latest version of <b>autoconf</b>.</li>
+	</ul>
+	<li><b>2.750 (May 19, 2004)<br></b></li>
+	<ul>
+          <li>Yabasic finally has an Icon under Windows.</li>
+          <li>The str$()-function, may now format numbers&nbsp;like 123,456.56 
+            (or 123.456,56 for german conventions).</li>
+          <li>Changed the system()-function under Windows&nbsp;to use the right 
+            command-processor.</li>
+          <li>Added a list of commands, grouped by topics to the documentation.</li>
+	</ul>
+	<li><b>2.740 (January 18 2003)</b><br>
+	</li>
+	<ul><li>Implemented the <b>bind</b>-feature.</li>
+	  <li>More meaningful&nbsp;messages on failing open-calls.</li>
+	</ul>    <li><b>2.730 (24 August 2003):</b>
+	  
+	  <br>The new documentation is finally finished. It has more than four times 
+	  the size of the old documentation (153 pages compared to 36).</li>
+	<li><b>2.722 (3 January 2003):</b>
+	  
+	  <br>Another release, that mostly includes a series of minor bugfixes related 
+	  with the new documentation:
+	</li>
+	<ul type="disc">
+          <li type="circle">A bug with the functions<b> split() </b>and<b> token() 
+            </b>has been fixed, which caused&nbsp;to coredumps in some cases.</li>
+	</ul>
+	<li><b>2.72 (3 January 2003):</b>
+	  
+	  <br>Big changes only in the new documentation. In yabasic itself there have 
+	  been&nbsp;mostly&nbsp;cosmetics changes:<ul type="circle">
+            <li>Two argument form of<b> log()</b>.</li>
+            <li>The special option '<b>--</b>' stops all option processing</li>
+            <li>Lots of bugfixes related with: open, import, continue</li>
+	  </ul>
+	<li><b>2.71 (18 December 2001):</b>
+	</li>
+	<ul type="circle">
+          <li>The short form of the <b>if</b>-statement now behaves as you expect. 
+            
+          <li>A new loop: You may put statements between <b>loop</b> and <b>end 
+              loop</b>. 
+          <li><b>break</b> and <b>continue</b> can be used to control any loop 
+            
+          <li>The <b>switch</b>-statement is available to check one expression 
+            against many different values. 
+	</ul>
+	<li><b>2.70 (August 2001):</b>
+	  <ul type="circle">
+            <li>Allowed hex-escapes in string constants (e.g. &quot;\xa&quot;).
+            <li>Better warnings for forgotten endif, endsub or next.
+            <li>Allowed for dumping of stack of subroutine calls.
+            <li>Various bugfixes related with: print using,token$() and with printing 
+              to mixed streams
+	  </ul>
+	<li><b>2.69 (30 June 2001):</b> 
+	  <ul type="circle">
+            <li>Implemented <b>logical shortcuts</b>, i.e. conditions within if 
+              or while statements are only evaluated as far as needed. 
+            <li>New form of the open statement: o<b>pen &quot;foo&quot; for reading 
+		as #1</b> 
+            <li>New form of the open function: open(a,&quot;foo&quot;) intended 
+              for use in if-statements: <br> &nbsp;&nbsp;&nbsp;&nbsp;<b>if (not open(a,&quot;foo&quot;)) 
+		print &quot;Shit !&quot; 
+            </b><li>You may now write: a=open(&quot;foo&quot;,&quot;w&quot;):print #a 
+              &quot;Hello&quot; 
+	  </ul>
+	<li><b>2.68 (2 March 2001): </b>Essentially removed the distinction between 
+	  <b>expressions</b> and <b>conditions</b>, i.e. you may write things like 
+	  this:&nbsp;okay=(1&lt;10) : if (okay) print &quot;Hallo&quot; 
+	<li><b>2.66 (7 January 2001): </b>Modified <b>instr()</b> to accept an optional 
+	  third argument and <b>mid$()</b> to go without its third argument. Added 
+	  the <b>rinstr()</b>-Function. Added the <b>bin$()</b> function to convert 
+	  decimal into binary numbers and extended <b>dec()</b> to do the other way 
+	  around; fixed some errors related with int()/hex() and large numbers. 
+	<li><b>2.65 (21 October 2000): </b>You may specify the directory to search 
+	  libraries with the new option <b>librarypath</b>. The <b>seek()</b> function 
+	  might now be used within conditions to check for success e.g.: &nbsp;if 
+	  (!seek(1,20)) error &quot;Shit !&quot;. <br> Added the command <b>compile</b> 
+	  and the function <b>execute()</b> to create code on the fly and to call 
+	  a subroutine, whose name is only known at runtime only. E.g. use <b>compile 
+	    &quot;sub foo(a):print a:end sub&quot;</b> to create subroutine <b>foo</b> 
+	  on the fly and use <b>execute(&quot;foo&quot;,2)</b> as an alternate way 
+	  to say <b>foo(2)</b>. 
+	  <ul type="disc">
+            <li>Release 3: Fixed a bug with the <b>system()</b> function as reported 
+              by <b>Michael Cwickel</b>: Some strange problems with <b>scrolling</b> 
+              under windows surfaced within the system() function, which did not give 
+              correct output in some cases. Corrected some problems with using <b>arraydim()</b> 
+              and <b>arraysize()</b> within subroutines as reported by <b>Arnand Roques.</b> 
+              
+	  </ul>
+	<li><b>2.64 (15 June 2000):</b> Rewrote the functions <b>token()</b> and 
+	  <b>split()</b> and even changed their grammar. This change will affect existing 
+	  yabasic-programs, if they use those functions ! 
+	  <ul type="disc">
+            <li>Release 5: Fixed an error with <b>numparams</b> (which contains 
+              the number of parameters passed to a function). 
+            <li>Release 4: Reintroduced the <b>token$()</b> and <b>split$()</b> 
+              functions, fixed a compile problem under <b>AIX</b> and made <b>Pi</b> 
+              and euler available within libraries. 
+	  </ul>
+	<li><b>2.63 (10 April 2000):</b> Made the graphic window <b>repaint</b> 
+	  itself under Unix, so a covered window will not loose its contents; made 
+	  the inkey$ function recognize the state of the <b>shift</b> key, if a mousebutton 
+	  is pressed within the graphic window; Removed an error which <b>freezes 
+	  </b>yabasic after opening a window under some Unix systems. A special <b>poke</b> 
+	  makes the input statement return nonprintable characters. A bug related 
+	  with <b>restore</b>/labels and <b>Subroutines</b> has been fixed. 
+	<li><b>2.62 (21 January 2000): </b>Extended the domain of the **-operator, 
+	  as suggested by <b>Albert Beissel</b>. Corrected the resolution-pattern 
+	  for non local variables, thanks to <b>Tom Ellestad</b>. Added the <b>-e</b> 
+	  option, which allows one to execute yabasic code on the fly. Options may now 
+	  be abbreviated. 
+	<li><b>2.61 (29 Dezember 1999):</b> Besides printing grafics, yabasic is 
+	  now &nbsp;able to print pure text and listst. You may <b>clear</b> and <b>fill</b> 
+	  circles, rectangles, lines and dots &nbsp;in a simple manner. Bitmanipulation 
+	  with the new &nbsp;functions &nbsp;<b>and(), or(), eor(). </b>You may move 
+	  around within an open file with<b> seek </b>and<b> tell(). </b>Fixed a nasty 
+	  bug with <b>local</b> variables, which has been detected by <b>Tom Ellestad. 
+	  </b>Bugfix for <b>peek$(&quot;library&quot;)</b>, thanx again to <b>Tom 
+	    Ellestad</b> ! 
+	<li><strong>2.60 (26 October 1999): Array</strong> parameters to subroutines 
+	  are now <strong>optional</strong>, you may query the number of parameters 
+	  through the local variable <strong>numparams</strong>. Added the <strong>docu$()</strong>-array, 
+	  which contains any embedded documentation. Removed lot's of <strong>errors</strong> 
+	  related with: <strong>ran()</strong>, <strong>window origin</strong>, <strong>inkey$</strong>, 
+	  <strong>linenumbers</strong>, <strong>peek(#)</strong>. Changed the License 
+	  of yabasic: You may now apply the <strong>Gnu Public License</strong> or 
+	  the <strong>Artistic License</strong> at your own choice. 
+	<li><strong>2.59 (12. October 99):</strong> Subroutines now support <strong>arrays</strong> 
+	  as parameters and as local or static variables. A dim-statement may now 
+	  change the size of an array. You may specify file numbers as variables (e.g. 
+	  <strong>print #(a) &quot;Hello&quot;</strong> ). Builtin support for <strong>plotting</strong> 
+	  (i.e. map(),mapx(),mapy(), arrow and marker) has been <strong>removed</strong>. 
+	  
+	<li><strong>2.58 (30. August 99):</strong> Added colours to the text console: 
+	  You may render text in one of eight colours. 
+	<li><strong>2.57 (24. August 99): </strong>Yabasic now supports libraries: 
+	  Your programs may use readymade subroutines, which are defined in separate 
+	  files. Added the error-statement. Allowed for lines consisting of a single 
+	  <strong>rem</strong> (bug reported by <strong>Tom Ellestad</strong>). Added 
+	  the <strong>error</strong> statement and <strong>static</strong> variables. 
+	  Fixed a lot of bugs. 
+	<li><strong>2.56 (14. August 99): </strong>Allowed for &quot;_&quot; in 
+	  variable names and for continuation lines; Yabasic can now handle more than 
+	  9 open files; removed a bug, connected with user defined subroutines. 
+	<li><strong>2.55 (3. August 99): </strong>Added <strong>user defined subroutines</strong>. 
+	  
+	<li><strong>2.54 (17.July 99):</strong> Split the single source (yabasic.c) 
+	  into five seperate files (main.c, io.c, function.c, symbol.c, graphic.c). 
+	  
+	<li><strong>2.53 (29. June 99): </strong>Yabasic can now receive <strong>keys</strong> 
+	  which have been directed to the <strong>grafic window</strong> as well as 
+	  <strong>mouseclicks</strong>. Fixed problems with printing under Windows. 
+	  
+	<li><strong>2.51 (6. June 99): glob$()</strong> for globbing strings and 
+	  <strong>split$()</strong> as a variant of the <strong>token$()</strong>-function. 
+	  <strong>open</strong> can be checked for success. <strong>sokoban</strong> 
+	  game of <strong>Hermang Mansilla</strong> as part of the standard demo. 
+	  
+	<li><strong>2.50 (15.May 99): </strong>Implemented <strong>repeat-until</strong> 
+	  and <strong>while-wend</strong> loops 
+	<li><strong>2.49 (9.May 99): </strong>Added <strong>hex$()</strong> and 
+	  <strong>dec()</strong> functions, fixed an error with peek$() 
+	<li><strong>2.47 (31.Mar 99):</strong> Implemented commands for bitmap manipulation. 
+	  
+	<li><strong>2.46 (12.Mar 99):</strong> Added the <strong>clear rect</strong>-command, 
+	  removed a bug related with <strong>system$()</strong>. 
+	<li><strong>2.45 (26.Feb 99): </strong>Made the grafic window redraw itself 
+	  automatically. 
+	<li><strong>2.43 (24.Feb 99):</strong> Added the <strong>elsif</strong> 
+	  to the <strong>if</strong>-clause and made the <strong>for</strong>-statement 
+	  more flexible. 
+	<li><strong>2.42 (16. Feb 99): </strong>Some improvements on the install-program 
+	  for Windows, Fixed an incompatability with AIX. 
+	<li><strong>2.41 (31. Jan 99): </strong>Numbers are read in as <strong>double</strong> 
+	  instead of <strong>float</strong>. 
+	<li><strong>2.40 (24. Jan 99): </strong>Added the print using statement, 
+	  fixed bugs related with strings like &quot;\\&quot; and with printing under 
+	  windows. 
+	<li><strong>2.39 (16. Jan 99):</strong> Fixed a bug int the Unix<strong> 
+	    print at </strong>command, Improved the diagnostics. 
+	<li><strong>2.38 (12. Jan 99):</strong> Peeks to get command line arguments 
+	  and open for binary files. 
+	<li><b>2.37</b>: Rewrote the demo, added <strong>abs()</strong>, <strong>sig()</strong> 
+	  and <strong>sqr()</strong>-functions, created a rpm-package for distributing 
+	  the linux-version and removed bugs related with inkey$ and input 
+	<li><b>2.36</b>:<b> </b>Added the <strong>token$()</strong>-function and 
+	  a timeout-argument to the <strong>inkey$</strong>-function. Removed a bug 
+	  in the (Windows) <strong>clear screen</strong>-function 
+	<li><b>2.35</b>:<b> </b>Poked around in <strong>clear screen</strong> and 
+	  <strong>print reverse </strong>and changed the Windows setup-program to 
+	  avoid a reported problem 
+	<li><b>2.34</b>: Bugfix related with clear-screen 
+	<li><b>2.33</b>: Bugfix related with line-input 
+	<li><b>Version 2.32</b>: Added the line-input-statement 
+	<li><b>Version 2.31</b>: Switched to VC++, Maintainance 
+	<li><b>Version 2.3</b>: Support for plotting 
+	<li><b>Version 2.22</b>: Maintainance 
+	<li><b>Version 2.21</b>: Four new string-functions <tt>ltrim$()</tt>, <tt>rtrim$()</tt>, 
+	  <tt>date$</tt> and <tt>time$</tt> 
+	<li><b>Version 2.20</b>: <tt>peek</tt> and <tt>poke</tt> 
+	<li><b>Version 2.19</b>: Handled keyboard-interrupts. 
+	<li><b>Version 2.18</b>: Reverse-printing and linenumbers. 
+	<li><b>Version 2.17</b>: Fixed problems with very large programs. 
+	<li><b>Version 2.16</b>: Rewrote the documentation. 
+	<li><b>Version 2.15</b>: Improved <tt>inkey$</tt> and <tt>system$()</tt>. 
+	  
+	<li><b>Version 2.14</b>: Rewrote the input-statement. 
+	<li><b>Switched to Version 2.12 and 2.13</b> Added the <tt>eof()</tt>-function 
+	  and allowed for comparing strings with &lt;,&lt;=,&gt; and &gt;=. 
+	<li><b>Switched to Version 2.11</b> Added <tt>system$()</tt> <tt>system()</tt>, 
+	  <tt>print at(,)</tt>, <tt>min(,)</tt> and <tt>max(,)</tt> commands. 
+	<li><b>Switched to Version 2.1</b> 
+	<li>Added <tt>asc()</tt>, <tt>chr$()</tt>, <tt>lower$()</tt>, <tt>upper$()</tt>, 
+	  and <tt>instr()</tt>, enhanced <tt>mid$()</tt>, <tt>left$()</tt>, <tt>right$()</tt> 
+	  and <tt>inkey$</tt>. 
+	<li>Implemented an <tt>INKEY$</tt>-function, which allows yabasic-programs 
+	  to receive any pressed key without waiting for a newline. 
+	<li>Windows: Improved search for default-printer, so that I could get a 
+	  printout even under Windows NT. 
+	<li>Unix: Introduced comment-lines that start with a hash ('#'), allowing 
+	  the usual Unix-convention for specifying the interpreter (e.g. #!/usr/bin/yabasic); 
+	  thanx to Ken Jordan, who suggested this useful feature. 
+	<li>Windows: Changed the icon to something more meaningful. 
+	<li>A serious bug in the <tt>close</tt>-statement has been fixed. 
+	<li>Random numbers can be generated, e.g. <tt>ran(12)</tt> 
+	<li>Strings can contain control-characters: The usual C-style escape sequences 
+	  (e.g. \n, \a, \t) are processed in any string. 
+	<li>To make the build-process more reliable, I try using the GNU-autconf 
+	  package. Hope, this will fix some mysterious problems, I heard of before. 
+	  
+	<li>During the last change I introduced a bug in the str$()-function, making 
+	  it expect strings instead of numbers as arguments. This bug has been fixed. 
+	  
+	<li>Simplified internal handling of functions and arrays. This had no impact 
+	  on the language, except, that some errors have been introduced and removed 
+	  during the process. 
+	<li>Unified printing under Unix and Windows, added internal variables. 
+	<li>Windows: Fixed an old, but nasty bug in the installation-program, which 
+	  caused strange mixing of pathnames on some systems. Added writing of an 
+	  installation-log, allowing (hopefully !) better remote-diagnostics. 
+	<li>Windows: Added yabasic to the root menu, fixed some bugs in setup. 
+	<li>Unix &amp; Win95: Allowed for negative steps in For-Next-Loops (at last 
+	  !). 
+	<li><b>Switched to Version 2.0</b> 
+	<li>Ported to Windows and changed the name to <b>yabasic</b> (&quot;yet 
+	  another basic&quot;). 
+	<li>The <tt>wait</tt>-command has been changed to accept fractional delays 
+	  (e.g. <tt>wait 0.2</tt>). 
+	<li>Fixing the last bug, I intoduced another one, which made it impossible 
+	  to parse an expression like <tt>a=-b</tt>. This has been corrected. 
+	<li>Fixed an old bug: In earlier versions yabasic accepted only positive 
+	  constants on <tt>data</tt>-lines and as <tt>step</tt>-part of a <tt>for-next</tt>-loop. 
+	  
+	<li>Implementation of <tt>circle</tt>-command. 
+	<li><b>Switched to Version 1.2</b> 
+	<li>Introduced choice of grafics font. 
+	<li>Added postscript-support. 
+	<li><b>Switched to Version 1.1</b> 
+	<li>Some sort of memory leak has been closed; in fact, no memory has been 
+	  freed at all ! This problem has been fixed, so that even heavy string-arithmetics 
+	  should not lead to memory-problems any longer. 
+	<li>The commands pause (or wait) and bell have been implemented. 
+	<li>The compilation has become more simple by using xmkmf. 
+	<li>The for-next-loop has been changed, so that only a number will be accepted 
+	  as step-part. 
+	<li>There have been difficulties on some systems in the case of colour resources. 
+	  Ron Nicholson has given me a hint to avoid this problem. 
+	<li><b>April 1995: Initial Version 1.0 </b>(0.01 would have been better 
+	  :-) 
+      </ul>
