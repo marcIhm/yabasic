@@ -6,6 +6,7 @@ LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
 AUTOMAKE_OPTIONS = check-news subdir-objects
+TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
