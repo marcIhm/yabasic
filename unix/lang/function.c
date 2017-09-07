@@ -39,7 +39,7 @@ static char *peek3 (char *, char *);	/* peek into internals */
 static int peekfile (int);	/* read a byte from stream */
 static char *do_system (char *);	/* executes command via command.com */
 static int do_system2 (char *);	/* execute command as system */
-
+static double myrand (); /* generate random number in given range */
 
 /* ------------- global variables ---------------- */
 
@@ -506,11 +506,11 @@ function (struct command *current)	/* performs a function */
         result = stNUMBER;
         break;
     case fRAN:
-        value = a1->value * (((double) rand ()) / (((double) RAND_MAX) + 1));
+        value = a1->value * myrand ();
         result = stNUMBER;
         break;
     case fRAN2:
-        value = (double) rand () / RAND_MAX;
+        value = myrand ();
         result = stNUMBER;
         break;
     case fMIN:
@@ -892,6 +892,24 @@ do_system2 (char *cmd)		/* hand over execution of command to system */
     CloseHandle (proc.hThread);
     return ec;
 #endif
+}
+
+
+static double
+myrand ()
+{
+    long ran;
+    long max;
+
+#if RAND_MAX <= ( LONG_MAX >> 15 )
+    ran = ((rand () << 15) | rand ());
+    max = RAND_MAX << 15;
+#else
+    ran = rand ();
+    max = RAND_MAX;
+#endif
+
+    ((double) ran) / ((double) max);
 }
 
 

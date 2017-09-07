@@ -1,0 +1,71 @@
+
+print "Check, that no random number exceeds maximum ..."
+rep = 1000
+for m=0 to 100 step 10
+    for i=1 to rep
+        if ran(m) > m then
+	     print "  Random number larger than maximum ", m
+	     exit 1
+	endif
+    next i
+next m
+
+print "Check for small enough granularity of random numbers ..."
+p = 2**15
+numbins = 10
+rep = 1000000
+dim bins(numbins)
+for i=1 to rep
+    r = int(ran(numbins * p))
+    if (r < numbins) bins(r) = bins(r) + 1
+next i
+expected = rep / ( numbins * p )
+print "Expecting count ", expected
+bad = 0
+for i=0 to numbins - 1
+    print bins(i)," ";
+    if bins(i) < expected/2 or bins(i) > 3 * expected / 2 then
+        print "Bin ",i," has count of ",bins(i)
+        bad = 1
+    endif
+next i
+print
+if bad = 1 exit 1
+
+print "Calculating pi ..."
+hits = 0
+rep = 10000
+for i=1 to rep
+    x = ran(1)
+    y = ran(1)
+    dist = sqrt( x*x + y*y )
+    if dist < 1 hits = hits + 1
+next i
+pi_approx = 4 * hits / rep
+if pi_approx < 0.9 * pi or pi_approx > 1.1 * pi then
+    print "Did not get a reasonable value of pi: ",pi_approx
+    exit 1
+endif
+print pi_approx
+
+print "Checking for even spacing of random numbers ..."
+for i=0 to numbins - 1
+    bins(i) = 0
+next i
+rep = 10000
+for i=1 to rep
+    r = int(ran(numbins))
+    bins(r) = bins(r) + 1
+next i
+expected = rep/numbins
+print "Expecting count of ",expected
+for i=0 to numbins - 1
+    print bins(i)," ";
+    if bins(i) < 0.8 * expected or bins(i) > 1.2 * expected then
+        print "Unreasonable count of ",bins(i)," for bin ",i
+	exit 1
+    endif
+next i
+print
+
+exit 0

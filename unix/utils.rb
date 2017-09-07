@@ -19,7 +19,7 @@ def run_tests dir, executable
   cd dir do
     maxlen = Dir["*.yab"].map(&:length).max
     Dir["*.yab"].each do |fname|
-      command = (RUBY_PLATFORM=~/cygwin/ ? "cygstart --wait " : "") + executable + " " + fname
+      command = executable + " " + fname
       expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
       if expected_error
         expected_error.chomp!
