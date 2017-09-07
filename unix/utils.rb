@@ -72,8 +72,15 @@ class News
     @year = $3
     @lines = []
     lines.drop(1).each do |l|
-      fail "Cannot parse line of '#{fname}': #{l}" unless l=~/^\s+-\s+(.*?)\s*$/
-      @lines << $1
+      case l
+      ## To require a fixed number of spaces makes it easier to parse correctly
+      when /^  - (.*?)\s*$/  
+        @lines << $1
+      when /^    (\S.*?)\s*$/
+        @lines[-1]+=l
+      else
+        fail "Cannot parse line of '#{fname}': '#{l}'"
+      end
     end
   end
   
