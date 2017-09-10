@@ -115,7 +115,7 @@ end
 desc 'Create rpm'
 task :rpm => :products_dir do
   cd "lang" do
-    sh 'make install DESTDIR=pkg'
+    sh "make install DESTDIR=#{Dir.pwd}/pkg"
     mkdir_p "pkg/#{yab_app_dir}"
     %w( demo.yab yabasic.htm ).each do |file|
       cp file, "pkg/#{yab_app_dir}"
