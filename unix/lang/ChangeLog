@@ -1,6 +1,6 @@
 Version 2.78.2 (August 27, 2017)
-  - The ran()-function is now guaranteed to return 2**30    different values
-
+  - The ran()-function is now guaranteed to return 2**30
+    different values
 
 Version 2.78.1 (August 13, 2017)
   - No more dump when using color without window open

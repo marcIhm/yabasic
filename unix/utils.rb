@@ -76,9 +76,9 @@ class News
       case l
       ## To require a fixed number of spaces makes it easier to parse correctly
       when /^  - (.*?)\s*$/  
-        @lines << $1
+        @lines << $1.rstrip
       when /^    (\S.*?)\s*$/
-        @lines[-1]+=l
+        @lines[-1] += "\n" + l.rstrip
       else
         fail "Cannot parse line of '#{fname}': '#{l}'"
       end
@@ -93,7 +93,7 @@ class News
     fill = " " * indent
     fill + "<h4>Version #{@version}, #{@month_day}, #{@year}</h4>\n" +
       fill + "<ul>\n" +
-      @lines.map {|l| fill + "  <li>#{l}</li>\n"}.join +
+      @lines.map {|l| fill + "  <li>#{l.gsub(/\n/,' ').gsub(/\s+/,' ').trim}</li>\n"}.join +
       fill + "</ul>\n"
   end
 end
