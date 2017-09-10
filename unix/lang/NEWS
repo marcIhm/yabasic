@@ -1,3 +1,3 @@
 Version 2.78.2 (August 27, 2017)
-  - The ran()-function is now guaranteed to return 2**32
+  - The ran()-function is now guaranteed to return 2**30
     different values

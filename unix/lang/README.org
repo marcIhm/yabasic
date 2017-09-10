@@ -1,5 +1,4 @@
 
 Some hints: 
 
-- To advance the Version of yabasic, edit configure.ac
-- 'make check' to run available tests
+- To advance the Version of yabasic, edit configure.ac and NEWS

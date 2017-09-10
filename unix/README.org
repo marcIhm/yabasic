@@ -1,4 +1,5 @@
 The two subdirectories:
 
-- yabmain :: the complete code for the Yabasic interpreter
-- yabxml :: the docbook-xml-sources for its documentation
+- lang :: the complete code for the Yabasic interpreter
+- doc :: the docbook-xml-sources for its documentation
+
