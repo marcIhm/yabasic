@@ -6948,7 +6948,7 @@ x=ran(y)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>ran</function>-function returns a random number. If no argument is given, the number returned is in the range from 0 to 1; where only 0 is a possible value; 1 will never be returned. If an argument is supplied, the number returned will be in the range from 0 up to this argument, whereas this argument itself is not a possible return value.</para>
+	  <para>The <function>ran</function>-function returns a random number. If no argument is given, the number returned is in the range from 0 to 1; where only 0 is a possible value; 1 will never be returned. If an argument is supplied, the number returned will be in the range from 0 up to this argument, whereas this argument itself is not a possible return value. Regardless of the range, <function>ran</function> is guaranteed to have exactly 2**30 different return values.</para>
 
 	  <para>If you call <function>ran</function> multiple times during your program, the sequence of random numbers will be different each time you invoke your program; however, if, e.g. for testing you prefer to always have the same sequence of random numbers you may issue <function><link linkend="ref_poke">poke "random_seed",123</link></function>.</para>
 	</refsect1>
