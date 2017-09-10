@@ -5,6 +5,7 @@ AC_INIT([yabasic], [2.78.1])
 AC_CONFIG_SRCDIR([main.c])
 #AC_CONFIG_LINKS
 AM_INIT_AUTOMAKE
+LT_INIT
 
 dnl --- get canonical system name ---
 AC_CANONICAL_HOST
