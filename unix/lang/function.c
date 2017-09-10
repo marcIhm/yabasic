@@ -899,17 +899,10 @@ static double
 myrand ()
 {
     long ran;
-    long max;
 	
-#if RAND_MAX <= ( LONG_MAX >> 15 )
-    ran = ((((long) rand ()) << 15) | ((long) rand ()));
-    max = RAND_MAX << 15;
-#else
-    ran = rand ();
-    max = RAND_MAX;
-#endif
+    ran = (((long) rand ()) & 0x7fffL) << 15 | ((long) rand () & 0x7fffL);
 
-    return ((double) ran) / ((double) max);
+    return ((double) ran) / ((double) 0x3fffffffL);
 }
 
 

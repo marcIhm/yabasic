@@ -3,14 +3,15 @@ print "Check, that no random number exceeds maximum ..."
 rep = 1000
 for m=0 to 100 step 10
     for i=1 to rep
-        if ran(m) > m then
-	     print "  Random number larger than maximum ", m
+        r = ran(m)
+        if r > m then
+	     print "  Random number ",r," larger than maximum ", m
 	     exit 1
 	endif
     next i
 next m
 
-print "Check for small enough granularity of random numbers ..."
+print "Check for granularity of random numbers ..."
 p = 2**15
 numbins = 10
 rep = 4000000
@@ -21,10 +22,14 @@ for i=1 to rep
 next i
 expected = rep / ( numbins * p )
 print "Expecting count ", expected
+if expected < 8 then
+    print "Sample to small; expected is < 8: ",expected
+    exit 1
+endif
 bad = 0
 for i=0 to numbins - 1
     print bins(i)," ";
-    if bins(i) < expected/4 or bins(i) > 2 * expected then
+    if bins(i) < expected / 8 or bins(i) > 4 * expected then
         print "Bin ",i," has count of ",bins(i)
         bad = 1
     endif

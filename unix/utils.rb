@@ -25,17 +25,18 @@ def run_tests dir, executable
         expected_error.chomp!
         puts "(Expecting error: '" + expected_error + "')"
         output = %x( #{command} 2>&1 )
-        puts output
         result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
       else
         sh command do |ok,res|
           result = ok
+          output = res
         end
       end
       print "\e[35m" + "Test #{fname}".ljust(maxlen+8,".") + "\e[0m"
       if result
         puts "\e[32mpassed.\e[0m"
       else
+        puts output
         puts "\e[31mFAILED !\e[0m"
         failed += 1
       end

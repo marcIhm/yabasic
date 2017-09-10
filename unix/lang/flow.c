@@ -92,7 +92,7 @@ check_return_value (struct command *cmd)	/* check return value of function */
 void
 reorder_stack_after_call (int keep_topmost) /* reorganize stack after function call: keep return value and remove switch value (if any) */
 {
-    struct stackentry *keep, *kept, *discarded;
+    struct stackentry *keep, *kept;
     char *kept_string;
     double kept_value;
     int kept_type;
