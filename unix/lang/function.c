@@ -900,16 +900,16 @@ myrand ()
 {
     long ran;
     long max;
-
+	
 #if RAND_MAX <= ( LONG_MAX >> 15 )
-    ran = ((rand () << 15) | rand ());
+    ran = ((((long) rand ()) << 15) | ((long) rand ()));
     max = RAND_MAX << 15;
 #else
     ran = rand ();
     max = RAND_MAX;
 #endif
 
-    ((double) ran) / ((double) max);
+    return ((double) ran) / ((double) max);
 }
 
 
