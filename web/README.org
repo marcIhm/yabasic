@@ -1,0 +1,6 @@
+Here are the files and erb-templates needed to create the website www.yabasic.de.
+
+The Rakefile (type 'rake' to invoke) automates the processing of the
+various templates.
+
+Test with ruby webserver: adsf -p 4000

@@ -1,5 +1,11 @@
+This directory contains eveything needed to build yabasic and
+its documentation under various flavours of unix.
+
+The Rakefile (type 'rake' to invoke) orchestrates the process of
+building the yabasic executable and its documentation; it relies
+heavily on the autocof toolchain and its Makefile.
+
 The two subdirectories:
 
 - lang :: the complete code for the Yabasic interpreter
 - doc :: the docbook-xml-sources for its documentation
-
