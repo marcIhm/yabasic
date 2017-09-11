@@ -93,7 +93,7 @@ class News
     fill = " " * indent
     fill + "<h4>Version #{@version}, #{@month_day}, #{@year}</h4>\n" +
       fill + "<ul>\n" +
-      @lines.map {|l| fill + "  <li>#{l.gsub(/\n/,' ').gsub(/\s+/,' ').trim}</li>\n"}.join +
+      @lines.map {|l| fill + "  <li>#{l.gsub(/\n/,' ').gsub(/\s+/,' ').strip}</li>\n"}.join +
       fill + "</ul>\n"
   end
 end
