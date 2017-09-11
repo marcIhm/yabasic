@@ -1,8 +1,0 @@
-#---Error in switch_goto_error2.yab, line 6: GOTO into a switch-statement
-
-goto other
-
-switch 0
-  case 0: label other
-end switch
-
