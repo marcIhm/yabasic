@@ -16,30 +16,28 @@ def run_tests dir, executable
   total = Dir["#{dir}/*.yab"].length
   failed = 0
   puts "\n\e[33mRunning #{total} tests in #{dir} with relative path to executable #{executable}:\e[0m"
-  cd dir do
-    maxlen = Dir["*.yab"].map(&:length).max
-    Dir["*.yab"].each do |fname|
-      command = executable + " " + fname
-      expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
-      if expected_error
-        expected_error.chomp!
-        puts "(Expecting error: '" + expected_error + "')"
-        output = %x( #{command} 2>&1 )
-        result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
-      else
-        sh command do |ok,res|
-          result = ok
-          output = res
-        end
+  maxlen = Dir["#{dir}/*.yab"].map(&:length).max
+  Dir["#{dir}/*.yab"].each do |fname|
+    command = executable + " " + fname
+    expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
+    if expected_error
+      expected_error.chomp!
+      puts "(Expecting error: '" + expected_error + "')"
+      output = %x( #{command} 2>&1 )
+      result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
+    else
+      sh command do |ok,res|
+        result = ok
+        output = res
       end
-      print "\e[35m" + "Test #{fname}".ljust(maxlen+8,".") + "\e[0m"
-      if result
-        puts "\e[32mpassed.\e[0m"
-      else
-        puts output
-        puts "\e[31mFAILED !\e[0m"
-        failed += 1
-      end
+    end
+    print "\e[35m" + "Test #{fname}".ljust(maxlen+8,".") + "\e[0m"
+    if result
+      puts "\e[32mpassed.\e[0m"
+    else
+      puts output
+      puts "\e[31mFAILED !\e[0m"
+      failed += 1
     end
   end
   printf "\e[33mTotal number of tests:  %4d\e[0m\n",total

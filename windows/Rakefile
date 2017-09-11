@@ -42,8 +42,10 @@ end
 
 desc 'Run tests for windows'
 task :tests => :versions do
-  run_tests './lang/tests', '../Release/yabasic.exe'
-  run_tests '../unix/lang/tests/common', '../../../../windows/lang/Release/yabasic.exe'
+  cd "lang" do
+    run_tests './tests', './Release/yabasic.exe'
+    run_tests '../../unix/lang/tests/common', './Release/yabasic.exe'
+  end
 end
 
 desc 'Pack binaries'
