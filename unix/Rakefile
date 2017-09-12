@@ -56,10 +56,10 @@ end
 
 desc 'Create Makefile'
 file 'lang/Makefile' => ['lang/Makefile.in','lang/configure'] do
-  cd ('lang') {
+  cd ('lang') do
     sh 'configure'
     sh 'config.status'
-  }
+  end
 end
 
 desc 'Run make'
@@ -69,8 +69,10 @@ end
 
 desc 'Run tests'
 task :tests => :make do
-  run_tests './lang/tests', '../yabasic'
-  run_tests './lang/tests/common', '../../yabasic'
+  cd ('lang') do
+    run_tests './tests', './yabasic'
+    run_tests './tests/common', './yabasic'
+  end
 end
 
 desc 'Collect Versions'
