@@ -132,6 +132,7 @@ end
 
 desc 'Cleanup, sync and show products'
 task :default => [:rpm, :sources] do
+  rm Dir.glob('../products/web/download/*')
   prod_globs = %w( yabasic*.x86_64.rpm yabasic*amd64.deb yabasic*.tar.gz )
   prod_globs.each { |glob| cleanup "../products/#{glob}" }
   sync_dest = '/work/yabasic/products'
