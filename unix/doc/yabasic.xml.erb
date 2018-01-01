@@ -5926,7 +5926,6 @@ if (open(a,"file","w")) &hellip;
 	  <para>As you may see from the synopsis, the <function>open</function>-command may either be called as a command (without braces) or as a function (with braces). If called as a function, it will return the filenumber or zero if the operation fails. Therefore the <function>open</function>-function may be used within the condition of an <function>if</function>-statement.</para>
 	  <para>If the <function>open</function>-command fails, you may use <function><link linkend="ref_peek">peek("error")</link></function> to retrieve the exact nature of the error.</para>
 	  <para>Furthermore note, that there is another, somewhat separate usage of the <function>open</function>-command; if you specify the bareword <literal>printer</literal> instead of a filename, the command opens a printer for printing text. Every text (and only text) you print to this file will appear on your printer. Note, that this is very different from printing graphics, as can be done with <function><link linkend="ref_open_printer">open printer</link></function>.</para>
-	  <para>Finally you may read the description for <function><link linkend="ref_peek">peek("error")</link></function> to learn which errors may have happened during an <function>open</function>-call.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
