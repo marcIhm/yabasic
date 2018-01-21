@@ -1075,7 +1075,7 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 {
 	int success = TRUE;
 	char string[SSLEN];   /* multi-purpose-string */
-	char windir[SSLEN];   /* windows-directory */
+	char notepad[SSLEN];  /* full path for notepad */
 	char buf[SSLEN];
 
 	switch (mode) {
@@ -1111,10 +1111,10 @@ int MyRegs(int mode) /* add or delete entries to or from registry */
 		success = putreg(ROOT, "Yabasic\\shell\\open\\command", "",
 			append("yabasic.exe \"%1\" \"%2\" \"%3\" \"%4\" \"%5\" \"%6\" \"%7\" \"%8\" \"%9\"")) && success;
 
-		success = putreg(ROOT, "Yabasic\\shell\\New", "", "&Edit") && success;
+		success = putreg(ROOT, "Yabasic\\shell\\Edit", "", "&Edit") && success;
 		GetWindowsDirectory(string, SSLEN);
-		sprintf(windir, "%s%s", brushup(string), "Notepad.exe \"%1\"");
-		success = putreg(ROOT, "Yabasic\\shell\\New\\command", "", windir)
+		sprintf(notepad, "%s%s", brushup(string), "Notepad.exe \"%1\"");
+		success = putreg(ROOT, "Yabasic\\shell\\Edit\\command", "", notepad)
 			&& success;
 		/* printing of embedded docu */
 		success = putreg(ROOT, "Yabasic\\shell\\ViewDocu", "", "&View docu") && success;
