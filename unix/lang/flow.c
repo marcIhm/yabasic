@@ -617,14 +617,15 @@ create_label (char *label, int type)	/* creates command label */
 
 
 void
-decide ()			/*  skips next command, if not 0 on stack */
+decide()			/*  skips next command, if not 0 on stack */
 {
-    if (pop (stNUMBER)->value != 0) {
-        current = current->next;    /* skip one command */
-	std_diag ("skipping", current->type, current->symname, current->diag);
-    } else {
-	if (infolevel >= DEBUG)	error (DEBUG, "(no command skipped)");
-    }
+	if (pop(stNUMBER)->value != 0) {
+		current = current->next;    /* skip one command */
+		if (infolevel >= DEBUG) std_diag("skipping", current->type, current->symname, current->diag);
+	}
+	else {
+		if (infolevel >= DEBUG)	error(DEBUG, "(no command skipped)");
+	}
 }
 
 
