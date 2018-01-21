@@ -1,0 +1,5 @@
+* Problems during the build-process
+
+  - [2018-01-21 So] 
+    - After cygwin update, needed to run rubyrebase.sh
+    - Start cygwin as Administrator to help iexpress
