@@ -446,7 +446,7 @@ add_command_with_switch_state (int type)	/* same as add_command, but add switch_
     struct command *cmd;
 
     cmd = add_command (type, NULL, NULL);
-    add_switch_state(cmd);
+    return add_switch_state(cmd);
 }
 
 
