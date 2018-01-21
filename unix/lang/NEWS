@@ -1,3 +1,4 @@
-Version 2.78.2 (August 27, 2017)
-  - The ran()-function is now guaranteed to return 2**30
-    different values
+Version 2.78.3 (January 21, 2018)
+  - Fixed a up to 4-times performance penalty, that has been introduced
+    in a previous version
+  - Brought back "Edit" to the windows context menu
