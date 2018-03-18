@@ -1,0 +1,9 @@
+print "Simple speed check (limit needs adjustment for each computer other than mine) ..."
+for a=1 to 10000
+  for b=1 to 1000
+  next b
+next a
+if (peek("secondsrunning")>2) then
+  print "Error, program took too long"
+  exit 1
+endif
