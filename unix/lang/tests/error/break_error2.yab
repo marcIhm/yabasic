@@ -1,4 +1,4 @@
-#---Error in ./tests/error/break_error2.yab, line 3: invalid number of levels to break: 4; only 1,2 or 3 are allowed
+#---Error in break_error2.yab, line 3: invalid number of levels to break: 4; only 1,2 or 3 are allowed
 for a=0 to 4
   if (a=2) break 4
 next a
