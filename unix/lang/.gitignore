@@ -16,7 +16,7 @@ Makefile
 test-suite.log
 tests/*.trs
 tests/*.log
+tests/test_import
 bison.output
 stamp-h.in
 stamp-h2
-

@@ -45,6 +45,10 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 %%
 <<EOF>> {
+  if (infolevel>=DEBUG) {
+    sprintf(string,"closing file '%s'",currlib->s);
+    error(DEBUG,string);
+  }
   if (--include_stack_ptr<0) {
     return tEOPROG;
   } else {
@@ -52,6 +56,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
       yy_delete_buffer(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(include_stack[include_stack_ptr]);
     }
+    currlib=libfile_stack[include_stack_ptr];	
     flex_line+=yylval.sep=-1;
     return tSEP;
   }
@@ -79,6 +84,7 @@ REM {yymore();}
 
 IMPORT {BEGIN(IMPORT);}
 <IMPORT>{WS}+{NAME} {if (!import_lib(yytext)) return 0;BEGIN(IMPORT_DONE);return tIMPORT;}
+<IMPORT>{WS}+. {error_with_line(WARNING,"invalid import statement; please check documentation.",flex_line);}
 <IMPORT_DONE>(.|\n) {if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);flex_line+=yylval.sep=0;return tSEP;}
 
 ((DOCU|DOC|DOCUMENTATION)({WS}+.*)?) {
@@ -388,11 +394,13 @@ int import_lib(char *name) /* import library */
   /* start line numbers anew */
   libfile_stack[include_stack_ptr]->lineno=mylineno;
  
-  include_stack_ptr++;
-  if (include_stack_ptr>=MAX_INCLUDE_DEPTH) {
-    sprintf(string,"Could not import '%s': nested too deep",name);
-    error(ERROR,string);
-    return FALSE;
+  if (!is_bound) {
+    include_stack_ptr++;
+    if (include_stack_ptr>=MAX_INCLUDE_DEPTH) {
+      sprintf(string,"Could not import '%s': nested too deep (%d)",name,include_stack_ptr);
+      error(ERROR,string);
+      return FALSE;
+    }
   }
 
   if (is_bound) {
@@ -481,7 +489,7 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
     if (!without) break;
   }
 
-  sprintf(string,"couldn't open library '%s'",full);
+  sprintf(string,"could not open library '%s'",full);
   error(ERROR,string);
   return NULL;
 }
