@@ -69,7 +69,7 @@ end
 
 desc 'Run tests'
 task :tests => :make do
-  cd ('lang') do
+  cd 'lang' do
     run_tests './tests', '../yabasic'
     run_tests './tests/common', '../../yabasic'
     run_tests './tests/error', '../../yabasic'

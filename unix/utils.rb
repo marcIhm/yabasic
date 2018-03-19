@@ -27,11 +27,17 @@ def run_tests dir, executable
       puts "(Expecting error: '" + expected_error + "')"
       output = ""
       cd dir do
+        [short,executable].each {|f|
+          fail "File #{f} cannot be found" unless File.file?(f)
+        }
         output = %x( #{command} 2>&1 )
       end
       result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
     else
       cd dir do
+        [short,executable].each {|f|
+          fail "File #{f} cannot be found" unless File.file?(f)
+        }
         sh command do |ok,res|
           result = ok
           output = res
@@ -43,7 +49,7 @@ def run_tests dir, executable
       puts "\e[32mpassed.\e[0m"
     else
       puts output
-      puts "\e[31mFAILED !\e[0m"
+      puts "\e[31mFAILED ! #{result}\e[0m"
       failed += 1
     end
   end

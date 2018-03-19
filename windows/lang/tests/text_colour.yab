@@ -2,8 +2,10 @@ open window 200,200
 print "Check, if chosen graphic color affects the text-command"
 colour 255,0,0
 text 100,100,"test","cc"
-if getbit$(98,98,102,102)="rgb 5,5:ff0000ffffffffffffff0000ffffffff0000ffffffffffffffffffff0000ffffffffffffffffffffffffffffffff0000ffffffffffffff0000ffffffffffffffffffffffffffffffff0000" then
+t$=getbit$(98,98,102,102)
+if t$="rgb 5,5:ff0000ffffffffffffff0000ffffffff0000ffffffffffffffffffff0000ffffffffffffffffffffffffffffffff0000ffffffffffffff0000ffffffffffffffffffffffffffffffff0000" then
    exit 0
 else
+   print t$
    exit 1
 endif
