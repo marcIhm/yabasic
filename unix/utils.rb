@@ -13,22 +13,29 @@ def cleanup glob
 end
 
 def run_tests dir, executable
-  total = Dir["#{dir}/*.yab"].length
+  total = Dir["#{dir}/*.yab"].select {|x| !x.match(/library.*\.yab/)}.length
   failed = 0
   puts "\n\e[33mRunning #{total} tests in #{dir} with relative path to executable #{executable}:\e[0m"
-  maxlen = Dir["#{dir}/*.yab"].map(&:length).max
-  Dir["#{dir}/*.yab"].each do |fname|
-    command = executable + " " + fname
+  maxlen = Dir["#{dir}/*.yab"].select {|x| !x.match(/library.*\.yab/)}.map(&:length).max
+  Dir["#{dir}/*.yab"].select {|x| !x.match(/library.*\.yab/)}.each do |fname|
+    dir = File.dirname(fname)
+    short = File.basename(fname)
+    command = executable + " " + short
     expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
     if expected_error
       expected_error.chomp!
       puts "(Expecting error: '" + expected_error + "')"
-      output = %x( #{command} 2>&1 )
+      output = ""
+      cd dir do
+        output = %x( #{command} 2>&1 )
+      end
       result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
     else
-      sh command do |ok,res|
-        result = ok
-        output = res
+      cd dir do
+        sh command do |ok,res|
+          result = ok
+          output = res
+        end
       end
     end
     print "\e[35m" + "Test #{fname}".ljust(maxlen+8,".") + "\e[0m"

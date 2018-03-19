@@ -1,0 +1,12 @@
+import library1
+import library2
+import library3
+import library4
+
+if (peek("isbound")) then
+  exit 0
+else
+  bind "test_import"
+  system("chmod 755 test_import")
+  exit system("./test_import")/256
+endif  

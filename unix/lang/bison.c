@@ -67,7 +67,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2017
+    written by Marc Ihm 1995-2018
     more info at www.yabasic.de
 
     BISON part
@@ -3026,7 +3026,7 @@ yyreduce:
 
   case 12:
 
-    {report_missing(ERROR,"do not import a library in a loop or an if-statement");switchlib();}
+    {report_missing(ERROR,"can not import a library in a loop or an if-statement");switchlib();}
 
     break;
 

@@ -155,7 +155,7 @@ statement:  /* empty */
   | tLET string_assignment 
   | assignment
   | tLET assignment
-  | tIMPORT {report_missing(ERROR,"do not import a library in a loop or an if-statement");switchlib();}
+  | tIMPORT {report_missing(ERROR,"can not import a library in a loop or an if-statement");switchlib();}
   | tERROR string_expression {add_command(cERROR,NULL,NULL);}
   | for_loop 
   | switch_number_or_string

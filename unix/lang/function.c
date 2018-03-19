@@ -1500,6 +1500,7 @@ static double
 peek (char *dest)		/* peek into internals */
 {
     char *s;
+    time_t now;
 
     for (s = dest; *s; s++) {
         *s = tolower ((int) *s);
@@ -1522,6 +1523,9 @@ peek (char *dest)		/* peek into internals */
         return errorcode;
     } else if (!strcmp (dest, "isbound")) {
         return is_bound;
+    } else if (!strcmp (dest, "secondsrunning")) {
+	time(&now);
+	return now-compilation_start;
     } else if (dest[0] == '#') {
         error (ERROR, "don't use quotes when peeking into a file");
         return 0;

@@ -4425,7 +4425,7 @@ import foo
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>import</function>-statement imports a library. It expects a single argument, which must be the name of a library (without the trailing <computeroutput>.yab</computeroutput>). This library will then be read and parsed and its subroutines (and variables) will be made available within the main program.</para>
-	  <para>Libraries will first be searched within the current directory (i.e. the directory within which you have invoked <application>yabasic</application>), then within a special directory, whose exact location depends on your system. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. However only <userinput>yabasic -help-usage</userinput> may tell the truth. The location of this second directory may be changed with the option <literal>-library</literal> (either under <link linkend="windows_options">Windows</link> or <link linkend="unix_options">Unix</link>).</para>
+	  <para>Libraries will first be searched within the current directory (i.e. the directory within which you have invoked <application>yabasic</application>), then within a special directory, whose exact location depends on your system. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. Invoking <userinput>yabasic --help</userinput> will show the correct directory. The location of this directory may be changed with the option <literal>--library</literal> (either under <link linkend="windows_options">Windows</link> or <link linkend="unix_options">Unix</link>).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -6166,6 +6166,13 @@ a=peek(#1)
 	  <variablelist>
 
 	    <varlistentry>
+	      <term><function>peek(a)</function></term>
+	      <listitem>
+		<para>Read a single character from the file <literal>a</literal> (which must be open of course).</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>peek("argument")</function></term>
 	      <listitem>
 		<para>Return the number of arguments, that have been passed to <application>yabasic</application> at invocation time. E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then <function>peek("argument")</function> will return 2. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to the program, which are passed on the command line. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return 0.</para>
@@ -6266,13 +6273,6 @@ a=peek(#1)
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek(a)</function></term>
-	      <listitem>
-		<para>Read a single character from the file <literal>a</literal> (which must be open of course).</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
 	      <term><function>peek("screenheight")</function></term>
 	      <listitem>
 		<para>Return the height in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
@@ -6283,6 +6283,13 @@ a=peek(#1)
 	      <term><function>peek("screenwidth")</function></term>
 	      <listitem>
 		<para>Return the width in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek("secondsrunning")</function></term>
+	      <listitem>
+		<para>Return the number of seconds that have passed since the start of <application>yabasic</application>.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -8455,12 +8462,11 @@ print time$()
 	    <programlisting>
 print "Hello it is ",time$
 print "An empty for-loop with ten million iterations takes ";
-s=val(mid$(time$,10))
 for a=1 to 10000000:next a
-e=val(mid$(time$,10))
-print e-s," seconds"
+print "Now it is ",time$
+print peek("secondsrunning")," seconds have passed."
           </programlisting>
-	    <para>This program benchmarks the <function>for</function>-loop and uses the fourth field of the string returned by <function>time$</function>.</para>
+	    <para>This program benchmarks the <function>for</function>-loop; however, it does not use the fourth field of the string returned by <function>time$</function>, because that string wraps around every 60 seconds; rather the <link linkend="ref_peek"><function>peek</function></link> <literal>"secondsrunning"</literal> is queried.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
