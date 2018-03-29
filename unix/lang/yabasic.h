@@ -110,7 +110,9 @@ extern char library_path[];	/* full path to search libraries */
 extern int program_state;	/* state of program */
 extern int check_compat;	/* true, if compatibility should be checked */
 extern int is_bound;		/* true, if this executable is bound */
-
+extern char *progname;		/* name of yabasic-program */
+extern char *main_file_name;	/* name of program to be executed */
+extern char *interpreter_path;	/* name of interpreter executing; i.e. ARGV[0] */
 
 /* io.c */
 extern FILE *streams[];		/* file streams */

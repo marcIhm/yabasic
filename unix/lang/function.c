@@ -1579,6 +1579,10 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
         return my_strdup (winorigin);
     } else if (!strcmp (dest, "error")) {
         return my_strdup (errorstring);
+    } else if (!strcmp (dest, "program_file_name")) {
+        return my_strdup(main_file_name);
+    } else if (!strcmp (dest, "program_name")) {
+        return my_strdup(progname);
     } else if (!strcmp (dest, "library")) {
         return my_strdup (curr->lib->s);
     } else if (!strcmp (dest, "version")) {

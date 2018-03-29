@@ -1,4 +1,4 @@
-Version 2.78.4 (March 2118, 2018)
+Version 2.78.4 (March 21, 2018)
   - Fixed a problem with bound yabasic-programs, that include more than three libraries
   - Introduced new peek "secondsrunning"
 

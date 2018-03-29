@@ -91,8 +91,8 @@ char library_default[200];	/* default full path to search libraries */
 static struct command *docuhead = NULL;	/* first docu in main */
 static int docucount = 0;	/* number of docu-lines in array */
 int check_compat = 0;		/* true, if compatibility should be checked */
-static char *interpreter_path = NULL;	/* name of interpreter executing; i.e. ARGV[0] */
-static char *main_file_name = NULL;	/* name of program to be executed */
+char *interpreter_path = NULL;	/* name of interpreter executing; i.e. ARGV[0] */
+char *main_file_name = NULL;	/* name of program to be executed */
 
 /* ------------- main program ---------------- */
 
@@ -209,7 +209,7 @@ main (int argc, char **argv)
     time (&compilation_start);
     last_inkey=my_malloc(INBUFFLEN);
     last_inkey[0]='\0';
-    error (DEBUG, "this is yabasic " VERSION);
+    error (DEBUG, "This is yabasic " VERSION);
     initialize ();
     program_state = INITIALIZED;
 
@@ -2093,7 +2093,9 @@ isbound (void)			/* check if this interpreter is bound to a program */
     int i;
     int c;
     int proglen = 0;
+    int namelen = 0;
     int bound = 1;
+    char *infolevel_text;
 
     if (!interpreter_path || !interpreter_path[0]) {
         error (FATAL, "interpreter_path is not set !");
@@ -2106,7 +2108,10 @@ isbound (void)			/* check if this interpreter is bound to a program */
         return 0;
     }
 
-    if (fseek (interpreter, 0 - strlen (YABMAGIC) - 1, SEEK_END)) {
+    /* Read fields from end of program as written in mybind() */
+
+    /* check magic cookie */
+    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC), SEEK_END)) {
         sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
                  my_strerror (errno));
         error (WARNING, string);
@@ -2123,7 +2128,57 @@ isbound (void)			/* check if this interpreter is bound to a program */
         return bound;
     }
 
-    if (fseek (interpreter, 0 - strlen (YABMAGIC) - 5 - 8 - 1, SEEK_END)) {
+    /* infolevel */
+    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2, SEEK_END)) {
+        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
+                 my_strerror (errno));
+        error (WARNING, string);
+        return 0;
+    }
+    if (!fscanf (interpreter, "%d", &infolevel)) {
+        error (WARNING, "Could not read length of name of embedded program");
+        return 0;
+    }
+    switch(infolevel) {
+    case FATAL: infolevel_text="FATAL";break;
+    case ERROR: infolevel_text="ERROR";break;
+    case INFO: infolevel_text="INFO";break;
+    case DUMP: infolevel_text="DUMP";break;
+    case WARNING: infolevel_text="WARNING";break;
+    case NOTE: infolevel_text="NOTE";break;
+    case DEBUG: infolevel_text="DEBUG";break;
+    case DEBUG+1: infolevel_text="DEBUG";yydebug=1;break;};
+    sprintf (string, "Set infolevel to %s",infolevel_text);
+    error (DEBUG, string);
+
+    /* length of name of embedded program */
+    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8, SEEK_END)) {
+        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
+                 my_strerror (errno));
+        error (WARNING, string);
+        return 0;
+    }
+    if (!fscanf (interpreter, "%d", &namelen)) {
+        error (WARNING, "Could not read length of name of embedded program");
+        return 0;
+    }
+    
+    /* name of embedded program */
+    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen, SEEK_END)) {
+        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
+                 my_strerror (errno));
+        error (WARNING, string);
+        return 0;
+    }
+    if (!fscanf (interpreter, "%ms", &progname)) {
+        error (WARNING, "Could not read name of embedded program");
+        return 0;
+    }
+    sprintf (string, "Name of embedded program is '%s'", progname);
+    error (DEBUG, string);
+
+    /* length of program */
+    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8, SEEK_END)) {
         sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
                  my_strerror (errno));
         error (WARNING, string);
@@ -2134,8 +2189,9 @@ isbound (void)			/* check if this interpreter is bound to a program */
         return 0;
     }
 
+    /* seek back to start of mbedded program */
     if (fseek
-            (interpreter, 0 - strlen (YABMAGIC) - 5 - 8 - 5 - 5 - proglen,
+            (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8 - 4 - proglen,
              SEEK_END)) {
         sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
                  my_strerror (errno));
@@ -2153,9 +2209,10 @@ isbound (void)			/* check if this interpreter is bound to a program */
                 fprintf (stderr, "     ");
             }
         }
+	fprintf (stderr, "\n");
         error (NOTE, "End of program, that will be executed");
         if (fseek
-                (interpreter, 0 - strlen (YABMAGIC) - 5 - 8 - 5 - 5 - proglen,
+                (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8 - 4 - proglen,
                  SEEK_END)) {
             sprintf (string, "Couldn't seek within '%s': %s",
                      interpreter_path, my_strerror (errno));
@@ -2261,7 +2318,11 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
         proglen++;
     }
     fprintf (fbound, "\nend\n");
+    proglen += 5;
     fprintf (fbound, "rem %08d\n", proglen);
+    fprintf (fbound, "rem %s\n", progname);
+    fprintf (fbound, "rem %08d\n", strlen(progname));
+    fprintf (fbound, "rem %02d\n", infolevel + yydebug);
     fprintf (fbound, "rem %s\n", YABMAGIC);
     fclose (fyab);
     fclose (fprog);
