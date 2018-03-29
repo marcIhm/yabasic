@@ -6394,6 +6394,20 @@ print peek$("foo")
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><function>peek$("program_name")</function></term>
+	      <listitem>
+		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this this <function>peek$</function> might return <filename>foo.yab</filename>; see also <function>peek$("program_file_name")</function> for related information.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("program_file_name")</function></term>
+	      <listitem>
+		<para>Returns the full file-name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, including any path-components. For the special case, that you have bound your <application>yabasic</application>-program with the interpreter to a single <link linkend="ref_standalone">standalone</link> executable, this <function>peek$</function> will return its name. See also <function>peek$("program_name")</function> for related information.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>peek$("error")</function></term>
 	      <listitem>
 		<para>Return a string describing the nature of the last error in an <function>open</function>- or <function>seek</function>-statement. See the corresponding <function><link linkend="ref_peek">peek("error")</link></function> for a detailed description.</para>
