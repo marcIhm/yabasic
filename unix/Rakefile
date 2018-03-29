@@ -76,6 +76,13 @@ task :tests => :make do
   end
 end
 
+desc 'Run autoconf checks'
+task :check => :tests do
+  cd 'lang' do
+    sh 'make check'
+  end
+end
+
 desc 'Collect Versions'
 task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure'] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]

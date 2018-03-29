@@ -20,3 +20,4 @@ tests/test_import
 bison.output
 stamp-h.in
 stamp-h2
+out.dat
