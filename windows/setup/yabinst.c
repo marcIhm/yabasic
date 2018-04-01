@@ -1,12 +1,13 @@
 /*
-Install-Program for yabasic
-Copyright by Marc Ihm 1996 - 2016.
 
-This file is part of yabasic and may be copied under the terms of
-MIT License which can be found in the file LICENSE.
-
-See www.yabasic.de for details.
-
+  Install-Program for yabasic
+  Copyright by Marc Ihm 1996 - 2016.
+  
+  This file is part of yabasic and may be copied under the terms of
+  MIT License which can be found in the file LICENSE.
+  
+  See www.yabasic.de for details.
+  
 */
 
 /*----------- includes -------------*/
@@ -98,8 +99,8 @@ char *currentpath;       /* current path */
 char *installpath;       /* path, where to install */
 char *librarypath;       /* path, where libraries should be installed */
 char *temppath;          /* path to store temporary files */
-char logs[10000];        /* string to compose log-message */
-char logfile[1000] = "undefined";      /* string containing pathname of logfile */
+char logs[10*SSLEN];        /* string to compose log-message */
+char logfile[SSLEN] = "undefined";      /* string containing pathname of logfile */
 int here;                /* install in current path ? */
 int install;             /* install or remove ? */
 int copied;              /* true if copy in temp-directory */
@@ -152,6 +153,9 @@ int MyMessage(HWND, LPCSTR, LPCSTR, UINT); /* wrapper for MessageBox() */
 char *reportdir(char *); /* generate a string containing filenames in directory */
 char *last_error(void); /* get last error as string */
 void center_dialog(HWND); /* center dialog on screen */
+BOOL is_elevated(); /* Check, if program is running with elevated privs */
+void log_os_info(); /* Write Windows Version to logfile */
+
 
 /*------------ main program --------------*/
 
@@ -193,7 +197,10 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 	sprintf(logs, "--Commandline='%s'\n", commandline);
 	logit(logs);
 
-	/* 'parse' commandline */
+	sprintf(logs, "--Process is elevated=%s\n", is_elevated() ? "true" : "false");
+	logit(logs);
+	
+	/* parse commandline */
 	install = TRUE;
 	copied = FALSE;
 	if (!strcmp(commandline, "remove")) {
@@ -1217,7 +1224,7 @@ int copy_file(char *name, char *dest, int here) /* copy files */
 		ret = CopyFile(name, dest, FALSE);
 	if (!ret) {
 	  sprintf(string, "Failed to copy '%s' to '%s': %s", name, dest, last_error());
-		MyMessage(NULL, string, INSTALL_HEADING, MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
+	  MyMessage(NULL, string, INSTALL_HEADING, MB_OK | MB_SYSTEMMODAL | MB_ICONINFORMATION);
 	}
 	return ret;
 }
@@ -1461,4 +1468,37 @@ char *formatsemver(SEMVER *ver, char *buf)
 {
 	sprintf(buf, "%d.%d.%d", ver->major, ver->minor, ver->patch);
 	return buf;
+}
+
+
+BOOL is_elevated()
+/* Check, if program is running with elevated privs */
+{
+  BOOL fRet = FALSE;
+    HANDLE hToken = NULL;
+    if( OpenProcessToken( GetCurrentProcess( ),TOKEN_QUERY,&hToken ) ) {
+        TOKEN_ELEVATION Elevation;
+        DWORD cbSize = sizeof( TOKEN_ELEVATION );
+        if( GetTokenInformation( hToken, TokenElevation, &Elevation, sizeof( Elevation ), &cbSize ) ) {
+            fRet = Elevation.TokenIsElevated;
+        }
+    }
+    if( hToken ) {
+        CloseHandle( hToken );
+    }
+    return fRet;
+}
+
+
+void log_os_info()
+/* Write Windows Version to logfile */
+{
+    OSVERSIONINFOEX info;
+    ZeroMemory(&info, sizeof(OSVERSIONINFOEX));
+    info.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+    GetVersionEx(&info);
+
+    sprintf(logs,"--Windows Version: %u.%u\n", info.dwMajorVersion, info.dwMinorVersion);
+    logit(logs);
 }

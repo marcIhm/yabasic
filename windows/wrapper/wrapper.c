@@ -1,13 +1,13 @@
 /*
-Simple wrapper for setup.exe of yabasic, invoked from iexpress.
-This wrapper is needed because setup.exe requires admin privileges
-but iexpress refuses to start such a program.
 
-
-This file is part of yabasic and may be copied under the terms of
-MIT License which can be found in the file LICENSE.
-
-See www.yabasic.de for details.
+  Simple wrapper for setup.exe of yabasic, invoked from iexpress.
+  This wrapper is needed because setup.exe requires admin privileges
+  but iexpress refuses to start such a program.
+  
+  This file is part of yabasic and may be copied under the terms of
+  MIT License which can be found in the file LICENSE.
+  
+  See www.yabasic.de for details.
 
 */
 
