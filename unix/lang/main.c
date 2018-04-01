@@ -49,6 +49,7 @@ void create_docu_array (void);	/* create array with documentation */
 int equal (char *, char *, int);	/* helper for processing options */
 static int mybind (char *);	/* bind a program to the interpreter and save it */
 char *find_interpreter (char *);	/* find interpreter with full path */
+static int seekback (FILE *, int);       /* seek back bytes */
 
 /* ------------- global variables ---------------- */
 
@@ -91,7 +92,7 @@ char library_default[200];	/* default full path to search libraries */
 static struct command *docuhead = NULL;	/* first docu in main */
 static int docucount = 0;	/* number of docu-lines in array */
 int check_compat = 0;		/* true, if compatibility should be checked */
-char *interpreter_path = NULL;	/* name of interpreter executing; i.e. ARGV[0] */
+char *inter_path = NULL;	/* name of interpreter executing; i.e. ARGV[0] */
 char *main_file_name = NULL;	/* name of program to be executed */
 
 /* ------------- main program ---------------- */
@@ -180,7 +181,7 @@ main (int argc, char **argv)
 #endif
 
     /* find out, if this executable is bound to a yabasic program */
-    interpreter_path = find_interpreter (argv[0]);
+    inter_path = find_interpreter (argv[0]);
     is_bound = isbound ();
 
     /* parse arguments */
@@ -250,12 +251,12 @@ main (int argc, char **argv)
     if (to_bind) {
         if (mybind (to_bind)) {
             sprintf (string, "Successfully bound '%s' and '%s' into '%s'",
-                     interpreter_path, main_file_name, to_bind);
+                     inter_path, main_file_name, to_bind);
             error (INFO, string);
             end_it ();
         } else {
             sprintf (string, "Could not bind '%s' and '%s' into '%s'",
-                     interpreter_path, main_file_name, to_bind);
+                     inter_path, main_file_name, to_bind);
             error (ERROR, string);
             end_it ();
         }
@@ -777,7 +778,7 @@ parse_arguments (int cargc, char *cargv[])
 
     if (is_bound) {
         inputfile = bound_program;
-        main_file_name = my_strdup (interpreter_path);
+        main_file_name = my_strdup (inter_path);
     } else if (!inputfile && !explicit) {
         interactive = TRUE;
         inputfile = stdin;
@@ -2089,21 +2090,23 @@ create_docu_array (void)	/* create array with documentation */
 int
 isbound (void)			/* check if this interpreter is bound to a program */
 {
-    FILE *interpreter;
+    FILE *inter;
     int i;
     int c;
     int proglen = 0;
     int namelen = 0;
     int bound = 1;
     char *infolevel_text;
+    int remlen = strlen("\nrem "); /* different under windows and unix */
+    int offset = 0;
 
-    if (!interpreter_path || !interpreter_path[0]) {
-        error (FATAL, "interpreter_path is not set !");
+    if (!inter_path || !inter_path[0]) {
+        error (FATAL, "inter_path is not set !");
         return 0;
     }
-    if (!(interpreter = fopen (interpreter_path, "r"))) {
+    if (!(inter = fopen (inter_path, "r"))) {
         sprintf (string, "Couldn't open '%s' to check, if it is bound: %s",
-                 interpreter_path, my_strerror (errno));
+                 inter_path, my_strerror (errno));
         error (WARNING, string);
         return 0;
     }
@@ -2111,34 +2114,28 @@ isbound (void)			/* check if this interpreter is bound to a program */
     /* Read fields from end of program as written in mybind() */
 
     /* check magic cookie */
-    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC), SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
-        return 0;
-    }
+    offset -= 1 + strlen (YABMAGIC);
+    if (!seekback (inter, offset)) return 0;
     for (i = 0; i < (int) strlen (YABMAGIC); i++) {
-        c = fgetc (interpreter);
+        c = fgetc (inter);
         if (c == EOF || c != (YABMAGIC)[i]) {
             bound = 0;
         }
     }
     if (!bound) {
-        fclose (interpreter);
+        fclose (inter);
         return bound;
     }
 
     /* infolevel */
-    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2, SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
+    offset -= remlen + 2;
+    if (!seekback (inter, offset)) return 0;
+    if (!fscanf (inter, "%d", &infolevel)) {
+        error (WARNING, "Could not read infolevel");
         return 0;
     }
-    if (!fscanf (interpreter, "%d", &infolevel)) {
-        error (WARNING, "Could not read length of name of embedded program");
-        return 0;
-    }
+    /* repeat just for its output side-effect */
+    if (!seekback (inter, offset)) return 0; 
     switch(infolevel) {
     case FATAL: infolevel_text="FATAL";break;
     case ERROR: infolevel_text="ERROR";break;
@@ -2148,62 +2145,47 @@ isbound (void)			/* check if this interpreter is bound to a program */
     case NOTE: infolevel_text="NOTE";break;
     case DEBUG: infolevel_text="DEBUG";break;
     case DEBUG+1: infolevel_text="DEBUG";yydebug=1;break;};
-    sprintf (string, "Set infolevel to %s",infolevel_text);
-    error (DEBUG, string);
+    sprintf (errorstring, "Set infolevel to %s", infolevel_text);
+    error (DEBUG, errorstring);
 
     /* length of name of embedded program */
-    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8, SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
-        return 0;
-    }
-    if (!fscanf (interpreter, "%d", &namelen)) {
+    offset -= remlen + 8;
+    if (!seekback (inter, offset)) return 0;
+    if (!fscanf (inter, "%d", &namelen)) {
         error (WARNING, "Could not read length of name of embedded program");
         return 0;
     }
+    sprintf (errorstring, "Length of embedded program is %d", namelen);
+    error (DEBUG, errorstring);
     
     /* name of embedded program */
-    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen, SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
-        return 0;
-    }
-    if (!fscanf (interpreter, "%ms", &progname)) {
+    offset -= remlen + namelen;
+    if (!seekback (inter, offset)) return 0;
+    progname = (char *) my_malloc (sizeof (char) * (namelen + 1));
+    if (!fgets (progname, namelen + 1, inter)) {
         error (WARNING, "Could not read name of embedded program");
         return 0;
     }
-    sprintf (string, "Name of embedded program is '%s'", progname);
-    error (DEBUG, string);
+    sprintf (errorstring, "Name of embedded program is '%s'", progname);
+    error (DEBUG, errorstring);
 
     /* length of program */
-    if (fseek (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8, SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
-        return 0;
-    }
-    if (!fscanf (interpreter, "%d", &proglen)) {
+    offset -= remlen + 8;
+    if (!seekback (inter, offset)) return 0;
+    if (!fscanf (inter, "%d", &proglen)) {
         error (WARNING, "Could not read length of embedded program");
         return 0;
     }
 
-    /* seek back to start of mbedded program */
-    if (fseek
-            (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8 - 4 - proglen,
-             SEEK_END)) {
-        sprintf (string, "Couldn't seek within '%s': %s", interpreter_path,
-                 my_strerror (errno));
-        error (WARNING, string);
-        return 0;
-    }
+    /* seek back to start of embedded program */
+    offset -= 4 + proglen; /* only the text 'rem ' without preceding newline */
+    if (!seekback (inter, offset)) return 0;
 
     if (infolevel >= NOTE) {
         error (NOTE, "Dumping the embedded program, that will be executed:");
         fprintf (stderr, "     ");
         for (i = 0; i < proglen; i++) {
-            c = fgetc (interpreter);
+            c = fgetc (inter);
             fprintf (stderr, "%c", c);
             if (c == '\n' && i < proglen - 1) {
                 fprintf (stderr, "     ");
@@ -2211,17 +2193,38 @@ isbound (void)			/* check if this interpreter is bound to a program */
         }
 	fprintf (stderr, "\n");
         error (NOTE, "End of program, that will be executed");
-        if (fseek
-                (interpreter, 0 - 1 - strlen (YABMAGIC) - 5 - 2 - 5 - 8 - 5 - namelen - 5 - 8 - 4 - proglen,
-                 SEEK_END)) {
-            sprintf (string, "Couldn't seek within '%s': %s",
-                     interpreter_path, my_strerror (errno));
-            error (WARNING, string);
-            return 0;
-        }
+	printf ("---Press RETURN to continue with its parsing and execution ");
+	fgets (string, 20, stdin);
+	if (!seekback (inter, offset)) return 0;
     }
-    bound_program = interpreter;
+    bound_program = inter;
     return 1;
+}
+
+static int
+seekback (FILE *file, int offset)           /* seek back bytes */
+{
+  if (fseek (file, offset, SEEK_END)) {
+    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
+	     my_strerror (errno));
+    error (WARNING, errorstring);
+    return FALSE;
+  }
+  if (!fgets (string, INBUFFLEN, file)) {
+    error (WARNING, "Could not read tail of embedded program");
+    return FALSE;
+  }
+  string[strlen(string) - strlen("\n")] = '\0';
+  sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
+  error (DEBUG, errorstring);
+  if (fseek (file, offset, SEEK_END)) {
+    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
+	     my_strerror (errno));
+    error (WARNING, errorstring);
+    return FALSE;
+  }
+    
+  return TRUE;
 }
 
 
@@ -2242,9 +2245,9 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
         return 0;
     }
 
-    if (!strcmp (interpreter_path, bound)) {
+    if (!strcmp (inter_path, bound)) {
         sprintf (string, "will not overwrite '%s' with '%s'", bound,
-                 interpreter_path);
+                 inter_path);
         error (ERROR, string);
         return 0;
     }
@@ -2255,9 +2258,9 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
         return 0;
     }
 
-    if (!(fyab = fopen (interpreter_path, "rb"))) {
+    if (!(fyab = fopen (inter_path, "rb"))) {
         sprintf (string, "could not open '%s' for reading: %s",
-                 interpreter_path, my_strerror (errno));
+                 inter_path, my_strerror (errno));
         error (ERROR, string);
         return 0;
     }
@@ -2278,7 +2281,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     }
 
     if (infolevel >= DEBUG) {
-        sprintf (string, "binding %s and %s into %s", interpreter_path,
+        sprintf (string, "binding %s and %s into %s", inter_path,
                  main_file_name, bound);
         error (NOTE, string);
     }

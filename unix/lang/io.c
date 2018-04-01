@@ -1287,7 +1287,7 @@ create_onestring(char *str)	/* create command 'onestring' */
 
 
 void
-onestring(char *s)		/* write string to file */
+onestring(char *s)		/* write string to current file */
 {
 #ifdef WINDOWS
     DWORD len, written;
