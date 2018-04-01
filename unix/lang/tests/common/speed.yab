@@ -4,6 +4,6 @@ for a=1 to 10000
   next b
 next a
 if (peek("secondsrunning")>2) then
-  print "Error, program took too long"
+  print "Error, program took too long" + str$(peek("secondsrunning"))
   exit 1
 endif
