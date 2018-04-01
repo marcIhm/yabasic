@@ -199,6 +199,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 
 	sprintf(logs, "--Process is elevated=%s\n", is_elevated() ? "true" : "false");
 	logit(logs);
+	log_os_info();
 	
 	/* parse commandline */
 	install = TRUE;
@@ -800,6 +801,9 @@ void end(int result) { /* display message and terminate */
 		break;
 	}
 
+	sprintf(logs, "--Final Message: %s\n", msg);
+	logit(logs);
+	
 	string2[0] = '\0';
 	if (ask_run_something) {
 		sprintf(string, "%s\n\n\nDo you want to run the demo of yabasic or read its documentation ?\n\nFor details on the installation you may also read the logfile.\n\n\nNote: These options are also available in the start-menu under 'Yabasic'", msg);
