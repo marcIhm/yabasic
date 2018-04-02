@@ -147,7 +147,7 @@ program: statement_list tEOPROG {YYACCEPT;}
 
 statement_list: statement
   | statement_list {if (errorlevel<=ERROR) {YYABORT;}} 
-  tSEP {if ($3>=0) mylineno+=$3; else switchlib();} statement
+  tSEP {if ($3>=0) mylineno+=$3;} statement
   ;
 
 statement:  /* empty */
@@ -155,7 +155,7 @@ statement:  /* empty */
   | tLET string_assignment 
   | assignment
   | tLET assignment
-  | tIMPORT {report_missing(ERROR,"can not import a library in a loop or an if-statement");switchlib();}
+  | tIMPORT {report_missing(ERROR,"can not import a library in a loop or an if-statement");}
   | tERROR string_expression {add_command(cERROR,NULL,NULL);}
   | for_loop 
   | switch_number_or_string

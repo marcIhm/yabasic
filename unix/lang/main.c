@@ -48,6 +48,8 @@ static void chop_command (char *, int *, char ***);	/* chops WIN95-commandline *
 void create_docu_array (void);	/* create array with documentation */
 int equal (char *, char *, int);	/* helper for processing options */
 static int mybind (char *);	/* bind a program to the interpreter and save it */
+void put_and_count (char *, FILE *, int *);  /* write text to file and increment len */
+
 char *find_interpreter (char *);	/* find interpreter with full path */
 static int seekback (FILE *, int);       /* seek back bytes */
 
@@ -2148,7 +2150,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
     case WARNING: infolevel_text="WARNING";break;
     case NOTE: infolevel_text="NOTE";break;
     case DEBUG: infolevel_text="DEBUG";break;
-    case DEBUG+1: infolevel_text="DEBUG";yydebug=1;break;};
+    case DEBUG+1: infolevel_text="DEBUG+BISON";yydebug=1;infolevel=DEBUG;break;};
     sprintf (errorstring, "Set infolevel to %s", infolevel_text);
     error (DEBUG, errorstring);
 
@@ -2243,7 +2245,6 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     FILE *fbound;
     FILE *flib;
     int c;
-    char *pc;
     int i;
     int proglen = 0;
 
@@ -2305,24 +2306,19 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
             return 0;
         }
         sprintf (string, "\nimport %s\n", libfile_chain[i]->s);
-        for (pc = string; *pc; pc++) {
-            fputc (*pc, fbound);
-            proglen++;
-        }
+	put_and_count(string, fbound, &proglen);
+	
+	put_and_count("\nimport __IGNORE_NESTED_IMPORTS\n", fbound, &proglen);
         while ((c = fgetc (flib)) != EOF) {
             fputc (c, fbound);
             proglen++;
         }
+	
+	put_and_count("\nimport __END_OF_CURRENT_IMPORT\n", fbound, &proglen);
     }
 
-    for (pc = "\nimport main\n"; *pc; pc++) {
-        fputc (*pc, fbound);
-        proglen++;
-    }
-    for (pc = "\nimport __END_OF_IMPORT\n"; *pc; pc++) {
-        fputc (*pc, fbound);
-        proglen++;
-    }
+    put_and_count("\nimport __END_OF_ALL_IMPORTS\n", fbound, &proglen);
+    put_and_count("\nimport main\n", fbound, &proglen);
     while ((c = fgetc (fprog)) != EOF) {
         fputc (c, fbound);
         proglen++;
@@ -2340,6 +2336,17 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
 
     return 1;
 }
+
+
+void
+put_and_count (char *text, FILE *file, int *len)  /* write text to file and increment len */
+{
+    for (; *text; text++) {
+        fputc (*text, file);
+        (*len)++;
+    }
+}
+
 
 char *
 find_interpreter (char *name)	/* find interpreter with full path */

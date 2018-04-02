@@ -3020,13 +3020,13 @@ yyreduce:
 
   case 5:
 
-    {if ((yyvsp[0].sep)>=0) mylineno+=(yyvsp[0].sep); else switchlib();}
+    {if ((yyvsp[0].sep)>=0) mylineno+=(yyvsp[0].sep);}
 
     break;
 
   case 12:
 
-    {report_missing(ERROR,"can not import a library in a loop or an if-statement");switchlib();}
+    {report_missing(ERROR,"can not import a library in a loop or an if-statement");}
 
     break;
 

@@ -24,10 +24,10 @@ int import_lib(char *); /* import library */
 #define MAX_INCLUDE_DEPTH 5
 #define MAX_INCLUDE_NUMBER 100
 static YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH]; /* stack for included libraries */
-int include_stack_ptr; /* current position in libfile_stack */
+int include_depth; /* current position in libfile_stack */
 struct libfile_name *libfile_stack[MAX_INCLUDE_DEPTH]; /* stack for library file names */
 int libfile_chain_length=0; /* length of libfile_chain */
-struct libfile_name *libfile_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names */
+struct libfile_name *libfile_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
 struct libfile_name *currlib; /* current libfile as relevant to bison */
 int inlib; /* true, while in library */
 int fi_pending=0; /* true, if within a short if */
@@ -49,14 +49,14 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
     sprintf(string,"closing file '%s'",currlib->s);
     error(DEBUG,string);
   }
-  if (--include_stack_ptr<0) {
+  if (--include_depth<0) {
     return tEOPROG;
   } else {
     if (!is_bound) {
       yy_delete_buffer(YY_CURRENT_BUFFER);
-      yy_switch_to_buffer(include_stack[include_stack_ptr]);
+      yy_switch_to_buffer(include_stack[include_depth]);
     }
-    currlib=libfile_stack[include_stack_ptr];	
+    leave_lib();
     flex_line+=yylval.sep=-1;
     return tSEP;
   }
@@ -83,7 +83,7 @@ REM\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.
 REM {yymore();}
 
 IMPORT {BEGIN(IMPORT);}
-<IMPORT>{WS}+{NAME} {if (!import_lib(yytext)) return 0;BEGIN(IMPORT_DONE);return tIMPORT;}
+<IMPORT>{WS}+{NAME} {if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);return tIMPORT;}
 <IMPORT>{WS}+. {error_with_line(WARNING,"invalid import statement; please check documentation.",flex_line);}
 <IMPORT_DONE>(.|\n) {if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);flex_line+=yylval.sep=0;return tSEP;}
 
@@ -359,15 +359,16 @@ void yyerror(char *msg)
 
 void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file */
 {
-  include_stack_ptr=0;
+  include_depth=0;
   
-  if (explicit) 
-    include_stack[include_stack_ptr]=yy_scan_string(explicit);
-  else
-    include_stack[include_stack_ptr]=yy_create_buffer(file,YY_BUF_SIZE);
-  libfile_stack[include_stack_ptr]=new_file(main_file_name,"main");
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_stack_ptr];
-  if (!explicit) yy_switch_to_buffer(include_stack[include_stack_ptr]);
+  if (explicit) {
+    include_stack[include_depth]=yy_scan_string(explicit);
+  } else {
+    include_stack[include_depth]=yy_create_buffer(file,YY_BUF_SIZE);
+  }
+  libfile_stack[include_depth]=new_file(main_file_name,"main");
+  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
+  if (!explicit) yy_switch_to_buffer(include_stack[include_depth]);
   currlib=libfile_stack[0];
   inlib=FALSE;
   
@@ -383,24 +384,45 @@ void open_string(char *cmd) /* open string with commands */
 int import_lib(char *name) /* import library */
 {
   char *full;
-  static int end_of_import=FALSE;
+  static int end_of_all_imports=FALSE;
+  static int ignore_nested_imports=FALSE;
 
   if (!*name) name=pop(stSTRING)->pointer;
   while(isspace(*name)) name++;
 
-  if (!strcmp(name,"__END_OF_IMPORT")) end_of_import=TRUE;
-  if (end_of_import) return TRUE;
+  /* This can only occur in bound programs; void all further import-statements */
+  if (!strcmp(name,"__END_OF_ALL_IMPORTS")) {
+    error(DEBUG,"Encountered special import __END_OF_ALL_IMPORTS");
+    end_of_all_imports=TRUE;
+  }
+
+  if (end_of_all_imports) return TRUE;
+
+  /* This can only occur in bound programs, close currently imported library */
+  if (!strcmp(name,"__END_OF_CURRENT_IMPORT")) {
+    error(DEBUG,"Encountered special import __END_OF_CURRENT_IMPORT");
+    include_depth--;
+    leave_lib();
+    ignore_nested_imports=FALSE; 
+    return TRUE;
+  }
+
+  /* This can only occur in bound programs, ignore nested import-statement */
+  if (!strcmp(name,"__IGNORE_NESTED_IMPORTS")) {
+    error(DEBUG,"Encountered special import __IGNORE_NESTED_IMPORTS");
+    ignore_nested_imports=TRUE; 
+  }
+
+  if (ignore_nested_imports) return TRUE;
 
   /* start line numbers anew */
-  libfile_stack[include_stack_ptr]->lineno=mylineno;
+  libfile_stack[include_depth]->lineno=mylineno;
  
-  if (!is_bound) {
-    include_stack_ptr++;
-    if (include_stack_ptr>=MAX_INCLUDE_DEPTH) {
-      sprintf(string,"Could not import '%s': nested too deep (%d)",name,include_stack_ptr);
-      error(ERROR,string);
-      return FALSE;
-    }
+  include_depth++;
+  if (include_depth>=MAX_INCLUDE_DEPTH) {
+    sprintf(string,"Could not import '%s': nested too deep (%d)",name,include_depth);
+    error(ERROR,string);
+    return FALSE;
   }
 
   if (is_bound) {
@@ -409,25 +431,30 @@ int import_lib(char *name) /* import library */
     yyin=open_library(name,&full,FALSE);
     if (!yyin) return FALSE;
     yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
-    include_stack[include_stack_ptr]=YY_CURRENT_BUFFER;
+    include_stack[include_depth]=YY_CURRENT_BUFFER;
   }
-  libfile_stack[include_stack_ptr]=new_file(full,NULL);
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_stack_ptr];
+  libfile_stack[include_depth]=new_file(full,NULL);
+  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
   if (libfile_chain_length>=MAX_INCLUDE_NUMBER) {
     sprintf(string,"Cannot import more than %d libraries",MAX_INCLUDE_NUMBER);
     error(ERROR,string);
     return FALSE;
   }
-  if (!libfile_stack[include_stack_ptr]) {
+  if (!libfile_stack[include_depth]) {
     sprintf(string,"library '%s' has already been imported",full);
     error(ERROR,string);
     return FALSE;
   } 
 
-  if (infolevel>=NOTE && !is_bound) {
-    sprintf(string,"importing from file '%s'",full);
+  if (infolevel>=NOTE) {
+    if (isbound) {      
+      sprintf(string,"importing library '%s'",name);
+    } else {
+      sprintf(string,"importing from file '%s'",full);
+    }
     error(NOTE,string);
   }
+  currlib=libfile_stack[include_depth]; /* switch late because error() uses currlib */
   return TRUE;
 }
 
@@ -495,16 +522,16 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
 }
 
 
-void switchlib(void) /* switch library, called by bison */
+void leave_lib(void) /* processing, when end of library is found */
 {
-  if (include_stack_ptr<0) return;
+  if (include_depth<0) return;
   if (infolevel>=DEBUG) {
-    sprintf(string,"switching from '%s' to '%s'",currlib->s,libfile_stack[include_stack_ptr]->s);
+    sprintf(string,"End of library '%s', continue with '%s'",currlib->s,libfile_stack[include_depth]->s);
     error(DEBUG,string);
   }
-  currlib=libfile_stack[include_stack_ptr];
+  currlib=libfile_stack[include_depth];
   mylineno=currlib->lineno;
-  inlib=(include_stack_ptr>0);
+  inlib=(include_depth>0);
 }
 
 

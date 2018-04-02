@@ -1,0 +1,3 @@
+sub qux$()
+  return "qux"
+end sub

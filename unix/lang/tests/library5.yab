@@ -1,1 +1,5 @@
 import library6
+
+sub foo$()
+  return "foo"
+end sub

@@ -680,4 +680,4 @@ void yyerror (char *);		/* yyerror message */
 void open_main (FILE *, char *, char *);	/* switch to file */
 void open_string (char *);	/* open string with commands */
 FILE *open_library (char *, char **, int);	/* search and open a library */
-void switchlib (void);		/* switch library, called by bison */
+void leave_lib (void);	      /* processing, when end of library is found; called by bison */

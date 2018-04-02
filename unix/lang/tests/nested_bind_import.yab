@@ -1,6 +1,9 @@
 import library5
+import library7
 
-print library6.foo$()
+print library5.foo$()
+print library6.bar$()
+print library7.qux$()
 if (peek("isbound")) then
   exit 0
 else
