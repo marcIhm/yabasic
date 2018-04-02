@@ -2186,14 +2186,14 @@ isbound (void)			/* check if this interpreter is bound to a program */
         fprintf (stderr, "     ");
         for (i = 0; i < proglen; i++) {
             c = fgetc (inter);
-            fprintf (stderr, "%c", c);
+            if (isprint(c) || c == '\r' || c== '\n') fprintf (stderr, "%c", c);
             if (c == '\n' && i < proglen - 1) {
                 fprintf (stderr, "     ");
             }
         }
 	fprintf (stderr, "\n");
         error (NOTE, "End of program, that will be executed");
-	printf ("---Press RETURN to continue with its parsing and execution ");
+	printf ("---Press RETURN to continue with its parsing and execution: ");
 	fgets (string, 20, stdin);
 	if (!seekback (inter, offset)) return 0;
     }
@@ -2211,7 +2211,7 @@ seekback (FILE *file, int offset)           /* seek back bytes */
     return FALSE;
   }
   if (!fgets (string, INBUFFLEN, file)) {
-    error (WARNING, "Could not read tail of embedded program");
+    error (WARNING, "Could not read from end of embedded program");
     return FALSE;
   }
   string[strlen(string) - strlen("\n")] = '\0';
