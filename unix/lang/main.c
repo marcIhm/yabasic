@@ -264,6 +264,10 @@ main (int argc, char **argv)
 
     if (errorlevel > ERROR && !check_compat) {
         program_state = RUNNING;
+	if (infolevel >= DEBUG) {
+	    printf ("---Program parsed, press RETURN to continue with its execution: ");
+	    fgets (string, 2, stdin);
+        }
         run_it ();
     } else {
         program_state = FINISHED;
@@ -1317,7 +1321,7 @@ run_it ()
                 l++;
                 if (hold_docu && !(l % 24)) {
                     printf ("---Press RETURN to continue ");
-                    fgets (string, 20, stdin);
+                    fgets (string, 2, stdin);
                 }
             } else {
                 if (infolevel >= DEBUG) {
@@ -1331,7 +1335,7 @@ run_it ()
         }
         if (hold_docu) {
             printf ("---End of embbedded documentation, press RETURN ");
-            fgets (string, 20, stdin);
+            fgets (string, 2, stdin);
         }
     } else {
         while (current != cmdhead && endreason == erNONE) {
@@ -2155,7 +2159,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (WARNING, "Could not read length of name of embedded program");
         return 0;
     }
-    sprintf (errorstring, "Length of embedded program is %d", namelen);
+    sprintf (errorstring, "Length of name of embedded program is %d", namelen);
     error (DEBUG, errorstring);
     
     /* name of embedded program */
@@ -2176,9 +2180,11 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (WARNING, "Could not read length of embedded program");
         return 0;
     }
+    sprintf (errorstring, "Length of embedded program is %d", proglen);
+    error (DEBUG, errorstring);
 
     /* seek back to start of embedded program */
-    offset -= 4 + proglen; /* only the text 'rem ' without preceding newline */
+    offset -= 4 + proglen; /* only the text 'rem ' without preceding linefeed */
     if (!seekback (inter, offset)) return 0;
 
     if (infolevel >= NOTE) {
@@ -2193,13 +2199,14 @@ isbound (void)			/* check if this interpreter is bound to a program */
         }
 	fprintf (stderr, "\n");
         error (NOTE, "End of program, that will be executed");
-	printf ("---Press RETURN to continue with its parsing and execution: ");
-	fgets (string, 20, stdin);
+	printf ("---Press RETURN to continue with its parsing: ");
+	fgets (string, 2, stdin);
 	if (!seekback (inter, offset)) return 0;
     }
     bound_program = inter;
     return 1;
 }
+
 
 static int
 seekback (FILE *file, int offset)           /* seek back bytes */
@@ -2241,7 +2248,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     int proglen = 0;
 
     if (interactive) {
-        error (ERROR, "cannot bind a program when called interactive");
+        error (ERROR, "cannot bind a program when called interactively");
         return 0;
     }
 
