@@ -7,6 +7,6 @@ if (peek("isbound")) then
   exit 0
 else
   bind "bind_import"
-  system("chmod 755 test_import")
+  system("chmod 755 bind_import")
   exit system("./bind_import")/256
 endif  
