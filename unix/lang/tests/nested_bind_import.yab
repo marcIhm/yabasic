@@ -1,0 +1,10 @@
+import library5
+
+print library6.foo$()
+if (peek("isbound")) then
+  exit 0
+else
+  bind "nested_bind_import"
+  system("chmod 755 nested_bind_import")
+  exit system("./nested_bind_import")/256
+endif  
