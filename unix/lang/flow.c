@@ -205,6 +205,7 @@ create_subr_link (char *label)	/* create link to subroutine */
     struct command *cmd;
 
     if (!inlib) {
+	error(DEBUG, "not in library, will not create link to subroutine");
         return;
     }
     dot = strchr (label, '.');

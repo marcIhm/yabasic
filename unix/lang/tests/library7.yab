@@ -1,3 +1,7 @@
 sub qux$()
   return "qux"
 end sub
+
+export sub thud$()
+  return "thud"
+end sub

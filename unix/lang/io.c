@@ -135,7 +135,7 @@ print(struct command *cmd)	/* print on screen */
     case 'n':			/* print newline */
         if (curinized && coutstr == stdout) {
 #ifdef WINDOWS
-            onestring("\r\n");
+            onestring ("\r\n");
             break;
 #else
             getyx (stdscr, y, x);
@@ -1287,7 +1287,7 @@ create_onestring(char *str)	/* create command 'onestring' */
 
 
 void
-onestring(char *s)		/* write string to current file */
+onestring (char *s)		/* write string to current file */
 {
 #ifdef WINDOWS
     DWORD len, written;

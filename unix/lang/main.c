@@ -1895,7 +1895,7 @@ new_file (char *l, char *s)  	/* create a new structure for library names */
     if (s) {
         new->s = my_strdup (s);
     } else {
-        /* no short name supplied get piece from l */
+        /* no short name supplied; get piece from l */
         end = strlen (l);
         for (start = end; start > 0; start--) {
             if (l[start - 1] == '\\' || l[start - 1] == '/') {

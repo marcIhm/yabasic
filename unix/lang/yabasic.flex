@@ -419,6 +419,7 @@ int import_lib(char *name) /* import library */
   libfile_stack[include_depth]->lineno=mylineno;
  
   include_depth++;
+  inlib=TRUE;
   if (include_depth>=MAX_INCLUDE_DEPTH) {
     sprintf(string,"Could not import '%s': nested too deep (%d)",name,include_depth);
     error(ERROR,string);
@@ -526,7 +527,7 @@ void leave_lib(void) /* processing, when end of library is found */
 {
   if (include_depth<0) return;
   if (infolevel>=DEBUG) {
-    sprintf(string,"End of library '%s', continue with '%s'",currlib->s,libfile_stack[include_depth]->s);
+    sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->s,libfile_stack[include_depth]->s,include_depth);
     error(DEBUG,string);
   }
   currlib=libfile_stack[include_depth];

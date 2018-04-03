@@ -4,6 +4,7 @@ import library7
 print library5.foo$()
 print library6.bar$()
 print library7.qux$()
+print thud$()
 if (peek("isbound")) then
   exit 0
 else
