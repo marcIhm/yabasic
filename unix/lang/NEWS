@@ -1,3 +1,4 @@
-Version 2.78.5 (March 29, 2018)
+Version 2.78.5 (April 3, 2018)
   - Within a bound yabasic-programs the name is correctly set (as returned by peeking "program_name")
   - Introduced new string-peeks "program_name" and "program_file_name"
+  - Bugfixes regarding bound programs and libraries
