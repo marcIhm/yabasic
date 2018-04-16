@@ -22,9 +22,10 @@
 
 #define DONE {current=current->next;break;}	/* reduces type-work */
 #define COPYRIGHT "Copyright 1995-2018 by Marc Ihm, according to the MIT License"
+/* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\ncompiled on "\
-ARCHITECTURE " at " __TIMESTAMP__ "\n\n   " COPYRIGHT "\n\n"
+ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
 #define BANNER_VERSION \
 "yabasic " VERSION ", built on " ARCHITECTURE
 #define YABFORHELP "(type 'yabasic --help' for help)"
@@ -212,7 +213,7 @@ main (int argc, char **argv)
     time (&compilation_start);
     last_inkey=my_malloc(INBUFFLEN);
     last_inkey[0]='\0';
-    error (DEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE " at " __TIMESTAMP__ ", configured at " BUILD_TIME);
+    error (DEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE ", configured at " BUILD_TIME);
     initialize ();
     program_state = INITIALIZED;
 
