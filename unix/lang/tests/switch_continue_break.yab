@@ -1,3 +1,5 @@
+#!./yabasic
+
 for r=1 to 2
   i=0
   do

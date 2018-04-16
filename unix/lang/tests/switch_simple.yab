@@ -1,4 +1,4 @@
-
+#!./yabasic
 
 switch 1
   case 1:x=1:poke "__assert_stack_size",1:break

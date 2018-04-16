@@ -533,7 +533,7 @@ LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
 AUTOMAKE_OPTIONS = check-news subdir-objects
-TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab
+TESTS = tests/bind_import.yab tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab tests/switch_continue_break.yab tests/switch_for.yab tests/switch_gosub.yab tests/switch_goto.yab tests/switch_return.yab tests/switch_simple.yab tests/switch_subr.yab tests/switch.yab
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
@@ -939,6 +939,13 @@ recheck: all
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
+tests/bind_import.yab.log: tests/bind_import.yab
+	@p='tests/bind_import.yab'; \
+	b='tests/bind_import.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 tests/break.yab.log: tests/break.yab
 	@p='tests/break.yab'; \
 	b='tests/break.yab'; \
@@ -977,6 +984,62 @@ tests/long_variable_name.yab.log: tests/long_variable_name.yab
 tests/simple.yab.log: tests/simple.yab
 	@p='tests/simple.yab'; \
 	b='tests/simple.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_continue_break.yab.log: tests/switch_continue_break.yab
+	@p='tests/switch_continue_break.yab'; \
+	b='tests/switch_continue_break.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_for.yab.log: tests/switch_for.yab
+	@p='tests/switch_for.yab'; \
+	b='tests/switch_for.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_gosub.yab.log: tests/switch_gosub.yab
+	@p='tests/switch_gosub.yab'; \
+	b='tests/switch_gosub.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_goto.yab.log: tests/switch_goto.yab
+	@p='tests/switch_goto.yab'; \
+	b='tests/switch_goto.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_return.yab.log: tests/switch_return.yab
+	@p='tests/switch_return.yab'; \
+	b='tests/switch_return.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_simple.yab.log: tests/switch_simple.yab
+	@p='tests/switch_simple.yab'; \
+	b='tests/switch_simple.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch_subr.yab.log: tests/switch_subr.yab
+	@p='tests/switch_subr.yab'; \
+	b='tests/switch_subr.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/switch.yab.log: tests/switch.yab
+	@p='tests/switch.yab'; \
+	b='tests/switch.yab'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

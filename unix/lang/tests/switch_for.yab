@@ -1,9 +1,12 @@
+#!./yabasic
 
-for i=1 to 2
-  switch 3
-    case 3:break
-  end switch
-next i
+for n=1 to 2
+  for i=1 to 2
+    switch 3
+      case 3:break
+    end switch
+  next i
+next n
 
 poke "__assert_stack_size",0
 
