@@ -1680,10 +1680,9 @@ long long current_millis() {  /* return current number of milliseconds */
 #ifdef WINDOWS
     return GetTickCount();
 #else
-    timespec tsnow;
+    struct timespec tsnow;
     clock_gettime(CLOCK_MONOTONIC, &tsnow);
-    gettimeofday(&te, NULL); // get current time
-    return tsnow.tv_sec*1000LL + te.tv_usec/1000;
+    return tsnow.tv_sec*1000LL + tsnow.tv_nsec/1000000LL;
 #endif
 }
 

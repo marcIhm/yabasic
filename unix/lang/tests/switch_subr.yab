@@ -2,7 +2,7 @@
 
 sub test_switch(num)
   switch num
-    case 0:return 0:break
+    case 0:poke "__assert_stack_size",2:return 0:break
     case 1:return 1:break
     case 2:case 3:case 4:return 2:break
     case 5:return 5:break

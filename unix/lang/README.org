@@ -2,3 +2,6 @@
 Some hints: 
 
 - To advance the Version of yabasic, edit configure.ac and NEWS
+- Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
+
+  

@@ -371,7 +371,7 @@ push ()
 
 struct stackentry *
 pop (int etype)
-/* pops element to memory and looks for pop-error */
+/* pops element from stack and its type */
 {
     static char expected[50];
     static char found[50];
@@ -389,7 +389,7 @@ pop (int etype)
                 && (ftype == stSTRINGARRAYREF || ftype == stNUMBERARRAYREF))
 	|| (etype == stSTRING && ftype == stSWITCH_STRING)
 	|| (etype == stNUMBER && ftype == stSWITCH_NUMBER)) {
-        return stackhead;    /* this is your value; use it quickly ! */
+        return stackhead;    /* this is your element; use it quickly ! It will be overwritten on next push */
     }
 
     /* expected and found don't match */

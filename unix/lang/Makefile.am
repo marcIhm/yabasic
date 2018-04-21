@@ -19,7 +19,7 @@ flex: yabasic.flex Makefile
 #	perl -i -n -e 'if (!/^\#include\s+<unistd.h>\s+$$/) {print if $$i;$$i++}' flex.c
 
 # flags for bison (-t -v for debugging)
-bisonflags = -d -l -t -v
+bisonflags = -d -l
 
 bison: yabasic.bison Makefile
 	bison $(bisonflags) --output-file bison.c yabasic.bison

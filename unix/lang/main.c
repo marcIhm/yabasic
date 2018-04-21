@@ -90,6 +90,7 @@ static int exitcode = 0;
 static int signal_arrived = 0;
 /* timing */
 time_t compilation_start, compilation_end, execution_end;
+long long int millis_compilation_start;
 char library_path[200];		/* full path to search libraries */
 char library_default[200];	/* default full path to search libraries */
 static struct command *docuhead = NULL;	/* first docu in main */
@@ -211,6 +212,7 @@ main (int argc, char **argv)
 #endif
 
     time (&compilation_start);
+    millis_compilation_start = current_millis();
     last_inkey=my_malloc(INBUFFLEN);
     last_inkey[0]='\0';
     error (DEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE ", configured at " BUILD_TIME);
@@ -441,6 +443,7 @@ add_command (int type, char *symname, char *diag)
     new->nextref = NULL;
     new->nextassoc = NULL;
     new->symname = NULL;
+    new->switch_state = NULL;
 
     cmdhead->next = new;
     lastcmd = cmdhead;

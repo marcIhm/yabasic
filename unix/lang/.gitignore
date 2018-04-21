@@ -22,3 +22,5 @@ bison.output
 stamp-h.in
 stamp-h2
 out.dat
+Makefile.in
+config.status

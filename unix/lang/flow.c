@@ -121,6 +121,7 @@ reorder_stack_after_call (int keep_topmost) /* reorganize stack after function c
 	} else {
 	    kept->value = kept_value;
 	}
+	kept->type = kept_type;
 	swap (); /* move return address to top */
     }
 }
@@ -484,9 +485,13 @@ jump (struct command *cmd)
             reorder_stack_before_call (ret);
         }
     }
-
+    
+    
     if (type == cQGOSUB || type == cQGOTO || type == cQCALL) {
         current = (struct command *) cmd->jump;	/* use remembered address */
+	if (type == cQGOTO && cmd->switch_state && cmd->switch_state->pop_on_qgoto) { /* jump out of switch-statment ? */
+	    pop(stANY);
+	}
         return;
     }
     label = search_label (cmd->pointer, srmSUBR | srmLINK | srmLABEL);
@@ -503,7 +508,10 @@ jump (struct command *cmd)
         switch (cmd->type) {
         case cGOTO:
             cmd->type = cQGOTO;
-	    check_leave_switch (cmd, label);
+	    cmd->switch_state->pop_on_qgoto = check_leave_switch (cmd, label);
+	    if (cmd->switch_state->pop_on_qgoto) {
+		pop(stANY);
+	    }
             break;
         case cGOSUB:
             cmd->type = cQGOSUB;
@@ -578,14 +586,14 @@ jump (struct command *cmd)
 
  */
 
-void
+int
 check_leave_switch (struct command *from, struct command *to)   /* check, if goto or continue enters or leaves a switch_statement */
 {
     if (from->switch_state->id == to->switch_state->id) {
-	/* okay, move within a single switch statement or jump and land outside of switch statement */
+	/* okay: move within a single switch statement or jump and land outside of any switch statement */
     } else if (from->switch_state->nesting == 1 && to->switch_state->nesting == 0) {
-	/* okay, move out of single switch statement */
-	pop(stANY);
+	/* okay: move out of single switch statement */
+	return 1;
     } else if (from->switch_state->id == 0 && to->switch_state->id != 0) {
 	error (ERROR, "GOTO into a switch-statement");
     } else if (from->switch_state->nesting != 0 && to->switch_state->nesting == 0) {
@@ -593,6 +601,7 @@ check_leave_switch (struct command *from, struct command *to)   /* check, if got
     } else {
 	error (ERROR, "GOTO between switch-statements");
     }
+    return 0;
 }
 
 
