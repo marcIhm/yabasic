@@ -103,6 +103,7 @@ extern char *explanation[];	/* explanations of commands */
 extern char **yabargv;		/* arguments for yabasic */
 extern int yabargc;		/* number of arguments in yabargv */
 extern time_t compilation_start, compilation_end, execution_end;
+extern long long int millis_compilation_start;
 extern char *string;		/* for trash-strings */
 extern char *errorstring;	/* for error-strings */
 extern int errorcode;		/* error-codes */
@@ -439,8 +440,9 @@ struct command {
 };
 
 struct switch_state {    /* records surrounding of a statement; used to check gotos into, out-of, within and between switch-statements (i.e. to err on most)  */
-    int id;         /* unique id for each switch-statment */
-    int nesting;    /* number of nested switch-statements */
+    int id;           /* unique id for each switch-statment */
+    int nesting;      /* number of nested switch-statements */
+    int pop_on_qgoto; /* number of stack entries to pop on quick goto */
 };
     
 struct array {
@@ -495,7 +497,6 @@ void compile (void);		/* create a subroutine at runtime */
 void create_execute (int);	/* create command 'cEXECUTE' */
 void execute (struct command *);	/* execute a subroutine */
 int isbound (void);		/* check if this interpreter is bound to a program */
-
 
 /* io.c */
 void checkopen (void);		/* check, if open has been sucessfull */
@@ -584,6 +585,7 @@ void mybell ();			/* ring ascii bell */
 void getmousexybm (char *, int *, int *, int *, int *);	/* get mouse coordinates */
 void token (struct command *);	/* extract token from variable */
 void tokenalt (struct command *);	/* extract token from variable with alternate semantics */
+long long current_millis(void); /* return current number of milliseconds */
 
 
 /* symbol.c */
@@ -668,7 +670,7 @@ void create_mybreak(int); /* create command mybreak */
 void mybreak (struct command *);	/* find break_here statement */
 void mycontinue (struct command *cmd);	/* find continue_here statement */
 void next_case (struct command *);		/* go to next case in switch statement */
-void check_leave_switch (struct command *, struct command *);    /* check, if goto or continue enters or leaves a switch_statement */
+int check_leave_switch (struct command *, struct command *);    /* check, if goto or continue enters or leaves a switch_statement */
 void pop_switch_value (struct command *); /* remove switch state from stack, keeping return value */
 void initialize_switch_id_stack(void); /* initialize stack of switch_ids */
 void push_switch_id (void);		  /* generate a new switch id on top of stack */

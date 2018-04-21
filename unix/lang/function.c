@@ -1526,6 +1526,8 @@ peek (char *dest)		/* peek into internals */
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
 	return now-compilation_start;
+    } else if (!strcmp (dest, "millisrunning")) {
+	return current_millis() - millis_compilation_start;
     } else if (dest[0] == '#') {
         error (ERROR, "don't use quotes when peeking into a file");
         return 0;
@@ -1671,6 +1673,18 @@ exception (struct command *cmd)	/* change handling of exceptions */
 #endif
     }
     return;
+}
+
+
+long long current_millis() {  /* return current number of milliseconds */
+#ifdef WINDOWS
+    return GetTickCount();
+#else
+    timespec tsnow;
+    clock_gettime(CLOCK_MONOTONIC, &tsnow);
+    gettimeofday(&te, NULL); // get current time
+    return tsnow.tv_sec*1000LL + te.tv_usec/1000;
+#endif
 }
 
 
