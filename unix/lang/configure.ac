@@ -20,7 +20,6 @@ dnl --- check for X-Window system ---
 AC_PATH_XTRA
 AS_IF([test "X$no_x" = "Xyes"],[AC_MSG_WARN([Could not find X11 header files; please install libx11-devel or similar.])])
 
-
 dnl --- check for required headers ---
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([fcntl.h limits.h stddef.h stdlib.h stdio.h float.h\

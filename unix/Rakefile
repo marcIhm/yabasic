@@ -64,7 +64,12 @@ end
 
 desc 'Run make'
 task :make => 'lang/yabasic.1' do
-  cd ('lang') { sh 'make' }
+  cd ('lang') do
+    sh 'make bison'
+    sh 'make flex'
+    sh 'make clean'
+    sh 'make'
+  end
 end
 
 desc 'Run tests'

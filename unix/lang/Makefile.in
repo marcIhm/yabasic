@@ -540,7 +540,7 @@ flexflags = -i -I -L -s
 #	perl -i -n -e 'if (!/^\#include\s+<unistd.h>\s+$$/) {print if $$i;$$i++}' flex.c
 
 # flags for bison (-t -v for debugging)
-bisonflags = -d -l
+bisonflags = -d -l -t -v
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 

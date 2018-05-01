@@ -13446,7 +13446,6 @@ if test "X$no_x" = "Xyes"; then :
 $as_echo "$as_me: WARNING: Could not find X11 header files; please install libx11-devel or similar." >&2;}
 fi
 
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sys/wait.h that is POSIX.1 compatible" >&5
 $as_echo_n "checking for sys/wait.h that is POSIX.1 compatible... " >&6; }
 if ${ac_cv_header_sys_wait_h+:} false; then :
