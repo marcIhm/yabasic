@@ -1,3 +1,7 @@
+Version 2.79.2 (May 13, 2018)
+  - No changes over 2.79.1
+  - Advanced patchlevel to get in line with tagging again
+
 Version 2.79.1 (May 1, 2018)
   - Fixed error related with yydebug
 

@@ -1,7 +1,7 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
 
-AC_INIT([yabasic], [2.79.1])
+AC_INIT([yabasic], [2.79.2])
 AC_CONFIG_SRCDIR([main.c])
 #AC_CONFIG_LINKS
 AM_INIT_AUTOMAKE
