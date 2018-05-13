@@ -1,7 +1,7 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
 
-AC_INIT([yabasic], [2.79.0])
+AC_INIT([yabasic], [2.79.1])
 AC_CONFIG_SRCDIR([main.c])
 #AC_CONFIG_LINKS
 AM_INIT_AUTOMAKE
@@ -52,7 +52,6 @@ dnl --- check for curses.h
 AC_CHECK_HEADER(ncurses.h,AC_DEFINE(HAVE_NCURSES_HEADER,1,[defined, if ncurses.h is present]))
 AC_CHECK_HEADER(curses.h,AC_DEFINE(HAVE_CURSES_HEADER,1,[defined, if ncurses.h is present]))
 AS_IF([test "X$ac_cv_header_curses_h" = "Xno" && test "X$ac_cv_header_curses_h" = "Xno"],[AC_MSG_WARN([Could not find curses or ncurses header files; please install ncurses-devel.])])
-
 
 dnl --- check if curses library is available ---
 AC_CHECK_LIB(ncurses,initscr)

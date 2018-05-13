@@ -1,3 +1,6 @@
+Version 2.79.1 (May 1, 2018)
+  - Fixed error related with yydebug
+
 Version 2.79.0 (April 21, 2018)
   - Introduced new peeks "secondsrunning" and "millisrunning"
   - Bugfixes regarding the switch statement
