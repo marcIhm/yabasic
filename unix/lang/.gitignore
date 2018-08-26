@@ -8,8 +8,6 @@ stamp-h1
 yabasic
 *.tar.gz
 yabasic.xml
-yabasic.1
-yabasic.htm
 *.rpm
 *.deb
 Makefile
@@ -24,3 +22,4 @@ stamp-h2
 out.dat
 Makefile.in
 config.status
+pkg
