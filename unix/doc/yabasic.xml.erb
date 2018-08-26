@@ -472,6 +472,20 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_ceil">ceil()</link></term>
+	  <listitem>
+	    return the smallest integral number, that is greater or equal than its argument
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_floor">floor()</link></term>
+	  <listitem>
+	    return the largest integral number, that is smaller or equal than its argument
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_log">log()</link></term>
 	  <listitem>
 	    compute the natural logarithm
@@ -493,7 +507,7 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_mod">mod()</link></term>
+	  <term><link linkend="ref_mod">mod</link></term>
 	  <listitem>
 	    compute the remainder of a division
 	  </listitem>
@@ -2309,6 +2323,39 @@ end switch
 	</refsect1>
       </refentry>
 
+      <refentry id="ref_ceil">
+	<refmeta>
+	  <refentrytitle>ceil()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>ceil()</refname>
+	  <refpurpose>compute the ceiling for its (float) argument.</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print ceil(x)
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>ceil</function>-function returns the smallest integer number, that is larger or equal than its argument.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print ceil(1.5),floor(1.5)
+print ceil(2),floor(2)
+          </programlisting>
+	    <para>Comparing functions <function>ceil</function> and <function>floor</function>, gives a first line of output (<computeroutput>1 2</computeroutput>), showing that <function>ceil</function> is less or equal than <function>floor</function>; but as the second line of output (<computeroutput>2 2</computeroutput>) shows, that the two functions give equal results for integer arguments.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	</refsect1>
+      </refentry>
+
       <refentry id="ref_chr">
 	<refmeta>
 	  <refentrytitle>chr$()</refentrytitle>
@@ -3960,6 +4007,39 @@ clear fill rectangle 10,10,90,90
 	</refsect1>
       </refentry>
 
+      <refentry id="ref_floor">
+	<refmeta>
+	  <refentrytitle>floor()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>floor()</refname>
+	  <refpurpose>compute the floor for its (float) argument.</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print floor(x)
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>floor</function>-function returns the largest integer number, that is smaller or equal than its argument. For positive numbers <literal>x</literal>, <literal>floor(x)</literal> is the same as <function>int(x)</function>; for negaive numbers it can be different (see the example below).</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print int(-1.5),floor(-1.5)
+print int(1.5),floor(1.5)
+          </programlisting>
+	    <para>This example compares the functions <function>int</function> and <function>floor</function>, starting with <computeroutput>-1 -2</computeroutput> and ending with <computeroutput>1 1</computeroutput> which shows the different behaviour of both functions.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	</refsect1>
+      </refentry>
+
       <refentry id="ref_for">
 	<refmeta>
 	  <refentrytitle>for</refentrytitle>
@@ -5275,10 +5355,10 @@ next a
 
       <refentry id="ref_mod">
 	<refmeta>
-	  <refentrytitle>mod()</refentrytitle>
+	  <refentrytitle>mod</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>mod()</refname>
+	  <refname>mod</refname>
 	  <refpurpose>compute the remainder of a division</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
@@ -5303,7 +5383,7 @@ for a=1 to 100
   print at(22,10) mid$(p$,1+mod(a,4))
 next a
           </programlisting>
-	    <para>This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (that's where the <function>mod()</function>-function comes into play).</para>
+	    <para>This example executes some time consuming action within a loop (in fact, it simply sleeps) and gives the user some indication of progress by displaying a turning bar (that's where the <function>mod</function>-function comes into play).</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
