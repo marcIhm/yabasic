@@ -60,9 +60,11 @@ AC_CHECK_LIB(curses,initscr)
 dnl --- check for specific functions within ncurses
 AC_CHECK_FUNCS(getnstr)
 
-dnl --- check for specific functions ---
+dnl --- check for timing functions and libraries ---
 AC_CHECK_FUNCS(setitimer)
 AC_CHECK_FUNCS(difftime)
+AC_CHECK_LIB([clock_gettime],[rt posix4])
+AC_CHECK_FUNCS([clock_gettime])
 
 dnl --- check for <alloca.h>
 AC_FUNC_ALLOCA
