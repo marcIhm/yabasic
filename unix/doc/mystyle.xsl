@@ -4,7 +4,7 @@
                 xmlns="http://www.w3.org/TR/xhtml1/transitional"
                 exclude-result-prefixes="#default">
 
-  <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets-1.78.1/xhtml/docbook.xsl"/>
+  <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets-1.79.2/xhtml/docbook.xsl"/>
   
   <xsl:variable name="toc.section.depth">4</xsl:variable>
   <xsl:variable name="toc.max.depth">5</xsl:variable>
