@@ -282,10 +282,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/x86_64-redhat-linux/6.3.1 /usr/lib64 /lib64 /usr/lib /lib "
+sys_lib_search_path_spec="/usr/lib/gcc/x86_64-redhat-linux/8 /usr/lib64 /lib64 /usr/lib /lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib /usr/lib64/bind99 /usr/lib64/iscsi "
+sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib /usr/lib64//bind9-export/ /usr/lib64/iscsi "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""

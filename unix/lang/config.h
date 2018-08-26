@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Sun May 13 13:40:51 UTC 2018"
+#define BUILD_TIME "Sun Aug 26 02:06:33 UTC 2018"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -18,6 +18,9 @@
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
 #define HAVE_ALLOCA_H 1
+
+/* Define to 1 if you have the `clock_gettime' function. */
+#define HAVE_CLOCK_GETTIME 1
 
 /* Define to 1 if you have the <ctype.h> header file. */
 #define HAVE_CTYPE_H 1
@@ -51,6 +54,9 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the `clock_gettime' library (-lclock_gettime). */
+/* #undef HAVE_LIBCLOCK_GETTIME */
 
 /* Define to 1 if you have the `curses' library (-lcurses). */
 #define HAVE_LIBCURSES 1

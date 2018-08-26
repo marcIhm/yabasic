@@ -14507,6 +14507,62 @@ _ACEOF
 fi
 done
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for rt posix4 in -lclock_gettime" >&5
+$as_echo_n "checking for rt posix4 in -lclock_gettime... " >&6; }
+if ${ac_cv_lib_clock_gettime_rt_posix4+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lclock_gettime  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char rt posix4 ();
+int
+main ()
+{
+return rt posix4 ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_clock_gettime_rt_posix4=yes
+else
+  ac_cv_lib_clock_gettime_rt_posix4=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_clock_gettime_rt_posix4" >&5
+$as_echo "$ac_cv_lib_clock_gettime_rt_posix4" >&6; }
+if test "x$ac_cv_lib_clock_gettime_rt_posix4" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBCLOCK_GETTIME 1
+_ACEOF
+
+  LIBS="-lclock_gettime $LIBS"
+
+fi
+
+for ac_func in clock_gettime
+do :
+  ac_fn_c_check_func "$LINENO" "clock_gettime" "ac_cv_func_clock_gettime"
+if test "x$ac_cv_func_clock_gettime" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_CLOCK_GETTIME 1
+_ACEOF
+
+fi
+done
+
 
 # The Ultrix 4.2 mips builtin alloca declared by alloca.h only works
 # for constant arguments.  Useless!
