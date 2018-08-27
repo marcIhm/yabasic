@@ -479,6 +479,14 @@ function (struct command *current)	/* performs a function */
         }
         result = stNUMBER;
         break;
+    case fCEIL:
+        value = ceil(a1->value);
+        result = stNUMBER;
+        break;
+    case fFLOOR:
+	value = floor(a1->value);
+        result = stNUMBER;
+        break;
     case fFRAC:
         if (a1->value < 0) {
             value = a1->value + floor (-a1->value);

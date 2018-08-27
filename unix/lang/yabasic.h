@@ -271,7 +271,7 @@ enum functions {
     fSIN, fASIN, fCOS, fACOS, fTAN,
     fATAN, fSYSTEM, fSYSTEM2, fPEEK, fPEEK2, fPEEK4, fTELL, fEXP, fLOG, fLEN,
     fSTR,
-    fSQRT, fSQR, fFRAC, fABS, fSIG, fRAN, fINT, fVAL, fASC, fHEX, fBIN, fDEC,
+    fSQRT, fSQR, fFRAC, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER,
     fLTRIM, fRTRIM, fTRIM, fCHR, fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fLOG2,

@@ -218,6 +218,8 @@ LOG return tLOG;
 SQRT return tSQRT;
 SQR return tSQR;
 INT return tINT;
+CEIL return tCEIL;
+FLOOR return tFLOOR;
 FRAC return tFRAC;
 ABS return tABS;
 SIG return tSIG;
