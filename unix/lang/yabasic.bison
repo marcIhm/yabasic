@@ -120,7 +120,7 @@ void report_missing(int severity,char *text) {
 
 %token tSIN tASIN tCOS tACOS tTAN tATAN tEXP tLOG
 %token tSQRT tSQR tMYEOF tABS tSIG
-%token tINT tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
+%token tINT tCEIL tFLOOR tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE 
@@ -396,6 +396,8 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tSQRT '(' expression ')' {create_function(fSQRT);}
   | tSQR '(' expression ')' {create_function(fSQR);}
   | tINT '(' expression ')' {create_function(fINT);}
+  | tCEIL '(' expression ')' {create_function(fCEIL);}
+  | tFLOOR '(' expression ')' {create_function(fFLOOR);}
   | tFRAC '(' expression ')' {create_function(fFRAC);}
   | tABS '(' expression ')' {create_function(fABS);}
   | tSIG '(' expression ')' {create_function(fSIG);}
