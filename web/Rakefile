@@ -57,7 +57,7 @@ generated_html = Array.new
 
 desc 'Process erb templates'
 task :templates => :version do
-  %w( content_download.html.erb  content_whatsnew.html.erb content_log.html.erb head.html.erb toc.html.erb ).each do |name|
+  %w( content_download.html.erb content_whatsnew.html.erb content_log.html.erb head.html.erb toc.html.erb ).each do |name|
     generated = name.chomp('.erb')
     generated_html << generated
     File.open(generated,'w') do |file|
@@ -101,7 +101,7 @@ task :copy => :templates do
       cp file, download
     end
   end
-  cp '../products/yabasic.htm', todir
+  cp '../unix/lang/yabasic.htm', todir
 end
 
 desc 'Remove generated html-files'
