@@ -2347,7 +2347,7 @@ print ceil(x)
 print ceil(1.5),floor(1.5)
 print ceil(2),floor(2)
           </programlisting>
-	    <para>Comparing functions <function>ceil</function> and <function>floor</function>, gives a first line of output (<computeroutput>1 2</computeroutput>), showing that <function>ceil</function> is less or equal than <function>floor</function>; but as the second line of output (<computeroutput>2 2</computeroutput>) shows, that the two functions give equal results for integer arguments.</para>
+	    <para>Comparing functions <function>ceil</function> and <function>floor</function>, gives a first line of output (<computeroutput>1 2</computeroutput>), showing that <function>ceil</function> is less or equal than <function>floor</function>; but as the second line of output (<computeroutput>2 2</computeroutput>) shows, the two functions give equal results for integer arguments.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4029,9 +4029,10 @@ print floor(x)
 	  <informalexample>
 	    <programlisting>
 print int(-1.5),floor(-1.5)
+print int(-1),floor(-1)
 print int(1.5),floor(1.5)
           </programlisting>
-	    <para>This example compares the functions <function>int</function> and <function>floor</function>, starting with <computeroutput>-1 -2</computeroutput> and ending with <computeroutput>1 1</computeroutput> which shows the different behaviour of both functions.</para>
+	    <para>This example compares the functions <function>int</function> and <function>floor</function>, starting with <computeroutput>-1 -2</computeroutput>, then <computeroutput>-1 -1</computeroutput> and ending with <computeroutput>1 1</computeroutput>, which shows the different behaviour of both functions.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4099,7 +4100,7 @@ x=frac(y)
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>frac</function>-function takes its argument, removes all the digits to the left of the comma and just returns the digits right of the comma, i.e. the fractional part.</para>
-	  <para>Refer to the example to learn how to rewrite <function>frac</function> by employing the <function>int</function>-function.</para>
+	  <para>Refer to the example to learn how to rewrite <function>frac</function> by employing the <function>int</function>-function (which is not suggested anyway).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4115,7 +4116,7 @@ next a
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_int">int</link></function></para>
+	  <para><function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4774,7 +4775,7 @@ endif
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_frac">frac</link></function></para>
+	  <para><function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -9654,8 +9655,6 @@ if (a&lt;&gt;0 and b/a&gt;2) print "b is at least twice as big as a"
       <para><quote>Nice, but whats this good for ?</quote>, I hear you say. Well, just have another look at the example, especially the second comparison (<literal>b/a&gt;2</literal>); dividing <literal>b</literal> by <literal>a</literal> is potentially hazardous: If <literal>a</literal> equals zero, the expression will cause an error and your program will terminate. To avoid this, the first part of the comparison (<literal>a&lt;&gt;0</literal>) checks, if the second one can be evaluated without risk. This pre-checking is the most common usage and primary motivation for <emphasis>logical shortcuts</emphasis> (and the reason why most programming languages implement them).</para>
     </sect1>
 
-
-
     <sect1 renderas="sect2" id="ref_conditions_and_expressions">
       <title>Conditions and expressions</title>
       <para>Well, bottomline there is no difference or distinction between <emphasis>conditions</emphasis> and <emphasis>expressions</emphasis>, at least as <application>yabasic</application> is concerned. So you may assign the result of comparisons to variables or use an arithmetic expression or a simple variable within a condition (e.g. within an <function>if</function>-statement). So the constructs shown in the example below are all totally valid:</para>
@@ -9672,8 +9671,6 @@ if (not okay) error "Wrong, wrong !"
       </informalexample>
       <para>So conditions and expressions are really the same thing (at least as long as yabasic is concerned). Therefore the terms <wordasword>conditions</wordasword> and <wordasword>expression</wordasword> can really be used interchangeably, at least in theory. In reality the term <wordasword>condition</wordasword> is used in connection with <function>if</function> or <function>while</function> whereas the term <wordasword>expression</wordasword> tends to be used more often within arithmetic context.</para>
     </sect1>
-
-
 
     <sect1 renderas="sect2" id="ref_array_references">
       <title>References on arrays</title>
