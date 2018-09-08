@@ -1,0 +1,63 @@
+#!./yabasic
+
+for i=1 to 4
+  read fun$
+  name$ = "test_" + fun$
+  body$ = "sub " + name$ + "(arg,expected)\n  found = " + fun$ + "(arg)\n  if found <> expected : print \"" + fun$ + "(\", arg, \") returned \", found, \" but expected \", expected: return 1\n  return 0\nend sub"
+  compile body$
+  label test_loop
+    read arg
+    if arg = 755 goto done
+    read expected
+    if execute(name$,arg,expected) > 0 exit 1
+  goto test_loop
+  label done
+next i
+
+data "int"
+data -2.5 , -2
+data -2   , -2
+data -1.5 , -1
+data -0.5 ,  0
+data  0   ,  0
+data  0.5 ,  0
+data  1   ,  1
+data  1.5 ,  1
+data  2   ,  2
+data  755
+
+data "frac"
+data -2.5 , -0.5
+data -2   ,  0
+data -1.5 , -0.5
+data -0.5 , -0.5
+data  0   ,  0
+data  0.5 ,  0.5
+data  1   ,  0
+data  1.5 ,  0.5
+data  2   ,  0
+data  755
+
+data "floor"
+data -2.5 , -3
+data -2   , -2
+data -1.5 , -2
+data -0.5 , -1
+data  0   ,  0
+data  0.5 ,  0
+data  1   ,  1
+data  1.5 ,  1
+data  2   ,  2
+data  755
+
+data "ceil"
+data -2.5 , -2
+data -2   , -2
+data -1.5 , -1
+data -0.5 ,  0
+data  0   ,  0
+data  0.5 ,  1
+data  1   ,  1
+data  1.5 ,  2
+data  2   ,  2
+data  755
