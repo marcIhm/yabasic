@@ -106,7 +106,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_yabasic_OBJECTS = main.$(OBJEXT) function.$(OBJEXT) io.$(OBJEXT) \
 	graphic.$(OBJEXT) symbol.$(OBJEXT) flow.$(OBJEXT) \
-	flex.$(OBJEXT) bison.$(OBJEXT)
+	flex.$(OBJEXT) bison.$(OBJEXT) whereami.$(OBJEXT)
 yabasic_OBJECTS = $(am_yabasic_OBJECTS)
 yabasic_LDADD = $(LDADD)
 yabasic_DEPENDENCIES =
@@ -527,13 +527,13 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c yabasic.h bison.h
+yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c whereami.c yabasic.h bison.h whereami.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
 AUTOMAKE_OPTIONS = check-news subdir-objects
-TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab tests/switch_continue_break.yab tests/switch_for.yab tests/switch_gosub.yab tests/switch_goto.yab tests/switch_return.yab tests/switch_simple.yab tests/switch_subr.yab tests/switch.yab tests/numbers.yab
+TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab tests/switch_continue_break.yab tests/switch_for.yab tests/switch_gosub.yab tests/switch_goto.yab tests/switch_return.yab tests/switch_simple.yab tests/switch_subr.yab tests/switch.yab tests/numbers.yab tests/silent.sh
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
@@ -662,6 +662,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/symbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/whereami.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1040,6 +1041,13 @@ tests/switch.yab.log: tests/switch.yab
 tests/numbers.yab.log: tests/numbers.yab
 	@p='tests/numbers.yab'; \
 	b='tests/numbers.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/silent.sh.log: tests/silent.sh
+	@p='tests/silent.sh'; \
+	b='tests/silent.sh'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

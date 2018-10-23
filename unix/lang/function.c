@@ -1593,6 +1593,8 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
         return my_strdup(main_file_name);
     } else if (!strcmp (dest, "program_name")) {
         return my_strdup(progname);
+    } else if (!strcmp (dest, "interpreter_path")) {
+	return my_strdup(inter_path);
     } else if (!strcmp (dest, "library")) {
         return my_strdup (curr->lib->s);
     } else if (!strcmp (dest, "version")) {

@@ -1,0 +1,6 @@
+
+REM Test these in a meaningful manner
+print peek$("interpreter_path")
+print peek$("program_name")
+print peek$("program_file_name")
+error "not implemented"

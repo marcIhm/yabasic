@@ -6484,14 +6484,21 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("program_name")</function></term>
 	      <listitem>
-		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this this <function>peek$</function> might return <filename>foo.yab</filename>; see also <function>peek$("program_file_name")</function> for related information.</para>
+		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this this <function>peek$</function> might return <filename>foo.yab</filename>; see also <function>peek$("program_file_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
 	    <varlistentry>
 	      <term><function>peek$("program_file_name")</function></term>
 	      <listitem>
-		<para>Returns the full file-name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, including any path-components. For the special case, that you have bound your <application>yabasic</application>-program with the interpreter to a single <link linkend="ref_standalone">standalone</link> executable, this <function>peek$</function> will return its name. See also <function>peek$("program_name")</function> for related information.</para>
+		<para>Returns the full file-name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, including any path-components. For the special case, that you have bound your <application>yabasic</application>-program with the interpreter to a single <link linkend="ref_standalone">standalone</link> executable, this <function>peek$</function> will return its name. See also <function>peek$("program_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("interpreter_path")</function></term>
+	      <listitem>
+		<para>Return the full file-name of the <application>yabasic</application>-interpreter that is currently executing your program; typically this will end on <filename>yabasic</filename> or <filename>yabasic.exe</filename> depending on your platform and the path will be where you installed <application>yabasic</application>. For bound programs (see <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>) however, this may be different and will include whatever you specified during the <function><link linkend="ref_bind">bind</link></function>-command. See also <function>peek$("program_name")</function> and <function>peek$("program_name")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -9629,7 +9636,7 @@ how to use these words in <application>yabasic</application>.
 
 
   <chapter id="chapter_ref_concepts">
-    <title>A grab-bag of some general concepts and terms</title>
+    <title>Some general concepts and terms</title>
     <para>This chapter presents some general concepts and terms, which deserve a description on their own, but are not associated with a single command or function in <application>yabasic</application>. Most of these topics do not lend themselves to be read alone, rather they might be read (or skimmed) as background material if an entry from the <link linkend="chapter_ref_words">alphabetical list of commands</link> refers to them.</para>
     <sect1 renderas="sect2" id="ref_logical_shortcuts">
       <title>Logical shortcuts</title>

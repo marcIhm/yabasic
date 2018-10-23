@@ -17,6 +17,7 @@
 #ifndef YABASIC_INCLUDED
 #include "yabasic.h"		/* all prototypes and structures */
 #endif
+#include "whereami.h"
 
 /* ------------- defines ---------------- */
 
@@ -51,8 +52,8 @@ int equal (char *, char *, int);	/* helper for processing options */
 static int mybind (char *);	/* bind a program to the interpreter and save it */
 void put_and_count (char *, FILE *, int *);  /* write text to file and increment len */
 
-char *find_interpreter (char *);	/* find interpreter with full path */
-static int seekback (FILE *, int);       /* seek back bytes */
+char *find_interpreter (char *);    /* find interpreter with full path, use code from Gregory Pakosz */
+static int seekback (FILE *, int, int);       /* seek back bytes */
 
 /* ------------- global variables ---------------- */
 
@@ -2125,7 +2126,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
     /* check magic cookie */
     offset -= 1 + strlen (YABMAGIC);
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, FALSE)) return 0;
     for (i = 0; i < (int) strlen (YABMAGIC); i++) {
         c = fgetc (inter);
         if (c == EOF || c != (YABMAGIC)[i]) {
@@ -2139,13 +2140,13 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
     /* infolevel */
     offset -= remlen + 2;
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &infolevel)) {
         error (WARNING, "Could not read infolevel");
         return 0;
     }
     /* repeat just for its output side-effect */
-    if (!seekback (inter, offset)) return 0; 
+    if (!seekback (inter, offset, TRUE)) return 0; 
     switch(infolevel) {
     case FATAL: infolevel_text="FATAL";break;
     case ERROR: infolevel_text="ERROR";break;
@@ -2160,7 +2161,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
     /* length of name of embedded program */
     offset -= remlen + 8;
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &namelen)) {
         error (WARNING, "Could not read length of name of embedded program");
         return 0;
@@ -2170,7 +2171,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
     
     /* name of embedded program */
     offset -= remlen + namelen;
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, TRUE)) return 0;
     progname = (char *) my_malloc (sizeof (char) * (namelen + 1));
     if (!fgets (progname, namelen + 1, inter)) {
         error (WARNING, "Could not read name of embedded program");
@@ -2181,7 +2182,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
     /* length of program */
     offset -= remlen + 8;
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &proglen)) {
         error (WARNING, "Could not read length of embedded program");
         return 0;
@@ -2191,7 +2192,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
     /* seek back to start of embedded program */
     offset -= 4 + proglen; /* only the text 'rem ' without preceding linefeed */
-    if (!seekback (inter, offset)) return 0;
+    if (!seekback (inter, offset, TRUE)) return 0;
 
     if (infolevel >= NOTE) {
         error (NOTE, "Dumping the embedded program, that will be executed:");
@@ -2207,7 +2208,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (NOTE, "End of program, that will be executed");
 	printf ("---Press RETURN to continue with its parsing: ");
 	fgets (string, 2, stdin);
-	if (!seekback (inter, offset)) return 0;
+	if (!seekback (inter, offset, TRUE)) return 0;
     }
     bound_program = inter;
     return 1;
@@ -2215,7 +2216,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
 
 static int
-seekback (FILE *file, int offset)           /* seek back bytes */
+seekback (FILE *file, int offset, int warn_on_fail)           /* seek back bytes */
 {
   if (fseek (file, offset, SEEK_END)) {
     sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
@@ -2224,7 +2225,8 @@ seekback (FILE *file, int offset)           /* seek back bytes */
     return FALSE;
   }
   if (!fgets (string, INBUFFLEN, file)) {
-    error (WARNING, "Could not read from end of embedded program");
+      /*    error (warn_on_fail ? WARNING:DEBUG, "Could not read from end of embedded program");*/
+      error (WARNING, "Could not read from end of embedded program");
     return FALSE;
   }
   string[strlen(string) - strlen("\n")] = '\0';
@@ -2353,48 +2355,17 @@ put_and_count (char *text, FILE *file, int *len)  /* write text to file and incr
 
 
 char *
-find_interpreter (char *name)	/* find interpreter with full path */
+find_interpreter (char *name)	/* find interpreter with full path, use code from Gregory Pakosz */
 {
-    FILE *f;
     char *path = NULL;
+    int length, dirname_length;
+    
+    length = wai_getExecutablePath(NULL, 0, NULL);
+    path = (char*)malloc(length + 1);
+    wai_getExecutablePath(path, length, &dirname_length);
+    path[length] = '\0';
 
-#ifdef WINDOWS
-    path = my_malloc (1000);
-    GetModuleFileName (NULL, path, 1000);
-    if (f = fopen (path, "r")) {
-        fclose (f);
-        return path;
-    } else {
-        my_free (path);
-        return my_strdup (name);
-    }
-
-#else
-    if ((f = fopen (name, "r"))) {
-        fclose (f);
-        path = my_strdup (name);
-        return path;
-    } else {
-        char *from, *to, *try;
-        from = to = path = getenv ("PATH");
-        try = my_malloc (strlen (path) + strlen (name) + 2);
-        to = strchr (to + 1, ':');
-        while (to) {
-            strncpy (try, from, to - from);
-            try[to - from] = 0;
-            if (try[to - from - 1] != '/')
-                    strcat (try, "/");
-            strcat (try, name);
-            if ((f = fopen (try, "r"))) {
-                fclose (f);
-                return try;
-            }
-            from = to + 1;
-            to = strchr (to + 1, ':');
-        }
-        return name;
-    }
-#endif
+    return path;
 }
 
 
