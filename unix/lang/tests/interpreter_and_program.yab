@@ -1,8 +1,6 @@
-
-REM Test these in a meaningful manner
 i$ = peek$("interpreter_path")
 ii$ = chomp$(system$( i$ + " -e 'print peek$(\"interpreter_path\")'"))
 print i$, ii$
-print peek$("program_name")
-print peek$("program_file_name")
-error "not implemented"
+if i$ <> ii$ error "Peek interpreter_path not repeatable: " + i$ + " " + ii$ 
+if peek$("program_name") <> "interpreter_and_program.yab" error "Peek program_name has problems"
+if not glob(peek$("program_file_name"), "*" + peek$("program_name")) error "Peek program_file_name has problems"

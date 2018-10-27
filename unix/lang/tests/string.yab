@@ -1,0 +1,7 @@
+if left$("abc",2)<>"ab" error "left$ has problems"
+if right$("abc",2)<>"bc" error "right$ has problems"
+if mid$("abc",2,1)<>"b" error "mid$ has problems"
+if chomp$("foo\n")<>"foo" error "chomp$ has problems"
+if chomp$("foo")<>"foo" error "chomp$ has problems"
+if not glob("foobar","*bar") error "glob has problems"
+if not glob("bar","*bar") error "glob has problems"
