@@ -340,9 +340,13 @@ yabasic*font: 9x15
 
     <sect1>
       <title>String processing</title>
-      <para><application>yabasic</application> has the usual functions to extract parts from a string: <function><link linkend="ref_left">left$</link></function>, <function><link linkend="ref_mid">mid$</link></function> and <function><link linkend="ref_right">right$</link></function>. Note, that all of them can be assigned to, i.e. they may <emphasis>change</emphasis> part of a string.</para>
+      <para><application>yabasic</application> has a set of functions to extract parts from a string: <function><link linkend="ref_left">left$</link></function>, <function><link linkend="ref_mid">mid$</link></function> and <function><link linkend="ref_right">right$</link></function>. Note, that all of them can be assigned to, i.e. they may <emphasis>change</emphasis> part of a string.</para>
       <para>If you want to split a string into tokens you should use the functions <function><link linkend="ref_token">token</link></function> or <function><link linkend="ref_split">split</link></function>.</para>
-      <para>There is quite a bunch of other string-processing functions like <function><link linkend="ref_upper">upper$</link></function> (converting to upper case), <function><link linkend="ref_instr">instr</link></function> (finding one string within the other), <function><link linkend="ref_chr">chr$</link></function> (converting an ascii-code into a character), <function><link linkend="ref_glob">glob</link></function> (testing a string against a pattern) and more. Just follow the links.</para>
+      <para>Some functions are handy for normalizing a string: <function><link linkend="ref_upper">upper$</link></function> and <function><link linkend="ref_lower">lower$</link></function> convert a string to all upper or lower case respectively, whereas <function><link linkend="ref_chomp">chomp$</link></function> cuts of any trailing newline character, but only if present.</para>
+      <para><function><link linkend="ref_chr">chr$</link></function> and <function><link linkend="ref_str">str$</link></function> convert a string into a number, both in different ways.</para>
+      <para>To analyze a string use <function><link linkend="ref_instr">instr</link></function> (finding one string within the other) or <function><link linkend="ref_glob">glob</link></function> (testing a string against a simple pattern).</para>
+      <para>To concatenate strings use the operator <function>+</function> like in <function>a$ + b$</function>.
+      <para>You may also see the complete list of a <link linkend="top_strings">string processing functions</link>.</para>
     </sect1>
 
     <sect1>
@@ -918,6 +922,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_chomp">chomp$()</link></term>
+	  <listitem>
+	    Chop of the trailing newline of its string-argument; if the string does not end in a newline, the string is returned unchanged
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_chr">chr$()</link></term>
 	  <listitem>
 	    accepts a number and returns the character at this position within the <acronym>ascii</acronym> charset
@@ -1397,16 +1408,16 @@ yabasic*font: 9x15
 
 
 	<varlistentry>
-	  <term><link linkend="ref_system">system$()</link></term>
+	  <term><link linkend="ref_system">system()</link></term>
 	  <listitem>
-	    hand a statement over to your operating system and return its output
+	    hand a statement over to your operating system and return its exitcode
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_system2">system()</link></term>
+	  <term><link linkend="ref_system2">system$()</link></term>
 	  <listitem>
-	    hand a statement over to your operating system and return its exitcode
+	    hand a statement over to your operating system and return its output
 	  </listitem>
 	</varlistentry>
 
@@ -2353,6 +2364,43 @@ print ceil(2),floor(2)
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_chomp">
+	<refmeta>
+	  <refentrytitle>chomp$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>chomp$()</refname>
+	  <refpurpose>Remove a single trailing newline from its string-argument; if the string does not end in a newline, the string is returned unchanged.</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>print chomp$("Hallo !\n")</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>chomp$</function>-function checks, if its string-argument ends in a newline and removes it eventually; for this purpose <function>chomp$</function> can replace an <function>if</statement>-statement. This can be especially useful, when you deal with input from external sources like <function><link linkend="ref_system2">system$</link></function><function>.</para>
+	  <para>You may apply <function>chomp$</function> freely, as it only acts, if there is a newline to remove; note however, that user-input that comes from the normal <function><link linkend="ref_input">input</link>-statement does not need such a treatment, because it already comes without a newline.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <para>The following <application>yabasic</application>-program uses the unix-command <command>whoami</command> to get the username of the current user in order to greet him personally. This is done twice: First with the <function>chomp$</function>-function and then again with with an equivalent <function>if</function>-statement:</para>
+	    <programlisting>
+print "Hello " + chomp$(system$("whoami")) + " !"
+
+user$ = system$("whoami")
+if (right$(user$,1)="\n") user$=left$(user$,len(user$)-1)
+print "Hello again " + user$ + " !"
+
+print "a",chr$(10),"b"
+          </programlisting>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_system2">system$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4728,11 +4776,11 @@ pos=instr(a$,b$,x)
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
-input "Please enter a text containing the string 'bumf': " a$
-if (instr(a$,"bumf")) then
+input "Please enter a text containing the string 'cat': " a$
+if (instr(a$,"cat")) then
   print "Well done !"
 else
-  print "not so well ..."
+  print "No cat in your input ..."
 endif
           </programlisting>
 	  </informalexample>
@@ -6484,7 +6532,7 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("program_name")</function></term>
 	      <listitem>
-		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this this <function>peek$</function> might return <filename>foo.yab</filename>; see also <function>peek$("program_file_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
+		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this <function>peek$</function> might return <filename>foo.yab</filename>. As a special case when <application>yabasic</application> has been invoked without the name of a program to be executed this peek will return the literal strings <literal>standard input</literal> or, when also the option <literal>-e</literal> has been specified, <literal>command line</literal>. See also <function>peek$("program_file_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -6498,7 +6546,8 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("interpreter_path")</function></term>
 	      <listitem>
-		<para>Return the full file-name of the <application>yabasic</application>-interpreter that is currently executing your program; typically this will end on <filename>yabasic</filename> or <filename>yabasic.exe</filename> depending on your platform and the path will be where you installed <application>yabasic</application>. For bound programs (see <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>) however, this may be different and will include whatever you specified during the <function><link linkend="ref_bind">bind</link></function>-command. See also <function>peek$("program_name")</function> and <function>peek$("program_name")</function> for related information.</para>
+		<para>Return the full file-name of the <application>yabasic</application>-interpreter that is currently executing your program; typically this will end on <filename>yabasic</filename> or <filename>yabasic.exe</filename> depending on your platform and the path will be where you installed <application>yabasic</application>. For bound programs (see <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>) however, this may be different and will include whatever you specified during the <function><link linkend="ref_bind">bind</link></function>-command.</para>
+		<para>See also <function>peek$("program_name")</function> and <function>peek$("program_file_name")</function> for related information. Employing these it would be possible for a <application>yabasic</application>-program to start itself: <function>system(peek$("interpreter_path") + " " + peek$("program_file_name"))</function>. Of course, in this simple form this would be a bad idea, because this would start concurrent instances of <application>yabasic</application> without end.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -8292,41 +8341,6 @@ end switch
 
       <refentry id="ref_system">
 	<refmeta>
-	  <refentrytitle>system$()</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>system$()</refname>
-	  <refpurpose>hand a statement over to your operating system and return its output</refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-print system$("dir")
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>Description</title>
-	  <para>The <function>system$</function>-command accepts a single string argument, specifying a command, that can be found and executed by your operating system. It returns the output of this command as one big string.</para>
-	</refsect1>
-	<refsect1>
-	  <title>Example</title>
-	  <informalexample>
-	    <programlisting>
-input "Please enter the name of a directory: " d$
-print
-print "This is the contents of the '"+d$+"':"
-print system$("dir "+d$)
-          </programlisting>
-	    <para>This example lists the contents of a directory, employing the <application>dir</application>-command  (which is about the only program, that is known under Unix as well as Windows).</para>
-	  </informalexample>
-	</refsect1>
-	<refsect1>
-	  <title>See also</title>
-	  <para><function><link linkend="ref_system">system</link></function></para>
-	</refsect1>
-      </refentry>
-
-      <refentry id="ref_system2">
-	<refmeta>
 	  <refentrytitle>system()</refentrytitle>
 	</refmeta>
 	<refnamediv>
@@ -8361,6 +8375,41 @@ endif
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_system2">system$</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_system2">
+	<refmeta>
+	  <refentrytitle>system$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>system$()</refname>
+	  <refpurpose>hand a statement over to your operating system and return its output</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print system$("dir")
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>system$</function>-command accepts a single string argument, specifying a command, that can be found and executed by your operating system. It returns the output of this command as one big string.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+input "Please enter the name of a directory: " d$
+print
+print "This is the contents of the '"+d$+"':"
+print system$("dir "+d$)
+          </programlisting>
+	    <para>This example lists the contents of a directory, employing the <application>dir</application>-command  (which is about the only program, that is known under Unix as well as Windows).</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_system">system</link></function>, <function><link linkend="ref_chomp">chomp</link></function></para>
 	</refsect1>
       </refentry>
 
