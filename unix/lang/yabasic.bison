@@ -122,7 +122,7 @@ void report_missing(int severity,char *text) {
 %token tSQRT tSQR tMYEOF tABS tSIG
 %token tINT tCEIL tFLOOR tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
-%token tTRIM tLTRIM tRTRIM tINSTR tRINSTR
+%token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE 
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
@@ -318,6 +318,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tLTRIM '(' string_expression ')' {create_function(fLTRIM);}
   | tRTRIM '(' string_expression ')' {create_function(fRTRIM);}
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
+  | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}

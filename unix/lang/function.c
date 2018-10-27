@@ -463,6 +463,12 @@ function (struct command *current)	/* performs a function */
         }
         pointer = my_strdup (string);
         break;
+    case fCHOMP:
+        result = stSTRING;
+	pointer = a1->pointer;
+	a1->pointer = NULL;
+	pointer[strcspn(pointer, "\r\n")] = 0;
+	break;
     case fSQRT:
         value = sqrt (a1->value);
         result = stNUMBER;

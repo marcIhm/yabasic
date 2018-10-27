@@ -190,19 +190,20 @@ extern int yydebug;
     tRTRIM = 400,
     tINSTR = 401,
     tRINSTR = 402,
-    tSYSTEM = 403,
-    tSYSTEM2 = 404,
-    tPEEK = 405,
-    tPEEK2 = 406,
-    tPOKE = 407,
-    tDATE = 408,
-    tTIME = 409,
-    tTOKEN = 410,
-    tTOKENALT = 411,
-    tSPLIT = 412,
-    tSPLITALT = 413,
-    tGLOB = 414,
-    UMINUS = 415
+    tCHOMP = 403,
+    tSYSTEM = 404,
+    tSYSTEM2 = 405,
+    tPEEK = 406,
+    tPEEK2 = 407,
+    tPOKE = 408,
+    tDATE = 409,
+    tTIME = 410,
+    tTOKEN = 411,
+    tTOKENALT = 412,
+    tSPLIT = 413,
+    tSPLITALT = 414,
+    tGLOB = 415,
+    UMINUS = 416
   };
 #endif
 

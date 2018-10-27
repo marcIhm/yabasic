@@ -237,6 +237,7 @@ MAX return tMAX;
 "TRIM$" return tTRIM;
 INSTR return tINSTR;
 RINSTR return tRINSTR;
+"CHOMP$" return tCHOMP;
 LEN return tLEN;
 VAL return tVAL;
 EOF return tMYEOF;
