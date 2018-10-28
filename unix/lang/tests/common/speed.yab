@@ -1,9 +1,37 @@
-print "Simple speed check (limit needs adjustment for each computer other than mine) ..."
+print "Simple speed check ..."
+
+REM  Measure system speed
+REM
+sng_out$=system$("stress-ng --cpu 2 --cpu-method matrixprod  --metrics-brief --perf -t 4 2>&1")
+dim lines$(1),words$(1)
+numl=split(sng_out$,lines$(),"\n")
+numw=token(lines$(5),words$())
+bogo=val(words$(10))
+print "System speed is ",bogo," bogo ops per second"
+
+REM  The constant estimated_ops is the number of operations necessary for the two nested for-loops down below
+REM  its unit is 'time' as consumed by stress-ng (see above) and has been measured initially; in Theory this value
+REM  should not need to be corrected, even for other systems than mine.
+REM
+REM  Measurement 2018-10-28: 72.73 bogo ops per sec, 5155 duration
+REM
+estimated_ops=72.73*5155
+REM  Limit is chosen with 10% safe margin
+limit=estimated_ops*1.1/bogo
+print "Limit is therefore ",limit, " msec"
+
+REM  Measure duration of simple for-loops assuming this represents the speed of the whole yabasic-language
+REM
+mstart=peek("millisrunning")
 for a=1 to 10000
   for b=1 to 1000
   next b
 next a
-if (peek("secondsrunning")>3) then
-  print "Error, program took too long" + str$(peek("secondsrunning"))
+print "Durations: ",peek("millisrunning")-mstart," msec"
+
+REM  Check results
+REM
+if (peek("millisrunning")-mstart>limit) then
+  print "Error, program took too long !"
   exit 1
 endif
