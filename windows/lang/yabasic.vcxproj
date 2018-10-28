@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\unix\lang\bison.h" />
     <ClInclude Include="..\..\unix\lang\config.h" />
+    <ClInclude Include="..\..\unix\lang\whereami.h" />
     <ClInclude Include="..\..\unix\lang\yabasic.h" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClCompile Include="..\..\unix\lang\io.c" />
     <ClCompile Include="..\..\unix\lang\main.c" />
     <ClCompile Include="..\..\unix\lang\symbol.c" />
+    <ClCompile Include="..\..\unix\lang\whereami.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
