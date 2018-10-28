@@ -1,5 +1,8 @@
 *.o
 *.orig
+*.gcda
+*.gcno
+*.gcov
 .deps
 config.log
 aclocal.m4

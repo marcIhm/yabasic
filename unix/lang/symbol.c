@@ -1233,7 +1233,7 @@ doarray (struct command *cmd)	/* call an array */
 
     ar = ((struct symbol *) cmd->symbol)->pointer;
 
-    if (!ar->dimension) {
+    if (!ar) {
         sprintf (string, "array parameter '%s()' has not been supplied",
                  strip (cmd->symname));
         error (ERROR, string);
