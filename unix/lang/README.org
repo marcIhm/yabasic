@@ -5,5 +5,9 @@ Some hints:
   - Edit configure.ac and NEWS
   - Add a matching annotated tag after all platforms have been built
 - Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
-
+- To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
+  - Then run yabasic as normal: ./yabasic tests/common/speed-yab
+  - Run gprof: gprof ./yabasic
+  - Or run gcov: gcov main.c
+  - WARNING: adding "--coverage" to CFLAGS slows down yabasic by a factor of 3 or more
   
