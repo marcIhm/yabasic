@@ -2380,7 +2380,7 @@ print ceil(2),floor(2)
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>chomp$</function>-function checks, if its string-argument ends in a newline and removes it eventually; for this purpose <function>chomp$</function> can replace an <function>if</function>-statement. This can be especially useful, when you deal with input from external sources like <function><link linkend="ref_system2">system$</link></function>.</para>
-	  <para>You may apply <function>chomp$</function> freely, as it only acts, if there is a newline to remove; note however, that user-input that comes from the normal <function><link linkend="ref_input">input</link></function>-statement does not need such a treatment, because it already comes without a newline.</para>
+	  <para>You may apply <function>chomp$</function> freely, as it only acts, if there is a newline to remove; note however, that user-input, that comes from the normal <function><link linkend="ref_input">input</link></function>-statement, does not need such a treatment, because it already comes without a newline.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -2392,8 +2392,6 @@ print "Hello " + chomp$(system$("whoami")) + " !"
 user$ = system$("whoami")
 if (right$(user$,1)="\n") user$=left$(user$,len(user$)-1)
 print "Hello again " + user$ + " !"
-
-print "a",chr$(10),"b"
           </programlisting>
 	  </informalexample>
 	</refsect1>
@@ -6546,7 +6544,7 @@ print peek$("foo")
 	      <term><function>peek$("interpreter_path")</function></term>
 	      <listitem>
 		<para>Return the full file-name of the <application>yabasic</application>-interpreter that is currently executing your program; typically this will end on <filename>yabasic</filename> or <filename>yabasic.exe</filename> depending on your platform and the path will be where you installed <application>yabasic</application>. For bound programs (see <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>) however, this may be different and will include whatever you specified during the <function><link linkend="ref_bind">bind</link></function>-command.</para>
-		<para>See also <function>peek$("program_name")</function> and <function>peek$("program_file_name")</function> for related information. Employing these it would be possible for a <application>yabasic</application>-program to start itself: <function>system(peek$("interpreter_path") + " " + peek$("program_file_name"))</function>. Of course, in this simple form this would be a bad idea, because this would start concurrent instances of <application>yabasic</application> without end.</para>
+		<para>See also <function>peek$("program_name")</function> and <function>peek$("program_file_name")</function> for related information. Employing these, it would be possible for a <application>yabasic</application>-program to start itself: <function>system(peek$("interpreter_path") + " " + peek$("program_file_name"))</function>. Of course, in this simple form this would be a bad idea, because this would start concurrent instances of <application>yabasic</application> without end.</para>
 	      </listitem>
 	    </varlistentry>
 
