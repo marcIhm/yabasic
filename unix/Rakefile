@@ -38,12 +38,10 @@ file 'lang/yabasic.htm' => 'doc/_yabasic.xml' do
 end
 
 desc 'Create man page'
-task :man do
-  file 'lang/yabasic.1' => ['lang/yabasic.htm','doc/yabasic.1.erb'] do
-    sh 'w3m -dump -o display_charset=ascii,cols=74 lang/yabasic.htm >/tmp/y.utf8'
-    ascii = File.new('/tmp/y.utf8').read.lines.map {|x| " " + x}.join
-    open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result(binding)}
-  end
+file 'lang/yabasic.1' => ['lang/yabasic.htm','doc/yabasic.1.erb'] do
+  sh 'w3m -dump -o display_charset=ascii,cols=74 lang/yabasic.htm >/tmp/y.utf8'
+  ascii = File.new('/tmp/y.utf8').read.lines.map {|x| " " + x}.join
+  open('lang/yabasic.1','w') {|f| f.write ERB.new(File.new('doc/yabasic.1.erb').read).result(binding)}
 end
 
 desc 'Create configure'
@@ -146,7 +144,7 @@ task :rpm => :products_dir do
 end
 
 desc 'Cleanup, sync and show products'
-task :default => [:check, :man, :rpm, :sources] do
+task :default => [:check, 'lang/yabasic.1', :rpm, :sources] do
   rm Dir.glob('../products/web/download/*')
   prod_globs = %w( yabasic*.x86_64.rpm yabasic*amd64.deb yabasic*.tar.gz )
   prod_globs.each { |glob| cleanup "../products/#{glob}" }

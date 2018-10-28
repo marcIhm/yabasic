@@ -13,10 +13,9 @@
       You will find information about the <application>yabasic</application> 
       interpreter (the program <command>yabasic</command> under Unix or 
       <command>yabasic.exe</command> under Windows)
-      as well as the language (which is, of course, a sort of
-<acronym>basic</acronym>) itself.<para>
+      as well as the language (which is, of course, a sort of <acronym>basic</acronym>) itself.
     </para>
-      This document applies to version <%= version_short %> of <application>yabasic</application></para>
+      <para>This document applies to version <%= version_short %> of <application>yabasic</application></para>
       <para>
       However, this document does not contain the latest news about <application>yabasic</application> or a FAQ.
       As such information tends to change rapidly, it is presented online only 
@@ -345,7 +344,7 @@ yabasic*font: 9x15
       <para>Some functions are handy for normalizing a string: <function><link linkend="ref_upper">upper$</link></function> and <function><link linkend="ref_lower">lower$</link></function> convert a string to all upper or lower case respectively, whereas <function><link linkend="ref_chomp">chomp$</link></function> cuts of any trailing newline character, but only if present.</para>
       <para><function><link linkend="ref_chr">chr$</link></function> and <function><link linkend="ref_str">str$</link></function> convert a string into a number, both in different ways.</para>
       <para>To analyze a string use <function><link linkend="ref_instr">instr</link></function> (finding one string within the other) or <function><link linkend="ref_glob">glob</link></function> (testing a string against a simple pattern).</para>
-      <para>To concatenate strings use the operator <function>+</function> like in <function>a$ + b$</function>.
+      <para>To concatenate strings use the operator <function>+</function> like in <function>a$ + b$</function>.</para>
       <para>You may also see the complete list of a <link linkend="top_strings">string processing functions</link>.</para>
     </sect1>
 
@@ -2380,8 +2379,8 @@ print ceil(2),floor(2)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>chomp$</function>-function checks, if its string-argument ends in a newline and removes it eventually; for this purpose <function>chomp$</function> can replace an <function>if</statement>-statement. This can be especially useful, when you deal with input from external sources like <function><link linkend="ref_system2">system$</link></function><function>.</para>
-	  <para>You may apply <function>chomp$</function> freely, as it only acts, if there is a newline to remove; note however, that user-input that comes from the normal <function><link linkend="ref_input">input</link>-statement does not need such a treatment, because it already comes without a newline.</para>
+	  <para>The <function>chomp$</function>-function checks, if its string-argument ends in a newline and removes it eventually; for this purpose <function>chomp$</function> can replace an <function>if</function>-statement. This can be especially useful, when you deal with input from external sources like <function><link linkend="ref_system2">system$</link></function>.</para>
+	  <para>You may apply <function>chomp$</function> freely, as it only acts, if there is a newline to remove; note however, that user-input that comes from the normal <function><link linkend="ref_input">input</link></function>-statement does not need such a treatment, because it already comes without a newline.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>

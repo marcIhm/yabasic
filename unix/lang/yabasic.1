@@ -95,7 +95,7 @@ Here is its content:
      Special characters
      Reserved Words
  
- 7. A grab-bag of some general concepts and terms
+ 7. Some general concepts and terms
  
      Logical shortcuts
      Conditions and expressions
@@ -122,7 +122,7 @@ Here is its content:
  interpreter (the program yabasic under Unix or yabasic.exe under Windows) as
  well as the language (which is, of course, a sort of basic) itself.
  
- This document applies to version 2.79 of yabasic
+ This document applies to version 2.81 of yabasic
  
  However, this document does not contain the latest news about yabasic or a FAQ.
  As such information tends to change rapidly, it is presented online only at
@@ -519,17 +519,25 @@ Here is its content:
  
  String processing
  
- yabasic has the usual functions to extract parts from a string: left$, mid$ and
+ yabasic has a set of functions to extract parts from a string: left$, mid$ and
  right$. Note, that all of them can be assigned to, i.e. they may change part of
  a string.
  
  If you want to split a string into tokens you should use the functions token or
  split.
  
- There is quite a bunch of other string-processing functions like upper$
- (converting to upper case), instr (finding one string within the other), chr$
- (converting an ascii-code into a character), glob (testing a string against a
- pattern) and more. Just follow the links.
+ Some functions are handy for normalizing a string: upper$ and lower$ convert a
+ string to all upper or lower case respectively, whereas chomp$ cuts of any
+ trailing newline character, but only if present.
+ 
+ chr$ and str$ convert a string into a number, both in different ways.
+ 
+ To analyze a string use instr (finding one string within the other) or glob
+ (testing a string against a simple pattern).
+ 
+ To concatenate strings use the operator + like in a$ + b$.
+ 
+ You may also see the complete list of a string processing functions.
  
  Arithmetic
  
@@ -728,6 +736,9 @@ Here is its content:
  asc()
      accepts a string and returns the position of its first character within the
      ascii charset
+ chomp$()
+     Chop of the trailing newline of its string-argument; if the string does not
+     end in a newline, the string is returned unchanged
  chr$()
      accepts a number and returns the character at this position within the 
      ascii charset
@@ -872,10 +883,10 @@ Here is its content:
      start a comment
  sleep
      pause, sleep, wait for the specified number of seconds
- system$()
-     hand a statement over to your operating system and return its output
  system()
      hand a statement over to your operating system and return its exitcode
+ system$()
+     hand a statement over to your operating system and return its output
  time$
      return a string containing the current time
  to
@@ -1616,6 +1627,8 @@ Here is its content:
  
  case ? mark the different cases within a switch-statement
  ceil() ? compute the ceiling for its (float) argument.
+ chomp$() ? Remove a single trailing newline from its string-argument; if the
+     string does not end in a newline, the string is returned unchanged.
  chr$() ? accepts a number and returns the character at this position within the
      ascii charset
  circle ? draws a circle in the graphic-window
@@ -1697,11 +1710,52 @@ Here is its content:
  
  Comparing functions ceil and floor, gives a first line of output (1 2), showing
  that ceil is less or equal than floor; but as the second line of output (2 2)
- shows, that the two functions give equal results for integer arguments.
+ shows, the two functions give equal results for integer arguments.
  
  See also
  
  floor, int, frac
+ 
+ -------------------------------------------------------------------------------
+ 
+ Name
+ 
+ chomp$() ? Remove a single trailing newline from its string-argument; if the
+ string does not end in a newline, the string is returned unchanged.
+ 
+ Synopsis
+ 
+ print chomp$("Hallo !\n")
+ 
+ Description
+ 
+ The chomp$-function checks, if its string-argument ends in a newline and
+ removes it eventually; for this purpose chomp$ can replace an if-statement.
+ This can be especially useful, when you deal with input from external sources
+ like system$.
+ 
+ You may apply chomp$ freely, as it only acts, if there is a newline to remove;
+ note however, that user-input that comes from the normal input-statement does
+ not need such a treatment, because it already comes without a newline.
+ 
+ Example
+ 
+ The following yabasic-program uses the unix-command whoami to get the username
+ of the current user in order to greet him personally. This is done twice: First
+ with the chomp$-function and then again with with an equivalent if-statement:
+ 
+ print "Hello " + chomp$(system$("whoami")) + " !"
+ 
+ user$ = system$("whoami")
+ if (right$(user$,1)="\n") user$=left$(user$,len(user$)-1)
+ print "Hello again " + user$ + " !"
+ 
+ print "a",chr$(10),"b"
+ 
+ 
+ See also
+ 
+ system$
  
  -------------------------------------------------------------------------------
  
@@ -3322,11 +3376,12 @@ Here is its content:
  Example
  
  print int(-1.5),floor(-1.5)
+ print int(-1),floor(-1)
  print int(1.5),floor(1.5)
  
  
- This example compares the functions int and floor, starting with -1 -2 and
- ending with 1 1 which shows the different behaviour of both functions.
+ This example compares the functions int and floor, starting with -1 -2, then -1
+ -1 and ending with 1 1, which shows the different behaviour of both functions.
  
  See also
  
@@ -3392,8 +3447,8 @@ Here is its content:
  The frac-function takes its argument, removes all the digits to the left of the
  comma and just returns the digits right of the comma, i.e. the fractional part.
  
- Refer to the example to learn how to rewrite frac by employing the
- int-function.
+ Refer to the example to learn how to rewrite frac by employing the int-function
+ (which is not suggested anyway).
  
  Example
  
@@ -3409,7 +3464,7 @@ Here is its content:
  
  See also
  
- int
+ int, floor, ceil
  
  G
  
@@ -4045,11 +4100,11 @@ Here is its content:
  
  Example
  
- input "Please enter a text containing the string 'bumf': " a$
- if (instr(a$,"bumf")) then
+ input "Please enter a text containing the string 'cat': " a$
+ if (instr(a$,"cat")) then
    print "Well done !"
  else
-   print "not so well ..."
+   print "No cat in your input ..."
  endif
  
  
@@ -4084,7 +4139,7 @@ Here is its content:
  
  See also
  
- frac
+ frac, floor, ceil
  
  L
  
@@ -5794,8 +5849,12 @@ Here is its content:
  
      Returns the name of the yabasic-program that is currently executing;
      typically this is the name, that you have specified on the commandline, but
-     without any path-components. So this this peek$ might return foo.yab; see
-     also peek$("program_file_name") for related information.
+     without any path-components. So this peek$ might return foo.yab. As a
+     special case when yabasic has been invoked without the name of a program to
+     be executed this peek will return the literal strings standard input or,
+     when also the option -e has been specified, command line. See also peek$
+     ("program_file_name") and peek$("interpreter_path") for related
+     information.
  
  peek$("program_file_name")
  
@@ -5804,7 +5863,22 @@ Here is its content:
      commandline, including any path-components. For the special case, that you
      have bound your yabasic-program with the interpreter to a single standalone
      executable, this peek$ will return its name. See also peek$("program_name")
-     for related information.
+     and peek$("interpreter_path") for related information.
+ 
+ peek$("interpreter_path")
+ 
+     Return the full file-name of the yabasic-interpreter that is currently
+     executing your program; typically this will end on yabasic or yabasic.exe
+     depending on your platform and the path will be where you installed yabasic
+     . For bound programs (see creating a standalone-program) however, this may
+     be different and will include whatever you specified during the bind
+     -command.
+ 
+     See also peek$("program_name") and peek$("program_file_name") for related
+     information. Employing these it would be possible for a yabasic-program to
+     start itself: system(peek$("interpreter_path") + " " + peek$
+     ("program_file_name")). Of course, in this simple form this would be a bad
+     idea, because this would start concurrent instances of yabasic without end.
  
  peek$("error")
  
@@ -6876,10 +6950,10 @@ Here is its content:
  str$() ? convert a number into a string
  sub ? declare a user defined subroutine
  switch ? select one of many alternatives depending on a value
- system$() ? hand a statement over to your operating system and return its
-     output
  system() ? hand a statement over to your operating system and return its
      exitcode
+ system$() ? hand a statement over to your operating system and return its
+     output
  
  Name
  
@@ -7551,38 +7625,6 @@ Here is its content:
  
  Name
  
- system$() ? hand a statement over to your operating system and return its
- output
- 
- Synopsis
- 
- print system$("dir")
- 
- Description
- 
- The system$-command accepts a single string argument, specifying a command,
- that can be found and executed by your operating system. It returns the output
- of this command as one big string.
- 
- Example
- 
- input "Please enter the name of a directory: " d$
- print
- print "This is the contents of the '"+d$+"':"
- print system$("dir "+d$)
- 
- 
- This example lists the contents of a directory, employing the dir-command
- (which is about the only program, that is known under Unix as well as Windows).
- 
- See also
- 
- system
- 
- -------------------------------------------------------------------------------
- 
- Name
- 
  system() ? hand a statement over to your operating system and return its
  exitcode
  
@@ -7613,6 +7655,38 @@ Here is its content:
  See also
  
  system$
+ 
+ -------------------------------------------------------------------------------
+ 
+ Name
+ 
+ system$() ? hand a statement over to your operating system and return its
+ output
+ 
+ Synopsis
+ 
+ print system$("dir")
+ 
+ Description
+ 
+ The system$-command accepts a single string argument, specifying a command,
+ that can be found and executed by your operating system. It returns the output
+ of this command as one big string.
+ 
+ Example
+ 
+ input "Please enter the name of a directory: " d$
+ print
+ print "This is the contents of the '"+d$+"':"
+ print system$("dir "+d$)
+ 
+ 
+ This example lists the contents of a directory, employing the dir-command
+ (which is about the only program, that is known under Unix as well as Windows).
+ 
+ See also
+ 
+ system, chomp
  
  T
  
@@ -8653,7 +8727,7 @@ Here is its content:
  
  Please see here for explanations on how to use these words in yabasic.
  
- Chapter 7. A grab-bag of some general concepts and terms
+ Chapter 7. Some general concepts and terms
  
  Logical shortcuts
  Conditions and expressions

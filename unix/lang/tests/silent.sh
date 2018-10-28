@@ -3,8 +3,8 @@
 #
 # Check if empty yabasic-program produces any warning
 #
-OUT=`./yabasic tests/resources/empty.yab 2>&1`
-OUT=`foo`
+OUT=`./yabasic tests/resources/silent.yab 2>&1`
+echo $OUT
 if [ $OUT -ne "" ]; then
     exit 1
 else

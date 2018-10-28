@@ -9,3 +9,7 @@ The two subdirectories:
 
 - lang :: the complete code for the Yabasic interpreter
 - doc :: the docbook-xml-sources for its documentation
+
+Some Hints:
+
+- To create the documentation: rake lang/yabasic.htm
