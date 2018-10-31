@@ -1,0 +1,2 @@
+system("ls")
+a$=system$("ls")

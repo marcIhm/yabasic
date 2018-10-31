@@ -785,7 +785,7 @@ function (struct command *current)	/* performs a function */
         break;
     case fSYSTEM2:
         str = a1->pointer;
-        pointer = do_systems (str);
+        pointer = do_system2 (str);
         result = stSTRING;
         break;
     case fPEEK:
@@ -861,10 +861,13 @@ do_system (char *cmd)		/* hand over execution of command to system */
     ret = system (cmd);
     if (curinized) {
         reset_prog_mode ();
+	if (!tcsetpgrp(STDIN_FILENO, getpid())) {
+	    sprintf(string,"could not get control of terminal: %s",
+		    my_strerror(errno));
+	    error (ERROR,string);
+	    return ret;
+	};
     }
-    signal(SIGTTOU, SIG_IGN);
-    signal(SIGTTIN, SIG_IGN);
-    tcsetpgrp(STDIN_FILENO, getpid());
 
     return ret;
 #else

@@ -272,7 +272,7 @@ main (int argc, char **argv)
         program_state = RUNNING;
 	if (infolevel >= DEBUG) {
 	    printf ("---Program parsed, press RETURN to continue with its execution: ");
-	    fgets (string, 2, stdin);
+	    fgets (string, INBUFFLEN, stdin);
         }
         run_it ();
     } else {
@@ -892,7 +892,7 @@ chop_command (char *command, int *argc, char ***argv)
 static void
 end_it (void)			/* perform shutdown-operations */
 {
-    char l[2];
+    char l[INBUFFLEN];
 #ifdef UNIX
     int status;
 
@@ -914,7 +914,7 @@ end_it (void)			/* perform shutdown-operations */
         SetConsoleMode (ConsoleInput, InitialConsole & (~ENABLE_ECHO_INPUT));
         FlushConsoleInputBuffer (ConsoleInput);
 #endif
-        fgets (l, 2, stdin);
+        fgets (l, INBUFFLEN, stdin);
 #ifdef WINDOWS
         if (wthandle != INVALID_HANDLE_VALUE) {
             TerminateThread (wthandle, 0);
@@ -959,13 +959,6 @@ initialize (void)
     struct timeval time;
 #endif
     int i;
-
-#ifdef UNIX
-#ifdef SETPGRP_VOID
-    setpgrp ();
-#else
-#endif
-#endif
 
     /* install exception handler */
     signal (SIGFPE, signal_handler);
@@ -1328,7 +1321,7 @@ run_it ()
                 l++;
                 if (hold_docu && !(l % 24)) {
                     printf ("---Press RETURN to continue ");
-                    fgets (string, 2, stdin);
+                    fgets (string, INBUFFLEN, stdin);
                 }
             } else {
                 if (infolevel >= DEBUG) {
@@ -1342,7 +1335,7 @@ run_it ()
         }
         if (hold_docu) {
             printf ("---End of embbedded documentation, press RETURN ");
-            fgets (string, 2, stdin);
+            fgets (string, INBUFFLEN, stdin);
         }
     } else {
         while (current != cmdhead && endreason == erNONE) {
@@ -2207,7 +2200,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 	fprintf (stderr, "\n");
         error (NOTE, "End of program, that will be executed");
 	printf ("---Press RETURN to continue with its parsing: ");
-	fgets (string, 2, stdin);
+	fgets (string, INBUFFLEN, stdin);
 	if (!seekback (inter, offset, TRUE)) return 0;
     }
     bound_program = inter;

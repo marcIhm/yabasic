@@ -284,9 +284,12 @@ curinit(void)			/* initialize curses */
     set_escdelay(10);
     curs_set (0);
     intrflush(stdscr,FALSE);
-    signal(SIGTTOU, SIG_IGN);
-    signal(SIGTTIN, SIG_IGN);
-    tcsetpgrp(STDIN_FILENO, getpid());
+    if (!tcsetpgrp(STDIN_FILENO, getpid())) {
+	sprintf(string,"could not get control of terminal: %s",
+                my_strerror(errno));
+        error (ERROR,string);
+	return;
+    };
 #else
     GetConsoleScreenBufferInfo(ConsoleOutput, &coninfo);
     COLS = coninfo.srWindow.Right + 1;
