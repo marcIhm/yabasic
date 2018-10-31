@@ -37,8 +37,8 @@ static double peek (char *);	/* peek into internals */
 static char *peek2 (char *, struct command *);	/* peek into internals */
 static char *peek3 (char *, char *);	/* peek into internals */
 static int peekfile (int);	/* read a byte from stream */
-static char *do_system (char *);	/* executes command via command.com */
-static int do_system2 (char *);	/* execute command as system */
+static int do_system (char *);	/* execute command as system */
+static char *do_system2 (char *);	/* executes command via command.com */
 static double myrand (); /* generate random number in given range */
 
 /* ------------- global variables ---------------- */
@@ -780,13 +780,13 @@ function (struct command *current)	/* performs a function */
         break;
     case fSYSTEM:
         str = a1->pointer;
-        pointer = do_system (str);
-        result = stSTRING;
+        value = do_system (str);
+        result = stNUMBER;
         break;
     case fSYSTEM2:
         str = a1->pointer;
-        value = do_system2 (str);
-        result = stNUMBER;
+        pointer = do_systems (str);
+        result = stSTRING;
         break;
     case fPEEK:
         str = a1->pointer;
@@ -851,7 +851,7 @@ function (struct command *current)	/* performs a function */
 
 
 static int
-do_system2 (char *cmd)		/* hand over execution of command to system */
+do_system (char *cmd)		/* hand over execution of command to system */
 {
 #ifdef UNIX
     int ret;
@@ -962,7 +962,7 @@ recall_buff ()			/* recall store buffer */
 
 
 static char *
-do_system (char *cmd)		/* executes command via command.com */
+do_system2 (char *cmd)		/* executes command via command.com */
 {
     static char buff[SYSBUFFLEN + 1];	/* buffer to store command */
     int len;			/* number of bytes read */

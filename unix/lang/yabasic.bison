@@ -245,8 +245,8 @@ statement:  /* empty */
   | tINKEY {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
   | tINKEY '(' ')' {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
   | tINKEY '(' expression ')' {create_function(fINKEY);add_command(cPOP,NULL,NULL);}
-  | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);
-	add_command(cPOP,NULL,NULL);}
+  | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);
+	add_command(cPOP,NULL,NULL);} 
   | tPOKE string_expression ',' string_expression {create_poke('s');}
   | tPOKE string_expression ',' expression {create_poke('d');}
   | tPOKE hashed_number ',' string_expression {create_poke('S');}
@@ -319,7 +319,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tRTRIM '(' string_expression ')' {create_function(fRTRIM);}
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
-  | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
+  | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -416,7 +416,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tINSTR '(' string_expression ',' string_expression ',' expression ')' {create_function(fINSTR2);}
   | tRINSTR '(' string_expression ',' string_expression ')' {create_function(fRINSTR);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
-  | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
+  | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}
