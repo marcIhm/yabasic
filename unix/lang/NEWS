@@ -1,4 +1,2 @@
-Version 2.81.0 (October 27, 2018)
-  - New function chomp$	
-  - Added new peek "interpreter_path"
-  - Fixed a sporadic issue with bound programs
+Version 2.81.1 (November 1, 2018)
+  - Fix: Allow yabasic to run from within a script

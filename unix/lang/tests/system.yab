@@ -1,3 +1,5 @@
+#!./yabasic
+
 system("ls")
 a=system("ls")
 a$=system$("ls")

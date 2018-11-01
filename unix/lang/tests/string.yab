@@ -1,3 +1,5 @@
+#!./yabasic
+
 if left$("abc",2)<>"ab" error "left$ has problems"
 if right$("abc",2)<>"bc" error "right$ has problems"
 if mid$("abc",2,1)<>"b" error "mid$ has problems"

@@ -1735,7 +1735,7 @@ Here is its content:
  like system$.
  
  You may apply chomp$ freely, as it only acts, if there is a newline to remove;
- note however, that user-input that comes from the normal input-statement does
+ note however, that user-input, that comes from the normal input-statement, does
  not need such a treatment, because it already comes without a newline.
  
  Example
@@ -1749,8 +1749,6 @@ Here is its content:
  user$ = system$("whoami")
  if (right$(user$,1)="\n") user$=left$(user$,len(user$)-1)
  print "Hello again " + user$ + " !"
- 
- print "a",chr$(10),"b"
  
  
  See also
@@ -5875,7 +5873,7 @@ Here is its content:
      -command.
  
      See also peek$("program_name") and peek$("program_file_name") for related
-     information. Employing these it would be possible for a yabasic-program to
+     information. Employing these, it would be possible for a yabasic-program to
      start itself: system(peek$("interpreter_path") + " " + peek$
      ("program_file_name")). Of course, in this simple form this would be a bad
      idea, because this would start concurrent instances of yabasic without end.
