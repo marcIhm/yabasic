@@ -37,8 +37,8 @@ static double peek (char *);	/* peek into internals */
 static char *peek2 (char *, struct command *);	/* peek into internals */
 static char *peek3 (char *, char *);	/* peek into internals */
 static int peekfile (int);	/* read a byte from stream */
-static int do_system (char *);	/* execute command as system */
-static char *do_system2 (char *);	/* executes command via command.com */
+static int do_system (char *);	/* hand over execution of command to system, return exit code */
+static char *do_system2 (char *); /* hand over execution of command to system, return output as string */
 static double myrand (); /* generate random number in given range */
 
 /* ------------- global variables ---------------- */
@@ -851,7 +851,7 @@ function (struct command *current)	/* performs a function */
 
 
 static int
-do_system (char *cmd)		/* hand over execution of command to system */
+do_system (char *cmd)		/* hand over execution of command to system, return exit code */
 {
 #ifdef UNIX
     int ret;
@@ -860,13 +860,13 @@ do_system (char *cmd)		/* hand over execution of command to system */
     }
     ret = system (cmd);
     if (curinized) {
-        reset_prog_mode ();
 	if (!tcsetpgrp(STDIN_FILENO, getpid())) {
 	    sprintf(string,"could not get control of terminal: %s",
 		    my_strerror(errno));
 	    error (ERROR,string);
 	    return ret;
 	};
+	reset_prog_mode ();
     }
 
     return ret;
@@ -965,7 +965,7 @@ recall_buff ()			/* recall store buffer */
 
 
 static char *
-do_system2 (char *cmd)		/* executes command via command.com */
+do_system2 (char *cmd)		/* hand over execution of command to system, return output as string */
 {
     static char buff[SYSBUFFLEN + 1];	/* buffer to store command */
     int len;			/* number of bytes read */
@@ -1005,7 +1005,6 @@ do_system2 (char *cmd)		/* executes command via command.com */
         store_buff (buff, len);
     } while (c != EOF);
     pclose (p);
-
 #else
     ZeroMemory (&prosec, sizeof (prosec));
     prosec.nLength = sizeof (prosec);

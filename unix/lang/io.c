@@ -274,7 +274,16 @@ curinit(void)			/* initialize curses */
 #endif
 
 #ifdef UNIX
-    initscr();
+    if (!tcsetpgrp(STDIN_FILENO, getpid())) {
+	sprintf(string,"could not get control of terminal: %s",
+                my_strerror(errno));
+        error (ERROR,string);
+	return;
+    };
+    if (!initscr()) {
+        error (ERROR,"could not initialize curses");
+	return;
+    };
     initcol();
     setscrreg(0,LINES);
     scrollok(stdscr,TRUE);
@@ -284,12 +293,6 @@ curinit(void)			/* initialize curses */
     set_escdelay(10);
     curs_set (0);
     intrflush(stdscr,FALSE);
-    if (!tcsetpgrp(STDIN_FILENO, getpid())) {
-	sprintf(string,"could not get control of terminal: %s",
-                my_strerror(errno));
-        error (ERROR,string);
-	return;
-    };
 #else
     GetConsoleScreenBufferInfo(ConsoleOutput, &coninfo);
     COLS = coninfo.srWindow.Right + 1;
