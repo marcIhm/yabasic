@@ -73,11 +73,31 @@ def run_tests dir, executable
 end
 
 class News
+
+  attr_reader :version
+
+  def initialize fname
+    @paras = []
+    paras = File.read(fname).split(/\n\s*\n/)
+    paras.each { |para| @paras<<News_para.new(para) }
+    @version = @paras[0].version
+  end
+
+  def as_html indent
+    @paras[0].as_html indent
+  end
+
+  def as_html_all indent
+    @paras.map { |para| para.as_html indent }.join
+  end
+end
+
+class News_para
   
   attr_reader :version
   
-  def initialize fname
-    lines = File.readlines(fname)
+  def initialize paras
+    lines = paras.lines
     fail "Cannot parse first line of '#{fname}': #{lines[0]}" unless lines[0]=~/^Version (\d\.\d+\.\d+) \(([^,]+), (20\d+\d)\)\s*$/;
     @version = $1
     @month_day = $2
@@ -96,10 +116,6 @@ class News
     end
   end
   
-  def as_text
-    "Version #{@version} (#{@month_day}, #{@year})\n" + @lines.map {|l| "  - #{l}\n"}.join
-  end
-
   def as_html indent
     fill = " " * indent
     fill + "<h4>Version #{@version}, #{@month_day}, #{@year}</h4>\n" +

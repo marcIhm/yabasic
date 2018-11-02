@@ -50,7 +50,7 @@ end
 
 desc 'Pack binaries'
 task :pack => :tests do
-  fail "This should be run as admin user !" unless %x{id -G}.match(/\s(114|544)\s/)
+  fail "\n\n*** This should be run as admin user ! ***\n\n" unless %x{id -G}.match(/\s(114|544)\s/)
   cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp/LICENSE.txt'
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
