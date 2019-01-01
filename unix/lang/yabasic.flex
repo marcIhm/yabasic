@@ -83,7 +83,7 @@ REM\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.
 REM {yymore();}
 
 IMPORT {BEGIN(IMPORT);}
-<IMPORT>{WS}+{NAME} {if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);return tIMPORT;}
+<IMPORT>{WS}+{NAME} {if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);unput('\n');return tIMPORT;}
 <IMPORT>{WS}+. {error_with_line(WARNING,"invalid import statement; please check documentation.",flex_line);}
 <IMPORT_DONE>(.|\n) {if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);flex_line+=yylval.sep=0;return tSEP;}
 

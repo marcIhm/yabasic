@@ -581,41 +581,43 @@ parse_arguments (int cargc, char *cargv[])
 		     "ARGUMENTS : strings, that are available from within the yabasic program\n\n");
 	    fprintf (stderr, "Available OPTIONS:\n");
 	    fprintf (stderr,
-		     "   --help                 : print this message\n");
+		     "   --help                  : print this message\n");
 	    fprintf (stderr,
-		     "   --version              : show version of yabasic\n");
+		     "   --version               : show version of yabasic\n");
 	    fprintf (stderr,
-		     "   -i,-infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison\n");
+		     "   -i,--infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison\n");
 	    fprintf (stderr,
-		     "   -e,--execute COMMANDS  : execute yabasic COMMANDS right away\n");
+		     "   -e,--execute COMMANDS   : execute yabasic COMMANDS right away\n");
 	    fprintf (stderr,
-		     "   --bind BOUND           : bind interpreter with FILENAME into BOUND\n");
+		     "   --bind BOUND            : bind interpreter with FILENAME into BOUND\n");
 	    fprintf (stderr,
-		     "   --geometry x+y         : position graphic window at x,y\n");
+		     "   --geometry x+y          : position graphic window at x,y\n");
 #ifdef UNIX
 	    fprintf (stderr,
-		     "   --fg,--bg COL          : specify fore/background color of graphic window\n");
+		     "   -fg,--foreground COL    : specify foreground color of graphic window\n");
 	    fprintf (stderr,
-		     "   --display DISP         : display, where window will show up\n");
+		     "   -bg,--background COL    : specify background color of graphic window\n");
 	    fprintf (stderr,
-		     "   --font FONT            : font for graphic window\n");
+		     "   --display DISP          : display, where window will show up\n");
+	    fprintf (stderr,
+		     "   --font FONT             : font for graphic window\n");
 #else
 	    fprintf (stderr,
-		     "   --font FONT            : font for graphic, supply style (decorative,dontcare,\n");
+		     "   --font FONT             : font for graphic, supply style (decorative,dontcare,\n");
 	    fprintf (stderr,
-		     "                            modern,roman,script or swiss) and size, e.g. swiss10\n");
+		     "                             modern,roman,script or swiss) and size, e.g. swiss10\n");
 #endif
 	    fprintf (stderr,
-		     "   --docu NAME            : print embedded docu of program or library\n");
+		     "   --docu NAME             : print embedded docu of program or library\n");
 	    fprintf (stderr,
-		     "   --check                : check for possible compatibility problems\n");
+		     "   --check                 : check for possible compatibility problems\n");
 	    fprintf (stderr,
-		     "   --                     : pass any subsequent words as arguments to yabasic\n");
+		     "   --librarypath PATH      : directory to search libraries not found in\n");
 	    fprintf (stderr,
-		     "   --librarypath PATH     : directory to search libraries not found in\n");
-	    fprintf (stderr,
-		     "                            current dir (default %s)\n",
+		     "                             current dir (default %s)\n",
 		     library_default);
+	    fprintf (stderr,
+		     "   --                      : pass any subsequent words as arguments to yabasic\n");
 	    fprintf (stderr, "\n");
 	    end_it ();
 	  } else if (equal ("-check", option, 2)) {

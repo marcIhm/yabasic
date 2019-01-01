@@ -1851,7 +1851,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-{if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);return tIMPORT;}
+{if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);unput('\n');return tIMPORT;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
