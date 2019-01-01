@@ -2,7 +2,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2018
+    written by Marc Ihm 1995-2019
     more info at www.yabasic.de
 
     FLEX part

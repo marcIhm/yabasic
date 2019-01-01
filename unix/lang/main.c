@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2018
+    written by Marc Ihm 1995-2019
     more info at www.yabasic.de
 
     main.c --- main() and auxilliary functions
@@ -25,7 +25,7 @@
 #define COPYRIGHT "Copyright 1995-2018 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
-"\nThis is yabasic version " VERSION ",\ncompiled on "\
+"\nThis is yabasic version " VERSION ",\nconfigured for "\
 ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
 #define BANNER_VERSION \
 "yabasic " VERSION ", built on " ARCHITECTURE
