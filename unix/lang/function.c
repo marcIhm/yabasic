@@ -860,12 +860,14 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
     }
     ret = system (cmd);
     if (curinized) {
-	if (!tcsetpgrp(STDIN_FILENO, getpid())) {
+#ifndef __APPLE__
+	tcsetpgrp(STDIN_FILENO, getpid()));
 	    sprintf(string,"could not get control of terminal: %s",
 		    my_strerror(errno));
 	    error (ERROR,string);
 	    return ret;
 	};
+#endif
 	reset_prog_mode ();
     }
 
