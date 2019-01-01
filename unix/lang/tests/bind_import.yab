@@ -1,3 +1,5 @@
+#!./yabasic
+
 import library1
 import library2
 import library3

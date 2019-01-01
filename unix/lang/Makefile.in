@@ -530,10 +530,10 @@ top_srcdir = @top_srcdir@
 yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c whereami.c yabasic.h bison.h whereami.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
-AM_CPPFLAGS = -DUNIX
+AM_CPPFLAGS = -DUNIX $(X_CFLAGS)
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
 AUTOMAKE_OPTIONS = check-news subdir-objects
-TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab tests/switch_continue_break.yab tests/switch_for.yab tests/switch_gosub.yab tests/switch_goto.yab tests/switch_return.yab tests/switch_simple.yab tests/switch_subr.yab tests/switch.yab tests/numbers.yab tests/system.yab tests/string.yab tests/silent.sh tests/run_in_script.sh
+TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long_variable_name.yab tests/simple.yab tests/switch_continue_break.yab tests/switch_for.yab tests/switch_gosub.yab tests/switch_goto.yab tests/switch_return.yab tests/switch_simple.yab tests/switch_subr.yab tests/switch.yab tests/numbers.yab tests/system.yab tests/string.yab tests/silent.sh tests/run_in_script.sh tests/import.yab tests/bind_import.yab tests/nested_bind_import.yab
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s
@@ -1069,6 +1069,27 @@ tests/silent.sh.log: tests/silent.sh
 tests/run_in_script.sh.log: tests/run_in_script.sh
 	@p='tests/run_in_script.sh'; \
 	b='tests/run_in_script.sh'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/import.yab.log: tests/import.yab
+	@p='tests/import.yab'; \
+	b='tests/import.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/bind_import.yab.log: tests/bind_import.yab
+	@p='tests/bind_import.yab'; \
+	b='tests/bind_import.yab'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+tests/nested_bind_import.yab.log: tests/nested_bind_import.yab
+	@p='tests/nested_bind_import.yab'; \
+	b='tests/nested_bind_import.yab'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

@@ -1,0 +1,5 @@
+#!./yabasic
+
+import library8
+
+print foo$()

@@ -1,0 +1,5 @@
+# This is an unusual comment as the first line of an imported library
+
+export sub foo$()
+  return "foo"
+end sub
