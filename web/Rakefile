@@ -66,7 +66,7 @@ task :templates => :version do
   end
 
   structure=File.read('structure.html.erb')
-  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html faq.html history.html log.html manual_yabasic.html new_docu.html old_docu.html mit.html ).each do |name|
+  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html faq.html history.html log.html manual_yabasic.html new_docu.html old_docu.html mit.html changing.html ).each do |name|
     if name == 'manual_yabasic.html'
       frame_html = 'yabasic.htm'
     elsif name == 'index.html'
