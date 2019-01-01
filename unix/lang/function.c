@@ -1419,6 +1419,8 @@ poke (struct command *cmd)	/* poke into internals */
                 || !strcmp (sarg, "subroutine")
                 || !strcmp (sarg, "subroutines"))) {
         dump_sub (0);
+    } else if (!strcmp (dest, "librarypath") && sarg) {
+	strcpy (library_path, sarg);
     } else if (!strcmp (dest, "textalign") && sarg) {
         if (!check_alignment (sarg)) {
             return;
