@@ -250,7 +250,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><literal>--librarypath <replaceable>DIRECTORY-WITH-LIBRARIES</replaceable></literal></term>
 	  <listitem>
-	    <para>Change the directory, wherein libraries will be searched and imported (with the <function><link linkend="ref_import">import</link></function>-command). See also <function><link linkend="ref_import">import</link></function> for more information about the way, libraries are searched. There is also a <function><link linkend="ref_poke">poke</link></function> for changing this path.</para>
+	    <para>Change the directory, wherein libraries will be searched and imported (with the <function><link linkend="ref_import">import</link></function>-command). See also <function><link linkend="ref_import">import</link></function> for more information about the way, libraries are searched.</para>
 	  </listitem>
 	</varlistentry>
 	
@@ -6691,14 +6691,6 @@ gets overwritten with the dump, please be careful.</para>
 		<para>Change the amount of internal information, that <application>yabasic</application> outputs during execution.</para>
 		<para>The second argument can be either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>. However, normally you will not want to change this from its default value <literal>"warning"</literal>.</para>
 		<para>See also the related <function><link linkend="ref_peek2">peek$("infolevel")</link></function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "librarypath","directory-with-libraries"</function></term>
-	      <listitem>
-		<para>Change the directory, wherein libraries will be searched and imported. See <function><link linkend="ref_import">import</link></function> for more information about the way, libraries are searched.</para>
-		<para>See also the related <link linkend="chapter_options">command line option</link>.</para>
 	      </listitem>
 	    </varlistentry>
 

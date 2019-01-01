@@ -1388,48 +1388,46 @@ void
 poke (struct command *cmd)	/* poke into internals */
 {
     char *dest, *s, c;
-    char *sarg = NULL;
-    double darg;
+    char *string_arg = NULL;
+    double double_arg;
     struct stackentry *stack;
     int count;
 
     if (cmd->tag == 's') {
-        sarg = pop (stSTRING)->pointer;
+        string_arg = pop (stSTRING)->pointer;
     } else {
-        darg = pop (stNUMBER)->value;
+        double_arg = pop (stNUMBER)->value;
     }
 
     dest = pop (stSTRING)->pointer;
     for (s = dest; *s; s++) {
         *s = tolower ((int) *s);
     }
-    if (!strcmp (dest, "fontheight") && !sarg) {
-        fontheight = (int) darg;
+    if (!strcmp (dest, "fontheight") && !string_arg) {
+        fontheight = (int) double_arg;
 #ifdef UNIX
         calc_psscale ();
 #endif
-    } else if (!strcmp (dest, "font") && sarg) {
-        fontname = my_strdup (sarg);
-    } else if (!strcmp (dest, "dump") && sarg) {
-        dump_commands (sarg);
-    } else if (!strcmp (dest, "dump") && sarg && !strcmp (sarg, "symbols")) {
+    } else if (!strcmp (dest, "font") && string_arg) {
+        fontname = my_strdup (string_arg);
+    } else if (!strcmp (dest, "dump") && string_arg) {
+        dump_commands (string_arg);
+    } else if (!strcmp (dest, "dump") && string_arg && !strcmp (string_arg, "symbols")) {
         dump_sym ();
-    } else if (!strcmp (dest, "dump") && sarg &&
-               (!strcmp (sarg, "sub") || !strcmp (sarg, "subs")
-                || !strcmp (sarg, "subroutine")
-                || !strcmp (sarg, "subroutines"))) {
+    } else if (!strcmp (dest, "dump") && string_arg &&
+               (!strcmp (string_arg, "sub") || !strcmp (string_arg, "subs")
+                || !strcmp (string_arg, "subroutine")
+                || !strcmp (string_arg, "subroutines"))) {
         dump_sub (0);
-    } else if (!strcmp (dest, "librarypath") && sarg) {
-	strcpy (library_path, sarg);
-    } else if (!strcmp (dest, "textalign") && sarg) {
-        if (!check_alignment (sarg)) {
+    } else if (!strcmp (dest, "textalign") && string_arg) {
+        if (!check_alignment (string_arg)) {
             return;
         }
-        strncpy (text_align, sarg, 2);
-    } else if (!strcmp (dest, "windoworigin") && sarg) {
-        moveorigin (sarg);
-    } else if (!strcmp (dest, "infolevel") && sarg) {
-        c = tolower ((int) *sarg);
+        strncpy (text_align, string_arg, 2);
+    } else if (!strcmp (dest, "windoworigin") && string_arg) {
+        moveorigin (string_arg);
+    } else if (!strcmp (dest, "infolevel") && string_arg) {
+        c = tolower ((int) *string_arg);
         switch (c) {
         case 'd':
             infolevel = DEBUG;
@@ -1454,19 +1452,19 @@ poke (struct command *cmd)	/* poke into internals */
             sprintf (string, "switching infolevel to '%c'", c);
             error (DEBUG, string);
         }
-    } else if (!strcmp (dest, "stdout") && sarg) {
-        fputs (sarg, stdout);
-    } else if (!strcmp (dest, "random_seed") && !sarg) {
-        srand((unsigned int) darg);
-    } else if (!strcmp (dest, "__assert_stack_size") && !sarg) {
+    } else if (!strcmp (dest, "stdout") && string_arg) {
+        fputs (string_arg, stdout);
+    } else if (!strcmp (dest, "random_seed") && !string_arg) {
+        srand((unsigned int) double_arg);
+    } else if (!strcmp (dest, "__assert_stack_size") && !string_arg) {
 	count = -1;
 	stack = stackhead;
 	while ( stack != stackroot) {
 	    count++;
 	    stack = stack->prev;
 	}
-	if (count != (int) darg) {
-	    sprintf (string, "assertion failed for number of entries on stack; expected = %d, actual = %d",(int) darg,count);
+	if (count != (int) double_arg) {
+	    sprintf (string, "assertion failed for number of entries on stack; expected = %d, actual = %d",(int) double_arg,count);
 	    error (FATAL, string);
 	}
     } else if (dest[0] == '#') {
