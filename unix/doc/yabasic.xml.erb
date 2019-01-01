@@ -46,6 +46,7 @@ close window
     </sect1>
   </chapter>
 
+
   <chapter id="chapter_program_windows">
     <title>The <application>yabasic</application>-program under Windows</title>
     <sect1>
@@ -68,75 +69,13 @@ close window
 	</listitem>
       </orderedlist>
     </sect1>
+
     <sect1>
       <title id="windows_options">Options</title>
-      <para>Under Windows <application>yabasic</application> will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the command line options below. However, advanced users may add some of those options to the appropriate entries in the registry.</para>
-      <para>All the options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example, you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
-      <variablelist>
-	<varlistentry>
-	  <term><literal>-help</literal> or <literal>-?</literal></term>
-	  <listitem>
-	    <para>Prints a short help message, which itself describes two further help-options.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-version</literal></term>
-	  <listitem>
-	    <para>Prints the version of <application>yabasic</application>.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-geometry +<replaceable>X-POSITION</replaceable>+<replaceable>Y-POSITION</replaceable></literal></term>
-	  <listitem>
-	    <para>Sets the position of the graphic window, that is opened by <function>open window</function> (the <emphasis>size</emphasis> of this window, of course, is specified within the <function>open window</function>-command). An example would be <literal>-geometry +20+10</literal>, which would place the graphic window 10 pixels below the upper border and 20 pixels right of the left border of the screen. This value cannot be changed, once <application>yabasic</application> has been started.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-font <replaceable>NAME-OF-FONT</replaceable></literal></term>
-	  <listitem>
-	    <para>Name of the font, which will be used for graphic-text; can be any of <literal>decorative, dontcare, modern, roman, script, swiss</literal>. You may append a fontsize (measured in pixels) to any of those fontnames; for example <literal>-font swiss30</literal> chooses a swiss-type font with a size of 30 pixels.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-bind <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable></literal></term>
-	  <listitem>
-	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the command line. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
-	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away.This is useful for very short programs, which you do not want to save within a file. If this option is given, <application>yabasic</application> will not read any code from a file. Let's say, you have forgotten some of the square numbers between 1 and 10; in this case the command <literal>yabasic -e 'for a=1 to 10:print a*a:next a'</literal> will give you the answer immediately.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-infolevel <replaceable>INFOLEVEL</replaceable></literal></term>
-	  <listitem>
-	    <para>Change the <emphasis>infolevel</emphasis> of yabasic, where <replaceable>INFOLEVEL</replaceable> can be one of <literal>debug</literal>, <literal>note</literal>, <literal>warning</literal>, <literal>error</literal> and <literal>fatal</literal> (the default is <literal>warning</literal>). This option changes the amount of debugging-information <application>yabasic</application> produces. However, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-doc <replaceable>NAME-OF-A-PROGRAM</replaceable></literal></term>
-	  <listitem>
-	    <para>Print the <emphasis>embedded documentation</emphasis> of the named program. The embedded documentation of a program consists of all the comments within the program, which start with the special keyword <function><link linkend="ref_doc">doc</link></function>. This documentation can also be seen by choosing the corresponding entry from the context-menu of any <application>yabasic</application>-program.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-librarypath <replaceable>DIRECTORY-WITH-LIBRARIES</replaceable></literal></term>
-	  <listitem>
-	    <para>Change the directory, wherein libraries will be searched and imported (with the <function><link linkend="ref_import">import</link></function>-command). See also <function><link linkend="ref_import">this entry</link></function> for more information about the way, libraries are searched.</para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+      <para>Under Windows <application>yabasic</application> will mostly be invoked by double-clicking on an appropriate icon; this way you do not have a chance to specify any of the command line options below. However, advanced users may change the librarypath in the registry, which has the same effect as specifying it as an option on the command line.</para>
+      <para>See the <link linkend="chapter_options">chapter on options</link> for a complete list of all options, either on Unix or Windows.</para>
     </sect1>
+
     <sect1>
       <title id="windows_context_menu">The context Menu</title>
       <para>Like every other icon under Windows, the icon of every <application>yabasic</application>-program has a <emphasis>context menu</emphasis> offering the most frequent operations, that may be applied to a <application>yabasic</application>-program.</para>
@@ -193,94 +132,8 @@ close window
 
     <sect1>
       <title id="unix_options">Options</title>
-      <para><application>yabasic</application> accepts a number of options on the command line. All these options below may be abbreviated, as long as the abbreviation does not become ambiguous. For example you may write <literal>-e</literal> instead of <literal>-execute</literal>.</para>
-      <variablelist>
-	<varlistentry>
-	  <term><literal>-help</literal> or <literal>-?</literal></term>
-	  <listitem>
-	    <para>Prints a short help message, which itself describes two further help-options.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-version</literal></term>
-	  <listitem>
-	    <para>Prints the version of <application>yabasic</application>.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-fg <replaceable>FOREGROUND-COLOR</replaceable></literal> or <literal>-foreground <replaceable>FOREGROUND-COLOR</replaceable></literal></term>
-	  <listitem>
-	    <para>Define the foreground color for the graphics-window (that will be opened with <function><link linkend="ref_open_window">open window</link></function>). The usual X11 color names, like <emphasis>red</emphasis>, <emphasis>green</emphasis>, &hellip; are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-bg <replaceable>BACKGROUND-COLOR</replaceable></literal> or <literal>-background <replaceable>BACKGROUND-COLOR</replaceable></literal></term>
-	  <listitem>
-	    <para>Define the background color for the graphics-window. The usual X11 color names are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-geometry +<replaceable>X-POSITION</replaceable>+<replaceable>Y-POSITION</replaceable></literal></term>
-	  <listitem>
-	    <para>Sets the position of the graphic window, that is opened by <function>open window</function> (the <emphasis>size</emphasis> of this window, of course, is specified with the <function>open window</function>-command). An example would be <literal>+20+10</literal>, which would place the graphic window 10 pixels below the upper border and 20 pixels right of the left border of the screen. Note, that the size of the window may not be specified here (well it may, but it will be ignored anyway). This value cannot be changed, once <application>yabasic</application> has been started.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-display <replaceable>BACKGROUND-COLOR</replaceable></literal></term>
-	  <listitem>
-	    <para>Specify the <emphasis>display</emphasis>, where the graphics window of yabasic should appear. Normally, however this value will be already present within the environment variable <envar>DISPLAY</envar>.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-font <replaceable>NAME-OF-FONT</replaceable></literal></term>
-	  <listitem>
-	    <para>Name of the font, which will be used for text within the graphics window.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
-	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
-</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-bind <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable></literal></term>
-	  <listitem>
-	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the command line. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry>
-	  <term><literal>-infolevel <replaceable>INFOLEVEL</replaceable></literal></term>
-	  <listitem>
-	    <para>Change the <emphasis>infolevel</emphasis> of yabasic where <replaceable>INFOLEVEL</replaceable> can be one of <literal>debug</literal>, <literal>note</literal>, <literal>warning</literal>, <literal>error</literal> and <literal>fatal</literal> (the default is <literal>warning</literal>). This option changes the amount of debugging-information <application>yabasic</application> produces. However, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-doc <replaceable>NAME-OF-A-PROGRAM</replaceable></literal></term>
-	  <listitem>
-	    <para>Print the <emphasis>embedded documentation</emphasis> of the named program. The embedded documentation of a program consists of all the comments within the program, which start with the special keyword <function><link linkend="ref_doc">doc</link></function>.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><literal>-librarypath <replaceable>DIRECTORY-WITH-LIBRARIES</replaceable></literal></term>
-	  <listitem>
-	    <para>Change the directory from which libraries will be imported (with the <function><link linkend="ref_import">import</link></function>-command). See also this entry for more information about the way, libraries will be searched.</para>
-	  </listitem>
-	</varlistentry>
-      </variablelist>
+      <para><application>yabasic</application> accepts a number of options on the command line.</para>
+      <para>See the <link linkend="chapter_options">chapter on options</link> for a complete list of all options, either on Unix or Windows.</para>
     </sect1>
 
     <sect1>
@@ -297,6 +150,120 @@ yabasic*font: 9x15
     </sect1>
   </chapter>
 
+
+  <chapter id="chapter_options">
+    <para>Here are the options, that <application>yabasic</application> accepts on the commandline (both under Unix and Windows).</para>
+    <para>All the options below may be abbreviated (and one hyphen may be dropped), as long as the abbreviation does not become ambiguous. For example, you may write <literal>-e</literal> instead of <literal>--execute</literal>.</para>
+      <variablelist>
+	<varlistentry>
+	  <term><literal>--help</literal> or <literal>-?</literal></term>
+	  <listitem>
+	    <para>Prints a short help message, which itself describes two further help-options.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--version</literal></term>
+	  <listitem>
+	    <para>Prints the version of <application>yabasic</application>.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--infolevel <replaceable>INFOLEVEL</replaceable></literal></term>
+	  <listitem>
+	    <para>Change the <emphasis>infolevel</emphasis> of yabasic, where <replaceable>INFOLEVEL</replaceable> can be one of <literal>debug</literal>, <literal>note</literal>, <literal>warning</literal>, <literal>error</literal>, <literal>fatal</literal> and <literal>bison</literal> (the default is <literal>warning</literal>). This option changes the amount of debugging-information <application>yabasic</application> produces. However, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this.</para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term><literal>--execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
+	  <listitem>
+	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
+</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--bind <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable></literal></term>
+	  <listitem>
+	    <para>Create a standalone program (whose name is specified by <replaceable>NAME-OF-STANDALONE-PROGRAM</replaceable>) from the <application>yabasic</application>-program, that is specified on the command line. See the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--geometry +<replaceable>X-POSITION</replaceable>+<replaceable>Y-POSITION</replaceable></literal></term>
+	  <listitem>
+	    <para>Sets the position of the graphic window, that is opened by <function>open window</function> (the <emphasis>size</emphasis> of this window, of course, is specified within the <function>open window</function>-command). An example would be <literal>-geometry +20+10</literal>, which would place the graphic window 10 pixels below the upper border and 20 pixels right of the left border of the screen. This value cannot be changed, once <application>yabasic</application> has been started.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>-fg <replaceable>FOREGROUND-COLOR</replaceable></literal> or <literal>--foreground <replaceable>FOREGROUND-COLOR</replaceable></literal></term>
+	  <listitem>
+	    <para><emphasis>Unix only.</emphasis> Define the foreground color for the graphics-window (that will be opened with <function><link linkend="ref_open_window">open window</link></function>). The usual X11 color names, like <emphasis>red</emphasis>, <emphasis>green</emphasis>, &hellip; are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>-bg <replaceable>BACKGROUND-COLOR</replaceable></literal> or <literal>--background <replaceable>BACKGROUND-COLOR</replaceable></literal></term>
+	  <listitem>
+	    <para><emphasis>Unix only.</emphasis> Define the background color for the graphics-window. The usual X11 color names are accepted. This value cannot be changed, once <application>yabasic</application> has been started.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--display <replaceable>X11-DISPLAY-SPECIFICATION</replaceable></literal></term>
+	  <listitem>
+	    <para><emphasis>Unix only.</emphasis> Specify the <emphasis>display</emphasis>, where the graphics window of yabasic should appear. Normally this value will be already present within the environment variable <envar>DISPLAY</envar>.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--font <replaceable>NAME-OF-FONT</replaceable></literal></term>
+	  <listitem>
+	    <para><emphasis>Under Unix.</emphasis> Name of the font, which will be used for text within the graphics window.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--font <replaceable>NAME-OF-FONT</replaceable></literal></term>
+	  <listitem>
+	    <para><emphasis>Under Windows.</emphasis> Name of the font, which will be used for graphic-text; can be any of <literal>decorative, dontcare, modern, roman, script, swiss</literal>. You may append a fontsize (measured in pixels) to any of those fontnames; for example <literal>-font swiss30</literal> chooses a swiss-type font with a size of 30 pixels.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--docu <replaceable>NAME-OF-A-PROGRAM</replaceable></literal></term>
+	  <listitem>
+	    <para>Print the <emphasis>embedded documentation</emphasis> of the named program. The embedded documentation of a program consists of all the comments within the program, which start with the special keyword <function><link linkend="ref_doc">doc</link></function>. This documentation can also be seen by choosing the corresponding entry from the context-menu of any <application>yabasic</application>-program.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--check</literal></term>
+	  <listitem>
+	    <para>Check for possible compatibility problems within your <application>yabasic</application>-program. E.g. this option reports, if you are using a function, that has recently changed.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><literal>--librarypath <replaceable>DIRECTORY-WITH-LIBRARIES</replaceable></literal></term>
+	  <listitem>
+	    <para>Change the directory, wherein libraries will be searched and imported (with the <function><link linkend="ref_import">import</link></function>-command). See also <function><link linkend="ref_import">import</link></function> for more information about the way, libraries are searched. There is also a <function><link linkend="ref_poke">poke</link></function> for changing this path.</para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term><literal>--</literal></term>
+	  <listitem>
+	    <para>Do not try to parse any further options; rather pass the subsequent words from the commandline to <application>yabasic</application>.</para>
+	  </listitem>
+	</varlistentry>	
+      </variablelist>
+
+  </chapter>
+  
 
   <chapter id="chapter_topics">
     <title>Some features of <application>yabasic</application>, explained by topic</title>
@@ -2206,7 +2173,7 @@ print "Hello World !"
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
+	  <para>The section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
 	</refsect1>
       </refentry>
 
@@ -4551,7 +4518,7 @@ import foo
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>import</function>-statement imports a library. It expects a single argument, which must be the name of a library (without the trailing <computeroutput>.yab</computeroutput>). This library will then be read and parsed and its subroutines (and variables) will be made available within the main program.</para>
-	  <para>Libraries will first be searched within the current directory (i.e. the directory within which you have invoked <application>yabasic</application>), then within a special directory, whose exact location depends on your system. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. Invoking <userinput>yabasic --help</userinput> will show the correct directory. The location of this directory may be changed with the option <literal>--library</literal> (either under <link linkend="windows_options">Windows</link> or <link linkend="unix_options">Unix</link>).</para>
+	  <para>Libraries will first be searched within the current directory (i.e. the directory within which you have invoked <application>yabasic</application>), then within a special directory, whose exact location depends on your system. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. Invoking <userinput>yabasic --help</userinput> will show the correct directory. The location of this directory may be changed with the option <literal>--librarypath</literal> (see <link linkend="chapter_options">options</link>).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -6507,7 +6474,7 @@ print peek$("foo")
 	    <varlistentry>
 	      <term><function>peek$("infolevel")</function></term>
 	      <listitem>
-		<para>Returns either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>, depending on the current infolevel. This value can be specified with an option (either under <link linkend="windows_options">windows</link> or <link linkend="unix_options">unix</link>) on the command line or changed during the execution of the program with the corresponding <function><link linkend="ref_poke">poke</link></function>; however, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this from its default value <literal>"warning"</literal>.</para>
+		<para>Returns either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>, depending on the current infolevel. This value can be specified with an <link linkend="chapter_options">option</link> on the command line or changed during the execution of the program with the corresponding <function><link linkend="ref_poke">poke</link></function>; however, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this from its default value <literal>"warning"</literal>.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -6724,6 +6691,14 @@ gets overwritten with the dump, please be careful.</para>
 		<para>Change the amount of internal information, that <application>yabasic</application> outputs during execution.</para>
 		<para>The second argument can be either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>. However, normally you will not want to change this from its default value <literal>"warning"</literal>.</para>
 		<para>See also the related <function><link linkend="ref_peek2">peek$("infolevel")</link></function>.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "librarypath","directory-with-libraries"</function></term>
+	      <listitem>
+		<para>Change the directory, wherein libraries will be searched and imported. See <function><link linkend="ref_import">import</link></function> for more information about the way, libraries are searched.</para>
+		<para>See also the related <link linkend="chapter_options">command line option</link>.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -7267,8 +7242,9 @@ See the <function><link linkend="ref_dim">dim</link></function>-command.
 	<refsynopsisdiv>
 	  <synopsis>
 rem  Hey, this is a comment
-#    this is a comment too
-// even this
+#    the hash-sign too (at beginning of line)
+// even the double slash
+' and the single quote (at beginning of line)
 print "Not a comment" #    This is an error !!
 print "Not a comment"://   But this is again a valid comment
 print "Not a comment" //   even this.
@@ -7279,7 +7255,7 @@ print "Not a comment" rem  and this !
 	  <title>Description</title>
 	  <para><function>rem</function> introduces a comment (like <literal>#</literal> or <literal>//</literal>), that extends up to the end of the line.</para>
 	  <para>Those comments do not even need a colon
-('<literal>:</literal>') in front of them; they (<literal>rem</literal>, <literal>#</literal> and <literal>//</literal>) all behave alike except for <literal>#</literal>, which may only appear at the very beginning of a line; therefore the fourth example in the synopsis above (<literal>print "Not a comment" #    This is an error !!</literal>) is indeed an error.</para>
+('<literal>:</literal>') in front of them; they (<literal>rem</literal>, <literal>#</literal>, <literal>'</literal> (single quite) and <literal>//</literal>) all behave alike except for <literal>#</literal> and <literal>'</literal>, which may only appear at the very beginning of a line; therefore the fourth example in the synopsis above (<literal>print "Not a comment" #    This is an error !!</literal>) is indeed an error.</para>
 	  <para>Note, that <function>rem</function> is an abbreviation for <emphasis>remark</emphasis>. <function>remark</function> however is <emphasis>not</emphasis> a valid command in <application>yabasic</application>.</para>
 	  <para>Finally note, that a comment introduced with '<literal>#</literal>' may have a special meaning under unix; see the entry for <link linkend="ref_hash">#</link> for details.</para>
 	</refsect1>
@@ -9831,7 +9807,7 @@ array would be a time (and resource) consuming operation; passing just a referen
 	  <para>The <function><link linkend="ref_bind">bind</link></function>-command, which does the actual job of creating the standalone program from the <application>yabasic</application>-interpreter and your program.</para>
 	</listitem>
 	<listitem>
-	  <para>The command-line Option <literal>-bind</literal> (available under <link linkend="windows_options">windows</link> and <link linkend="unix_options">Unix</link>), which does the same from the command-line.</para>
+	  <para>The command-line Option <literal>--bind</literal> (see <link linkend="chapter_options">options</link></link>), which does the same from the command-line.</para>
 	</listitem>
 	<listitem>
 	  <para>The special <function><link linkend="ref_peek">peek("isbound")</link></function>, which may be used to check, if the <application>yabasic</application>-program containing this <function>peek</function> is bound to the interpreter as part of a standalone program.</para>
@@ -9891,7 +9867,7 @@ print "Hello World !"
       </sect3>
       <sect3>
 	<title>See also</title>
-	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line options for <link linkend="unix_options">Unix</link> and <link linkend="windows_options">Windows</link>.</para>
+	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
       </sect3>
     </sect1>
 
