@@ -10,7 +10,9 @@
   documentation.
 
   If you want to modify yabasic itself and participate in its development, read below.
-  A short draft on changing yabasic can be found at http://www.yabasic.de/changing.html.
+  The various files README.org in subdirectories may contain some hints to.
+
+  A short overview on changing yabasic can be found at http://www.yabasic.de/changing.html.
 
 * Table of Content						      :TOC_2:
  - [[#the-three-top-level-directories][The three top-level directories]]
@@ -112,14 +114,19 @@
 
    To build yabasic, go through the stages in this sequence:
 
+   - Follow the instructions in unix/lang/README.org, e.g. for incrementing
+     the version of yabasic
    - Build under Unix in directory unix
    - Build under Windows in directory windows
    - Build under Windows in directory web
      
    Depending on your changes and desired products, you do not need to
    build on all stages however.
-
+   
    The tern "build" in the above list refers to these subtasks:
    - "git pull/add/commit/push" as all changes between the platforms
      unix and windows are only propagated by git
-   - "rake" as (almost) all tasks are automated within the Rakefile
+   - "rake" as (almost) all tasks are automated within the Rakefile.
+
+   See the previous chapters for a more detailed description of the
+   build process.
