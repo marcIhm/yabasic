@@ -46,7 +46,8 @@ Here is its content:
      Options
      Setting defaults
  
- 4. Some features of yabasic, explained by topic
+ 4.
+ 5. Some features of yabasic, explained by topic
  
      print, input and others
      Control statements: loops, if and switch
@@ -58,7 +59,7 @@ Here is its content:
      Data and such
      Other interesting commands.
  
- 5. All commands and functions of yabasic listed by topic
+ 6. All commands and functions of yabasic listed by topic
  
      Number processing and conversion
      Conditions and control structures
@@ -69,7 +70,7 @@ Here is its content:
      Other commands
      Graphics and printing
  
- 6. All commands and functions of yabasic grouped alphabetically
+ 7. All commands and functions of yabasic grouped alphabetically
  
      A
      B
@@ -95,7 +96,7 @@ Here is its content:
      Special characters
      Reserved Words
  
- 7. Some general concepts and terms
+ 8. Some general concepts and terms
  
      Logical shortcuts
      Conditions and expressions
@@ -104,12 +105,12 @@ Here is its content:
      Escape-sequences
      Creating a standalone program from your yabasic-program
  
- 8. A few example programs
+ 9. A few example programs
  
      A very simple program
      The demo of yabasic
  
- 9. The Copyright of yabasic
+ 10. The Copyright of yabasic
  
  Chapter 1. Introduction
  
@@ -196,73 +197,12 @@ Here is its content:
  
  Under Windows yabasic will mostly be invoked by double-clicking on an
  appropriate icon; this way you do not have a chance to specify any of the
- command line options below. However, advanced users may add some of those
- options to the appropriate entries in the registry.
+ command line options below. However, advanced users may change the librarypath
+ in the registry, which has the same effect as specifying it as an option on the
+ command line.
  
- All the options below may be abbreviated, as long as the abbreviation does not
- become ambiguous. For example, you may write -e instead of -execute.
- 
- -help or -?
- 
-     Prints a short help message, which itself describes two further
-     help-options.
- 
- -version
- 
-     Prints the version of yabasic.
- 
- -geometry +X-POSITION+Y-POSITION
- 
-     Sets the position of the graphic window, that is opened by open window (the
-     size of this window, of course, is specified within the open
-     window-command). An example would be -geometry +20+10, which would place
-     the graphic window 10 pixels below the upper border and 20 pixels right of
-     the left border of the screen. This value cannot be changed, once yabasic
-     has been started.
- 
- -font NAME-OF-FONT
- 
-     Name of the font, which will be used for graphic-text; can be any of
-     decorative, dontcare, modern, roman, script, swiss. You may append a
-     fontsize (measured in pixels) to any of those fontnames; for example -font
-     swiss30 chooses a swiss-type font with a size of 30 pixels.
- 
- -bind NAME-OF-STANDALONE-PROGRAM
- 
-     Create a standalone program (whose name is specified by
-     NAME-OF-STANDALONE-PROGRAM) from the yabasic-program, that is specified on
-     the command line. See the section about creating a standalone-program for
-     details.
- 
- -execute A-PROGRAM-AS-A-SINGLE-STRING
- 
-     With this option you may specify some yabasic-code to be executed right
-     away.This is useful for very short programs, which you do not want to save
-     within a file. If this option is given, yabasic will not read any code from
-     a file. Let's say, you have forgotten some of the square numbers between 1
-     and 10; in this case the command yabasic -e 'for a=1 to 10:print a*a:next
-     a' will give you the answer immediately.
- 
- -infolevel INFOLEVEL
- 
-     Change the infolevel of yabasic, where INFOLEVEL can be one of debug, note,
-     warning, error and fatal (the default is warning). This option changes the
-     amount of debugging-information yabasic produces. However, normally only
-     the author of yabasic (me !) would want to change this.
- 
- -doc NAME-OF-A-PROGRAM
- 
-     Print the embedded documentation of the named program. The embedded
-     documentation of a program consists of all the comments within the program,
-     which start with the special keyword doc. This documentation can also be
-     seen by choosing the corresponding entry from the context-menu of any 
-     yabasic-program.
- 
- -librarypath DIRECTORY-WITH-LIBRARIES
- 
-     Change the directory, wherein libraries will be searched and imported (with
-     the import-command). See also this entry for more information about the
-     way, libraries are searched.
+ See the chapter on options for a complete list of all options, either on Unix
+ or Windows.
  
  The context Menu
  
@@ -327,87 +267,10 @@ Here is its content:
  
  Options
  
- yabasic accepts a number of options on the command line. All these options
- below may be abbreviated, as long as the abbreviation does not become
- ambiguous. For example you may write -e instead of -execute.
+ yabasic accepts a number of options on the command line.
  
- -help or -?
- 
-     Prints a short help message, which itself describes two further
-     help-options.
- 
- -version
- 
-     Prints the version of yabasic.
- 
- -fg FOREGROUND-COLOR or -foreground FOREGROUND-COLOR
- 
-     Define the foreground color for the graphics-window (that will be opened
-     with open window). The usual X11 color names, like red, green, ? are
-     accepted. This value cannot be changed, once yabasic has been started.
- 
- -bg BACKGROUND-COLOR or -background BACKGROUND-COLOR
- 
-     Define the background color for the graphics-window. The usual X11 color
-     names are accepted. This value cannot be changed, once yabasic has been
-     started.
- 
- -geometry +X-POSITION+Y-POSITION
- 
-     Sets the position of the graphic window, that is opened by open window (the
-     size of this window, of course, is specified with the open window-command).
-     An example would be +20+10, which would place the graphic window 10 pixels
-     below the upper border and 20 pixels right of the left border of the
-     screen. Note, that the size of the window may not be specified here (well
-     it may, but it will be ignored anyway). This value cannot be changed, once 
-     yabasic has been started.
- 
- -display BACKGROUND-COLOR
- 
-     Specify the display, where the graphics window of yabasic should appear.
-     Normally, however this value will be already present within the environment
-     variable DISPLAY.
- 
- -font NAME-OF-FONT
- 
-     Name of the font, which will be used for text within the graphics window.
- 
- -execute A-PROGRAM-AS-A-SINGLE-STRING
- 
-     With this option you may specify some yabasic-code to be executed right
-     away. This is useful for very short programs, which you do not want to save
-     to a file. If this option is given, yabasic will not read any code from a
-     file. E.g.
- 
-     yabasic -e 'for a=1 to 10:print a*a:next a'
- 
-     prints the square numbers from 1 to 10.
- 
- -bind NAME-OF-STANDALONE-PROGRAM
- 
-     Create a standalone program (whose name is specified by
-     NAME-OF-STANDALONE-PROGRAM) from the yabasic-program, that is specified on
-     the command line. See the section about creating a standalone-program for
-     details.
- 
- -infolevel INFOLEVEL
- 
-     Change the infolevel of yabasic where INFOLEVEL can be one of debug, note,
-     warning, error and fatal (the default is warning). This option changes the
-     amount of debugging-information yabasic produces. However, normally only
-     the author of yabasic (me !) would want to change this.
- 
- -doc NAME-OF-A-PROGRAM
- 
-     Print the embedded documentation of the named program. The embedded
-     documentation of a program consists of all the comments within the program,
-     which start with the special keyword doc.
- 
- -librarypath DIRECTORY-WITH-LIBRARIES
- 
-     Change the directory from which libraries will be imported (with the import
-     -command). See also this entry for more information about the way,
-     libraries will be searched.
+ See the chapter on options for a complete list of all options, either on Unix
+ or Windows.
  
  Setting defaults
  
@@ -426,7 +289,112 @@ Here is its content:
  background color to gold. The window will appear at position 10,10 and the text
  font will be 9x15.
  
- Chapter 4. Some features of yabasic, explained by topic
+ Here are the options, that yabasic accepts on the commandline (both under Unix
+ and Windows).
+ 
+ All the options below may be abbreviated (and one hyphen may be dropped), as
+ long as the abbreviation does not become ambiguous. For example, you may write
+ -e instead of --execute.
+ 
+ --help or -?
+ 
+     Prints a short help message, which itself describes two further
+     help-options.
+ 
+ --version
+ 
+     Prints the version of yabasic.
+ 
+ --infolevel INFOLEVEL
+ 
+     Change the infolevel of yabasic, where INFOLEVEL can be one of debug, note,
+     warning, error, fatal and bison (the default is warning). This option
+     changes the amount of debugging-information yabasic produces. However,
+     normally only the author of yabasic (me !) would want to change this.
+ 
+ --execute A-PROGRAM-AS-A-SINGLE-STRING
+ 
+     With this option you may specify some yabasic-code to be executed right
+     away. This is useful for very short programs, which you do not want to save
+     to a file. If this option is given, yabasic will not read any code from a
+     file. E.g.
+ 
+     yabasic -e 'for a=1 to 10:print a*a:next a'
+ 
+     prints the square numbers from 1 to 10.
+ 
+ --bind NAME-OF-STANDALONE-PROGRAM
+ 
+     Create a standalone program (whose name is specified by
+     NAME-OF-STANDALONE-PROGRAM) from the yabasic-program, that is specified on
+     the command line. See the section about creating a standalone-program for
+     details.
+ 
+ --geometry +X-POSITION+Y-POSITION
+ 
+     Sets the position of the graphic window, that is opened by open window (the
+     size of this window, of course, is specified within the open
+     window-command). An example would be -geometry +20+10, which would place
+     the graphic window 10 pixels below the upper border and 20 pixels right of
+     the left border of the screen. This value cannot be changed, once yabasic
+     has been started.
+ 
+ -fg FOREGROUND-COLOR or --foreground FOREGROUND-COLOR
+ 
+     Unix only. Define the foreground color for the graphics-window (that will
+     be opened with open window). The usual X11 color names, like red, green, ?
+     are accepted. This value cannot be changed, once yabasic has been started.
+ 
+ -bg BACKGROUND-COLOR or --background BACKGROUND-COLOR
+ 
+     Unix only. Define the background color for the graphics-window. The usual
+     X11 color names are accepted. This value cannot be changed, once yabasic
+     has been started.
+ 
+ --display X11-DISPLAY-SPECIFICATION
+ 
+     Unix only. Specify the display, where the graphics window of yabasic should
+     appear. Normally this value will be already present within the environment
+     variable DISPLAY.
+ 
+ --font NAME-OF-FONT
+ 
+     Under Unix. Name of the font, which will be used for text within the
+     graphics window.
+ 
+ --font NAME-OF-FONT
+ 
+     Under Windows. Name of the font, which will be used for graphic-text; can
+     be any of decorative, dontcare, modern, roman, script, swiss. You may
+     append a fontsize (measured in pixels) to any of those fontnames; for
+     example -font swiss30 chooses a swiss-type font with a size of 30 pixels.
+ 
+ --docu NAME-OF-A-PROGRAM
+ 
+     Print the embedded documentation of the named program. The embedded
+     documentation of a program consists of all the comments within the program,
+     which start with the special keyword doc. This documentation can also be
+     seen by choosing the corresponding entry from the context-menu of any 
+     yabasic-program.
+ 
+ --check
+ 
+     Check for possible compatibility problems within your yabasic-program. E.g.
+     this option reports, if you are using a function, that has recently
+     changed.
+ 
+ --librarypath DIRECTORY-WITH-LIBRARIES
+ 
+     Change the directory, wherein libraries will be searched and imported (with
+     the import-command). See also import for more information about the way,
+     libraries are searched.
+ 
+ --
+ 
+     Do not try to parse any further options; rather pass the subsequent words
+     from the commandline to yabasic.
+ 
+ Chapter 5. Some features of yabasic, explained by topic
  
  print, input and others
  Control statements: loops, if and switch
@@ -564,7 +532,7 @@ Here is its content:
    * The current time or date can be retrieved with (guess what !) time$ and
      date$.
  
- Chapter 5. All commands and functions of yabasic listed by topic
+ Chapter 6. All commands and functions of yabasic listed by topic
  
  Number processing and conversion
  Conditions and control structures
@@ -948,7 +916,7 @@ Here is its content:
  window origin
      move the origin of a window
  
- Chapter 6. All commands and functions of yabasic grouped alphabetically
+ Chapter 7. All commands and functions of yabasic grouped alphabetically
  
  A
  B
@@ -1554,7 +1522,7 @@ Here is its content:
  See also
  
  The section about creating a standalone-program, the peek-function and the
- command line options for Unix and Windows.
+ command line options.
  
  -------------------------------------------------------------------------------
  
@@ -3857,7 +3825,7 @@ Here is its content:
  directory, whose exact location depends on your system. Typical values would be
  /usr/lib under Unix or C:\yabasic\lib under Windows. Invoking yabasic --help
  will show the correct directory. The location of this directory may be changed
- with the option --library (either under Windows or Unix).
+ with the option --librarypath (see options).
  
  Example
  
@@ -5667,7 +5635,7 @@ Here is its content:
      ("error") explains the nature of the error. Note, that the codes 10,11 and
      12 refer to the seek-command.
  
-     Table 6.1. Error codes
+     Table 7.1. Error codes
  
      +-------------------------------------------------------------------------+
      |  peek   |peek$("error")|                  Explanation                   |
@@ -5812,11 +5780,10 @@ Here is its content:
  peek$("infolevel")
  
      Returns either "debug", "note", "warning", "error" or "fatal", depending on
-     the current infolevel. This value can be specified with an option (either
-     under windows or unix) on the command line or changed during the execution
-     of the program with the corresponding poke; however, normally only the
-     author of yabasic (me !) would want to change this from its default value
-     "warning".
+     the current infolevel. This value can be specified with an option on the
+     command line or changed during the execution of the program with the
+     corresponding poke; however, normally only the author of yabasic (me !)
+     would want to change this from its default value "warning".
  
  peek$("textalign")
  
@@ -6551,8 +6518,9 @@ Here is its content:
  Synopsis
  
  rem  Hey, this is a comment
- #    this is a comment too
- // even this
+ #    the hash-sign too (at beginning of line)
+ // even the double slash
+ ' and the single quote (at beginning of line)
  print "Not a comment" #    This is an error !!
  print "Not a comment"://   But this is again a valid comment
  print "Not a comment" //   even this.
@@ -6563,10 +6531,11 @@ Here is its content:
  rem introduces a comment (like # or //), that extends up to the end of the
  line.
  
- Those comments do not even need a colon (':') in front of them; they (rem, #
- and //) all behave alike except for #, which may only appear at the very
- beginning of a line; therefore the fourth example in the synopsis above (print
- "Not a comment" # This is an error !!) is indeed an error.
+ Those comments do not even need a colon (':') in front of them; they (rem, #, '
+ (single quite) and //) all behave alike except for # and ', which may only
+ appear at the very beginning of a line; therefore the fourth example in the
+ synopsis above (print "Not a comment" # This is an error !!) is indeed an
+ error.
  
  Note, that rem is an abbreviation for remark. remark however is not a valid
  command in yabasic.
@@ -7409,7 +7378,7 @@ Here is its content:
  letter 'x', because it would be hard to figure out, how many spaces are
  produced exactly otherwise.
  
- Table 6.2. Examples for the format argument
+ Table 7.2. Examples for the format argument
  
  +-----------------------------------------------------------------------------+
  |   Example   | Result for |                                                  |
@@ -8725,7 +8694,7 @@ Here is its content:
  
  Please see here for explanations on how to use these words in yabasic.
  
- Chapter 7. Some general concepts and terms
+ Chapter 8. Some general concepts and terms
  
  Logical shortcuts
  Conditions and expressions
@@ -8844,7 +8813,7 @@ Here is its content:
  len("\a") returns 1, because yabasic replaces "\a" with the matching special
  character just before the program executes.
  
- Table 7.1. Escape sequences
+ Table 8.1. Escape sequences
  
  +--------------------------------------------+
  |Escape Sequence| Matching special character |
@@ -8911,8 +8880,8 @@ Here is its content:
    * The bind-command, which does the actual job of creating the standalone
      program from the yabasic-interpreter and your program.
  
-   * The command-line Option -bind (available under windows and Unix), which
-     does the same from the command-line.
+   * The command-line Option --bind (see options), which does the same from the
+     command-line.
  
    * The special peek("isbound"), which may be used to check, if the yabasic
      -program containing this peek is bound to the interpreter as part of a
@@ -8998,10 +8967,9 @@ Here is its content:
  
  See also
  
- The bind-command, the peek-function and the command line options for Unix and
- Windows.
+ The bind-command, the peek-function and the command line options.
  
- Chapter 8. A few example programs
+ Chapter 9. A few example programs
  
  A very simple program
  The demo of yabasic
@@ -9286,7 +9254,7 @@ Here is its content:
  
  
  
- Chapter 9. The Copyright of yabasic
+ Chapter 10. The Copyright of yabasic
  
  yabasic may be copied under the terms of the MIT License, which is distributed
  with yabasic in the file LICENSE.

@@ -83,6 +83,10 @@ class News
     @version = @paras[0].version
   end
 
+  def as_text
+    @paras[0].as_text
+  end
+  
   def as_html indent
     @paras[0].as_html indent
   end
@@ -103,6 +107,7 @@ class News_para
     @month_day = $2
     @year = $3
     @lines = []
+    @text = paras
     lines.drop(1).each do |l|
       case l
       ## To require a fixed number of spaces makes it easier to parse correctly
@@ -114,6 +119,10 @@ class News_para
         fail "Cannot parse line of '#{fname}': '#{l}'"
       end
     end
+  end
+
+  def as_text
+    @text
   end
   
   def as_html indent

@@ -1,6 +1,5 @@
 #!./yabasic
 
-poke librarypath,".."
 import library8
 
 print foo$()
