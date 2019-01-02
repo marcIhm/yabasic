@@ -1,4 +1,4 @@
-This directory contains eveything needed to build yabasic and
+This directory contains everything needed to build yabasic and
 its documentation under various flavours of unix.
 
 The Rakefile (type 'rake' to invoke) orchestrates the process of
@@ -7,9 +7,6 @@ heavily on the autocof toolchain and its Makefile.
 
 The two subdirectories:
 
-- lang :: the complete code for the Yabasic interpreter
-- doc :: the docbook-xml-sources for its documentation
+- lang :: The complete code for the Yabasic interpreter
+- doc :: The docbook-xml-sources for its documentation
 
-Some Hints:
-
-- To create the documentation: rake lang/yabasic.htm

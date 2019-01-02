@@ -1,3 +1,13 @@
+Version 2.81.2 (January 2, 2019)
+  - Fixed a problem under netbsd, which prevented yabasic from finding
+    its own executable
+  - Fix on macos for curses-initialization e.g. during "clear screen"
+  - Fix that allows libraries to start with a comment introduced by 
+    a hash or a single quote
+  - Made the prior "Guide into the guts" available again as "Some
+    remarks on changing Yabasic"; see www.yabasic.de
+  - Document options for unix and windows in the same chapter
+
 Version 2.81.1 (November 1, 2018)
   - Fix: Allow yabasic to run from within a script
 

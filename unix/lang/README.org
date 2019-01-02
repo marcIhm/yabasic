@@ -4,7 +4,9 @@ Some hints:
 - To advance the Version of yabasic:
   - Edit configure.ac and NEWS
   - Add a matching annotated tag after all platforms have been built
+
 - Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
+
 - To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
   - Then run yabasic as normal: ./yabasic tests/common/speed-yab
   - Run gprof: gprof ./yabasic
