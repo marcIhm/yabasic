@@ -861,7 +861,7 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
     ret = system (cmd);
     if (curinized) {
 #ifdef __APPLE__
-	tcsetpgrp(STDIN_FILENO, getpid()));
+	tcsetpgrp(STDIN_FILENO, getpid());
 #else
         if (!tcsetpgrp(STDIN_FILENO, getpid())) {
 	    sprintf(string,"could not get control of terminal: %s",
