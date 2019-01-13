@@ -107,7 +107,7 @@ task :news => :versions do
     puts "ChangeLog already up to date"
   else
     File.open('lang/ChangeLog','w') do |f|
-      f.write news.as_text + "\n"
+      f.write news.as_text + "\n\n"
       f.write cl_content
       puts "Updated ChangeLog"
     end
