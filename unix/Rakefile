@@ -112,6 +112,8 @@ task :news => :versions do
       puts "Updated ChangeLog"
     end
   end
+  cp 'lang/ChangeLog', '../ChangeLog.org'
+  File.open('../tag-message','w') { |f| f.write news.as_text + "\n" }
 end
 
 desc 'Create directory to collect products'

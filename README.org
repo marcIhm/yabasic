@@ -114,11 +114,16 @@
 
    To build yabasic, go through the stages in this sequence:
 
-   - Follow the instructions in unix/lang/README.org, e.g. for incrementing
-     the version of yabasic
-   - Build under Unix in directory unix
+   - Implement some features, fix some bugs, write tests, improve the docu
+   - cd to unix/lang:
+     - Edit configure.ac to increment the version of yabasic:
+     - Document changes in NEWS
+   - Build under Unix (e.g. fedora) in directory unix
    - Build under Windows in directory windows
    - Build under Windows in directory web
+   - In the toplevel-dir: 
+     - Check the correctness of yabasic.version
+     - git tag -a $( cat yabasic.version ) -F tag-message
      
    Depending on your changes and desired products, you do not need to
    build on all stages however.

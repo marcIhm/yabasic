@@ -1,13 +1,6 @@
 
 Some hints: 
 
-- To advance the Version of yabasic:
-  - Edit configure.ac and NEWS
-  - Build and push under unix
-  - Pull, build and push under windows and web
-  - Add a matching annotated tag after all platforms have been built
-    (like git tag -a -m 2.81.2 2.81.2)
-
 - Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
 
 - To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
