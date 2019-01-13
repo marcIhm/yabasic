@@ -1,3 +1,8 @@
+Version 2.81.3 (January 13, 2019)
+  - Fixed a compile-problem on macos
+  - Corrected a rendering problem on www.yabasic.de, which had cut off the
+    bottom-lines of many pages
+
 Version 2.81.2 (January 2, 2019)
   - Fixed a problem under netbsd, which prevented yabasic from finding
     its own executable
