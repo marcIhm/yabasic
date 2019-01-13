@@ -3,6 +3,8 @@ Some hints:
 
 - To advance the Version of yabasic:
   - Edit configure.ac and NEWS
+  - Build and push under unix
+  - Pull, build and push under windows and web
   - Add a matching annotated tag after all platforms have been built
     (like git tag -a -m 2.81.2 2.81.2)
 
