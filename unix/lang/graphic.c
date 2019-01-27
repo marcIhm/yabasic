@@ -2523,6 +2523,7 @@ getwinkey (char *retkey)
     do {
         if (keysym) {
             XFree(keysym);
+	    keysym = NULL;
         }
 
         if (!XCheckWindowEvent(display, window, KeyPressMask | ButtonPressMask | ButtonReleaseMask, &event)) {
@@ -2534,8 +2535,11 @@ getwinkey (char *retkey)
                            NULL);
         if (event.type == KeyPress) {
             keysym = XGetKeyboardMapping(display, event.xkey.keycode, 1,&numsym);
-            sym = keysym[0];
-            XFree(keysym);
+	    if (keysym) {
+	      sym = keysym[0];
+	      XFree(keysym);
+	      keysym = NULL;
+	    }
         }
     } while (event.type == KeyPress &&
              (sym == XK_Shift_L || sym == XK_Shift_R ||
@@ -2567,8 +2571,11 @@ getwinkey (char *retkey)
     if (len != 1 || !isprint (retkey[0])) {
         yk = -1;
         keysym = XGetKeyboardMapping(display, event.xkey.keycode, 1,&numsym);
-        sym = keysym[0];
-        XFree(keysym);
+	if (keysym) {
+	  sym = keysym[0];
+	  XFree(keysym);
+	  keysym = NULL;
+	}
 
         switch (sym) {
         case XK_BackSpace:
