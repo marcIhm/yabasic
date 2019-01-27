@@ -274,16 +274,12 @@ curinit(void)			/* initialize curses */
 #endif
 
 #ifdef UNIX
-#ifdef __APPLE__
-    tcsetpgrp(STDIN_FILENO, getpid());
-#else
-    if (!tcsetpgrp(STDIN_FILENO, getpid())) {
+    if (tcsetpgrp(STDIN_FILENO, getpid())) {
 	sprintf(string,"could not get control of terminal: %s",
                 my_strerror(errno));
         error (ERROR,string);
 	return;
     };
-#endif
     if (!initscr()) {
         error (ERROR,"could not initialize curses");
 	return;
