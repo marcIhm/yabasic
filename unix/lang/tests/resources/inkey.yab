@@ -1,0 +1,7 @@
+#
+# Test inkey$-function
+#
+clear screen
+a$=inkey$
+print "Echo of ",a$
+

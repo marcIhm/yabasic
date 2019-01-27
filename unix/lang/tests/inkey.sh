@@ -1,24 +1,21 @@
 #!/bin/bash
 
 #
-# Check that yabasic can be run from within a script
+# Test inkey$-function
 # Use tmux as a remote control
 #
 
 # Prepare variables
-RAND=$RANDOM   ## $RANDOM returns a numeric random number
-EXPECTED="Echo of $RAND"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SCRIPT=$DIR/resources/in_script.sh
+EXPECTED="Echo of A"
 
 # start tmux
-tmux -u new-session -d -x 80 -y 20 -s in_script
+tmux -u new-session -d -x 80 -y 20 -s inkey
 
-# Start script within tmux-session and supply input
-tmux send -l -t in_script $SCRIPT
-tmux send -t in_script ENTER
-tmux send -l -t in_script $RAND
-tmux send -t in_script ENTER
+# Start yabasic within tmux-session and supply input
+tmux send -l -t inkey "./yabasic tests/resources/inkey.yab"
+tmux send -t inkey ENTER
+tmux send -l -t inkey A
 sleep .5
 
 # Get and compare output of script from tmux
@@ -29,7 +26,7 @@ EOF
 RET=$?
 
 # End tmux session
-tmux kill-session -t in_script
+tmux kill-session -t inkey
 
 # Evaluate result
 if [ $RET -ne 0 ] ; then

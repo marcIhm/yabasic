@@ -1,0 +1,8 @@
+#
+# Test print at
+#
+clear screen
+print at(6,2) "c"
+print at(5,2) "b"
+print at(4,2) "a"
+
