@@ -7400,8 +7400,9 @@ Here is its content:
  |%012.5g      |0000003141.6|specifies the overall number of digits (before and|
  |             |            |after the decimal point).                         |
  |-------------+------------+--------------------------------------------------|
- |%-12.5f      |3141.59265xx|The '-' requests the output to be left-centered   |
- |             |            |(therefor the filling space appears at the right).|
+ |             |            |The '-' requests the output to be left-centered   |
+ |%-12.5f      |3141.59265xx|(therefore the filling space appears at the       |
+ |             |            |right).                                           |
  |-------------+------------+--------------------------------------------------|
  |             |            |Each '#' specifies a digit (either before or after|
  |             |            |the dot), the '.' specifies the position of the   |
@@ -7727,7 +7728,7 @@ Here is its content:
  
  
  This example (mis)uses tell to get the size of the file. The seek positions the
- file pointer at the end of the file, therefor the call to tell returns the
+ file pointer at the end of the file, therefore the call to tell returns the
  total length of the file.
  
  See also
