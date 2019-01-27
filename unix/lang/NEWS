@@ -1,3 +1,7 @@
+Version 2.81.4 (January 27, 2019)
+  - Fixed error with inkey$ and clear screen
+  - Fixed fatal error with inkey$ and upper case letters
+
 Version 2.81.3 (January 13, 2019)
   - Fixed a compile-problem on macos
   - Corrected a rendering problem on www.yabasic.de, which had cut off the
