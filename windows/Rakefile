@@ -34,7 +34,7 @@ end
 version = nil
 desc 'Collect Versions'
 task :versions => :build do
-  File.open('version.yab','w') { |f| f.puts 'open 1,"../yabasic.version","w":print #1 peek$("version"):close 1:exit' }
+  File.open('version.yab','w') { |f| f.puts 'open 1,"../yabasic.version","w":print #1 peek$("version");:close 1:exit' }
   sh 'cygstart --wait ./lang/Release/yabasic.exe version.yab'
   version=File.new('../yabasic.version').read.chomp.strip
   puts "Version = " + version
