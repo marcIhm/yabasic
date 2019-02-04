@@ -250,7 +250,8 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
   int length = -1;
   FILE* maps = NULL;
 
-  for (int r = 0; r < WAI_PROC_SELF_MAPS_RETRY; ++r)
+  int r;
+  for (r = 0; r < WAI_PROC_SELF_MAPS_RETRY; ++r)
   {
     maps = fopen(WAI_PROC_SELF_MAPS, "r");
     if (!maps)
