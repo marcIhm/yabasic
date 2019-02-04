@@ -19,7 +19,7 @@ tmux send -l -t in_script $SCRIPT
 tmux send -t in_script ENTER
 tmux send -l -t in_script $RAND
 tmux send -t in_script ENTER
-sleep .5
+sleep 2
 
 # Get and compare output of script from tmux
 FOUND=`tmux capture-pane -p`
