@@ -124,6 +124,8 @@
    - In the toplevel-dir: 
      - Check the correctness of yabasic.version
      - git tag -a $( cat yabasic.version ) -F tag-message
+   - Maybe submit new version to symantec and microsoft virus detection
+     - https://submit.symantec.com/false_positive/standard/
      
    Depending on your changes and desired products, you do not need to
    build on all stages however.
