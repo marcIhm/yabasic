@@ -22,7 +22,7 @@ tmux send -t in_script ENTER
 sleep .5
 
 # Get and compare output of script from tmux
-FOUND=`tmux capture-pane -p`
+FOUND=`tmux capture-pane -t in_script -p`
 grep -q "$EXPECTED" <<EOF
 $FOUND
 EOF

@@ -18,7 +18,7 @@ tmux send -t print-at ENTER
 sleep .5
 
 # Get and compare output of script from tmux
-FOUND=`tmux capture-pane -p`
+FOUND=`tmux capture-pane -t print-at -p`
 grep -q "$EXPECTED" <<EOF
 $FOUND
 EOF
