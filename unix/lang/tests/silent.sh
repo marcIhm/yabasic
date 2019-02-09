@@ -5,7 +5,7 @@
 #
 OUT=`./yabasic tests/resources/silent.yab 2>&1`
 echo "$OUT"
-if [ "$OUT" -ne "" ]; then
+if [ -n "$OUT" ]; then
     exit 1
 else
     exit 0
