@@ -1,0 +1,6 @@
+#!./yabasic
+
+import library9
+
+x = first_level_import_func()
+if x<>1234 error "Expected 1234, got " + str$(x)

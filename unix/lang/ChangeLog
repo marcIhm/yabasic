@@ -1,3 +1,7 @@
+Version 2.81.5 (February 4, 2019)
+  - Advanced version of autotools
+  - Fix in tests
+
 Version 2.81.4 (January 27, 2019)
   - Fixed error with inkey$ and clear screen
   - Fixed fatal error with inkey$ and upper case letters

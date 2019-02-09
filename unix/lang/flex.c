@@ -3421,10 +3421,10 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	yy_size_t i;
+	int i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = (yy_size_t) _yybytes_len + 2;
+	n = (yy_size_t) (_yybytes_len + 2);
 	buf = (char *) yyalloc(n  );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
@@ -3757,7 +3757,7 @@ int import_lib(char *name) /* import library */
   if (is_bound) {
     full=name;
   } else {
-    yyin=open_library(name,&full,FALSE);
+    yyin=open_library(name,&full);
     if (!yyin) return FALSE;
     yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
     include_stack[include_depth]=YY_CURRENT_BUFFER;
@@ -3787,16 +3787,15 @@ int import_lib(char *name) /* import library */
   return TRUE;
 }
 
-FILE *open_library(char *name,char **fullreturn,int without) /* search and open a library */
+FILE *open_library(char *name,char **fullreturn) /* search and open a library */
 {
-  static char full[200];
+  static char full_wdir[200];
+  static char full_main[200];
+  static char full_global[200];
   char unquoted[200];
   char *p;
   FILE *lib;
   int i;
-  char *trail;
-
-  if (fullreturn) *fullreturn=full;
 
   for(p=name;strchr(" \"'`",*p);p++) if (!*p) break;
   strncpy(unquoted,p,200);
@@ -3814,37 +3813,52 @@ FILE *open_library(char *name,char **fullreturn,int without) /* search and open 
     return NULL;
   }
 
-  /* search local */
-  trail=".yab";
-  for(i=0;i<2;i++) {
-    strncpy(full,name,200);
-    if (!strchr(full,'.')) strcat(full,trail);
-    lib=fopen(full,"r");
-    if (lib) return lib;
-    trail="";
-    if (!without) break;
-  }
+  /* search in current working dir */
+  if (fullreturn) *fullreturn=full_wdir;
+  strncpy(full_wdir,name,200);
+  strcat(full_wdir,".yab");
+  lib=fopen(full_wdir,"r");
+  if (lib) return lib;
   
-  /* search in global location */
-  trail=".yab";
-  for(i=0;i<2;i++) {
-    strncpy(full,library_path,200);
-    if (full[0] && !strchr("\\/",full[strlen(full)-1])) {
-#ifdef UNIX
-      strcat(full,"/");
-#else
-      strcat(full,"\\");
-#endif
-    }     
-    strcat(full,name);
-    if (!strchr(full,'.')) strcat(full,trail);
-    lib=fopen(full,"r");
-    if (lib) return lib;
-    trail="";
-    if (!without) break;
+  /* search in dir of main file */
+  if (fullreturn) *fullreturn=full_main;
+  if (strchr(main_file_name,'/') || strchr(main_file_name,'\\')) {
+    strncpy(full_main,main_file_name,200);
+  } else {
+    full_main[0]='\0';
   }
-
-  sprintf(string,"could not open library '%s'",full);
+  for(i=0;i<2;i++) {
+    p=strrchr(full_main,"\\/"[i]);
+    if (p) *p='\0';
+  }
+  if (full_main[0] && !strchr("\\/",full_main[strlen(full_main)-1])) {
+#ifdef UNIX
+    strcat(full_main,"/");
+#else
+    strcat(full_main,"\\");
+#endif
+  }     
+  strcat(full_main,name);
+  strcat(full_main,".yab");
+  lib=fopen(full_main,"r");
+  if (lib) return lib;
+  
+  /* search in global directory */
+  if (fullreturn) *fullreturn=full_global;
+  strncpy(full_global,library_path,200);
+  if (full_global[0] && !strchr("\\/",full_global[strlen(full_global)-1])) {
+#ifdef UNIX
+    strcat(full_global,"/");
+#else
+    strcat(full_global,"\\");
+#endif
+  }     
+  strcat(full_global,name);
+  strcat(full_global,".yab");
+  lib=fopen(full_global,"r");
+  if (lib) return lib;
+    
+  sprintf(string,"could not open library '%s': not in current workingdir as '%s', not in directory of main file as '%s', not in library path as '%s'",name,full_wdir,full_main,full_global);
   error(ERROR,string);
   return NULL;
 }

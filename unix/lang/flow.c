@@ -210,7 +210,7 @@ create_subr_link (char *label)	/* create link to subroutine */
         return;
     }
     dot = strchr (label, '.');
-    strcpy (global, "main");
+    strcpy (global, libfile_stack[include_depth-1]->s);
     strcat (global, dot);
 
     /* check, if label is duplicate */

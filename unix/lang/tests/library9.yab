@@ -1,0 +1,5 @@
+import library10
+
+export sub first_level_import_func()
+  return second_level_import_func()
+end sub

@@ -301,7 +301,7 @@ yabasic*font: 9x15
       <title>Subroutines and Libraries</title>
       <para>The best way to break any <application>yabasic</application>-program into smaller, more manageable chunks are <emphasis>subroutines</emphasis> and <emphasis>libraries</emphasis>. They are <application>yabasic</application>'s most advanced means of structuring a program.</para>
       <para>Subroutines are created with the command <function><link linkend="ref_sub">sub</link></function>. they accept parameters and may return a value. Subroutines can be called much like any builtin function of <application>yabasic</application>; therefore they allow one to <emphasis>extend</emphasis> the language itself.</para>
-      <para>Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a <emphasis>library</emphasis>. Such a library is contained within a separate file and may be included in any of your programs, using the keyword <function><link linkend="ref_import">import</link></function>.</para>
+      <para>Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a <emphasis>library</emphasis>. Such a library is contained within a separate file and may be included in any of your programs, using the keyword <function><link linkend="ref_import">import</link></function>, which see.</para>
     </sect1>
 
     <sect1>
@@ -4517,23 +4517,33 @@ import foo
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>import</function>-statement imports a library. It expects a single argument, which must be the name of a library (without the trailing <computeroutput>.yab</computeroutput>). This library will then be read and parsed and its subroutines (and variables) will be made available within the main program.</para>
-	  <para>Libraries will first be searched within the current directory (i.e. the directory within which you have invoked <application>yabasic</application>), then within a special directory, whose exact location depends on your system. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. Invoking <userinput>yabasic --help</userinput> will show the correct directory. The location of this directory may be changed with the option <literal>--librarypath</literal> (see <link linkend="chapter_options">options</link>).</para>
+	  <para>The <function>import</function>-statement imports a library. It expects a single argument, which must be the name of a library (without the trailing <computeroutput>.yab</computeroutput>). This library will then be read and parsed and its subroutines (and variables) will be made available within the importing program. Most of the time this will be the main program, but libraries my also import and use other libraries.</para>
+	  <para>Libraries will first be searched in three locations in order:
+	  <itemizedlist>
+	    <listitem>
+	      <para>The current directory, i.e. the directory from which you have invoked <application>yabasic</application>)</para>
+	    </listitem>
+	    <listitem>
+	      <para>The directory, where your main program lives. This can be different from the first directory, if you specify a path for your main program, e.g. like <literal>yabasic foo/bar.yab</literal>.</para>
+	    </listitem>
+	    <listitem>
+	    <para>Finally, libraries are searched within a special directory, whose exact location depends on your system or options when invoking <application>yabasic</application>. Typical values would be <filename>/usr/lib</filename> under Unix or <filename>C:\yabasic\lib</filename> under Windows. Invoking <userinput>yabasic --help</userinput> will show the correct directory. The location of this directory may be changed with the option <literal>--librarypath</literal> (see <link linkend="chapter_options">options</link>).</para></listitem>
+	  </itemizedlist>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
 	  <informalexample>
-	    <para>Lets say you have a <application>yabasic</application>-program <computeroutput>foo.yab</computeroutput>, which imports a library <computeroutput>lib.yab</computeroutput>. <computeroutput>foo.yab</computeroutput> reads:</para>
+	    <para>Lets say you have a <application>yabasic</application>-program <computeroutput>foo.yab</computeroutput>, which imports a library <computeroutput>lib.yab</computeroutput>. <computeroutput>foo.yab</computeroutput>; this would read:</para>
 	    <programlisting>
 import lib
 
-rem  This works ...
+rem  This works
 lib.x(0)
 
-rem  This works too ..
+rem  This works too
 x(1)
 
-rem  And this.
+rem  And this
 lib.y(2)
 
 rem  But this not !

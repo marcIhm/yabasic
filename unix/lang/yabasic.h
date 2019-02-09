@@ -203,14 +203,13 @@ extern struct command *firstref;	/* first command in UDS referencing a symbol */
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
-extern int include_stack_ptr;	/* Lex buffer for any imported file */
 extern struct libfile_name *libfile_stack[];	/* stack for library file names */
 extern struct libfile_name *currlib;	/* current libfile as relevant to bison */
 extern int inlib;		/* true, while in library */
 extern int fi_pending;		/* true, if within a short if */
 extern int libfile_chain_length;	/* length of libfile_chain */
 extern struct libfile_name *libfile_chain[];	/* list of all library file names */
-
+extern int include_depth; /* current position in libfile_stack */
 
 /* bison.c */
 extern char *current_function;	/* name of currently parsed function */
@@ -681,5 +680,5 @@ void pop_switch_id (void);  		  /* pop last switch_id */
 void yyerror (char *);		/* yyerror message */
 void open_main (FILE *, char *, char *);	/* switch to file */
 void open_string (char *);	/* open string with commands */
-FILE *open_library (char *, char **, int);	/* search and open a library */
+FILE *open_library (char *, char **);	/* search and open a library */
 void leave_lib (void);	      /* processing, when end of library is found; called by bison */

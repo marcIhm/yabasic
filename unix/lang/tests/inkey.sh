@@ -16,7 +16,7 @@ tmux -u new-session -d -x 80 -y 20 -s inkey
 tmux send -l -t inkey "./yabasic tests/resources/inkey.yab"
 tmux send -t inkey ENTER
 tmux send -l -t inkey A
-sleep .5
+sleep 2
 
 # Get and compare output of script from tmux
 FOUND=`tmux capture-pane -p`

@@ -15,7 +15,7 @@ tmux -u new-session -d -x 80 -y 20 -s print-at
 # Start yabasic within tmux-session and supply input
 tmux send -l -t print-at "./yabasic tests/resources/print-at.yab"
 tmux send -t print-at ENTER
-sleep .5
+sleep 2
 
 # Get and compare output of script from tmux
 FOUND=`tmux capture-pane -p`
