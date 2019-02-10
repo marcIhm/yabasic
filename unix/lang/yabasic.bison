@@ -36,12 +36,12 @@
 void __yy_bcopy(char *,char *,int); /* prototype missing */
 
 int tileol; /* true, read should go to eon of line */
-int mylineno = 1; /* line number; counts fresh in every new file */
 int function_type=ftNONE; /* contains function type while parsing function */
 char *current_function=NULL; /* name of currently parsed function */
 int exported=FALSE; /* true, if function is exported */
 int yylex(void);
-extern struct libfile_name *current_libfile; /*  defined in main.c: name of currently parsed file */
+extern struct library *current_library; /* defined in main.c: name of currently parsed library */
+extern int yylineno; /* defined in flex */
 int missing_endif=0;
 int missing_endif_line=0;
 int missing_endsub=0;
@@ -74,9 +74,10 @@ void report_missing(int severity,char *text) {
     if (string[0]) error(severity,string);
   }
 }
-     
+
 %}
 
+%locations
 %union {
   double fnum;          /* double number */
   int inum;             /* integer number */
@@ -147,7 +148,7 @@ program: statement_list tEOPROG {YYACCEPT;}
 
 statement_list: statement
   | statement_list {if (errorlevel<=ERROR) {YYABORT;}} 
-  tSEP {if ($3>=0) mylineno+=$3;} statement
+  tSEP statement
   ;
 
 statement:  /* empty */
@@ -162,14 +163,14 @@ statement:  /* empty */
   | repeat_loop
   | while_loop
   | do_loop
-  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi($2));if (!loop_nesting && !switch_nesting) error(ERROR,"break outside loop or switch");}
-  | tCONTINUE {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) error(ERROR,"continue outside loop");}
+  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(@1,ERROR,"break outside loop or switch");}
+  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi($2));if (!loop_nesting && !switch_nesting) lyyerror(@1,ERROR,"break outside loop or switch");}
+  | tCONTINUE {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(@1,ERROR,"continue outside loop");}
   | function_definition
   | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
   | stringfunction_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
-  | tLOCAL {if (function_type==ftNONE) error(ERROR,"no use for 'local' outside functions");} local_list
-  | tSTATIC {if (function_type==ftNONE) error(ERROR,"no use for 'static' outside functions");} static_list
+  | tLOCAL {if (function_type==ftNONE) lyyerror(@1,ERROR,"no use for 'local' outside functions");} local_list
+  | tSTATIC {if (function_type==ftNONE) lyyerror(@1,ERROR,"no use for 'static' outside functions");} static_list
   | if_clause
   | short_if
   | tGOTO symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($2,TRUE):$2);}
@@ -208,8 +209,8 @@ statement:  /* empty */
             } else {
                add_command(cRETURN_FROM_GOSUB,NULL,NULL);
             }}
-  | tRETURN expression {if (function_type==ftNONE) {error(ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
-  | tRETURN string_expression {if (function_type==ftNONE) {error(ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN expression {if (function_type==ftNONE) {lyyerror(@1,ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN string_expression {if (function_type==ftNONE) {lyyerror(@1,ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
@@ -297,7 +298,7 @@ string_scalar_or_array: tSTRSYM {add_command(cPUSHSTRPTR,dotify($1,FALSE),NULL);
 string_expression: tSTRSYM {add_command(cPUSHSTRSYM,dotify($1,FALSE),NULL);}
   | string_function
   | stringfunction_or_array {add_command(cSTRINGFUNCTION_OR_ARRAY,$1,NULL);}
-  | tSTRING {if ($1==NULL) {error(ERROR,"String not terminated");create_pushstr("");} else {create_pushstr($1);}}
+  | tSTRING {if ($1==NULL) {lyyerror(@1,ERROR,"String not terminated");create_pushstr("");} else {create_pushstr($1);}}
   | string_expression '+' string_expression {add_command(cCONCAT,NULL,NULL);}
   | '(' string_expression ')'
   ;
@@ -412,7 +413,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tASC '(' string_expression ')' {create_function(fASC);}
   | tDEC '(' string_expression ')' {create_function(fDEC);}
   | tDEC '(' string_expression ',' expression ')' {create_function(fDEC2);}
-  | tINSTR '(' string_expression ',' string_expression ')' {if (check_compat) error(WARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
+  | tINSTR '(' string_expression ',' string_expression ')' {if (check_compat) lyyerror(@1,WARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
   | tINSTR '(' string_expression ',' string_expression ',' expression ')' {create_function(fINSTR2);}
   | tRINSTR '(' string_expression ',' string_expression ')' {create_function(fRINSTR);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
@@ -485,7 +486,7 @@ call_item: string_expression
   | expression
   ;
  
-function_definition: export tSUB {missing_endsub++;missing_endsub_line=mylineno;pushlabel();report_missing(WARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {error(ERROR,"nested functions not allowed");YYABORT;}}
+function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_missing(WARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {lyyerror(@1,ERROR,"nested functions not allowed");YYABORT;}}
 	function_name {if (exported) create_subr_link($4); create_label($4,cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
 		       create_count_params();}
@@ -494,7 +495,7 @@ function_definition: export tSUB {missing_endsub++;missing_endsub_line=mylineno;
 	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
   ;
 
-endsub: tEOPROG {if (missing_endsub) {sprintf(string,"%d end-sub(s) are missing (last at line %d)",missing_endsub,missing_endsub_line);error(ERROR,string);} YYABORT;}
+endsub: tEOPROG {if (missing_endsub) {sprintf(string,"%d end-sub(s) are missing (last at line %d)",missing_endsub,missing_endsub_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tENDSUB {missing_endsub--;}
   ;
 
@@ -539,7 +540,7 @@ paramitem: tSYMBOL {create_require(stNUMBER);create_makelocal(dotify($1,FALSE),s
   | tSTRSYM '(' ')' {create_require(stSTRINGARRAYREF);create_arraylink(dotify($1,FALSE),stSTRINGARRAYREF);}
   ;
 
-for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=mylineno;} tSYMBOL tEQU 
+for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=yylineno;} tSYMBOL tEQU 
             {pushname(dotify($3,FALSE)); /* will be used by next_symbol to check equality,NULL */
 	     add_command(cRESETSKIPONCE,NULL,NULL);
 	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
@@ -563,7 +564,7 @@ for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_n
           next next_symbol {add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
-next: tEOPROG {if (missing_next) {sprintf(string,"%d next(s) are missing (last at line %d)",missing_next,missing_next_line);error(ERROR,string);} YYABORT;}
+next: tEOPROG {if (missing_next) {sprintf(string,"%d next(s) are missing (last at line %d)",missing_next,missing_next_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tNEXT {missing_next--;}
   ;
 
@@ -573,7 +574,7 @@ step_part: {create_pushdbl(1);} /* can be omitted */
 
 next_symbol:  {pop(stSTRING);}/* can be omitted */
   | tSYMBOL {if (strcmp(pop(stSTRING)->pointer,dotify($1,FALSE))) 
-             {error(ERROR,"'for' and 'next' do not match"); YYABORT;}
+             {lyyerror(@1,ERROR,"'for' and 'next' do not match"); YYABORT;}
            }
   ;
 
@@ -581,8 +582,8 @@ switch_number_or_string: tSWITCH {push_switch_id();add_command(cBEGIN_SWITCH_MAR
                 number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);pop_switch_id();}
   ;
 
-sep_list: tSEP {if ($1>=0) mylineno+=$1;} 
-  | sep_list tSEP {if ($2>=0) mylineno+=$2;} 
+sep_list: tSEP 
+  | sep_list tSEP 
   ;
 
 number_or_string: expression
@@ -597,51 +598,51 @@ case_list: /* empty */
 
 
 default: /* empty */
-  | tDEFAULT tSEP {if ($2>=0) mylineno+=$2; add_command(cNEXT_CASE_HERE,NULL,NULL);} statement_list
+  | tDEFAULT tSEP {add_command(cNEXT_CASE_HERE,NULL,NULL);} statement_list
   ;
 
 
-do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=mylineno;pushgoto();}
+do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
 	      statement_list
             loop
   ;
 
 
-loop: tEOPROG {if (missing_loop) {sprintf(string,"%d loop(s) are missing (last at line %d)",missing_loop,missing_loop_line);error(ERROR,string);} YYABORT;}
+loop: tEOPROG {if (missing_loop) {sprintf(string,"%d loop(s) are missing (last at line %d)",missing_loop,missing_loop_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
 
-while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=mylineno;pushgoto();} '(' expression ')'
+while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();} '(' expression ')'
 	      {add_command(cDECIDE,NULL,NULL);
 	      pushlabel();}
 	      statement_list
             wend
   ;	    
 
-wend: tEOPROG {if (missing_wend) {sprintf(string,"%d wend(s) are missing (last at line %d)",missing_wend,missing_wend_line);error(ERROR,string);} YYABORT;}
+wend: tEOPROG {if (missing_wend) {sprintf(string,"%d wend(s) are missing (last at line %d)",missing_wend,missing_wend_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
 
-repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=mylineno;pushgoto();} 
+repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();} 
 	       statement_list
 	     until
   ;
 
-until: tEOPROG {if (missing_until) {sprintf(string,"%d until(s) are missing (last at line %d)",missing_until,missing_until_line);error(ERROR,string);} YYABORT;}
+until: tEOPROG {if (missing_until) {sprintf(string,"%d until(s) are missing (last at line %d)",missing_until,missing_until_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tUNTIL '(' expression ')'
 	       {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
 if_clause: tIF expression {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel();}
-           tTHEN {missing_endif++;missing_endif_line=mylineno;} statement_list {swap();matchgoto();swap();poplabel();}
+           tTHEN {missing_endif++;missing_endif_line=yylineno;} statement_list {swap();matchgoto();swap();poplabel();}
 	   elsif_part
            else_part {poplabel();}
            endif
   ;
 
-endif: tEOPROG {if (missing_endif) {sprintf(string,"%d endif(s) are missing (last at line %d)",missing_endif,missing_endif_line);error(ERROR,string);} YYABORT;}
+endif: tEOPROG {if (missing_endif) {sprintf(string,"%d endif(s) are missing (last at line %d)",missing_endif,missing_endif_line);lyyerror(@1,ERROR,string);} YYABORT;}
   | tENDIF {missing_endif--;}
   ;
 
@@ -745,3 +746,14 @@ gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRU
   | gosub_list ',' symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP,NULL,NULL);}
   ;
 
+%code {
+void
+yyerror(char *message) {
+  error(ERROR,message);
+}
+
+void
+lyyerror(YYLTYPE where, int severity, char *message) {
+  error(severity,message);
+}
+};

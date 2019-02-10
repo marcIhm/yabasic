@@ -210,7 +210,7 @@ create_subr_link (char *label)	/* create link to subroutine */
         return;
     }
     dot = strchr (label, '.');
-    strcpy (global, libfile_stack[include_depth-1]->s);
+    strcpy (global, library_stack[include_depth-1]->short_name);
     strcat (global, dot);
 
     /* check, if label is duplicate */
@@ -329,7 +329,7 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
                     error (DUMP, "Executing in:");
                 }
                 sprintf (string, "sub %s() called in %s,%d",
-                         dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->l,
+                         dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->long_name,
                          cmd->line);
                 error (DUMP, string);
                 first = FALSE;

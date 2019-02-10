@@ -203,12 +203,12 @@ extern struct command *firstref;	/* first command in UDS referencing a symbol */
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
-extern struct libfile_name *libfile_stack[];	/* stack for library file names */
-extern struct libfile_name *currlib;	/* current libfile as relevant to bison */
+extern struct library *library_stack[];	/* stack for library file names */
+extern struct library *currlib;	/* current libfile as relevant to bison */
 extern int inlib;		/* true, while in library */
 extern int fi_pending;		/* true, if within a short if */
-extern int libfile_chain_length;	/* length of libfile_chain */
-extern struct libfile_name *libfile_chain[];	/* list of all library file names */
+extern int library_chain_length;	/* length of library_chain */
+extern struct library *library_chain[];	/* list of all library file names */
 extern int include_depth; /* current position in libfile_stack */
 
 /* bison.c */
@@ -433,7 +433,9 @@ struct command {
     /* or stream number for open/close             */
     int tag;			/* char/int to pass some information */
     int line;			/* line this command has been created for */
-    struct libfile_name *lib;	/* associated library */
+    int first_column;           /* column, at which this command started */
+    int last_column;            /* column, at which this command ended */
+    struct library *lib;	/* associated library */
     char *diag;                 /* optional text for diagnostics */
     struct switch_state *switch_state;  /* state for switch statements */
 };
@@ -459,23 +461,23 @@ struct buff_chain {
     struct buff_chain *next;	/* next buffer in chain */
 };
 
-struct libfile_name {
-    /* used to store library names */
-    char *l;			/* long version, including path */
-    int llen;			/* length of l */
-    char *s;			/* short version */
-    int slen;			/* length of s */
-    int lineno;			/* linenumber within file */
-    struct command *datapointer;	/* data pointer of this library */
+struct library {
+    /* used to store library names and other details */
+    char *long_name;		/* long version, including path */
+    int long_len;		/* length of l */
+    char *short_name;		/* short version */
+    int short_len;		/* length of s */
+    struct command *datapointer;/* data pointer of this library */
     struct command *firstdata;	/* first data-command in library */
-    struct libfile_name *next;	/* next in chain */
+    struct library *next_lib;	/* next in chain */
 };
 
 /* ------------- function prototypes defined in ... ---------------- */
 
 /* main.c */
 void error (int, char *);	/* reports an error and possibly exits */
-void error_with_line (int, char *, int);	/* reports an error and possibly exits */
+void error_with_position (int, char *, char *, int, int, int); /* reports an basic error to the user and possibly exits */
+void show_and_mark_line (char *, int, int, int); /* try to find and show offending line */
 void std_diag (char *, int, char *, char *);	/* produce standard diagnostic */
 void *my_malloc (unsigned);	/* my own version of malloc */
 void my_free (void *);		/* free memory */
@@ -486,7 +488,7 @@ void dump_commands (char *);         /* dump commands into given file */
 void signal_handler (int);	/* handle various signals */
 char *my_strdup (char *);	/* my own version of strdup */
 char *my_strndup (char *, int);	/*  own version of strndup */
-struct libfile_name *new_file (char *, char *);	/* create a new structure for library names */
+struct library *new_file (char *, char *);	/* create a new structure for library names */
 char *dotify (char *, int);	/* add library name, if not already present */
 char *strip (char *);		/* strip off to minimal name */
 void do_error (struct command *);	/* issue user defined error */

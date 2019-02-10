@@ -18,6 +18,7 @@
 #include "yabasic.h"		/* all prototypes and structures */
 #endif
 #include "whereami.h"
+#include "bison.h"
 
 /* ------------- defines ---------------- */
 
@@ -34,7 +35,8 @@ ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
 
 /* ------------- external references ---------------- */
 
-extern int mylineno;		/* current line number */
+extern int yylineno;            /* line number */
+extern YYLTYPE yylloc;          /* line numbers and columns */
 extern int yyparse ();		/* call bison parser */
 extern int yydebug;             /* for bison debugging */
 
@@ -248,7 +250,7 @@ main (int argc, char **argv)
     }
 
     add_command (cEND, NULL, NULL);
-    sprintf (string, "read %d line(s) and generated %d command(s)", mylineno,
+    sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
              commandcount);
     error (NOTE, string);
 
@@ -408,7 +410,9 @@ add_command (int type, char *symname, char *diag)
         std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
-    cmdhead->line = mylineno;
+    cmdhead->line = yylineno;
+    cmdhead->first_column = yylloc.first_column;
+    cmdhead->last_column = yylloc.last_column;
     cmdhead->lib = currlib;
     cmdhead->cnt = commandcount;
     if (!symname || !*symname) {
@@ -497,7 +501,7 @@ dump_commands (char *dumpfilename)
 
     for (cmd=cmdroot; cmd; cmd=cmd->next) {
         sprintf(string,"");
-        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,explanation[cmd->type],cmd->lib->s,cmd->pointer,cmd->tag,string);
+        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,explanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
         if (cmd->type==cEND) {
             break;
         }
@@ -1712,26 +1716,24 @@ run_it ()
 
 
 void
-error (int severity, char *messageline)
-/* reports an basic error to the user and possibly exits */
+error (int severity, char *message)
+/* reports an error to the user and possibly exits */
 {
     if (program_state == COMPILING) {
-        error_with_line (severity, messageline, mylineno );
+        error_with_position (severity, message, currlib->long_name, yylineno, yylloc.first_column, yylloc.last_column );
     } else if (program_state == RUNNING && current->line > 0) {
-        error_with_line (severity, messageline, current->line);
+        error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
     } else {
-        error_with_line (severity, messageline, -1);
+        error_with_position (severity, message, NULL, 0, 0, 0);
     }
 }
 
 
 void
-error_with_line (int severity, char *message, int line)
+error_with_position (int severity, char *message, char *filename, int lineno, int first_column, int last_column)
 /* reports an basic error to the user and possibly exits */
 {
-    char *stext;
-    char *f = NULL;
-    int l;
+    char *severity_text;
     static int lastline;
     static int first = TRUE;
 
@@ -1744,51 +1746,43 @@ error_with_line (int severity, char *message, int line)
 
         switch (severity) {
         case (INFO):
-            stext = "---Info";
+            severity_text = "---Info";
             break;
         case (DUMP):
-            stext = "---Dump";
+            severity_text = "---Dump";
             break;
         case (DEBUG):
-            stext = "---Debug";
+            severity_text = "---Debug";
             debug_count++;
             break;
         case (NOTE):
-            stext = "---Note";
+            severity_text = "---Note";
             note_count++;
             break;
         case (WARNING):
-            stext = "---Warning";
+            severity_text = "---Warning";
             warning_count++;
             break;
         case (ERROR):
-            stext = "---Error";
+            severity_text = "---Error";
             error_count++;
             break;
         case (FATAL):
-            stext = "---Fatal";
+            severity_text = "---Fatal";
             break;
         }
-        fprintf (stderr, "%s", stext);
-        if (line >= 0) {
-            if (program_state == COMPILING) {
-                f = currlib->l;
-                l = line;
-            } else if (program_state == RUNNING && current->line > 0) {
-                f = current->lib->l;
-                l = current->line;
-            }
-            if (f) {
-                if (first || lastline != l) {
-                    fprintf (stderr, " in %s, line %d", f, l);
-                }
-                lastline = l;
-                first = FALSE;
-            }
-        }
-        fprintf (stderr, ": %s\n", message);
-        if (program_state == RUNNING && severity <= ERROR
-                && severity != DUMP) {
+        fprintf (stderr, "%s", severity_text);
+	if (filename) {
+	    if (first || lastline != lineno) {
+		fprintf (stderr, " in %s, line %d: %s\n", filename, lineno, message);
+		show_and_mark_line (filename, lineno, first_column, last_column);
+	    }
+	    lastline = lineno;
+	    first = FALSE;
+        } else {
+	    fprintf (stderr, ": %s\n", message);
+	}
+        if (program_state == RUNNING && severity <= ERROR && severity != DUMP) {
             dump_sub (1);
         }
     }
@@ -1814,8 +1808,43 @@ error_with_line (int severity, char *message, int line)
 }
 
 
+void
+show_and_mark_line (char *filename, int lineno, int first_column, int last_column) /* try to find and show offending line */
+{
+    FILE *file;
+    char linebuffer[INBUFFLEN];
+    int i;
+    
+    if (is_bound) {
+	return;
+    }
+
+    file = fopen(filename, "r");
+    if (!file) {
+	return;
+    }
+
+    linebuffer[0]='\0';
+    while (fgets(linebuffer, INBUFFLEN, file) && lineno) {
+	lineno--;
+    }
+    fclose(file);
+
+    if (linebuffer[0] && lineno==0) {
+	linebuffer[strcspn(linebuffer, "\n")] = 0;
+	fputs("   ", stderr);
+	fputs(linebuffer, stderr);
+	fputs("\n   ", stderr);
+	for(i=1;i<=last_column;i++) {
+	    fputc((i<first_column) ? ' ': ((i==first_column) ? '^':'~'), stderr);
+	}
+	fputs("\n", stderr);
+    }
+}
+
+
 char *
-my_strndup (char *arg, int len)	/*  own version of strndup */
+my_strndup (char *arg, int len)	/* own version of strndup */
 {
     char *copy;
 
@@ -1862,17 +1891,17 @@ my_free (void *mem)		/* free memory */
 }
 
 
-struct libfile_name *
-new_file (char *l, char *s)  	/* create a new structure for library names */
+struct library *
+new_file (char *long_name, char *short_name)  	/* create a new structure for library names */
 {
-    struct libfile_name *new;
-    struct libfile_name *curr;
-    static struct libfile_name *last = NULL;
+    struct library *new;
+    struct library *curr;
+    static struct library *last = NULL;
     int start, end;
 
     /* check, if library has already been included */
-    for (curr = libfile_stack[0]; curr; curr = curr->next) {
-        if (!strcmp (curr->l, l)) {
+    for (curr = library_chain[0]; curr; curr = curr->next_lib) {
+        if (!strcmp (curr->long_name, long_name)) {
             if (is_bound) {
                 return curr;
             } else {
@@ -1881,36 +1910,35 @@ new_file (char *l, char *s)  	/* create a new structure for library names */
         }
     }
 
-    new = my_malloc (sizeof (struct libfile_name));
-    new->next = NULL;
-    new->lineno = 1;
+    new = my_malloc (sizeof (struct library));
+    new->next_lib = NULL;
     if (last) {
-        last->next = new;
+        last->next_lib = new;
     }
     last = new;
 
-    new->l = my_strdup (l);
-    new->llen = strlen (new->l);
+    new->long_name = my_strdup (long_name);
+    new->long_len = strlen (new->long_name);
 
-    if (s) {
-        new->s = my_strdup (s);
+    if (short_name) {
+        new->short_name = my_strdup (short_name);
     } else {
-        /* no short name supplied; get piece from l */
-        end = strlen (l);
+        /* no short name supplied; get piece from long_name */
+        end = strlen (long_name);
         for (start = end; start > 0; start--) {
-            if (l[start - 1] == '\\' || l[start - 1] == '/') {
+            if (long_name[start - 1] == '\\' || long_name[start - 1] == '/') {
                 break;
             }
-            if (l[start] == '.') {
+            if (long_name[start] == '.') {
                 end = start;
             }
         }
         end--;
-        new->s = my_malloc (end - start + 2);
-        strncpy (new->s, new->l + start, end - start + 1);
-        new->s[end - start + 1] = '\0';
+        new->short_name = my_malloc (end - start + 2);
+        strncpy (new->short_name, new->long_name + start, end - start + 1);
+        new->short_name[end - start + 1] = '\0';
     }
-    new->slen = strlen (new->s);
+    new->short_len = strlen (new->short_name);
     new->datapointer = new->firstdata = NULL;
 
     return new;
@@ -1922,7 +1950,7 @@ dotify (char *name, int addfun)	/* add library name, if not already present */
 {
     static char buff[200];
     if (!strchr (name, '.')) {
-	strncpy (buff, currlib->s, 200);
+	strncpy (buff, currlib->short_name, 200);
         strncat (buff, ".", 200-1-strlen(buff));
         strncat (buff, name, 200-1-strlen(buff));
     } else {
@@ -2298,15 +2326,15 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     while ((c = fgetc (fyab)) != EOF) {
         fputc (c, fbound);
     }
-    for (i = 1; i < libfile_chain_length; i++) {
-        if (!(flib = fopen (libfile_chain[i]->l, "rb"))) {
+    for (i = 1; i < library_chain_length; i++) {
+        if (!(flib = fopen (library_chain[i]->long_name, "rb"))) {
             sprintf (string, "could not open '%s' for reading: %s",
-                     libfile_chain[i]->l, my_strerror (errno));
+                     library_chain[i]->long_name, my_strerror (errno));
             error (ERROR, string);
             fclose (flib);
             return 0;
         }
-        sprintf (string, "\nimport %s\n", libfile_chain[i]->s);
+        sprintf (string, "\nimport %s\n", library_chain[i]->short_name);
 	put_and_count(string, fbound, &proglen);
 	
 	put_and_count("\nimport __IGNORE_NESTED_IMPORTS\n", fbound, &proglen);

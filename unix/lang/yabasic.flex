@@ -18,20 +18,23 @@
 #ifndef YABASIC_INCLUDED
 #include "yabasic.h"     /* definitions of yabasic */
 #endif
-extern int mylineno; 
 int import_lib(char *); /* import library */
 
 #define MAX_INCLUDE_DEPTH 5
 #define MAX_INCLUDE_NUMBER 100
 static YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH]; /* stack for included libraries */
-int include_depth; /* current position in libfile_stack */
-struct libfile_name *libfile_stack[MAX_INCLUDE_DEPTH]; /* stack for library file names */
-int libfile_chain_length=0; /* length of libfile_chain */
-struct libfile_name *libfile_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
-struct libfile_name *currlib; /* current libfile as relevant to bison */
+int include_depth; /* current position in library_stack */
+struct library *library_stack[MAX_INCLUDE_DEPTH]; /* stack for library file names */
+int library_chain_length=0; /* length of library_chain */
+struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
+struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
 int fi_pending=0; /* true, if within a short if */
-int flex_line=0; /* line number counted in flex */
+%}
+
+%{
+int yycolumn=1;
+#define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 %}
 
 WS [ \t\f\r\v]
@@ -47,7 +50,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 %%
 <<EOF>> {
   if (infolevel>=DEBUG) {
-    sprintf(string,"closing file '%s'",currlib->s);
+    sprintf(string,"closing file '%s'",currlib->short_name);
     error(DEBUG,string);
   }
   if (--include_depth<0) {
@@ -58,7 +61,6 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
       yy_switch_to_buffer(include_stack[include_depth]);
     }
     leave_lib();
-    flex_line+=yylval.sep=-1;
     return tSEP;
   }
 }
@@ -71,22 +73,22 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
   yylval.symbol=(char *)my_strdup(yytext);
   return tSYMBOL;
 }
-<PASTLNO>.* {BEGIN(INITIAL);flex_line+=yylval.sep=0;yyless(0);return tSEP;}
-<PASTLNO>\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);flex_line+=yylval.sep=1;return tSEP;}
+<PASTLNO>.* {BEGIN(INITIAL);yyless(0);return tSEP;}
+<PASTLNO>\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);return tSEP;}
 
-\n\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {flex_line+=yylval.sep=2;return tSEP;}}
-\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.sep=1;return tSEP;}
-: {if (fi_pending && check_compat) error_with_line(WARNING,"short-if has changed in version 2.71",flex_line);flex_line+=yylval.sep=0;return tSEP;}
+\n\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
+: {if (fi_pending && check_compat) error(WARNING,"short-if has changed in version 2.71");return tSEP;}
 
-REM{WS}+.* {flex_line+=yylval.sep=0;return tSEP;}  /* comments span 'til end of line */
-\/\/.* {flex_line+=yylval.sep=0;return tSEP;}  /* comments span 'til end of line */
-REM\n {if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.sep=1;return tSEP;}
+REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
+\/\/.* {return tSEP;}  /* comments span 'til end of line */
+REM\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
 REM {yymore();}
 
 IMPORT {BEGIN(IMPORT);}
 <IMPORT>{WS}+{NAME} {if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);unput('\n');return tIMPORT;}
-<IMPORT>{WS}+. {error_with_line(WARNING,"invalid import statement; please check documentation.",flex_line);}
-<IMPORT_DONE>(.|\n) {if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);flex_line+=yylval.sep=0;return tSEP;}
+<IMPORT>{WS}+. {error(WARNING,"invalid import statement; please check documentation.");}
+<IMPORT_DONE>(.|\n) {if (yytext[0]=='\n') yycolumn=1; if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);return tSEP;}
 
 ((DOCU|DOC|DOCUMENTATION)({WS}+.*)?) {
   char *where=strpbrk(yytext," \t\r\f\v");
@@ -94,8 +96,8 @@ IMPORT {BEGIN(IMPORT);}
   return tDOCU;
 }
 
-^#.*\n {flex_line+=yylval.sep=1;return tSEP;} /* '#' as first character may introduce comments too */
-^'.*\n {flex_line+=yylval.sep=1;return tSEP;} /* ' as first character may introduce comments too */
+^#.*\n {yycolumn=1;return tSEP;} /* '#' as first character may introduce comments too */
+^'.*\n {yycolumn=1;return tSEP;} /* ' as first character may introduce comments too */
 
 EXECUTE return tEXECUTE;
 "EXECUTE$" return tEXECUTE2;
@@ -314,6 +316,7 @@ FALSE {yylval.fnum=0; return tFNUM;}
 
 \"[^\"]*(\"|\n) {
   int cnt;
+  if (yytext[yyleng-1]=='\n') yycolumn=1;
   if (yytext[yyleng-1]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}
   if (yytext[yyleng-1]=='\n') {
   	yylval.string=NULL;
@@ -335,32 +338,6 @@ FALSE {yylval.fnum=0; return tFNUM;}
 . {if (isprint(yytext[0])) return yytext[0]; else return ' ';}
 
 %%
-void yyerror(char *msg)
-{
-  int i,j;
-  
-  sprintf(string,"%s at %n",msg,&j);
-  if (*yytext=='\n' || *yytext=='\0') {
-    sprintf(string+j,"end of line");
-  } else {
-    i=0;
-    string[j++]='\"';
-    while(yytext[i]) {
-      if (isprint(yytext[i])) string[j++]=yytext[i++];
-      else {
-	sprintf(string+j,"0x%02x",yytext[i]);
-	j+=4;
-	break;
-      }
-    }
-    string[j++]='\"';
-    string[j]='\0';
-  }
-  error(ERROR,string);		
-  return;
-}
-
-
 void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file */
 {
   include_depth=0;
@@ -370,10 +347,10 @@ void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file
   } else {
     include_stack[include_depth]=yy_create_buffer(file,YY_BUF_SIZE);
   }
-  libfile_stack[include_depth]=new_file(main_file_name,"main");
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
+  library_stack[include_depth]=new_file(main_file_name,"main");
+  library_chain[library_chain_length++]=library_stack[include_depth];
   if (!explicit) yy_switch_to_buffer(include_stack[include_depth]);
-  currlib=libfile_stack[0];
+  currlib=library_stack[0];
   inlib=FALSE;
   
   return;
@@ -419,9 +396,6 @@ int import_lib(char *name) /* import library */
 
   if (ignore_nested_imports) return TRUE;
 
-  /* start line numbers anew */
-  libfile_stack[include_depth]->lineno=mylineno;
- 
   include_depth++;
   inlib=TRUE;
   if (include_depth>=MAX_INCLUDE_DEPTH) {
@@ -438,14 +412,14 @@ int import_lib(char *name) /* import library */
     yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
     include_stack[include_depth]=YY_CURRENT_BUFFER;
   }
-  libfile_stack[include_depth]=new_file(full,NULL);
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
-  if (libfile_chain_length>=MAX_INCLUDE_NUMBER) {
+  library_stack[include_depth]=new_file(full,NULL);
+  library_chain[library_chain_length++]=library_stack[include_depth];
+  if (library_chain_length>=MAX_INCLUDE_NUMBER) {
     sprintf(string,"Cannot import more than %d libraries",MAX_INCLUDE_NUMBER);
     error(ERROR,string);
     return FALSE;
   }
-  if (!libfile_stack[include_depth]) {
+  if (!library_stack[include_depth]) {
     sprintf(string,"library '%s' has already been imported",full);
     error(ERROR,string);
     return FALSE;
@@ -459,7 +433,7 @@ int import_lib(char *name) /* import library */
     }
     error(NOTE,string);
   }
-  currlib=libfile_stack[include_depth]; /* switch late because error() uses currlib */
+  currlib=library_stack[include_depth]; /* switch late because error() uses currlib */
   return TRUE;
 }
 
@@ -545,11 +519,10 @@ void leave_lib(void) /* processing, when end of library is found */
 {
   if (include_depth<0) return;
   if (infolevel>=DEBUG) {
-    sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->s,libfile_stack[include_depth]->s,include_depth);
+    sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->short_name,library_stack[include_depth]->short_name,include_depth);
     error(DEBUG,string);
   }
-  currlib=libfile_stack[include_depth];
-  mylineno=currlib->lineno;
+  currlib=library_stack[include_depth];
   inlib=(include_depth>0);
 }
 

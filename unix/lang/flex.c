@@ -160,8 +160,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex. 
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                yy_size_t yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -1389,6 +1408,21 @@ static yyconst flex_int16_t yy_chk[2830] =
       679,  679,  679,  679,  679,  679,  679,  679,  679
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static yyconst flex_int32_t yy_rule_can_match_eol[213] =
+    {   0,
+0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
+
 extern int yy_flex_debug;
 int yy_flex_debug = 0;
 
@@ -1436,20 +1470,20 @@ char *yytext;
 #ifndef YABASIC_INCLUDED
 #include "yabasic.h"     /* definitions of yabasic */
 #endif
-extern int mylineno; 
 int import_lib(char *); /* import library */
 
 #define MAX_INCLUDE_DEPTH 5
 #define MAX_INCLUDE_NUMBER 100
 static YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH]; /* stack for included libraries */
-int include_depth; /* current position in libfile_stack */
-struct libfile_name *libfile_stack[MAX_INCLUDE_DEPTH]; /* stack for library file names */
-int libfile_chain_length=0; /* length of libfile_chain */
-struct libfile_name *libfile_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
-struct libfile_name *currlib; /* current libfile as relevant to bison */
+int include_depth; /* current position in library_stack */
+struct library *library_stack[MAX_INCLUDE_DEPTH]; /* stack for library file names */
+int library_chain_length=0; /* length of library_chain */
+struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
+struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
 int fi_pending=0; /* true, if within a short if */
-int flex_line=0; /* line number counted in flex */
+int yycolumn=1;
+#define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 
 #define INITIAL 0
 #define PRELNO 1
@@ -1762,6 +1796,16 @@ find_rule: /* we branch to this label when backing up */
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			yy_size_t yyl;
+			for ( yyl = (yy_more_len); yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					   
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -1773,7 +1817,7 @@ case YY_STATE_EOF(IMPORT):
 case YY_STATE_EOF(IMPORT_DONE):
 {
   if (infolevel>=DEBUG) {
-    sprintf(string,"closing file '%s'",currlib->s);
+    sprintf(string,"closing file '%s'",currlib->short_name);
     error(DEBUG,string);
   }
   if (--include_depth<0) {
@@ -1784,7 +1828,6 @@ case YY_STATE_EOF(IMPORT_DONE):
       yy_switch_to_buffer(include_stack[include_depth]);
     }
     leave_lib();
-    flex_line+=yylval.sep=-1;
     return tSEP;
   }
 }
@@ -1807,39 +1850,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-{BEGIN(INITIAL);flex_line+=yylval.sep=0;yyless(0);return tSEP;}
+{BEGIN(INITIAL);yyless(0);return tSEP;}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-{if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);flex_line+=yylval.sep=1;return tSEP;}
+{yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);return tSEP;}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-{if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {flex_line+=yylval.sep=2;return tSEP;}}
+{yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-{if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.sep=1;return tSEP;}
+{yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-{if (fi_pending && check_compat) error_with_line(WARNING,"short-if has changed in version 2.71",flex_line);flex_line+=yylval.sep=0;return tSEP;}
+{if (fi_pending && check_compat) error(WARNING,"short-if has changed in version 2.71");return tSEP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-{flex_line+=yylval.sep=0;return tSEP;}  /* comments span 'til end of line */
+{return tSEP;}  /* comments span 'til end of line */
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-{flex_line+=yylval.sep=0;return tSEP;}  /* comments span 'til end of line */
+{return tSEP;}  /* comments span 'til end of line */
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-{if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}flex_line+=yylval.sep=1;return tSEP;}
+{yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -1855,12 +1898,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-{error_with_line(WARNING,"invalid import statement; please check documentation.",flex_line);}
+{error(WARNING,"invalid import statement; please check documentation.");}
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-{if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);flex_line+=yylval.sep=0;return tSEP;}
+{if (yytext[0]=='\n') yycolumn=1; if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);return tSEP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -1873,12 +1916,12 @@ YY_RULE_SETUP
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-{flex_line+=yylval.sep=1;return tSEP;} /* '#' as first character may introduce comments too */
+{yycolumn=1;return tSEP;} /* '#' as first character may introduce comments too */
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-{flex_line+=yylval.sep=1;return tSEP;} /* ' as first character may introduce comments too */
+{yycolumn=1;return tSEP;} /* ' as first character may introduce comments too */
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
@@ -2661,6 +2704,7 @@ case 210:
 YY_RULE_SETUP
 {
   int cnt;
+  if (yytext[yyleng-1]=='\n') yycolumn=1;
   if (yytext[yyleng-1]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}
   if (yytext[yyleng-1]=='\n') {
   	yylval.string=NULL;
@@ -3014,6 +3058,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -3092,6 +3140,10 @@ static int yy_get_next_buffer (void)
 	(yy_hold_char) = *++(yy_c_buf_p);
 
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
+	if ( YY_CURRENT_BUFFER_LVALUE->yy_at_bol )
+		   
+    yylineno++;
+;
 
 	return c;
 }
@@ -3559,6 +3611,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -3661,31 +3716,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-void yyerror(char *msg)
-{
-  int i,j;
-  
-  sprintf(string,"%s at %n",msg,&j);
-  if (*yytext=='\n' || *yytext=='\0') {
-    sprintf(string+j,"end of line");
-  } else {
-    i=0;
-    string[j++]='\"';
-    while(yytext[i]) {
-      if (isprint(yytext[i])) string[j++]=yytext[i++];
-      else {
-	sprintf(string+j,"0x%02x",yytext[i]);
-	j+=4;
-	break;
-      }
-    }
-    string[j++]='\"';
-    string[j]='\0';
-  }
-  error(ERROR,string);		
-  return;
-}
-
 void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file */
 {
   include_depth=0;
@@ -3695,10 +3725,10 @@ void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file
   } else {
     include_stack[include_depth]=yy_create_buffer(file,YY_BUF_SIZE);
   }
-  libfile_stack[include_depth]=new_file(main_file_name,"main");
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
+  library_stack[include_depth]=new_file(main_file_name,"main");
+  library_chain[library_chain_length++]=library_stack[include_depth];
   if (!explicit) yy_switch_to_buffer(include_stack[include_depth]);
-  currlib=libfile_stack[0];
+  currlib=library_stack[0];
   inlib=FALSE;
   
   return;
@@ -3743,9 +3773,6 @@ int import_lib(char *name) /* import library */
 
   if (ignore_nested_imports) return TRUE;
 
-  /* start line numbers anew */
-  libfile_stack[include_depth]->lineno=mylineno;
- 
   include_depth++;
   inlib=TRUE;
   if (include_depth>=MAX_INCLUDE_DEPTH) {
@@ -3762,14 +3789,14 @@ int import_lib(char *name) /* import library */
     yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
     include_stack[include_depth]=YY_CURRENT_BUFFER;
   }
-  libfile_stack[include_depth]=new_file(full,NULL);
-  libfile_chain[libfile_chain_length++]=libfile_stack[include_depth];
-  if (libfile_chain_length>=MAX_INCLUDE_NUMBER) {
+  library_stack[include_depth]=new_file(full,NULL);
+  library_chain[library_chain_length++]=library_stack[include_depth];
+  if (library_chain_length>=MAX_INCLUDE_NUMBER) {
     sprintf(string,"Cannot import more than %d libraries",MAX_INCLUDE_NUMBER);
     error(ERROR,string);
     return FALSE;
   }
-  if (!libfile_stack[include_depth]) {
+  if (!library_stack[include_depth]) {
     sprintf(string,"library '%s' has already been imported",full);
     error(ERROR,string);
     return FALSE;
@@ -3783,7 +3810,7 @@ int import_lib(char *name) /* import library */
     }
     error(NOTE,string);
   }
-  currlib=libfile_stack[include_depth]; /* switch late because error() uses currlib */
+  currlib=library_stack[include_depth]; /* switch late because error() uses currlib */
   return TRUE;
 }
 
@@ -3867,11 +3894,10 @@ void leave_lib(void) /* processing, when end of library is found */
 {
   if (include_depth<0) return;
   if (infolevel>=DEBUG) {
-    sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->s,libfile_stack[include_depth]->s,include_depth);
+    sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->short_name,library_stack[include_depth]->short_name,include_depth);
     error(DEBUG,string);
   }
-  currlib=libfile_stack[include_depth];
-  mylineno=currlib->lineno;
+  currlib=library_stack[include_depth];
   inlib=(include_depth>0);
 }
 

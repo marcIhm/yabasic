@@ -1604,7 +1604,7 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
     } else if (!strcmp (dest, "interpreter_path")) {
 	return my_strdup(inter_path);
     } else if (!strcmp (dest, "library")) {
-        return my_strdup (curr->lib->s);
+        return my_strdup (curr->lib->short_name);
     } else if (!strcmp (dest, "version")) {
         return my_strdup (PACKAGE_VERSION);
     } else if (!strcmp (dest, "os")) {
