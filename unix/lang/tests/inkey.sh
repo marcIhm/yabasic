@@ -19,7 +19,7 @@ tmux send -l -t inkey A
 sleep 2
 
 # Get and compare output of script from tmux
-FOUND=`tmux capture-pane -p`
+FOUND=`tmux capture-pane -t inkey -p`
 grep -q "$EXPECTED" <<EOF
 $FOUND
 EOF
