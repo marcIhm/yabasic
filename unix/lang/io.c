@@ -828,7 +828,7 @@ open_done:
 
 
 void
-checkopen(void)		/* check, if open has been sucessfull */
+checkopen(void)		/* check, if open has been sucessfully */
 {
     double result;
 

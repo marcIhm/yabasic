@@ -45,6 +45,8 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 %option yylineno
 %x PRELNO
 %x PASTLNO
+%x IMPORT
+%x IMPORT_DONE
 
 %%
 <<EOF>> {
@@ -85,7 +87,10 @@ REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
 REM\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
 REM {yymore();}
 
-IMPORT{WS}+{NAME}\n {if (!import_lib(my_strdup(yytext+7))) return tSEP;return tIMPORT;}
+IMPORT {BEGIN(IMPORT);}
+<IMPORT>{WS}+{NAME} {if (!import_lib(my_strdup(yytext))) return tSEP;BEGIN(IMPORT_DONE);unput('\n');return tIMPORT;}
+<IMPORT>{WS}+. {error(WARNING,"invalid import statement; please check documentation.");}
+<IMPORT_DONE>(.|\n) {if (yytext[0]=='\n') yycolumn=1; if (yytext[0]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);yyless(0);return tSEP;}
 
 ((DOCU|DOC|DOCUMENTATION)({WS}+.*)?) {
   char *where=strpbrk(yytext," \t\r\f\v");
@@ -366,8 +371,8 @@ int import_lib(char *name) /* import library */
   static int end_of_all_imports=FALSE;
   static int ignore_nested_imports=FALSE;
 
+  if (!*name) name=pop(stSTRING)->pointer;
   while(isspace(*name)) name++;
-  name[strcspn(name, "\n")] = '\0';
 
   /* This can only occur in bound programs; void all further import-statements */
   if (!strcmp(name,"__END_OF_ALL_IMPORTS")) {
@@ -520,7 +525,6 @@ void leave_lib(void) /* processing, when end of library is found */
     sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->short_name,library_stack[include_depth]->short_name,include_depth);
     error(DEBUG,string);
   }
-  yylineno=currlib->yylineno_at_start;
   currlib=library_stack[include_depth];
   inlib=(include_depth>0);
 }

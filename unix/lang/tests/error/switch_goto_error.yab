@@ -1,4 +1,7 @@
-#expect#---Error in switch_goto_error.yab, line 8: GOTO between switch-statements
+#expect#---Error in switch_goto_error.yab, line 11: GOTO between switch-statements
+#expect#     case 0: label other
+#expect#                   ^~~~~
+#expect#---Error: Program stopped due to an error
 
 switch 0
   case 0: goto other

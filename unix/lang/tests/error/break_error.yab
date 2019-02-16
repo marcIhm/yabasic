@@ -1,4 +1,8 @@
-#expect#---Fatal in break_error.yab, line 4: break has left program (loop_nesting=-2, switch_nesting=0)
+#expect#---Error in break_error.yab, line 8: break has left program (loop_nesting=-2, switch_nesting=0)
+#expect#       if (a*b=12) break 3
+#expect#                         ^
+#expect#---Error: Program stopped due to an error
+
 for a=0 to 4
   for b=0 to 4
     if (a*b=12) break 3

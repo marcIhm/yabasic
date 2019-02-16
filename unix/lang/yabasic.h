@@ -479,6 +479,7 @@ struct library {
 /* main.c */
 void error (int, char *);	/* reports an error and possibly exits */
 void error_with_position (int, char *, char *, int, int, int); /* reports an basic error to the user and possibly exits */
+void error_without_position(int, char *); /* like error_with_position but without position */
 void show_and_mark_line (char *, int, int, int); /* try to find and show offending line */
 void std_diag (char *, int, char *, char *);	/* produce standard diagnostic */
 void *my_malloc (unsigned);	/* my own version of malloc */

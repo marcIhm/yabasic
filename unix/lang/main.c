@@ -1724,7 +1724,7 @@ error (int severity, char *message)
     } else if (program_state == RUNNING && current->line > 0) {
         error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
     } else {
-        error_with_position (severity, message, NULL, 0, 0, 0);
+        error_without_position (severity, message);
     }
 }
 
@@ -1842,6 +1842,14 @@ show_and_mark_line (char *filename, int lineno, int first_column, int last_colum
 	}
 	fputs("\n", stderr);
     }
+}
+
+
+void
+error_without_position(int severity, char *message)
+/* like error_with_position but without position */
+{
+    error_with_position (severity, message, NULL, 0, 0, 0);
 }
 
 

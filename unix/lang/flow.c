@@ -318,6 +318,7 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
 {
     struct stackentry *st = stackhead;
     struct command *cmd;
+    char dumpbuffer[INBUFFLEN];
     int first = TRUE;
     do {
         if (st->type == stRET_ADDR_CALL) {
@@ -326,12 +327,12 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
                 char *dot;
                 dot = strchr (cmd->pointer, '.');
                 if (first && !short_dump) {
-                    error (DUMP, "Executing in:");
+                    error_without_position (DUMP, "Executing in:");
                 }
-                sprintf (string, "sub %s() called in %s,%d",
+                sprintf (dumpbuffer, "sub %s() called in %s,%d",
                          dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->long_name,
                          cmd->line);
-                error (DUMP, string);
+                error_without_position (DUMP, dumpbuffer);
                 first = FALSE;
             }
         }
@@ -339,11 +340,11 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
     } while (st && st != stackroot);
     if (first && !short_dump) {
         if (!short_dump) {
-            error (DUMP, "Executing in:");
+            error_without_position (DUMP, "Executing in:");
         }
     }
     if (!short_dump) {
-        error (DUMP, "main program");
+        error_without_position (DUMP, "main program");
     }
 
     return;
@@ -756,8 +757,9 @@ mybreak (struct command *cmd)	/* find break_here statement */
 	}
 	curr = curr->next;
 	if (!curr) {
-	    sprintf(string,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (FATAL, string);
+	    curr = cmd;
+	    sprintf(errorstring,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+	    error (ERROR, errorstring);
 	}
     }
     cmd->type = cQGOTO;
@@ -794,8 +796,9 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
 	}
         curr = curr->prev;
         if (!curr) {
+	    curr = cmd;
             sprintf(string,"continue has left program (loop_nesting=%d)",loop_nesting);
-            error (FATAL, string);
+            error (ERROR, string);
         }
     }
     cmd->type = cQGOTO;
@@ -831,8 +834,9 @@ next_case (struct command *cmd)	/* find next_case_here statement */
         }
         curr = curr->next;
         if (!curr) {
-            sprintf(string,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-            error (FATAL, string);
+	    curr = cmd;
+	    sprintf(errorstring,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+	    error (ERROR, errorstring);
         }
     }
     cmd->type = cQGOTO;

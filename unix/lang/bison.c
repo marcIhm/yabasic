@@ -127,7 +127,7 @@ void report_missing(int severity,char *text) {
     error(severity,text);
     string[0]='\0';
     if (missing_endif)
-      sprintf(string,"if statement starting at line %d has seen no 'endif' yet",missing_endif_line);
+      sprintf(string,"if-statement starting at line %d has seen no 'endif' yet",missing_endif_line);
     else if (missing_next)
       sprintf(string,"for-loop starting at line %d has seen no 'next' yet",missing_next_line);
     else if (missing_wend)
@@ -4691,7 +4691,7 @@ yyreduce:
 
   case 293:
 
-    {if (missing_endsub) {sprintf(string,"%d end-sub(s) are missing (last at line %d)",missing_endsub,missing_endsub_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
@@ -4857,7 +4857,7 @@ yyreduce:
 
   case 325:
 
-    {if (missing_next) {sprintf(string,"%d next(s) are missing (last at line %d)",missing_next,missing_next_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
@@ -4925,7 +4925,7 @@ yyreduce:
 
   case 345:
 
-    {if (missing_loop) {sprintf(string,"%d loop(s) are missing (last at line %d)",missing_loop,missing_loop_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
@@ -4950,7 +4950,7 @@ yyreduce:
 
   case 350:
 
-    {if (missing_wend) {sprintf(string,"%d wend(s) are missing (last at line %d)",missing_wend,missing_wend_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
@@ -4968,7 +4968,7 @@ yyreduce:
 
   case 354:
 
-    {if (missing_until) {sprintf(string,"%d until(s) are missing (last at line %d)",missing_until,missing_until_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
@@ -5004,7 +5004,7 @@ yyreduce:
 
   case 361:
 
-    {if (missing_endif) {sprintf(string,"%d endif(s) are missing (last at line %d)",missing_endif,missing_endif_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
 
     break;
 
