@@ -81,6 +81,36 @@ task :tests => :make do
   end
 end
 
+desc 'Run tests immediately'
+task :t do
+  cd 'lang' do
+    run_tests './tests', '../yabasic'
+    run_tests './tests/common', '../../yabasic'
+    run_tests './tests/error', '../../yabasic'
+  end
+end
+
+desc 'Run tests immediately, part1'
+task :t1 do
+  cd 'lang' do
+    run_tests './tests', '../yabasic'
+  end
+end
+
+desc 'Run tests immediately, part2'
+task :t2 do
+  cd 'lang' do
+    run_tests './tests/common', '../../yabasic'
+  end
+end
+
+desc 'Run tests immediately, part3'
+task :t3 do
+  cd 'lang' do
+    run_tests './tests/error', '../../yabasic'
+  end
+end
+
 desc 'Run autoconf checks'
 task :check => :tests do
   cd 'lang' do

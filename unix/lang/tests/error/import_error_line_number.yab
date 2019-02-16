@@ -1,3 +1,6 @@
-#---Error 
-import library11
+#expect#---Error 
+
+# Error in library with correct line number
+import library1e
+
 

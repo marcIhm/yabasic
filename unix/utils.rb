@@ -21,10 +21,9 @@ def run_tests dir, executable
     dir = File.dirname(fname)
     short = File.basename(fname)
     command = executable + " " + short
-    expected_error = File.readlines(fname).select{ |l| l.start_with?("#---")}.first
+    expected_error = File.readlines(fname).select{ |l| l.start_with?("#expect#")}.map { |l| l[8..-1] }.join('')
+    expected_error = nil if expected_error == ''
     if expected_error
-      expected_error.chomp!
-      puts "(Expecting error: '" + expected_error + "')"
       output = ""
       cd dir do
         [short,executable].each {|f|
@@ -32,7 +31,7 @@ def run_tests dir, executable
         }
         output = %x( #{command} 2>&1 )
       end
-      result = !output.lines.select {|l| l.start_with?(expected_error[1..-1])}.first.nil?
+      result = (output == expected_error)
     else
       cd dir do
         [short,executable].each {|f|
@@ -48,10 +47,14 @@ def run_tests dir, executable
     if result
       puts "\e[32mpassed.\e[0m"
     else
+      puts "\e[31mFAILED !\e[0m"
       puts output
-      puts "\e[31mFAILED ! #{result}\e[0m"
+      if expected_error
+        puts "Was expecting:",expected_error
+      end
       failed += 1
     end
+    File.open(fname + '.log','w') {|f| f.write(output)}
   end
   printf "\e[33mTotal number of tests:  %4d\e[0m\n",total
   if total==0

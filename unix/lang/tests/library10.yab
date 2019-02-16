@@ -1,5 +1,3 @@
 export sub second_level_import_func()
   return 1234
 end sub
-
-gurp

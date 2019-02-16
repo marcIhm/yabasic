@@ -1,0 +1,6 @@
+#expect#---Error in error_line_number.yab, line 6: syntax error
+#expect#   this does not compute :-/
+#expect#        ^~~~
+#expect#---Error: Program not executed
+
+this does not compute :-/
