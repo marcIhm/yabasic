@@ -470,6 +470,8 @@ struct library {
     struct command *datapointer;/* data pointer of this library */
     struct command *firstdata;	/* first data-command in library */
     struct library *next_lib;	/* next in chain */
+    struct library *imported_from; /* where has this library been imported from ? */
+    int yylineno_at_start;      /* value of yylineno at import of library */
 };
 
 /* ------------- function prototypes defined in ... ---------------- */
@@ -488,7 +490,7 @@ void dump_commands (char *);         /* dump commands into given file */
 void signal_handler (int);	/* handle various signals */
 char *my_strdup (char *);	/* my own version of strdup */
 char *my_strndup (char *, int);	/*  own version of strndup */
-struct library *new_file (char *, char *);	/* create a new structure for library names */
+struct library *new_library (char *, char *);	/* create a new structure for library */
 char *dotify (char *, int);	/* add library name, if not already present */
 char *strip (char *);		/* strip off to minimal name */
 void do_error (struct command *);	/* issue user defined error */

@@ -17,7 +17,7 @@ REM  Measurement 2018-10-28: 72.73 bogo ops per sec, 5155 duration
 REM
 estimated_ops=72.73*5155
 REM  Limit is chosen with 10% safe margin
-limit=estimated_ops*1.2/bogo
+limit=estimated_ops*2/bogo
 print "Limit is therefore ",limit, " msec"
 
 REM  Measure duration of simple for-loops assuming this represents the speed of the whole yabasic-language

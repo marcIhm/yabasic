@@ -1482,6 +1482,7 @@ struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file n
 struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
 int fi_pending=0; /* true, if within a short if */
+int len_of_lineno=0; /* length of last line number */
 int yycolumn=1;
 #define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 
@@ -1845,17 +1846,18 @@ YY_RULE_SETUP
 {
   BEGIN(PASTLNO);
   yylval.symbol=(char *)my_strdup(yytext);
+  len_of_lineno=strlen(yytext);		 
   return tSYMBOL;
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-{BEGIN(INITIAL);yyless(0);return tSEP;}
+{yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-{yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);return tSEP;}
+{yycolumn=1;if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}BEGIN(INITIAL);return tSEP;}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
@@ -3725,7 +3727,7 @@ void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file
   } else {
     include_stack[include_depth]=yy_create_buffer(file,YY_BUF_SIZE);
   }
-  library_stack[include_depth]=new_file(main_file_name,"main");
+  library_stack[include_depth]=new_library(main_file_name,"main");
   library_chain[library_chain_length++]=library_stack[include_depth];
   if (!explicit) yy_switch_to_buffer(include_stack[include_depth]);
   currlib=library_stack[0];
@@ -3789,7 +3791,7 @@ int import_lib(char *name) /* import library */
     yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
     include_stack[include_depth]=YY_CURRENT_BUFFER;
   }
-  library_stack[include_depth]=new_file(full,NULL);
+  library_stack[include_depth]=new_library(full,NULL);
   library_chain[library_chain_length++]=library_stack[include_depth];
   if (library_chain_length>=MAX_INCLUDE_NUMBER) {
     sprintf(string,"Cannot import more than %d libraries",MAX_INCLUDE_NUMBER);

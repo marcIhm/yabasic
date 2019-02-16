@@ -410,7 +410,7 @@ add_command (int type, char *symname, char *diag)
         std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
-    cmdhead->line = yylineno;
+    cmdhead->line = yylineno - currlib->yylineno_at_start + 1;
     cmdhead->first_column = yylloc.first_column;
     cmdhead->last_column = yylloc.last_column;
     cmdhead->lib = currlib;
@@ -1720,7 +1720,7 @@ error (int severity, char *message)
 /* reports an error to the user and possibly exits */
 {
     if (program_state == COMPILING) {
-        error_with_position (severity, message, currlib->long_name, yylineno, yylloc.first_column, yylloc.last_column );
+        error_with_position (severity, message, currlib->long_name, yylineno - currlib->yylineno_at_start + 1, yylloc.first_column, yylloc.last_column );
     } else if (program_state == RUNNING && current->line > 0) {
         error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
     } else {
@@ -1775,7 +1775,9 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 	if (filename) {
 	    if (first || lastline != lineno) {
 		fprintf (stderr, " in %s, line %d: %s\n", filename, lineno, message);
-		show_and_mark_line (filename, lineno, first_column, last_column);
+		if (severity==ERROR) {
+		   show_and_mark_line (filename, lineno, first_column, last_column);
+		}
 	    }
 	    lastline = lineno;
 	    first = FALSE;
@@ -1825,13 +1827,13 @@ show_and_mark_line (char *filename, int lineno, int first_column, int last_colum
     }
 
     linebuffer[0]='\0';
-    while (fgets(linebuffer, INBUFFLEN, file) && lineno) {
+    while (lineno && fgets(linebuffer, INBUFFLEN, file)) {
 	lineno--;
     }
     fclose(file);
 
     if (linebuffer[0] && lineno==0) {
-	linebuffer[strcspn(linebuffer, "\n")] = 0;
+	linebuffer[strcspn(linebuffer, "\n")] = '\0';
 	fputs("   ", stderr);
 	fputs(linebuffer, stderr);
 	fputs("\n   ", stderr);
@@ -1892,16 +1894,16 @@ my_free (void *mem)		/* free memory */
 
 
 struct library *
-new_file (char *long_name, char *short_name)  	/* create a new structure for library names */
+new_library (char *long_name, char *short_name)  	/* create a new structure for library */
 {
     struct library *new;
     struct library *curr;
     static struct library *last = NULL;
     int start, end;
 
-    /* check, if library has already been included */
+    /* check, if library has already been imported */
     for (curr = library_chain[0]; curr; curr = curr->next_lib) {
-        if (!strcmp (curr->long_name, long_name)) {
+        if (!strcmp (curr->long_name, long_name) && currlib->imported_from != curr->imported_from) {
             if (is_bound) {
                 return curr;
             } else {
@@ -1919,6 +1921,7 @@ new_file (char *long_name, char *short_name)  	/* create a new structure for lib
 
     new->long_name = my_strdup (long_name);
     new->long_len = strlen (new->long_name);
+    new->yylineno_at_start = yylineno;
 
     if (short_name) {
         new->short_name = my_strdup (short_name);
@@ -2239,7 +2242,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
 
 
 static int
-seekback (FILE *file, int offset, int warn_on_fail)           /* seek back bytes */
+seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes */
 {
   if (fseek (file, offset, SEEK_END)) {
     sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
@@ -2248,16 +2251,16 @@ seekback (FILE *file, int offset, int warn_on_fail)           /* seek back bytes
     return FALSE;
   }
   if (!fgets (string, INBUFFLEN, file)) {
-      /*    error (warn_on_fail ? WARNING:DEBUG, "Could not read from end of embedded program");*/
-      error (WARNING, "Could not read from end of embedded program");
+    error (cookie_found ? WARNING:DEBUG, "Could not read from end of embedded program");
     return FALSE;
   }
   string[strlen(string) - strlen("\n")] = '\0';
-  sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
-  error (DEBUG, errorstring);
+  if (cookie_found && infolevel >= DEBUG) { 
+    sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
+    error (DEBUG, errorstring);
+  }
   if (fseek (file, offset, SEEK_END)) {
-    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
-	     my_strerror (errno));
+    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path, my_strerror (errno));
     error (WARNING, errorstring);
     return FALSE;
   }
