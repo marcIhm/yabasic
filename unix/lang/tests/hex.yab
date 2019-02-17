@@ -1,0 +1,6 @@
+#!./yabasic
+
+if (0xff<>255) exit 1
+if (0xafde24<>dec("afde24")) exit 1
+exit 0
+

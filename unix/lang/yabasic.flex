@@ -282,6 +282,11 @@ GLOB return tGLOB;
 
 [-+*/:(),.;] {return yytext[0];}
 
+0x[0-9a-zA-Z]+ {
+  yylval.digits=(char *)my_strdup(yytext);
+  return tHEXDIGITS;
+}
+
 [0-9]+ {
   yylval.digits=(char *)my_strdup(yytext);
   return tDIGITS;

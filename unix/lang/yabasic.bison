@@ -102,6 +102,7 @@ void report_if_missing(int severity,char *text) {
 %token <symbol> tSTRSYM
 %token <symbol> tDOCU
 %token <digits> tDIGITS
+%token <digits> tHEXDIGITS
 %token <string> tSTRING
 
 %token tFOR tTO tSTEP tNEXT tWHILE tWEND tREPEAT tUNTIL tIMPORT
@@ -456,6 +457,7 @@ const: number {$$=$1;}
 
 number: tFNUM {$$=$1;}
   | tDIGITS {$$=strtod($1,NULL);}
+  | tHEXDIGITS {$$=(double)strtol($1,NULL,0);}
   ;
 
 symbol_or_lineno: tDIGITS {$$=my_strdup(dotify($1,FALSE));}

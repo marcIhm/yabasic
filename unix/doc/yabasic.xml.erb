@@ -316,8 +316,10 @@ yabasic*font: 9x15
     </sect1>
 
     <sect1>
-      <title>Arithmetic</title>
+      <title>Arithmetic and numbers</title>
       <para><application>Yabasic</application> handles numbers and arithmetic: You may calculate trigonometric functions like <function><link linkend="ref_sin">sin</link></function> or <function><link linkend="ref_atan">atan</link></function>, or logarithms (with <function><link linkend="ref_log">log</link></function>). Bitwise operations, like <function><link linkend="ref_arithmetic_and">and</link></function> or <function><link linkend="ref_arithmetic_or">or</link></function> are available as well <function><link linkend="ref_min">min</link></function> or <function><link linkend="ref_max">max</link></function> (calculate the minimum or maximum of its argument) or <function><link linkend="ref_mod">mod</link></function> or <function><link linkend="ref_int">int</link></function> (reminder of a division or integer part or a number).</para>
+      <para>Conversion between numerical bases can be done with <function><link linkend="ref_hex">hex$</link></function> and <function><link linkend="ref_dex">dec</link></function>. And you may write hexadecimal constants in the usual way, e.g. <programlisting>print 0xff</programlisting>. All calculations in <application>yabasic</application> are done with double precision.
+      </para>
     </sect1>
 
     <sect1>
@@ -3008,7 +3010,7 @@ a=dec(number$,base)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>dec</function>-function takes the string-representation of a base-2 or base-16 (which is the default) number and converts it into a decimal number. The optional second argument (<varname>base</varname>) might be used to specify a base other than 16. However, currently only base 2 or base 16 are supported.</para>
+	  <para>The <function>dec</function>-function takes the string-representation of a base-2 or base-16 (which is the default) number and converts it into a decimal number. The optional second argument (<varname>base</varname>) might be used to specify a base other than 16. However, currently only base 2 or base 16 are supported. Please note, that for base 16 you may write literals in the usual way, by preceding them with <literal>0x</literal>, e.g. like <programlisting>print 0xff</programlisting>; this may save you from applying the <function>dec</function> altogether.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
