@@ -86,7 +86,7 @@ REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
 REM\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
 REM {yymore();}
 
-IMPORT{WS}+{NAME}\n {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMPORT;}
+IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMPORT;}
 <PASTIMPORT>.* {yycolumn=1;BEGIN(INITIAL);yyless(0);unput('\n');return tSEP;}
 <PASTIMPORT>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
 
