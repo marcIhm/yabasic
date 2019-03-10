@@ -4699,7 +4699,7 @@ yyreduce:
 
   case 294:
 
-    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);yyerror(string);} YYABORT;}
 
     break;
 
@@ -4865,7 +4865,7 @@ yyreduce:
 
   case 326:
 
-    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);yyerror(string);} YYABORT;}
 
     break;
 
@@ -4933,7 +4933,7 @@ yyreduce:
 
   case 346:
 
-    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);yyerror(string);} YYABORT;}
 
     break;
 
@@ -4958,7 +4958,7 @@ yyreduce:
 
   case 351:
 
-    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);yyerror(string);} YYABORT;}
 
     break;
 
@@ -4976,7 +4976,7 @@ yyreduce:
 
   case 355:
 
-    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);yyerror(string);} YYABORT;}
 
     break;
 
@@ -5012,7 +5012,7 @@ yyreduce:
 
   case 362:
 
-    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);lyyerror((yylsp[0]),ERROR,string);} YYABORT;}
+    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);yyerror(string);} YYABORT;}
 
     break;
 

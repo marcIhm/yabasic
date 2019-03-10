@@ -1,0 +1,6 @@
+#expect#---Error in tests/error/error_line_number2.yab, line 1: syntax error
+#expect#   a = b$
+#expect#         ^
+#expect#---Error: Program not executed
+
+a = b$

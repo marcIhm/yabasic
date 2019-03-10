@@ -36,6 +36,7 @@ ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
 /* ------------- external references ---------------- */
 
 extern int yylineno;            /* line number */
+extern int yycolumn;            /* column number */
 extern YYLTYPE yylloc;          /* line numbers and columns */
 extern int yyparse ();		/* call bison parser */
 extern int yydebug;             /* for bison debugging */
@@ -1720,7 +1721,7 @@ error (int severity, char *message)
 /* reports an error to the user and possibly exits */
 {
     if (program_state == COMPILING) {
-        error_with_position (severity, message, currlib->long_name, yylineno - currlib->yylineno_at_start + 1, yylloc.first_column, yylloc.last_column );
+        error_with_position (severity, message, currlib->long_name, yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0) , yylloc.first_column, yylloc.last_column );
     } else if (program_state == RUNNING && current->line > 0) {
         error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
     } else {

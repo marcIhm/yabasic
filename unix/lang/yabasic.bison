@@ -497,7 +497,7 @@ function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;
 	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
   ;
 
-endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);lyyerror(@1,ERROR,string);} YYABORT;}
+endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);yyerror(string);} YYABORT;}
   | tENDSUB {missing_endsub--;}
   ;
 
@@ -566,7 +566,7 @@ for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_n
           next next_symbol {add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
-next: tEOPROG {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);lyyerror(@1,ERROR,string);} YYABORT;}
+next: tEOPROG {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);yyerror(string);} YYABORT;}
   | tNEXT {missing_next--;}
   ;
 
@@ -610,7 +610,7 @@ do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command
   ;
 
 
-loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);lyyerror(@1,ERROR,string);} YYABORT;}
+loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);yyerror(string);} YYABORT;}
   | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
@@ -622,7 +622,7 @@ while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_c
             wend
   ;	    
 
-wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);lyyerror(@1,ERROR,string);} YYABORT;}
+wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);yyerror(string);} YYABORT;}
   | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
@@ -632,7 +632,7 @@ repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add
 	     until
   ;
 
-until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);lyyerror(@1,ERROR,string);} YYABORT;}
+until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);yyerror(string);} YYABORT;}
   | tUNTIL '(' expression ')'
 	       {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
@@ -644,7 +644,7 @@ if_clause: tIF expression {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel
            endif
   ;
 
-endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);lyyerror(@1,ERROR,string);} YYABORT;}
+endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);yyerror(string);} YYABORT;}
   | tENDIF {missing_endif--;}
   ;
 
@@ -751,7 +751,7 @@ gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRU
 %code {
 void
 yyerror(char *message) {
-  error(ERROR,message);
+  error_without_position(ERROR,message);
 }
 
 void
