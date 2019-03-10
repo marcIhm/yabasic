@@ -751,7 +751,7 @@ gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRU
 %code {
 void
 yyerror(char *message) {
-  error_without_position(sERROR,message);
+  error(sERROR,message);
 }
 
 void

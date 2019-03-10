@@ -392,7 +392,7 @@ int yyparse (void);
 
 void
 yyerror(char *message) {
-  error_without_position(sERROR,message);
+  error(sERROR,message);
 }
 
 void

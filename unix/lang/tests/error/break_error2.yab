@@ -1,6 +1,7 @@
-#expect#---Error in break_error2.yab, line 6: invalid number of levels to break: 4; only 1,2 or 3 are allowed
+#expect#---Error in break_error2.yab, line 7: invalid number of levels to break: 4; only 1,2 or 3 are allowed
 #expect#     if (a=2) break 4
 #expect#                    ^
+#expect#---Error: Couldn't parse program
 #expect#---Error: Program not executed
 for a=0 to 4
   if (a=2) break 4

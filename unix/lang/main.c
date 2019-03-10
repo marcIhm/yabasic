@@ -1735,8 +1735,8 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 /* reports an basic error to the user and possibly exits */
 {
     char *severity_text;
-    static int lastline;
-    static int first = TRUE;
+    static int printed_lineno = -1;
+    static char *printed_filename = NULL;
 
     if (severity >= severity_threshold) {
 #ifdef UNIX
@@ -1773,25 +1773,21 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
             break;
         }
         fprintf (stderr, "%s", severity_text);
-	if (filename) {
-	    if (first || lastline != lineno) {
+	if (filename && (printed_filename != filename || printed_lineno != lineno)) {
 		fprintf (stderr, " in %s, line %d: %s\n", filename, lineno, message);
-		if (severity == sERROR) {
-		   show_and_mark_line (filename, lineno, first_column, last_column);
-		}
-	    }
-	    lastline = lineno;
-	    first = FALSE;
+		printed_filename = filename;
+		printed_lineno = lineno;
         } else {
 	    fprintf (stderr, ": %s\n", message);
+	}
+	if (filename && severity == sERROR) {
+	    show_and_mark_line (filename, lineno, first_column, last_column);
 	}
         if (program_state == RUNNING && severity <= sERROR && severity != sDUMP) {
             dump_sub (1);
         }
     }
-    if (severity_threshold > severity_so_far) {
-        severity_so_far = severity_threshold;
-    }
+    if (severity > severity_so_far) severity_so_far = severity;
     if (severity >= sERROR) {
         program_state = FINISHED;
         endreason = rERROR;

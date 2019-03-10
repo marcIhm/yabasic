@@ -1,6 +1,7 @@
 #expect#---Error in library1e.yab, line 4: syntax error
 #expect#   This cannot be parsed :-/
 #expect#        ^~~~~~
+#expect#---Error: Couldn't parse program
 #expect#---Error: Program not executed
 
 # Error in library with correct line number

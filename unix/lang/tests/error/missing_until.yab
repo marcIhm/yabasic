@@ -1,4 +1,5 @@
 #expect#---Error in missing_until.yab, line 7: repeat-loop starting at line 6 has seen no 'until' at end of file
+#expect#---Error: Couldn't parse program
 #expect#---Error: Program not executed
 
 import library2e
