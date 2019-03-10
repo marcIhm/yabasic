@@ -95,8 +95,8 @@ extern struct command *current;	/* currently executed command */
 extern struct command *cmdroot;	/* first command */
 extern struct command *cmdhead;	/* next command */
 extern struct command *lastcmd;	/* last command */
-extern int infolevel;		/* controls issuing of error messages */
-extern int errorlevel;		/* highest level of error message seen til now */
+extern int severity_threshold;  /* minimum severity the user wants to see */
+extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
 extern char *explanation[];	/* explanations of commands */
@@ -247,19 +247,19 @@ extern int missing_endif_line;
 
 /* ---------------------- enum types ------------------------------- */
 
-enum error {
+enum severity {
     /* error levels  */
-    FATAL, ERROR, INFO, DUMP, WARNING, NOTE, DEBUG
+    sDEBUG, sNOTE, sWARNING, sDUMP, sINFO, sERROR, sFATAL
 };
 
 enum end_reasons {
     /* ways to end the program */
-    erNONE, erERROR, erREQUEST, erEOF
+    eNONE, eERROR, eREQUEST, eEOF
 };
 
 enum stream_modes {
     /* ways to access a stream */
-    stmCLOSED = 0, stmREAD = 1, stmWRITE = 2, stmPRINT = 4
+    mCLOSED = 0, mREAD = 1, mWRITE = 2, mPRINT = 4
 };
 
 enum functions {

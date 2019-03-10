@@ -64,8 +64,8 @@ struct command *cmdroot;	/* first command */
 struct command *cmdhead;	/* next command */
 struct command *lastcmd;	/* last command */
 struct command *current;	/* currently executed command */
-int infolevel;			/* controls issuing of error messages */
-int errorlevel;			/* highest level of error message seen til now */
+int severity_threshold;	        /* minimum severity the user wants to see */
+int severity_so_far;            /* maximum severity that has been printed until now */
 static int debug_count;		/* number of debug messages */
 static int note_count;		/* number of notes */
 static int warning_count;	/* number of warning messages */
@@ -122,7 +122,7 @@ main (int argc, char **argv)
     errorcode = 0;
 
     program_state = HATCHED;
-    infolevel = WARNING;		/* set the initial Infolevel */
+    severity_threshold = WARNING;		/* set the default severity threshold */
 
 #ifdef WINDOWS
 
@@ -273,7 +273,7 @@ main (int argc, char **argv)
 
     if (errorlevel > ERROR && !check_compat) {
         program_state = RUNNING;
-	if (infolevel >= DEBUG) {
+	if (severity_threshold >= sDEBUG) {
 	    printf ("---Program parsed, press RETURN to continue with its execution: ");
 	    fgets (string, INBUFFLEN, stdin);
         }
@@ -407,7 +407,7 @@ add_command (int type, char *symname, char *diag)
 {
     struct command *new;
 
-    if (infolevel >= DEBUG) {
+    if (severity_threshold >= sDEBUG) {
         std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
@@ -638,18 +638,18 @@ parse_arguments (int cargc, char *cargv[])
                 }
                 info = argv[ar];
                 if (!strncmp (info, "debug", strlen (info))) {
-                    infolevel = DEBUG;
+                    severity_threshold = sDEBUG;
                 } else if (!strncmp (info, "note", strlen (info))) {
-                    infolevel = NOTE;
+                    severity_threshold = sNOTE;
                 } else if (!strncmp (info, "warning", strlen (info))) {
-                    infolevel = WARNING;
+                    severity_threshold = sWARNING;
                 } else if (!strncmp (info, "error", strlen (info))) {
-                    infolevel = ERROR;
+                    severity_threshold = sERROR;
                 } else if (!strncmp (info, "fatal", strlen (info))) {
-                    infolevel = FATAL;
+                    severity_threshold = sFATAL;
                 } else if (!strncmp (info, "bison", strlen (info))) {
                     yydebug = 1;
-                    infolevel = DEBUG;
+                    severity_threshold = sDEBUG;
                 } else {
                     sprintf (string, "there's no infolevel '%s' " YABFORHELP,
                              argv[ar]);
@@ -1321,7 +1321,7 @@ run_it ()
         /* don't execute program, just print docu */
         while (current != cmdhead) {
             if (current->type == cDOCU) {
-                if (infolevel >= DEBUG) {
+                if (severity_threshold >= sDEBUG) {
                     std_diag ("executing", current->type, current->symname, current->diag);
                 }
                 printf ("%s\n", (char *) current->pointer);
@@ -1331,7 +1331,7 @@ run_it ()
                     fgets (string, INBUFFLEN, stdin);
                 }
             } else {
-                if (infolevel >= DEBUG) {
+                if (severity_threshold >= sDEBUG) {
                     std_diag ("skipping", current->type, current->symname, current->diag);
                 }
             }
@@ -1346,7 +1346,7 @@ run_it ()
         }
     } else {
         while (current != cmdhead && endreason == erNONE) {
-            if (infolevel >= DEBUG) {
+            if (severity_threshold >= sDEBUG) {
                 std_diag ("executing", current->type, current->symname, current->diag);
             }
             switch (current->type) {
@@ -1738,7 +1738,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
     static int lastline;
     static int first = TRUE;
 
-    if (severity <= infolevel) {
+    if (severity >= severity_threshold) {
 #ifdef UNIX
         if (curinized) {
             reset_shell_mode ();
@@ -1804,7 +1804,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
         end_it ();
     }
 #ifdef UNIX
-    if (curinized && severity <= infolevel) {
+    if (curinized && severity >= severity_threshold) {
         reset_prog_mode ();
     }
 #endif
@@ -1982,7 +1982,7 @@ strip (char *name)		/* strip down to minimal name */
     static char buff[300];
     char *at, *dot;
 
-    if (infolevel >= DEBUG) {
+    if (severity_threshold <= DEBUG) {
         return name;
     }
     dot = strchr (name, '.');
@@ -2176,13 +2176,13 @@ isbound (void)			/* check if this interpreter is bound to a program */
     /* infolevel */
     offset -= remlen + 2;
     if (!seekback (inter, offset, TRUE)) return 0;
-    if (!fscanf (inter, "%d", &infolevel)) {
+    if (!fscanf (inter, "%d", &severity_threshold)) {
         error (WARNING, "Could not read infolevel");
         return 0;
     }
     /* repeat just for its output side-effect */
     if (!seekback (inter, offset, TRUE)) return 0; 
-    switch(infolevel) {
+    switch(severity_threshold) {
     case FATAL: infolevel_text="FATAL";break;
     case ERROR: infolevel_text="ERROR";break;
     case INFO: infolevel_text="INFO";break;
@@ -2190,7 +2190,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
     case WARNING: infolevel_text="WARNING";break;
     case NOTE: infolevel_text="NOTE";break;
     case DEBUG: infolevel_text="DEBUG";break;
-    case DEBUG+1: infolevel_text="DEBUG+BISON";yydebug=1;infolevel=DEBUG;break;};
+    case DEBUG+1: infolevel_text="DEBUG+BISON";yydebug=1;severity_threshold=sDEBUG;break;};
     sprintf (errorstring, "Set infolevel to %s", infolevel_text);
     error (DEBUG, errorstring);
 
@@ -2229,7 +2229,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
     offset -= 4 + proglen; /* only the text 'rem ' without preceding linefeed */
     if (!seekback (inter, offset, TRUE)) return 0;
 
-    if (infolevel >= NOTE) {
+    if (severity_threshold <= sNOTE) {
         error (NOTE, "Dumping the embedded program, that will be executed:");
         fprintf (stderr, "     ");
         for (i = 0; i < proglen; i++) {
@@ -2264,7 +2264,7 @@ seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes
     return FALSE;
   }
   string[strlen(string) - strlen("\n")] = '\0';
-  if (cookie_found && infolevel >= DEBUG) { 
+  if (cookie_found && severity_threshold >= sDEBUG) { 
     sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
     error (DEBUG, errorstring);
   }
@@ -2329,7 +2329,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
         return 0;
     }
 
-    if (infolevel >= DEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf (string, "binding %s and %s into %s", inter_path,
                  main_file_name, bound);
         error (NOTE, string);
@@ -2369,7 +2369,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     fprintf (fbound, "rem %08d\n", proglen);
     fprintf (fbound, "rem %s\n", progname);
     fprintf (fbound, "rem %08d\n", strlen(progname));
-    fprintf (fbound, "rem %02d\n", infolevel + yydebug);
+    fprintf (fbound, "rem %02d\n", severity_threshold + yydebug);
     fprintf (fbound, "rem %s\n", YABMAGIC);
     fclose (fyab);
     fclose (fprog);

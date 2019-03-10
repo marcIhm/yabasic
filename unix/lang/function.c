@@ -77,12 +77,12 @@ token (struct command *cmd)	/* extract token from variable */
     sym = get_sym (s->pointer, syARRAY, amSEARCH);
     if (!sym || !sym->pointer) {
         sprintf (string, "array '%s()' is not defined", strip (s->pointer));
-        error (ERROR, string);
+        error (sevERROR, string);
         goto token_done;
     }
     ar = sym->pointer;
     if (ar->dimension > 1) {
-        error (ERROR, "only one dimensional arrays allowed");
+        error (sevERROR, "only one dimensional arrays allowed");
         goto token_done;
     }
 
@@ -225,9 +225,9 @@ do_glob (char *str, char *pat)	/* actually do the globbing */
 {
     int res;
 
-    if (infolevel >= DEBUG) {
+    if (severity_threshold <= DEBUG) {
         sprintf (string, "globbing '%s' on '%s'", str, pat);
-        error (DEBUG, string);
+        error (sevDEBUG, string);
     }
     if (*pat == '\0' && *str == '\0') {
         return TRUE;
@@ -458,7 +458,7 @@ function (struct command *current)	/* performs a function */
             pointer = my_strdup ("");
             sprintf (string, "'%s' is not a valid format",
                      (char *) a2->pointer);
-            error (ERROR, string);
+            error (sevERROR, string);
             break;
         }
         pointer = my_strdup (string);
@@ -622,7 +622,7 @@ function (struct command *current)	/* performs a function */
         i = (int) floor (a1->value);
         if (i > 255 || i < 0) {
             sprintf (string, "can't convert %g to character", a1->value);
-            error (ERROR, string);
+            error (sevERROR, string);
             return;
         }
         pointer[1] = '\0';
@@ -827,7 +827,7 @@ function (struct command *current)	/* performs a function */
         }
         if (!(stream_modes[i] & (stmREAD | stmWRITE))) {
             sprintf (string, "stream %d not opened", i);
-            error (ERROR, string);
+            error (sevERROR, string);
             value = 0;
         } else {
             value = ftell (streams[i]);
@@ -835,7 +835,7 @@ function (struct command *current)	/* performs a function */
         result = stNUMBER;
         break;
     default:
-        error (ERROR, "function called but not implemented");
+        error (sevERROR, "function called but not implemented");
         return;
     }
 
@@ -863,7 +863,7 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
         if (tcsetpgrp(STDIN_FILENO, getpid())) {
 	    sprintf(string,"could not get control of terminal: %s",
 		    my_strerror(errno));
-	    error (ERROR,string);
+	    error (sevERROR,string);
 	    return ret;
 	}
 	reset_prog_mode ();
@@ -898,7 +898,7 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
     if (!CreateProcess (NULL, string, &prosec, &thrsec, TRUE, 0,
                         NULL, NULL, &start, &proc)) {
         sprintf (string, "couldn't execute '%s'", cmd);
-        error (ERROR, string);
+        error (sevERROR, string);
         return -1;
     }
     WaitForSingleObject (proc.hProcess, INFINITE);
@@ -988,7 +988,7 @@ do_system2 (char *cmd)		/* hand over execution of command to system, return outp
     p = popen (cmd, "r");
     if (p == NULL) {
         sprintf (string, "couldn't execute '%s'", cmd);
-        error (ERROR, string);
+        error (sevERROR, string);
         return my_strdup ("");
     }
     do {
@@ -1031,7 +1031,7 @@ do_system2 (char *cmd)		/* hand over execution of command to system, return outp
     if (!CreateProcess (NULL, string, &prosec, &thrsec, TRUE, 0,
                         NULL, NULL, &start, &proc)) {
         sprintf (string, "couldn't execute '%s'", cmd);
-        error (ERROR, string);
+        error (sevERROR, string);
         return my_strdup ("");
     }
     CloseHandle (pipewrite);
@@ -1143,7 +1143,7 @@ other2dec (char *hex, int base)	/* convert hex or binary to double number */
 
     if (base != 2 && base != 16) {
         sprintf (string, "Cannot convert base-%d numbers", base);
-        error (ERROR, string);
+        error (sevERROR, string);
         return 0.;
     }
     dec = 0;
@@ -1153,7 +1153,7 @@ other2dec (char *hex, int base)	/* convert hex or binary to double number */
         found = strchr (digits, tolower (hex[i]));
         if (!found || found - digits >= base) {
             sprintf (string, "Not a base-%d number: '%s'", base, hex);
-            error (ERROR, string);
+            error (sevERROR, string);
             return 0.;
         }
         dec += found - digits;
@@ -1430,27 +1430,27 @@ poke (struct command *cmd)	/* poke into internals */
         c = tolower ((int) *string_arg);
         switch (c) {
         case 'd':
-            infolevel = DEBUG;
+            severity_threshold = sevDEBUG;
             break;
         case 'n':
-            infolevel = NOTE;
+            severity_threshold = sevNOTE;
             break;
         case 'w':
-            infolevel = WARNING;
+            severity_threshold = sevWARNING;
             break;
         case 'e':
-            infolevel = ERROR;
+            severity_threshold = sevERROR;
             break;
         case 'f':
-            infolevel = FATAL;
+            severity_threshold = sevFATAL;
             break;
         default:
-            error (ERROR, "invalid infolevel");
+            error (sevERROR, "invalid infolevel");
             return;
         }
-        if (infolevel >= DEBUG) {
+        if (severity_threshold >= sevDEBUG) {
             sprintf (string, "switching infolevel to '%c'", c);
-            error (DEBUG, string);
+            error (sevDEBUG, string);
         }
     } else if (!strcmp (dest, "stdout") && string_arg) {
         fputs (string_arg, stdout);
@@ -1465,13 +1465,13 @@ poke (struct command *cmd)	/* poke into internals */
 	}
 	if (count != (int) double_arg) {
 	    sprintf (string, "assertion failed for number of entries on stack; expected = %d, actual = %d",(int) double_arg,count);
-	    error (FATAL, string);
+	    error (sevFATAL, string);
 	}
     } else if (dest[0] == '#') {
-        error (ERROR, "don't use quotes when poking into file");
+        error (sevERROR, "don't use quotes when poking into file");
     } else {
 	sprintf(string,"invalid poke: '%s'",dest);
-        error (ERROR, string);
+        error (sevERROR, string);
     }
     return;
 }
@@ -1497,14 +1497,14 @@ pokefile (struct command *cmd)	/* poke into file */
 
     if (!(stream_modes[stream] & stmWRITE)) {
         sprintf (string, "Stream %d not open for writing", stream);
-        error (ERROR, string);
+        error (sevERROR, string);
         return;
     }
     if (sarg) {
         fputs (sarg, streams[stream]);
     } else {
         if (darg < 0 || darg > 255) {
-            error (ERROR, "stream poke out of byte range (0..255)");
+            error (sevERROR, "stream poke out of byte range (0..255)");
             return;
         }
         fputc ((int) darg, streams[stream]);
@@ -1545,11 +1545,11 @@ peek (char *dest)		/* peek into internals */
     } else if (!strcmp (dest, "millisrunning")) {
 	return current_millis() - millis_compilation_start;
     } else if (dest[0] == '#') {
-        error (ERROR, "don't use quotes when peeking into a file");
+        error (sevERROR, "don't use quotes when peeking into a file");
         return 0;
     }
 
-    error (ERROR, "invalid peek");
+    error (sevERROR, "invalid peek");
     return 0;
 }
 
@@ -1562,7 +1562,7 @@ peekfile (int stream)		/* read a byte from stream */
     }
     if (stream && !(stream_modes[stream] & stmREAD)) {
         sprintf (string, "stream %d not open for reading", stream);
-        error (ERROR, string);
+        error (sevERROR, string);
         return 0;
     }
     return fgetc (stream ? streams[stream] : stdin);
@@ -1577,16 +1577,16 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
     for (s = dest; *s; s++) {
         *s = tolower ((int) *s);
     }
-    if (!strcmp (dest, "infolevel")) {
-        if (infolevel == DEBUG) {
+    if (!strcmp (dest, "infolevel") || !strcmp (dest, "severity_threshold")) {
+        if (severity_threshold == sevDEBUG) {
             return my_strdup ("debug");
-        } else if (infolevel == NOTE) {
+        } else if (severity_threshold == sevNOTE) {
             return my_strdup ("note");
-        } else if (infolevel == WARNING) {
+        } else if (severity_threshold == sevWARNING) {
             return my_strdup ("warning");
-        } else if (infolevel == ERROR) {
+        } else if (severity_threshold == sevERROR) {
             return my_strdup ("error");
-        } else if (infolevel == FATAL) {
+        } else if (severity_threshold == sevFATAL) {
             return my_strdup ("fatal");
         } else {
             return my_strdup ("unknown");
@@ -1625,7 +1625,7 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
         }
         return my_strdup (s);
     } else {
-        error (ERROR, "invalid peek");
+        error (sevERROR, "invalid peek");
     }
     return my_strdup ("");
 }
@@ -1642,7 +1642,7 @@ peek3 (char *dest, char *cont)	/* peek into internals */
     if (!strcmp (dest, "env") || !strcmp (dest, "environment")) {
         return my_strdup (getenv (cont));
     } else {
-        error (ERROR, "invalid peek");
+        error (sevERROR, "invalid peek");
     }
     return my_strdup ("");
 }
@@ -1733,7 +1733,7 @@ restore (struct command *cmd)	/* reset data pointer to given label */
                 /* did not find label */
                 sprintf (string, "can't find label '%s'",
                          (char *) cmd->pointer);
-                error (ERROR, string);
+                error (sevERROR, string);
                 return;
             }
         }
@@ -1809,11 +1809,11 @@ readdata (struct command *cmd)	/* read data items */
         *datapointer = (*datapointer)->nextassoc;
     }
     if (!*datapointer) {
-        error (ERROR, "run out of data items");
+        error (sevERROR, "run out of data items");
         return;
     }
     if (type != (*datapointer)->tag) {
-        error (ERROR, "type of READ and DATA don't match");
+        error (sevERROR, "type of READ and DATA don't match");
         return;
     }
     read = push ();
@@ -1980,7 +1980,7 @@ switch_compare (void)		/* compare topmost values for switch statement */
 	    r = (first->value == second->value) ? 1. : 0.;
 	}
     } else {
-	error (ERROR,
+	error (sevERROR,
 	       "mixing strings and numbers in a single switch statement is not allowed");
     }
 
@@ -2006,7 +2006,7 @@ logical_shortcut (struct command *type)	/* shortcut and/or if possible */
     if ((type->type == cORSHORT && is != 0)
             || (type->type == cANDSHORT && is == 0)) {
         result = push ();
-        error (DEBUG, "logical shortcut taken");
+        error (sevDEBUG, "logical shortcut taken");
         result->type = stNUMBER;
         result->value = is;
     } else {

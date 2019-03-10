@@ -83,7 +83,7 @@ popsymlist (void)		/* pop list of symbols and free symbol contents */
         my_free (currsym);
         currsym = nextsym;
     }
-    if (infolevel >= DEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf (string, "removed symbol list with %d symbols", count);
         error (DEBUG, string);
     }
@@ -109,13 +109,13 @@ freesym (struct symbol *s)	/* free contents of symbol */
         return;
     }
     if (s->type == sySTRING) {
-        if (infolevel >= DEBUG) {
+        if (severity_threshold <= sDEBUG) {
             sprintf (string, "removing string symbol '%s'", s->name);
             error (DEBUG, string);
         }
         my_free (s->pointer);
     } else if (s->type == syARRAY) {
-        if (infolevel >= DEBUG) {
+        if (severity_threshold <= sDEBUG) {
             sprintf (string, "removing array symbol '%s()'", s->name);
             error (DEBUG, string);
         }
@@ -136,7 +136,7 @@ freesym (struct symbol *s)	/* free contents of symbol */
         }
         my_free (ar);
     } else if (s->type == syNUMBER) {
-        if (infolevel >= DEBUG) {
+        if (severity_threshold >= sDEBUG) {
             sprintf (string, "removing numeric symbol '%s'", s->name);
             error (DEBUG, string);
         }
@@ -195,7 +195,7 @@ get_sym (char *name, int type, int add)
                     currsym = &((*currsym)->link);
                     linked = TRUE;
                 }
-                if (infolevel >= DEBUG) {
+                if (severity_threshold <= sDEBUG) {
                     if (linked)
                         sprintf (string,
                                  "found symbol '%s%s', linked to %s after searching %d symbol(s) in %d stack(s)",
@@ -219,10 +219,10 @@ get_sym (char *name, int type, int add)
         if (add == amADD_LOCAL) {
             new = create_symbol (type, name);
             (*currsym) = new;
-            if (infolevel >= DEBUG) {
+            if (severity_threshold <= sDEBUG) {
                 sprintf (string, "created local symbol %s%s", name,
                          (type == syARRAY) ? "()" : "");
-                error (DEBUG, string);
+                error (sDEBUG, string);
             }
             return new;
         }
@@ -235,7 +235,7 @@ get_sym (char *name, int type, int add)
     if (add == amADD_GLOBAL) {
         new = create_symbol (type, name);
         (*currsym) = new;
-        if (infolevel >= DEBUG) {
+        if (severity_threshold <= sDEBUG) {
             sprintf (string, "created global symbol %s%s", name,
                      (type == syARRAY) ? "()" : "");
             error (DEBUG, string);
@@ -251,7 +251,7 @@ link_symbols (struct symbol *from, struct symbol *to)
 {
     /* link one symbol to the other */
     from->link = to;
-    if (infolevel >= DEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf (string, "linking symbol '%s' to '%s'", from->name,
                  to->name);
         error (DEBUG, string);
@@ -586,9 +586,9 @@ pushdblsym (struct command *cmd)
 
     if (!cmd->symbol) {
         cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
-    } else if (infolevel >= DEBUG) {
+    } else if (severity_threshold <= sDEBUG) {
     	sprintf(string, "reading symbol '%s'", cmd->symname);
-	error (DEBUG, string);
+	error (sDEBUG, string);
     }
 
     p->value = *(double *) cmd->symbol;
@@ -604,7 +604,7 @@ popdblsym (struct command *cmd)	/* pop double from stack */
     d = pop (stNUMBER)->value;
     if (!cmd->symbol) {
         cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
-    } else if (infolevel >= DEBUG) {
+    } else if (severity_threshold >= sDEBUG) {
 	sprintf(string, "writing symbol '%s'", cmd->symname);
 	error (DEBUG, string);
     }
@@ -697,10 +697,10 @@ arraylink (struct command *cmd)	/* link a local symbol to a global array */
         error (DEBUG, "creating dummy array");
         ar = create_array ((cmd->args == stNUMBERARRAYREF) ? 'd' : 's', 0);
         l->pointer = ar;
-        if (infolevel >= DEBUG) {
+        if (severity_threshold >= sDEBUG) {
             sprintf (string, "creating 0-dimensional dummy array '%s()'",
                      cmd->symname);
-            error (DEBUG, string);
+            error (sDEBUG, string);
         }
     } else {
         /* link those two together */

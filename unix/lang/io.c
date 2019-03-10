@@ -277,11 +277,11 @@ curinit(void)			/* initialize curses */
     if (tcsetpgrp(STDIN_FILENO, getpid())) {
 	sprintf(string,"could not get control of terminal: %s",
                 my_strerror(errno));
-        error (ERROR,string);
+        error (sERROR,string);
 	return;
     };
     if (!initscr()) {
-        error (ERROR,"could not initialize curses");
+        error (sERROR,"could not initialize curses");
 	return;
     };
     initcol();
@@ -955,10 +955,10 @@ push_stream(struct command *cmd)	/* push current stream on stack and switch to n
     s = push();
     s->type = stNUMBER;
     s->value = oldstream;
-    if (infolevel >= DEBUG) {
+    if (severity_threshold >= sDEBUG) {
         sprintf(string, "pushing %d on stack, switching to %d", oldstream,
                 stream);
-        error(DEBUG, string);
+        error(sDEBUG, string);
     }
     oldstream = stream;
     mystream(stream);
@@ -971,9 +971,9 @@ pop_stream(void)		/* pop stream from stack and switch to it */
     int stream;
 
     stream = (int)pop(stNUMBER)->value;
-    if (infolevel >= DEBUG) {
+    if (severity_threshold >= sDEBUG) {
         sprintf(string, "popping %d from stack, switching to it", stream);
-        error(DEBUG, string);
+        error(sDEBUG, string);
     }
     mystream(stream);
 }

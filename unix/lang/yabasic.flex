@@ -49,7 +49,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 %%
 <<EOF>> {
-  if (infolevel>=DEBUG) {
+  if (severity_threshold <= sDEBUG) {
     sprintf(string,"closing file '%s'",currlib->short_name);
     error(DEBUG,string);
   }
@@ -431,7 +431,7 @@ int import_lib(char *name) /* import library */
     return FALSE;
   } 
 
-  if (infolevel>=NOTE) {
+  if (severity_threshold >= sNOTE) {
     if (isbound) {      
       sprintf(string,"importing library '%s'",name);
     } else {
@@ -524,7 +524,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
 void leave_lib(void) /* processing, when end of library is found */
 {
   if (include_depth<0) return;
-  if (infolevel>=DEBUG) {
+  if (severity_threshold <= sDEBUG) {
     sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->short_name,library_stack[include_depth]->short_name,include_depth);
     error(DEBUG,string);
   }
