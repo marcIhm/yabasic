@@ -174,7 +174,7 @@ openwin (struct command *cmd)
 #endif
 
     if (winopened) {
-        error (sevWARNING, "Window already open");
+        error (sWARNING, "Window already open");
         return;
     }
 
@@ -185,13 +185,13 @@ openwin (struct command *cmd)
 
     winheight = (int) pop (stNUMBER)->value;
     if (winheight < 1) {
-        error (sevERROR, "winheight less than 1 pixel");
+        error (sERROR, "winheight less than 1 pixel");
         return;
     }
 
     winwidth = (int) pop (stNUMBER)->value;
     if (winwidth < 1) {
-        error (sevERROR, "winwidth less than 1 pixel");
+        error (sERROR, "winwidth less than 1 pixel");
         return;
     }
 
@@ -218,7 +218,7 @@ openwin (struct command *cmd)
                        CWColormap, &attrib);
 
     if (window == None) {
-        error (sevERROR, "Could not create window");
+        error (sERROR, "Could not create window");
         return;
     }
 
@@ -246,7 +246,7 @@ openwin (struct command *cmd)
         XCreatePixmap (display, window, winwidth, winheight,
                        attributes.depth);
     if (!backbit) {
-        error (sevERROR, "couldn't create backing pixmap");
+        error (sERROR, "couldn't create backing pixmap");
         return;
     }
     XFillRectangle (display, window, rgc, 0, 0, winwidth, winheight);
@@ -280,7 +280,7 @@ openwin (struct command *cmd)
             }
         }
     } else if (backpid == -1) {
-        error (sevERROR, "couldn't fork child");
+        error (sERROR, "couldn't fork child");
         return;
     }
 
@@ -298,7 +298,7 @@ openwin (struct command *cmd)
     wthandle = CreateThread (NULL, 0, (LPTHREAD_START_ROUTINE) winthread,
                              0, 0, (LPDWORD) & wtid);
     if (wthandle == NULL) {
-        error (sevERROR, "can't create thread for window");
+        error (sERROR, "can't create thread for window");
         return;
     }
 
@@ -697,7 +697,7 @@ grafinit (void)
     display = XOpenDisplay (displayname);
     if (display == NULL) {
         sprintf (string, "could not open display: %s", my_strerror (errno));
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
 
@@ -716,7 +716,7 @@ grafinit (void)
                                   TrueColor, &visualinfo)
             && !XMatchVisualInfo (display, DefaultScreen (display), 8, TrueColor,
                                   &visualinfo)) {
-        error (sevERROR, "Could not get any TrueColor visual");
+        error (sERROR, "Could not get any TrueColor visual");
         return FALSE;
     }
 
@@ -737,11 +737,11 @@ grafinit (void)
     for (bbits_count = 0; bbits_max & (1 << bbits_count); bbits_count++);
 
     sprintf (string, "Creating a %d bit True Color map", visualinfo.depth);
-    error (sevNOTE, string);
+    error (sNOTE, string);
     sprintf (string,
              "with %d, %d and %d bits for red, green and blue respectively",
              rbits_count, gbits_count, bbits_count);
-    error (sevNOTE, string);
+    error (sNOTE, string);
 
     /* create the colormap */
     colormap =
@@ -759,7 +759,7 @@ grafinit (void)
             (display, colormap, foreground, &exact_match, &best_match)) {
         sprintf (string, "Could not find foreground color '%s'\n",
                  background);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     forepixel =
@@ -776,7 +776,7 @@ grafinit (void)
             (display, colormap, background, &exact_match, &best_match)) {
         sprintf (string, "Could not find background color '%s'\n",
                  background);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     backpixel =
@@ -836,7 +836,7 @@ grafinit (void)
         sprintf (string,
                  "command line option -foreground must be three numbers between 0 and 255, separated by commas (not '%s')",
                  foreground);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     forepixel = RGB (r, g, b);
@@ -851,7 +851,7 @@ grafinit (void)
         sprintf (string,
                  "command line option -background must be three numbers between 0 and 255, separated by commas (not '%s')",
                  background);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     backpixel = RGB (r, g, b);
@@ -890,10 +890,10 @@ change_font (char *fname)
     if (!myfont) {
         sprintf (string, "could not load font '%s', trying 'fixed' instead",
                  fontname);
-        error (sevWARNING, string);
+        error (sWARNING, string);
         myfont = XLoadQueryFont (display, "fixed");
         if (!myfont) {
-            error (sevERROR, "could not get it");
+            error (sERROR, "could not get it");
             return FALSE;
         }
     }
@@ -901,7 +901,7 @@ change_font (char *fname)
     xgcvalues.font = myfont->fid;
     if (!XChangeGC (display, gc, GCFont, &xgcvalues)) {
         sprintf (string, "Could not change font to '%s'", fontname);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     firsttext = TRUE;
@@ -951,7 +951,7 @@ change_font (char *fname)
 
     else {
         sprintf (string, "Don't know font '%s' using 'swiss' instead", fontname);
-        error (sevWARNING, string);
+        error (sWARNING, string);
         f = FF_SWISS;
     }
     logfont.lfHeight = -fontheight;
@@ -971,7 +971,7 @@ change_font (char *fname)
     myfont = CreateFontIndirect (&logfont);
     if (myfont == NULL) {
         sprintf (string, "Could not create font '%s' for screen", fontname);
-        error (sevERROR, string);
+        error (sERROR, string);
         return FALSE;
     }
     my_free (family);
@@ -985,11 +985,11 @@ change_font (char *fname)
         printerfont = CreateFontIndirect (&logfont);
         if (printerfont == NULL) {
             sprintf (string, "Could not create font for printer");
-            error (sevERROR, string);
+            error (sERROR, string);
             return FALSE;
         }
         if (!SelectObject (printer, printerfont)) {
-            error (sevERROR, "could not select printerfont");
+            error (sERROR, "could not select printerfont");
         }
     }
 
@@ -1037,7 +1037,7 @@ dot (struct command *cmd)
     transform (&x, &y);
     clear = cmd->tag & dmCLEAR;
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
 #ifdef UNIX
@@ -1105,7 +1105,7 @@ line (struct command *cmd)
     int clear;
 
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
 
@@ -1213,7 +1213,7 @@ change_colour (struct command *cmd)
 #endif
 
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
     if (cmd->type == cGCOLOUR || cmd->type == cGBACKCOLOUR) {
@@ -1224,7 +1224,7 @@ change_colour (struct command *cmd)
             sprintf (string,
                      "arguments to command colour must be between 0 and 255 (not %d,%d,%d)",
                      r, g, b);
-            error (sevERROR, string);
+            error (sERROR, string);
             return;
         }
     } else {
@@ -1235,7 +1235,7 @@ change_colour (struct command *cmd)
             sprintf (string,
                      "string argument to command colour must be three numbers between 0 and 255, separated by commas (not '%s')",
                      h);
-            error (sevERROR, string);
+            error (sERROR, string);
             return;
         }
     }
@@ -1330,7 +1330,7 @@ circle (struct command *cmd)
     x = pop (stNUMBER)->value;
     transform (&x, &y);
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
 #ifdef UNIX
@@ -1432,7 +1432,7 @@ triangle (struct command *cmd)
     points[3].y = (long) y0;
     points[3].x = (long) x0;
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
 #ifdef UNIX
@@ -1534,7 +1534,7 @@ text (struct command *cmd)
                 sprintf (string,
                          "Found two possible alignments: '%s' and '%s'",
                          arg1, arg2);
-                error (sevERROR, string);
+                error (sERROR, string);
             }
             align = arg2;
         } else {
@@ -1548,9 +1548,9 @@ text (struct command *cmd)
         }
     }
     if (arg1 && arg2 && !align) {
-        error (sevERROR,
+        error (sERROR,
                "There should be a specification for a text alignment (e.g. 'ct')");
-        error (sevERROR, "among the last two arguments");
+        error (sERROR, "among the last two arguments");
         return;
     }
     if (!align) {
@@ -1565,7 +1565,7 @@ text (struct command *cmd)
     x = pop (stNUMBER)->value;
     transform (&x, &y);
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
 
@@ -1683,7 +1683,7 @@ closewin ()
     int status;
 #endif
     if (!winopened) {
-        error (sevWARNING, "Got no window to close");
+        error (sWARNING, "Got no window to close");
         return;
     }
     winopened = FALSE;
@@ -1714,7 +1714,7 @@ clearwin ()
 #endif
 
     if (!winopened) {
-        error (sevWARNING, "Got no window to clear");
+        error (sWARNING, "Got no window to clear");
         return;
     }
 #ifdef UNIX
@@ -1749,7 +1749,7 @@ moveorigin (char *or)
     or[0] = tolower ((int) or[0]);
     or[1] = tolower ((int) or[1]);
     if (or[2] != '\0' || !strchr ("lcr", or[0]) || !strchr ("tbc", or[1])) {
-        error (sevERROR, "invalid window origin");
+        error (sERROR, "invalid window origin");
         return;
     }
     strcpy (winorigin, or);
@@ -1778,7 +1778,7 @@ transform (double *x, double *y)
     double xz, yz, xd, yd;
     double xalt, yalt;
 
-    if (severity_threshold <= DEBUG) {
+    if (severity_threshold <= sDEBUG) {
         xalt = *x;
         yalt = *y;
     }
@@ -1810,10 +1810,10 @@ transform (double *x, double *y)
         yd = -1.0;
         break;
     }
-    if (severity_threshold >= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf (string, "transforming (%g,%g) into (%g,%g)", xalt, yalt,
                  *x, *y);
-        error (sevDEBUG, string);
+        error (sDEBUG, string);
     }
     *x = xz + (*x) * xd;
     *y = yz + (*y) * yd;
@@ -1831,7 +1831,7 @@ rect (struct command *cmd)
     double x1, y1, x2, y2, s;
 
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
     fill = cmd->tag & dmFILL;
@@ -1955,11 +1955,11 @@ putbit (void)
 #endif /*  */
     mode = pop (stSTRING)->pointer;
     if (print_to_file) {
-        error (sevERROR, "Cannot bitblit to printer");
+        error (sERROR, "Cannot bitblit to printer");
         return;
     }
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return;
     }
     for (pm = mode; *pm; pm++) {
@@ -1973,7 +1973,7 @@ putbit (void)
         sprintf (string,
                  "Invalid mode for bitblit: '%s', only 'solid' and 'transparent' are allowed",
                  mode);
-        error (sevERROR, string);
+        error (sERROR, string);
     }
     ydest = (int) pop (stNUMBER)->value;
     xdest = (int) pop (stNUMBER)->value;
@@ -1991,7 +1991,7 @@ putbit (void)
         }
     }
     if (badimage || w < 0 || h < 0) {
-        error (sevERROR,
+        error (sERROR,
                "Invalid bitmap (must start with 'rgb X,Y:', where X and Y are >0)");
         return;
     }
@@ -2027,7 +2027,7 @@ putbit (void)
             XGetImage (display, backbit, xe, ye, we, he, vals.plane_mask,
                        XYPixmap);
         if (!bits) {
-            error (sevERROR, "Couldn't get bits from window");
+            error (sERROR, "Couldn't get bits from window");
             return;
         }
     }
@@ -2037,7 +2037,7 @@ putbit (void)
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             if (!readrgb (NULL, &red, &green, &blue)) {
-                error (sevERROR, "Invalid bitmap");
+                error (sERROR, "Invalid bitmap");
                 return;
             }
             should_pixel = rgb_to_pixel (red, green, blue);
@@ -2086,7 +2086,7 @@ getbit (int x1, int y1, int x2, int y2)
 #endif
 
     if (!winopened) {
-        error (sevERROR, "Got no window to draw");
+        error (sERROR, "Got no window to draw");
         return my_strdup ("");
     }
     itransform (&x1, &y1);
@@ -2124,7 +2124,7 @@ getbit (int x1, int y1, int x2, int y2)
             XGetImage (display, backbit, xe1, ye1, xe2 - xe1 + 1,
                        ye2 - ye1 + 1, vals.plane_mask, XYPixmap);
         if (!bits) {
-            error (sevERROR, "Couldn't get bits from window");
+            error (sERROR, "Couldn't get bits from window");
             return my_strdup ("");
         }
     }
@@ -2278,13 +2278,13 @@ openprinter (struct command *cmd)
         if (stat (printerfilename, &s) && errno != ENOENT) {
             sprintf (string, "could not check printerfile '%s': %s",
                      printerfilename, my_strerror (errno));
-            error (sevERROR, string);
+            error (sERROR, string);
             return;
         }
         if (s.st_mode & S_IFLNK) {
             sprintf (string,
                      "could not print to file '%s'; it is a symbolic link");
-            error (sevERROR, string);
+            error (sERROR, string);
             return;
         }
         printerfile = fopen (printerfilename, "w");
@@ -2360,11 +2360,11 @@ openprinter (struct command *cmd)
         printerfont = CreateFontIndirect (&logfont);
         if (printerfont == NULL) {
             sprintf (string, "Could not create font for printer");
-            error (ERROR, string);
+            error (sERROR, string);
             return;
         }
         if (!SelectObject (printer, printerfont)) {
-            error (ERROR, "could not select printerfont");
+            error (sERROR, "could not select printerfont");
         }
     }
     di.cbSize = sizeof (DOCINFO);
@@ -2374,7 +2374,7 @@ openprinter (struct command *cmd)
     di.fwType = 0;
 
     if (StartDoc (printer, &di) == SP_ERROR) {
-        error (ERROR, "Couldn't start printing");
+        error (sERROR, "Couldn't start printing");
         return;
     }
     StartPage (printer);
@@ -2492,7 +2492,7 @@ closeprinter ()
             sprintf (string, "lpr %s", printerfilename);
             if (system (string)) {
                 sprintf (string, "couldn't print '%s'", printerfilename);
-                error (ERROR, string);
+                error (sERROR, string);
                 return;
             }
             remove (printerfilename);

@@ -72,9 +72,9 @@ check_return_value (struct command *cmd)	/* check return value of function */
         sprintf (string, "subroutine returns %s but should return %s",
                  (is == ftSTRING) ? "a string" : "a number",
                  (should == ftSTRING) ? "a string" : "a number");
-        error (sevERROR, string);
+        error (sERROR, string);
     }
-    if (severity_threshold <= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
         s = stackhead->prev;
         if (s->type == stNUMBER) {
             sprintf (string, "subroutine returns number %g", s->value);
@@ -84,7 +84,7 @@ check_return_value (struct command *cmd)	/* check return value of function */
         else
             sprintf (string, "subroutine returns something strange (%d)",
                      s->type);
-        error (sevDEBUG, string);
+        error (sDEBUG, string);
     }
 }
 
@@ -105,7 +105,7 @@ reorder_stack_after_call (int keep_topmost) /* reorganize stack after function c
 	} else if (keep->type==stNUMBER) {
 	    kept_value=keep->value;
 	} else {
-	    error (sevFATAL, "expecting only string or number on stack");
+	    error (sFATAL, "expecting only string or number on stack");
 	}
     }
 
@@ -185,12 +185,12 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
     address = pop (stANY);
     if (cmd->type == cRETURN_FROM_CALL) {
         if (address->type != stRET_ADDR_CALL) {
-            error (sevFATAL, "RETURN from a subroutine without CALL");
+            error (sFATAL, "RETURN from a subroutine without CALL");
             return;
         }
     } else { /* cRETURN_FROM_GOSUB */
         if (address->type != stRET_ADDR) {
-            error (sevFATAL, "RETURN without GOSUB");
+            error (sFATAL, "RETURN without GOSUB");
             return;
         }
     }
@@ -206,7 +206,7 @@ create_subr_link (char *label)	/* create link to subroutine */
     struct command *cmd;
 
     if (!inlib) {
-	error(DEBUG, "not in library, will not create link to subroutine");
+	error(sDEBUG, "not in library, will not create link to subroutine");
         return;
     }
     dot = strchr (label, '.');
@@ -216,7 +216,7 @@ create_subr_link (char *label)	/* create link to subroutine */
     /* check, if label is duplicate */
     if (search_label (global, srmSUBR | srmLINK | srmLABEL)) {
         sprintf (string, "duplicate subroutine '%s'", strip (global));
-        error (sevERROR, string);
+        error (sERROR, string);
         return;
     }
 
@@ -248,9 +248,9 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         cmd->type = cCALL;
         cmd->pointer = cmd->symname;
         cmd->symname = NULL;
-	if (severity_threshold <= sevDEBUG) {
+	if (severity_threshold <= sDEBUG) {
 	    sprintf(errorstring, "converting '%s' to '%s'",explanation[cFUNCTION_OR_ARRAY],explanation[cFUNCTION]);
-	    error(DEBUG, errorstring);
+	    error(sDEBUG, errorstring);
 	}
     } else {
         if (cmd->type == cFUNCTION_OR_ARRAY) {
@@ -260,9 +260,9 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         }
         cmd->type = cDOARRAY;
         cmd->args = -1;
-	if ( severity_threshold <= sevDEBUG) {
+	if ( severity_threshold <= sDEBUG) {
 	    sprintf(errorstring, "converting '%s' to '%s'",explanation[cFUNCTION_OR_ARRAY],explanation[cDOARRAY]);
-	    error(DEBUG, errorstring);
+	    error(sDEBUG, errorstring);
 	}
     }
 }
@@ -285,7 +285,7 @@ makelocal (struct command *cmd)	/* makes symbol local */
         sprintf (string,
                  "local variable '%s' already defined within this subroutine",
                  strip (cmd->symname));
-        error (sevERROR, string);
+        error (sERROR, string);
         return;
     }
     get_sym (cmd->symname, cmd->args, amADD_LOCAL);
@@ -327,12 +327,12 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
                 char *dot;
                 dot = strchr (cmd->pointer, '.');
                 if (first && !short_dump) {
-                    error_without_position (DUMP, "Executing in:");
+                    error_without_position (sDUMP, "Executing in:");
                 }
                 sprintf (dumpbuffer, "sub %s() called in %s,%d",
                          dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->long_name,
                          cmd->line);
-                error_without_position (DUMP, dumpbuffer);
+                error_without_position (sDUMP, dumpbuffer);
                 first = FALSE;
             }
         }
@@ -340,11 +340,11 @@ dump_sub (int short_dump)	/* dump the stack of subroutine calls */
     } while (st && st != stackroot);
     if (first && !short_dump) {
         if (!short_dump) {
-            error_without_position (DUMP, "Executing in:");
+            error_without_position (sDUMP, "Executing in:");
         }
     }
     if (!short_dump) {
-        error_without_position (DUMP, "main program");
+        error_without_position (sDUMP, "main program");
     }
 
     return;
@@ -403,7 +403,7 @@ initialize_switch_id_stack(void) /* initialize stack of switch_ids */
 void
 push_switch_id(void)		/* generate a new switch id on top of stack */
 {
-    if (switch_nesting>=100) error(FATAL, "more than 100 nested switch statements");
+    if (switch_nesting>=100) error(sFATAL, "more than 100 nested switch statements");
 
     switch_nesting++;
     max_switch_id++;
@@ -414,7 +414,7 @@ push_switch_id(void)		/* generate a new switch id on top of stack */
 void
 pop_switch_id (void)		/* pop last switch_id */
 {
-    if (switch_nesting<=0) error(FATAL, "no more switch ids to pop");
+    if (switch_nesting<=0) error(sFATAL, "no more switch ids to pop");
     
     switch_nesting--;
 }
@@ -529,7 +529,7 @@ jump (struct command *cmd)
         if (strchr (cmd->pointer, '@')) {
             strcat (string, " (not in this sub)");
         }
-        error (sevERROR, string);
+        error (sERROR, string);
     }
 }
 
@@ -596,11 +596,11 @@ check_leave_switch (struct command *from, struct command *to)   /* check, if got
 	/* okay: move out of single switch statement */
 	return 1;
     } else if (from->switch_state->id == 0 && to->switch_state->id != 0) {
-	error (sevERROR, "GOTO into a switch-statement");
+	error (sERROR, "GOTO into a switch-statement");
     } else if (from->switch_state->nesting != 0 && to->switch_state->nesting == 0) {
-	error (sevERROR, "GOTO out of multiple switch-statements");
+	error (sERROR, "GOTO out of multiple switch-statements");
     } else {
-	error (sevERROR, "GOTO between switch-statements");
+	error (sERROR, "GOTO between switch-statements");
     }
     return 0;
 }
@@ -615,7 +615,7 @@ create_label (char *label, int type)	/* creates command label */
     if (search_label (label, srmSUBR | srmLINK | srmLABEL)) {
         sprintf (string, "duplicate %s '%s'",
                  (type == cLABEL) ? "label" : "subroutine", strip (label));
-        error (sevERROR, string);
+        error (sERROR, string);
         return;
     }
 
@@ -632,10 +632,10 @@ decide()			/*  skips next command, if not 0 on stack */
 {
 	if (pop(stNUMBER)->value != 0) {
 		current = current->next;    /* skip one command */
-		if (severity_threshold <= sevDEBUG) std_diag("skipping", current->type, current->symname, current->diag);
+		if (severity_threshold <= sDEBUG) std_diag("skipping", current->type, current->symname, current->diag);
 	}
 	else {
-		if (severity_threshold <= sevDEBUG) error(sevDEBUG, "(no command skipped)");
+		if (severity_threshold <= sDEBUG) error(sDEBUG, "(no command skipped)");
 	}
 }
 
@@ -699,12 +699,12 @@ void load_pop_multi (struct command *cmd, int to_pop) /* put correct value into 
 {
     if (cmd->prev->type != cPOP_MULTI) {
 	sprintf(string, "while trying to load pop_multi; preceding command is rather '%s'", explanation[cmd->prev->type]);
-	error(FATAL, string);
+	error(sFATAL, string);
     }
     cmd->prev->tag = to_pop;
-    if (severity_threshold <= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
 	sprintf(string, "loading previous pop_multi-command with %d", to_pop);
-	error(sevDEBUG, string);
+	error(sDEBUG, string);
     }
 
     /* and execute it for the first time */
@@ -719,7 +719,7 @@ create_mybreak(int depth) /* create command mybreak */
 
     if (depth > 3 || depth < 1) {
 	sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",depth);
-	error(ERROR,string);
+	error(sERROR,string);
     }
 
     cmd = add_command (cBREAK_MULTI, NULL, NULL);
@@ -759,13 +759,13 @@ mybreak (struct command *cmd)	/* find break_here statement */
 	if (!curr) {
 	    curr = cmd;
 	    sprintf(errorstring,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sevERROR, errorstring);
+	    error (sERROR, errorstring);
 	}
     }
     cmd->type = cQGOTO;
-    if (severity_threshold <= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
 	sprintf(errorstring, "converting '%s' to '%s'",explanation[cBREAK_MULTI],explanation[cQGOTO]);
-        error (sevDEBUG, errorstring);
+        error (sDEBUG, errorstring);
     }
     load_pop_multi(cmd, to_pop);
     cmd->jump = current = curr;
@@ -798,13 +798,13 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
         if (!curr) {
 	    curr = cmd;
             sprintf(string,"continue has left program (loop_nesting=%d)",loop_nesting);
-            error (sevERROR, string);
+            error (sERROR, string);
         }
     }
     cmd->type = cQGOTO;
-    if (severity_threshold <= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
 	sprintf( errorstring, "converting '%s' to '%s'",explanation[cCONTINUE],explanation[cQGOTO]);
-	error (sevDEBUG, errorstring);
+	error (sDEBUG, errorstring);
     }
     load_pop_multi(cmd, to_pop);
     cmd->jump = current = curr;
@@ -836,13 +836,13 @@ next_case (struct command *cmd)	/* find next_case_here statement */
         if (!curr) {
 	    curr = cmd;
 	    sprintf(errorstring,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sevERROR, errorstring);
+	    error (sERROR, errorstring);
         }
     }
     cmd->type = cQGOTO;
-    if (severity_threshold <= sevDEBUG) {
+    if (severity_threshold <= sDEBUG) {
 	sprintf(errorstring,"converting '%s' to '%s'",explanation[cNEXT_CASE],explanation[cQGOTO]);
-        error (sevDEBUG, errorstring);
+        error (sDEBUG, errorstring);
     }
     cmd->jump = current = curr;
 }

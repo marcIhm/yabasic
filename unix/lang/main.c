@@ -89,7 +89,7 @@ char *explanation[cLAST_COMMAND - cFIRST_COMMAND + 1];	/* explanations of comman
 char *explicit = NULL;		/* yabasic commands given on the command line */
 char **yabargv;			/* arguments for yabasic */
 int yabargc;			/* number of arguments in yabargv */
-static int endreason = erNONE;	/* reason for termination */
+static int endreason = rNONE;	/* reason for termination */
 static int exitcode = 0;
 static int signal_arrived = 0;
 /* timing */
@@ -122,7 +122,7 @@ main (int argc, char **argv)
     errorcode = 0;
 
     program_state = HATCHED;
-    severity_threshold = WARNING;		/* set the default severity threshold */
+    severity_threshold = sWARNING;		/* set the default severity threshold */
 
 #ifdef WINDOWS
 
@@ -219,11 +219,11 @@ main (int argc, char **argv)
     millis_compilation_start = current_millis();
     last_inkey=my_malloc(INBUFFLEN);
     last_inkey[0]='\0';
-    error (DEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE ", configured at " BUILD_TIME);
+    error (sDEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE ", configured at " BUILD_TIME);
     initialize ();
     program_state = INITIALIZED;
 
-    error (NOTE, "calling parser/compiler");
+    error (sNOTE, "calling parser/compiler");
 
     if (interactive) {
         printf ("%s", BANNER);
@@ -242,18 +242,18 @@ main (int argc, char **argv)
         printf ("or go to www.yabasic.de for online resources.\n\n");
     }
     program_state = COMPILING;
-    if (yyparse () && errorlevel > ERROR) {
-        error (ERROR, "Couldn't parse program");
+    if (yyparse () && severity_so_far < sERROR) {
+        error (sERROR, "Couldn't parse program");
     }
 
-    if (errorlevel > ERROR) {
+    if ( severity_so_far > sERROR) {
         create_docu_array ();
     }
 
     add_command (cEND, NULL, NULL);
     sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
              commandcount);
-    error (NOTE, string);
+    error (sNOTE, string);
 
     time (&compilation_end);
 
@@ -261,19 +261,19 @@ main (int argc, char **argv)
         if (mybind (to_bind)) {
             sprintf (string, "Successfully bound '%s' and '%s' into '%s'",
                      inter_path, main_file_name, to_bind);
-            error (INFO, string);
+            error (sINFO, string);
             end_it ();
         } else {
             sprintf (string, "Could not bind '%s' and '%s' into '%s'",
                      inter_path, main_file_name, to_bind);
-            error (ERROR, string);
+            error (sERROR, string);
             end_it ();
         }
     }
 
-    if (errorlevel > ERROR && !check_compat) {
+    if (severity_so_far < sERROR && !check_compat) {
         program_state = RUNNING;
-	if (severity_threshold >= sDEBUG) {
+	if (severity_threshold <= sDEBUG) {
 	    printf ("---Program parsed, press RETURN to continue with its execution: ");
 	    fgets (string, INBUFFLEN, stdin);
         }
@@ -285,21 +285,21 @@ main (int argc, char **argv)
             ("Check for possible compatibility problems done\nProgram will not be executed, %d possible problem(s) reported\n",
              warning_count);
         else {
-            error (ERROR, "Program not executed");
+            error (sERROR, "Program not executed");
         }
     }
 
     program_state = FINISHED;
     sprintf (string, "%d debug(s), %d note(s), %d warning(s), %d error(s)",
              debug_count, note_count, warning_count, error_count);
-    error (NOTE, string);
+    error (sNOTE, string);
     time (&execution_end);
     sprintf (string, "compilation time %g second(s), execution %g",
              (double) (compilation_end - compilation_start),
              (double) (execution_end - compilation_end));
-    error (NOTE, string);
+    error (sNOTE, string);
     end_it ();
-    return !(errorlevel > ERROR);
+    return !(severity_so_far >= sERROR);
 }
 
 
@@ -398,7 +398,7 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
     } else {
 	strcpy (dest, "t[]b");
     }
-    error (DEBUG, string);
+    error (sDEBUG, string);
 }
 
 struct command *
@@ -407,7 +407,7 @@ add_command (int type, char *symname, char *diag)
 {
     struct command *new;
 
-    if (severity_threshold >= sDEBUG) {
+    if (severity_threshold <= sDEBUG) {
         std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
@@ -479,7 +479,7 @@ dump_commands (char *dumpfilename)
     if (dump == NULL) {
         sprintf(string,"could not open '%s' for writing: %s",
                 dumpfilename,my_strerror(errno));
-        error (ERROR,string);
+        error (sERROR,string);
         return;
     }
 
@@ -492,7 +492,7 @@ dump_commands (char *dumpfilename)
         }
         if (cmd->type > cLAST_COMMAND || cmd->type < cFIRST_COMMAND) {
             sprintf (string, "Illegal command type %d", cmd->type);
-            error(ERROR,string);
+            error(sERROR,string);
             return;
         }
         if (cmd->type==cEND) {
@@ -507,9 +507,9 @@ dump_commands (char *dumpfilename)
             break;
         }
     }
-    fclose(dump);
-    sprintf(string,"Dumped to '%s'",dumpfilename);
-    error(INFO,string);
+    fclose (dump);
+    sprintf (string,"Dumped to '%s'",dumpfilename);
+    error (sINFO,string);
 }
 
 static void
@@ -633,7 +633,7 @@ parse_arguments (int cargc, char *cargv[])
             } else if (equal ("-infolevel", option, 2)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR, "no infolevel specified " YABFORHELP);
+                    error (sERROR, "no infolevel specified " YABFORHELP);
                     end_it ();
                 }
                 info = argv[ar];
@@ -653,14 +653,14 @@ parse_arguments (int cargc, char *cargv[])
                 } else {
                     sprintf (string, "there's no infolevel '%s' " YABFORHELP,
                              argv[ar]);
-                    error (ERROR, string);
+                    error (sERROR, string);
                     end_it ();
                 }
             } else if (equal ("-fg", option, 3)
                        || equal ("-foreground", option, 4)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR,
+                    error (sERROR,
                            "no foreground colour specified " YABFORHELP);
                     end_it ();
                 }
@@ -669,7 +669,7 @@ parse_arguments (int cargc, char *cargv[])
                        || equal ("-background", option, 2)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR,
+                    error (sERROR,
                            "no background colour specified (-h for help)");
                     end_it ();
                 }
@@ -677,7 +677,7 @@ parse_arguments (int cargc, char *cargv[])
             } else if (equal ("-geometry", option, 2)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR,
+                    error (sERROR,
                            "no geometry string specified (-h for help)");
                     end_it ();
                 }
@@ -685,7 +685,7 @@ parse_arguments (int cargc, char *cargv[])
             } else if (equal ("-bind", option, 3)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR,
+                    error (sERROR,
                            "name of bound program to be written is missing");
                     end_it ();
                 }
@@ -693,28 +693,28 @@ parse_arguments (int cargc, char *cargv[])
             } else if (equal ("-execute", option, 2)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR, "no commands specified (-h for help)");
+                    error (sERROR, "no commands specified (-h for help)");
                     end_it ();
                 }
                 explicit = my_strdup (argv[ar]);
             } else if (equal ("-librarypath", option, 4)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR, "no library path specified (-h for help)");
+                    error (sERROR, "no library path specified (-h for help)");
                     end_it ();
                 }
                 strcpy (library_path, argv[ar]);
             } else if (equal ("-display", option, 3)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR, "no display name specified (-h for help)");
+                    error (sERROR, "no display name specified (-h for help)");
                     end_it ();
                 }
                 displayname = my_strdup (argv[ar]);
             } else if (equal ("-font", option, 4)) {
                 ar++;
                 if (ar >= argc) {
-                    error (ERROR, "no font specified (-h for help)");
+                    error (sERROR, "no font specified (-h for help)");
                     end_it ();
                 }
                 fontname = my_strdup (argv[ar]);
@@ -734,7 +734,7 @@ parse_arguments (int cargc, char *cargv[])
                     main_file_name = my_strdup (option + 6);
                 } else {
                     if (ar >= argc - 1) {
-                        error (ERROR, "no filename specified (-h for help)");
+                        error (sERROR, "no filename specified (-h for help)");
                         end_it ();
                     }
                     hold_docu = FALSE;
@@ -744,7 +744,7 @@ parse_arguments (int cargc, char *cargv[])
                 sprintf (string,
                          "unknown or ambiguous option '%s' " YABFORHELP,
                          option);
-                error (ERROR, string);
+                error (sERROR, string);
                 end_it ();
             } else if (!is_bound && !inputfile && !explicit) {
                 /* not an option */
@@ -755,8 +755,8 @@ parse_arguments (int cargc, char *cargv[])
                 if (inputfile == NULL) {
                     sprintf (string, "could not open '%s': %s",
                              main_file_name, my_strerror (errno));
-                    error (ERROR, string);
-                    endreason = erERROR;
+                    error (sERROR, string);
+                    endreason = rERROR;
                     exitcode = 1;
                     end_it ();
                 } else {
@@ -911,9 +911,9 @@ end_it (void)			/* perform shutdown-operations */
         waitpid (backpid, &status, 0);
         backpid = -1;
     }
-    if ((curinized || winopened) && endreason != erREQUEST) {
+    if ((curinized || winopened) && endreason != rREQUEST) {
 #else
-    if (!Commandline && endreason != erREQUEST) {
+    if (!Commandline && endreason != rREQUEST) {
 #endif
         mystream (STDIO_STREAM);
         onestring ("---Program done, press RETURN---\n");
@@ -982,7 +982,7 @@ initialize (void)
 #endif
 
     /* initialize error handling: no errors seen 'til now */
-    errorlevel = DEBUG;
+    severity_so_far = sDEBUG;
     debug_count = 0;
     note_count = 0;
     warning_count = 0;
@@ -1046,10 +1046,10 @@ initialize (void)
     /* file stuff */
     for (i = 1; i <= 9; i++) {
         streams[i] = NULL;
-        stream_modes[i] = stmCLOSED;
+        stream_modes[i] = mCLOSED;
     }
     streams[0] = stdin;
-    stream_modes[0] = stmREAD | stmWRITE;
+    stream_modes[0] = mREAD | mWRITE;
 #ifdef UNIX
     printerfile = NULL;		/* no ps-file yet */
 #endif
@@ -1211,7 +1211,7 @@ initialize (void)
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
 	if (!explanation[i]) {
 	    sprintf (string, "command %d has no description (command after %s)", i, explanation[i-1]);
-	    error(ERROR,string);
+	    error (sERROR,string);
 	}
     }
 
@@ -1282,27 +1282,27 @@ signal_handler (int sig)	/* handle signals */
 
     switch (sig) {
     case SIGFPE:
-        error (FATAL, "floating point exception, cannot proceed.");
+        error (sFATAL, "floating point exception, cannot proceed.");
     case SIGSEGV:
-        error (FATAL, "segmentation fault, cannot proceed.");
+        error (sFATAL, "segmentation fault, cannot proceed.");
     case SIGINT:
 #ifdef UNIX
         if (backpid == 0) {
             exit (1);
         }
 #endif
-        error (FATAL, "keyboard interrupt, cannot proceed.");
+        error (sFATAL, "keyboard interrupt, cannot proceed.");
 #ifdef SIGHUP
     case SIGHUP:
-        error (FATAL, "received signal HANGUP, cannot proceed.");
+        error (sFATAL, "received signal HANGUP, cannot proceed.");
 #endif
 #ifdef SIGQUIT
     case SIGQUIT:
-        error (FATAL, "received signal QUIT, cannot proceed.");
+        error (sFATAL, "received signal QUIT, cannot proceed.");
 #endif
 #ifdef SIGABRT
     case SIGABRT:
-        error (FATAL, "received signal ABORT, cannot proceed.");
+        error (sFATAL, "received signal ABORT, cannot proceed.");
 #endif
     default:
         break;
@@ -1321,7 +1321,7 @@ run_it ()
         /* don't execute program, just print docu */
         while (current != cmdhead) {
             if (current->type == cDOCU) {
-                if (severity_threshold >= sDEBUG) {
+                if (severity_threshold <= sDEBUG) {
                     std_diag ("executing", current->type, current->symname, current->diag);
                 }
                 printf ("%s\n", (char *) current->pointer);
@@ -1331,7 +1331,7 @@ run_it ()
                     fgets (string, INBUFFLEN, stdin);
                 }
             } else {
-                if (severity_threshold >= sDEBUG) {
+                if (severity_threshold <= sDEBUG) {
                     std_diag ("skipping", current->type, current->symname, current->diag);
                 }
             }
@@ -1345,8 +1345,8 @@ run_it ()
             fgets (string, INBUFFLEN, stdin);
         }
     } else {
-        while (current != cmdhead && endreason == erNONE) {
-            if (severity_threshold >= sDEBUG) {
+        while (current != cmdhead && endreason == rNONE) {
+            if (severity_threshold <= sDEBUG) {
                 std_diag ("executing", current->type, current->symname, current->diag);
             }
             switch (current->type) {
@@ -1682,35 +1682,35 @@ run_it ()
                 mybind (pop (stSTRING)->pointer);
                 DONE;
             case cEND:
-                endreason = erEOF;
+                endreason = rEOF;
                 break;
             case cEXIT:
                 exitcode = (int) pop (stNUMBER)->value;
-                endreason = erREQUEST;
+                endreason = rREQUEST;
                 break;
             default:
                 sprintf (string,
                          "Command %s (%d, right before '%s') not implemented",
                          explanation[current->type], current->type,
                          explanation[current->type + 1]);
-                error (ERROR, string);
+                error (sERROR, string);
             }
         }
     }
     program_state = FINISHED;
-    switch (errorlevel) {
-    case NOTE:
-    case DEBUG:
-        error (NOTE, "Program ended normally.");
+    switch (severity_so_far) {
+    case sNOTE:
+    case sDEBUG:
+        error (sNOTE, "Program ended normally.");
         break;
-    case WARNING:
-        error (WARNING, "Program ended with a warning");
+    case sWARNING:
+        error (sWARNING, "Program ended with a warning");
         break;
-    case ERROR:
-        error (ERROR, "Program stopped due to an error");
+    case sERROR:
+        error (sERROR, "Program stopped due to an error");
         break;
-    case FATAL:		/* should not come here ... */
-        error (FATAL, "Program terminated due to FATAL error");
+    case sFATAL:	/* should not come here ... */
+        error (sFATAL, "Program terminated due to FATAL error");
         break;
     }
 }
@@ -1746,29 +1746,29 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 #endif
 
         switch (severity) {
-        case (INFO):
+        case sINFO:
             severity_text = "---Info";
             break;
-        case (DUMP):
+        case sDUMP:
             severity_text = "---Dump";
             break;
-        case (DEBUG):
+        case sDEBUG:
             severity_text = "---Debug";
             debug_count++;
             break;
-        case (NOTE):
+        case sNOTE:
             severity_text = "---Note";
             note_count++;
             break;
-        case (WARNING):
+        case sWARNING:
             severity_text = "---Warning";
             warning_count++;
             break;
-        case (ERROR):
+        case sERROR:
             severity_text = "---Error";
             error_count++;
             break;
-        case (FATAL):
+        case sFATAL:
             severity_text = "---Fatal";
             break;
         }
@@ -1776,7 +1776,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 	if (filename) {
 	    if (first || lastline != lineno) {
 		fprintf (stderr, " in %s, line %d: %s\n", filename, lineno, message);
-		if (severity==ERROR) {
+		if (severity == sERROR) {
 		   show_and_mark_line (filename, lineno, first_column, last_column);
 		}
 	    }
@@ -1785,19 +1785,19 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
         } else {
 	    fprintf (stderr, ": %s\n", message);
 	}
-        if (program_state == RUNNING && severity <= ERROR && severity != DUMP) {
+        if (program_state == RUNNING && severity <= sERROR && severity != sDUMP) {
             dump_sub (1);
         }
     }
-    if (severity < errorlevel) {
-        errorlevel = severity;
+    if (severity_threshold > severity_so_far) {
+        severity_so_far = severity_threshold;
     }
-    if (severity <= ERROR) {
+    if (severity >= sERROR) {
         program_state = FINISHED;
-        endreason = erERROR;
+        endreason = rERROR;
         exitcode = 1;
     }
-    if (severity <= FATAL) {
+    if (severity >= sFATAL) {
         program_state = FINISHED;
         fprintf (stderr,
                  "---Immediate exit to system, due to a fatal error.\n");
@@ -1889,7 +1889,7 @@ my_malloc (unsigned num)	/* Alloc memory and issue warning on failure */
     room = malloc (num + sizeof (int));
     if (room == NULL) {
         sprintf (string, "Can't malloc %d bytes of memory", num);
-        error (FATAL, string);
+        error (sFATAL, string);
     }
     return room;
 }
@@ -1982,7 +1982,7 @@ strip (char *name)		/* strip down to minimal name */
     static char buff[300];
     char *at, *dot;
 
-    if (severity_threshold <= DEBUG) {
+    if (severity_threshold <= sDEBUG) {
         return name;
     }
     dot = strchr (name, '.');
@@ -2016,7 +2016,7 @@ do_error (struct command *cmd)	/* issue user defined error */
         }
         s = s->prev;
     }
-    error (ERROR, pop (stSTRING)->pointer);
+    error (sERROR, pop (stSTRING)->pointer);
 }
 
 
@@ -2052,7 +2052,7 @@ execute (struct command *cmd)	/* execute a subroutine */
     } while (st->type != stFREE);
     st = st->next;
     if (st->type != stSTRING) {
-        error (ERROR, "need a string as a function name");
+        error (sERROR, "need a string as a function name");
         return;
     }
     shortname = st->pointer;
@@ -2066,7 +2066,7 @@ execute (struct command *cmd)	/* execute a subroutine */
             sprintf (string,
                      "expecting the name of a numeric function (not '%s')",
                      shortname);
-        error (ERROR, string);
+        error (sERROR, string);
         return;
     }
     fullname = my_malloc (strlen (cmd->pointer) + strlen (shortname) + 2);
@@ -2077,7 +2077,7 @@ execute (struct command *cmd)	/* execute a subroutine */
     newcurr = search_label (fullname, srmSUBR);
     if (!newcurr) {
         sprintf (string, "subroutine '%s' not defined", fullname);
-        error (ERROR, string);
+        error (sERROR, string);
         return;
     }
     ret = push ();
@@ -2147,13 +2147,13 @@ isbound (void)			/* check if this interpreter is bound to a program */
     int offset = 0;
 
     if (!inter_path || !inter_path[0]) {
-        error (FATAL, "inter_path is not set !");
+        error (sFATAL, "inter_path is not set !");
         return 0;
     }
     if (!(inter = fopen (inter_path, "r"))) {
         sprintf (string, "Couldn't open '%s' to check, if it is bound: %s",
                  inter_path, my_strerror (errno));
-        error (WARNING, string);
+        error (sWARNING, string);
         return 0;
     }
 
@@ -2177,60 +2177,60 @@ isbound (void)			/* check if this interpreter is bound to a program */
     offset -= remlen + 2;
     if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &severity_threshold)) {
-        error (WARNING, "Could not read infolevel");
+        error (sWARNING, "Could not read infolevel");
         return 0;
     }
     /* repeat just for its output side-effect */
     if (!seekback (inter, offset, TRUE)) return 0; 
     switch(severity_threshold) {
-    case FATAL: infolevel_text="FATAL";break;
-    case ERROR: infolevel_text="ERROR";break;
-    case INFO: infolevel_text="INFO";break;
-    case DUMP: infolevel_text="DUMP";break;
-    case WARNING: infolevel_text="WARNING";break;
-    case NOTE: infolevel_text="NOTE";break;
-    case DEBUG: infolevel_text="DEBUG";break;
-    case DEBUG+1: infolevel_text="DEBUG+BISON";yydebug=1;severity_threshold=sDEBUG;break;};
+    case sFATAL: infolevel_text="FATAL";break;
+    case sERROR: infolevel_text="ERROR";break;
+    case sINFO: infolevel_text="INFO";break;
+    case sDUMP: infolevel_text="DUMP";break;
+    case sWARNING: infolevel_text="WARNING";break;
+    case sNOTE: infolevel_text="NOTE";break;
+    case sDEBUG: infolevel_text="DEBUG";break;
+    case sDEBUG-1: infolevel_text="DEBUG+BISON";yydebug=1;severity_threshold=sDEBUG;break;};
     sprintf (errorstring, "Set infolevel to %s", infolevel_text);
-    error (DEBUG, errorstring);
+    error (sDEBUG, errorstring);
 
     /* length of name of embedded program */
     offset -= remlen + 8;
     if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &namelen)) {
-        error (WARNING, "Could not read length of name of embedded program");
+        error (sWARNING, "Could not read length of name of embedded program");
         return 0;
     }
     sprintf (errorstring, "Length of name of embedded program is %d", namelen);
-    error (DEBUG, errorstring);
+    error (sDEBUG, errorstring);
     
     /* name of embedded program */
     offset -= remlen + namelen;
     if (!seekback (inter, offset, TRUE)) return 0;
     progname = (char *) my_malloc (sizeof (char) * (namelen + 1));
     if (!fgets (progname, namelen + 1, inter)) {
-        error (WARNING, "Could not read name of embedded program");
+        error (sWARNING, "Could not read name of embedded program");
         return 0;
     }
     sprintf (errorstring, "Name of embedded program is '%s'", progname);
-    error (DEBUG, errorstring);
+    error (sDEBUG, errorstring);
 
     /* length of program */
     offset -= remlen + 8;
     if (!seekback (inter, offset, TRUE)) return 0;
     if (!fscanf (inter, "%d", &proglen)) {
-        error (WARNING, "Could not read length of embedded program");
+        error (sWARNING, "Could not read length of embedded program");
         return 0;
     }
     sprintf (errorstring, "Length of embedded program is %d", proglen);
-    error (DEBUG, errorstring);
+    error (sDEBUG, errorstring);
 
     /* seek back to start of embedded program */
     offset -= 4 + proglen; /* only the text 'rem ' without preceding linefeed */
     if (!seekback (inter, offset, TRUE)) return 0;
 
     if (severity_threshold <= sNOTE) {
-        error (NOTE, "Dumping the embedded program, that will be executed:");
+        error (sNOTE, "Dumping the embedded program, that will be executed:");
         fprintf (stderr, "     ");
         for (i = 0; i < proglen; i++) {
             c = fgetc (inter);
@@ -2240,7 +2240,7 @@ isbound (void)			/* check if this interpreter is bound to a program */
             }
         }
 	fprintf (stderr, "\n");
-        error (NOTE, "End of program, that will be executed");
+        error (sNOTE, "End of program, that will be executed");
 	printf ("---Press RETURN to continue with its parsing: ");
 	fgets (string, INBUFFLEN, stdin);
 	if (!seekback (inter, offset, TRUE)) return 0;
@@ -2256,21 +2256,21 @@ seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes
   if (fseek (file, offset, SEEK_END)) {
     sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
 	     my_strerror (errno));
-    error (WARNING, errorstring);
+    error (sWARNING, errorstring);
     return FALSE;
   }
   if (!fgets (string, INBUFFLEN, file)) {
-    error (cookie_found ? WARNING:DEBUG, "Could not read from end of embedded program");
+    error (cookie_found ? sWARNING:sDEBUG, "Could not read from end of embedded program");
     return FALSE;
   }
   string[strlen(string) - strlen("\n")] = '\0';
-  if (cookie_found && severity_threshold >= sDEBUG) { 
+  if (cookie_found && severity_threshold <= sDEBUG) { 
     sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
-    error (DEBUG, errorstring);
+    error (sDEBUG, errorstring);
   }
   if (fseek (file, offset, SEEK_END)) {
     sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path, my_strerror (errno));
-    error (WARNING, errorstring);
+    error (sWARNING, errorstring);
     return FALSE;
   }
     
@@ -2290,40 +2290,40 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     int proglen = 0;
 
     if (interactive) {
-        error (ERROR, "cannot bind a program when called interactively");
+        error (sERROR, "cannot bind a program when called interactively");
         return 0;
     }
 
     if (!strcmp (inter_path, bound)) {
         sprintf (string, "will not overwrite '%s' with '%s'", bound,
                  inter_path);
-        error (ERROR, string);
+        error (sERROR, string);
         return 0;
     }
     if (!strcmp (main_file_name, bound)) {
         sprintf (string, "will not overwrite '%s' with '%s'", bound,
                  main_file_name);
-        error (ERROR, string);
+        error (sERROR, string);
         return 0;
     }
 
     if (!(fyab = fopen (inter_path, "rb"))) {
         sprintf (string, "could not open '%s' for reading: %s",
                  inter_path, my_strerror (errno));
-        error (ERROR, string);
+        error (sERROR, string);
         return 0;
     }
     if (!(fprog = fopen (main_file_name, "rb"))) {
         sprintf (string, "could not open '%s' for reading: %s",
                  main_file_name, my_strerror (errno));
-        error (ERROR, string);
+        error (sERROR, string);
         fclose (fyab);
         return 0;
     }
     if (!(fbound = fopen (bound, "wb"))) {
         sprintf (string, "could not open '%s' for writing: %s", bound,
                  my_strerror (errno));
-        error (ERROR, string);
+        error (sERROR, string);
         fclose (fyab);
         fclose (fprog);
         return 0;
@@ -2332,7 +2332,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     if (severity_threshold <= sDEBUG) {
         sprintf (string, "binding %s and %s into %s", inter_path,
                  main_file_name, bound);
-        error (NOTE, string);
+        error (sNOTE, string);
     }
 
     while ((c = fgetc (fyab)) != EOF) {
@@ -2342,7 +2342,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
         if (!(flib = fopen (library_chain[i]->long_name, "rb"))) {
             sprintf (string, "could not open '%s' for reading: %s",
                      library_chain[i]->long_name, my_strerror (errno));
-            error (ERROR, string);
+            error (sERROR, string);
             fclose (flib);
             return 0;
         }

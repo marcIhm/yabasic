@@ -188,7 +188,7 @@ print(struct command *cmd)	/* print on screen */
         if (!myformat(s, q->value, p->pointer, r ? r->pointer : NULL)) {
             sprintf(string, "'%s' is not a valid format",
                     (char *)p->pointer);
-            error(ERROR, string);
+            error (sERROR, string);
             break;
         }
         onestring(string);
@@ -225,7 +225,7 @@ mymove()			/* move to specific position on screen */
         x = COLS - 1;
     }
     if (!curinized) {
-        error(ERROR, "need to call 'clear screen' first");
+        error (sERROR, "need to call 'clear screen' first");
         return;
     }
 #ifdef UNIX
@@ -330,7 +330,7 @@ inkey (double maxtime)		/* get char from keyboard */
         maxtime = 0.01;
     }
     if (!curinized) {
-        error(ERROR, "need to call 'clear screen' first");
+        error (sERROR, "need to call 'clear screen' first");
         return my_strdup("");
     }
 
@@ -421,12 +421,12 @@ inkey (double maxtime)		/* get char from keyboard */
         /* report result */
 #ifdef UNIX
         if (ret == -1) {
-            error(ERROR, "waiting for input failed");
+            error (sERROR, "waiting for input failed");
             break;
         }
 #elif WINDOWS
         if (wait_result == WAIT_FAILED) {
-            error(ERROR, "waiting for input failed");
+            error (sERROR, "waiting for input failed");
             break;
         }
 
@@ -700,7 +700,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
     char **pmode;
     static char *valid_modes[] = { "r", "w", "a", "rb", "wb", "ab", "" };
     static int smodes[] =
-    { stmREAD, stmWRITE, stmWRITE, stmREAD, stmWRITE, stmWRITE };
+    { mREAD, mWRITE, mWRITE, mREAD, mWRITE, mWRITE };
     int smode;
     struct stackentry *p;
     int has_mode, has_stream, printer;
@@ -726,7 +726,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
     } else {
         stream = 0;
         for (i = 1; i < FOPEN_MAX - 4; i++) {
-            if (stream_modes[i] == stmCLOSED) {
+            if (stream_modes[i] == mCLOSED) {
                 stream = i;
                 break;
             }
@@ -754,7 +754,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
         errorcode = 9;
         goto open_done;
     }
-    if (stream_modes[stream] != stmCLOSED) {
+    if (stream_modes[stream] != mCLOSED) {
         sprintf(errorstring, "stream already in use");
         errorcode = 2;
         goto open_done;
@@ -834,7 +834,7 @@ checkopen(void)		/* check, if open has been sucessfully */
 
     result = pop(stNUMBER)->value;
     if (result <= 0) {
-        error(ERROR, errorstring);
+        error (sERROR, errorstring);
     }
 }
 
@@ -851,9 +851,9 @@ myclose(void)			/* close the specified stream */
     if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
         return;
     }
-    if (stream_modes[s] == stmCLOSED) {
+    if (stream_modes[s] == mCLOSED) {
         sprintf(string, "stream %d already closed", s);
-        error(WARNING, string);
+        error (sWARNING, string);
         return;
     }
     if (s == lprstream) {
@@ -871,7 +871,7 @@ myclose(void)			/* close the specified stream */
         fclose(streams[s]);
     }
     streams[s] = NULL;
-    stream_modes[s] = stmCLOSED;
+    stream_modes[s] = mCLOSED;
 }
 
 
@@ -912,7 +912,7 @@ myseek(struct command *cmd)	/* reposition file pointer */
     if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
         return;
     }
-    if (!(stream_modes[s] & (stmREAD | stmWRITE))) {
+    if (!(stream_modes[s] & (mREAD | mWRITE))) {
         sprintf(errorstring, "stream %d not open", s);
         errorcode = 11;
         return;
@@ -955,10 +955,10 @@ push_stream(struct command *cmd)	/* push current stream on stack and switch to n
     s = push();
     s->type = stNUMBER;
     s->value = oldstream;
-    if (severity_threshold >= sDEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf(string, "pushing %d on stack, switching to %d", oldstream,
                 stream);
-        error(sDEBUG, string);
+        error (sDEBUG, string);
     }
     oldstream = stream;
     mystream(stream);
@@ -971,9 +971,9 @@ pop_stream(void)		/* pop stream from stack and switch to it */
     int stream;
 
     stream = (int)pop(stNUMBER)->value;
-    if (severity_threshold >= sDEBUG) {
+    if (severity_threshold <= sDEBUG) {
         sprintf(string, "popping %d from stack, switching to it", stream);
-        error(sDEBUG, string);
+        error (sDEBUG, string);
     }
     mystream(stream);
 }
@@ -1017,16 +1017,16 @@ checkstream(void)		/* test if currst is still valid */
     input = (currstr > 0);
 
     if (!stdio) {
-        if (input && !(stream_modes[abs(currstr)] & stmREAD)) {
+        if (input && !(stream_modes[abs(currstr)] & mREAD)) {
             sprintf(string, "stream %d not open for reading",
                     abs(currstr));
-            error(ERROR, string);
+            error (sERROR, string);
             return FALSE;
         }
-        if (!input && !(stream_modes[abs(currstr)] & (stmWRITE | stmPRINT))) {
+        if (!input && !(stream_modes[abs(currstr)] & (mWRITE | mPRINT))) {
             sprintf(string, "stream %d not open for writing or printing",
                     abs(currstr));
-            error(ERROR, string);
+            error (sERROR, string);
             return FALSE;
         }
     }
@@ -1046,7 +1046,7 @@ testeof(struct command *cmd)	/* close the specified stream */
     }
     result = push();
     result->type = stNUMBER;
-    if (s && !(stream_modes[s] & stmREAD)) {
+    if (s && !(stream_modes[s] & mREAD)) {
         result->value = 1.;
         return;
     }
@@ -1076,7 +1076,7 @@ badstream(int stream, int errcode)	/* test for valid stream id */
         if (errcode) {
             errorcode = errcode;
         } else {
-            error(ERROR, string);
+            error (sERROR, string);
         }
         return TRUE;
     }
@@ -1345,7 +1345,7 @@ colour(struct command *cmd)	/* switch on colour */
     int fc, bc;
 
     if (cmd->args && !curinized) {
-        error(ERROR, "need to call 'clear screen' first");
+        error (sERROR, "need to call 'clear screen' first");
         return;
     }
     if (cmd->args == 0) {
@@ -1399,13 +1399,13 @@ colour(struct command *cmd)	/* switch on colour */
         fc = name2yc(fore);
         if (fc < 0) {
             sprintf(string, "unknown foreground colour: '%s'", fore);
-            error(ERROR, string);
+            error (sERROR, string);
         }
         if (back) {
             bc = name2yc(back);
             if (fc < 0) {
                 sprintf(string, "unknown background colour: '%s'", back);
-                error(ERROR, string);
+                error (sERROR, string);
             }
         }
 #ifdef UNIX
@@ -1686,7 +1686,7 @@ putchars(void)			/* put rect onto screen */
     oldy = csbi.dwCursorPosition.Y;
 #endif
     if (sscanf(ch, "%d,%d:%n", &sx, &sy, &n) != 2) {
-        error(ERROR, "illegal screen string");
+        error (sERROR, "illegal screen string");
         return;
     }
     ch += n;

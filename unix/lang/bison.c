@@ -392,7 +392,7 @@ int yyparse (void);
 
 void
 yyerror(char *message) {
-  error(ERROR,message);
+  error_without_position(sERROR,message);
 }
 
 void
@@ -3153,13 +3153,13 @@ yyreduce:
 
   case 4:
 
-    {if (errorlevel<=ERROR) {YYABORT;}}
+    {if (severity_so_far>=sERROR) {YYABORT;}}
 
     break;
 
   case 11:
 
-    {report_if_missing(ERROR,"can not import a library in a loop or an if-statement");}
+    {report_if_missing(sERROR,"can not import a library in a loop or an if-statement");}
 
     break;
 
@@ -3171,19 +3171,19 @@ yyreduce:
 
   case 18:
 
-    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror((yylsp[0]),ERROR,"break outside loop or switch");}
+    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror((yylsp[0]),sERROR,"break outside loop or switch");}
 
     break;
 
   case 19:
 
-    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) lyyerror((yylsp[-1]),ERROR,"break outside loop or switch");}
+    {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) lyyerror((yylsp[-1]),sERROR,"break outside loop or switch");}
 
     break;
 
   case 20:
 
-    {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror((yylsp[0]),ERROR,"continue outside loop");}
+    {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror((yylsp[0]),sERROR,"continue outside loop");}
 
     break;
 
@@ -3201,13 +3201,13 @@ yyreduce:
 
   case 24:
 
-    {if (function_type==ftNONE) lyyerror((yylsp[0]),ERROR,"no use for 'local' outside functions");}
+    {if (function_type==ftNONE) lyyerror((yylsp[0]),sERROR,"no use for 'local' outside functions");}
 
     break;
 
   case 26:
 
-    {if (function_type==ftNONE) lyyerror((yylsp[0]),ERROR,"no use for 'static' outside functions");}
+    {if (function_type==ftNONE) lyyerror((yylsp[0]),sERROR,"no use for 'static' outside functions");}
 
     break;
 
@@ -3382,13 +3382,13 @@ yyreduce:
 
   case 61:
 
-    {if (function_type==ftNONE) {lyyerror((yylsp[-1]),ERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+    {if (function_type==ftNONE) {lyyerror((yylsp[-1]),sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
 
     break;
 
   case 62:
 
-    {if (function_type==ftNONE) {lyyerror((yylsp[-1]),ERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+    {if (function_type==ftNONE) {lyyerror((yylsp[-1]),sERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
 
     break;
 
@@ -3785,7 +3785,7 @@ yyreduce:
 
   case 132:
 
-    {if ((yyvsp[0].string)==NULL) {lyyerror((yylsp[0]),ERROR,"String not terminated");create_pushstr("");} else {create_pushstr((yyvsp[0].string));}}
+    {if ((yyvsp[0].string)==NULL) {lyyerror((yylsp[0]),sERROR,"String not terminated");create_pushstr("");} else {create_pushstr((yyvsp[0].string));}}
 
     break;
 
@@ -4379,7 +4379,7 @@ yyreduce:
 
   case 235:
 
-    {if (check_compat) lyyerror((yylsp[-5]),WARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
+    {if (check_compat) lyyerror((yylsp[-5]),sWARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
 
     break;
 
@@ -4673,7 +4673,7 @@ yyreduce:
 
   case 290:
 
-    {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(WARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {lyyerror((yylsp[-1]),ERROR,"nested functions not allowed");YYABORT;}}
+    {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(sWARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {lyyerror((yylsp[-1]),sERROR,"nested functions not allowed");YYABORT;}}
 
     break;
 
@@ -4890,7 +4890,7 @@ yyreduce:
   case 331:
 
     {if (strcmp(pop(stSTRING)->pointer,dotify((yyvsp[0].symbol),FALSE))) 
-             {lyyerror((yylsp[0]),ERROR,"'for' and 'next' do not match"); YYABORT;}
+             {lyyerror((yylsp[0]),sERROR,"'for' and 'next' do not match"); YYABORT;}
            }
 
     break;

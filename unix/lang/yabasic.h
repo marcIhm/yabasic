@@ -249,12 +249,12 @@ extern int missing_endif_line;
 
 enum severity {
     /* error levels  */
-    sDEBUG, sNOTE, sWARNING, sDUMP, sINFO, sERROR, sFATAL
+    sBISON, sDEBUG, sNOTE, sWARNING, sDUMP, sINFO, sERROR, sFATAL
 };
 
 enum end_reasons {
     /* ways to end the program */
-    eNONE, eERROR, eREQUEST, eEOF
+    rNONE, rERROR, rREQUEST, rEOF
 };
 
 enum stream_modes {

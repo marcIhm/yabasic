@@ -51,7 +51,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 <<EOF>> {
   if (severity_threshold <= sDEBUG) {
     sprintf(string,"closing file '%s'",currlib->short_name);
-    error(DEBUG,string);
+    error(sDEBUG,string);
   }
   if (--include_depth<0) {
     return tEOPROG;
@@ -79,7 +79,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 \n\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 \n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
-: {if (fi_pending && check_compat) error(WARNING,"short-if has changed in version 2.71");return tSEP;}
+: {if (fi_pending && check_compat) error(sWARNING,"short-if has changed in version 2.71");return tSEP;}
 
 REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
 \/\/.* {return tSEP;}  /* comments span 'til end of line */
@@ -379,7 +379,7 @@ int import_lib(char *name) /* import library */
 
   /* This can only occur in bound programs; void all further import-statements */
   if (!strcmp(name,"__END_OF_ALL_IMPORTS")) {
-    error(DEBUG,"Encountered special import __END_OF_ALL_IMPORTS");
+    error(sDEBUG,"Encountered special import __END_OF_ALL_IMPORTS");
     end_of_all_imports=TRUE;
   }
 
@@ -387,7 +387,7 @@ int import_lib(char *name) /* import library */
 
   /* This can only occur in bound programs, close currently imported library */
   if (!strcmp(name,"__END_OF_CURRENT_IMPORT")) {
-    error(DEBUG,"Encountered special import __END_OF_CURRENT_IMPORT");
+    error(sDEBUG,"Encountered special import __END_OF_CURRENT_IMPORT");
     include_depth--;
     leave_lib();
     ignore_nested_imports=FALSE; 
@@ -396,7 +396,7 @@ int import_lib(char *name) /* import library */
 
   /* This can only occur in bound programs, ignore nested import-statement */
   if (!strcmp(name,"__IGNORE_NESTED_IMPORTS")) {
-    error(DEBUG,"Encountered special import __IGNORE_NESTED_IMPORTS");
+    error(sDEBUG,"Encountered special import __IGNORE_NESTED_IMPORTS");
     ignore_nested_imports=TRUE; 
   }
 
@@ -406,7 +406,7 @@ int import_lib(char *name) /* import library */
   inlib=TRUE;
   if (include_depth>=MAX_INCLUDE_DEPTH) {
     sprintf(string,"Could not import '%s': nested too deep (%d)",name,include_depth);
-    error(ERROR,string);
+    error(sERROR,string);
     return FALSE;
   }
 
@@ -422,22 +422,22 @@ int import_lib(char *name) /* import library */
   library_chain[library_chain_length++]=library_stack[include_depth];
   if (library_chain_length>=MAX_INCLUDE_NUMBER) {
     sprintf(string,"Cannot import more than %d libraries",MAX_INCLUDE_NUMBER);
-    error(ERROR,string);
+    error(sERROR,string);
     return FALSE;
   }
   if (!library_stack[include_depth]) {
     sprintf(string,"library '%s' has already been imported",full);
-    error(ERROR,string);
+    error(sERROR,string);
     return FALSE;
   } 
 
-  if (severity_threshold >= sNOTE) {
+  if (severity_threshold <= sNOTE) {
     if (isbound) {      
       sprintf(string,"importing library '%s'",name);
     } else {
       sprintf(string,"importing from file '%s'",full);
     }
-    error(NOTE,string);
+    error(sNOTE,string);
   }
   currlib=library_stack[include_depth]; /* switch late because error() uses currlib */
   return TRUE;
@@ -461,12 +461,12 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   name=unquoted;
   if (strchr(name,'.')) {
     sprintf(string,"library name '%s' contains '.'",name);
-    error(ERROR,string);
+    error(sERROR,string);
     return NULL;
   }
   if (!strcmp(name,"main")) {
     if (is_bound) return NULL;
-    error(ERROR,"invalid library name 'main'");
+    error(sERROR,"invalid library name 'main'");
     return NULL;
   }
 
@@ -516,7 +516,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   if (lib) return lib;
     
   sprintf(string,"could not open library '%s': not in current workingdir as '%s', not in directory of main file as '%s', not in library path as '%s'",name,full_wdir,full_main,full_global);
-  error(ERROR,string);
+  error(sERROR,string);
   return NULL;
 }
 
@@ -526,7 +526,7 @@ void leave_lib(void) /* processing, when end of library is found */
   if (include_depth<0) return;
   if (severity_threshold <= sDEBUG) {
     sprintf(string,"End of library '%s', continue with '%s', include depth is now %d",currlib->short_name,library_stack[include_depth]->short_name,include_depth);
-    error(DEBUG,string);
+    error(sDEBUG,string);
   }
   yylineno=currlib->yylineno_at_start;
   currlib=library_stack[include_depth];
