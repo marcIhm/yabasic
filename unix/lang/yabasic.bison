@@ -148,7 +148,7 @@ program: statement_list tEOPROG {YYACCEPT;}
   ;
 
 statement_list: statement
-  | statement_list {if (severity_so_far>=sERROR) {YYABORT;}} 
+  | statement_list {if (severity_so_far >= sERROR) {YYABORT;}} 
   tSEP statement
   ;
 

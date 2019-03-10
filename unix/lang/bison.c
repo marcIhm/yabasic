@@ -3153,7 +3153,7 @@ yyreduce:
 
   case 4:
 
-    {if (severity_so_far>=sERROR) {YYABORT;}}
+    {if (severity_so_far >= sERROR) {YYABORT;}}
 
     break;
 

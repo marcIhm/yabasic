@@ -242,11 +242,11 @@ main (int argc, char **argv)
         printf ("or go to www.yabasic.de for online resources.\n\n");
     }
     program_state = COMPILING;
-    if (yyparse () && severity_so_far < sERROR) {
+    if (yyparse () && severity_so_far >= sERROR) {
         error (sERROR, "Couldn't parse program");
     }
 
-    if ( severity_so_far > sERROR) {
+    if ( severity_so_far < sERROR) {
         create_docu_array ();
     }
 
