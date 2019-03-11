@@ -57,9 +57,13 @@ int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
 
-void report_if_missing(int severity,char *text) {
+void report_if_missing(int severity,char *text,int eof) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
-    error(severity,text);
+    if (eof) {
+       error_without_position(severity,text);
+    } else {
+       error(severity,text);
+    }
     string[0]='\0';
     if (missing_endif)
       sprintf(string,"if-statement starting at line %d has seen no 'endif' yet",missing_endif_line);
@@ -71,7 +75,9 @@ void report_if_missing(int severity,char *text) {
       sprintf(string,"repeat-loop starting at line %d has seen no 'until' yet",missing_until_line);
     else if (missing_loop)
       sprintf(string,"do-loop starting at line %d has seen no 'loop' yet",missing_loop_line);
-    if (string[0]) error(severity,string);
+    if (string[0]) {
+      error_without_position(severity,string);
+    }
   }
 }
 
@@ -157,7 +163,7 @@ statement:  /* empty */
   | tLET string_assignment 
   | assignment
   | tLET assignment
-  | tIMPORT {report_if_missing(sERROR,"can not import a library in a loop or an if-statement");}
+  | tIMPORT {report_if_missing(sERROR,"can not import a library in a loop or an if-statement",FALSE);}
   | tERROR string_expression {add_command(cERROR,NULL,NULL);}
   | for_loop 
   | switch_number_or_string
@@ -488,7 +494,7 @@ call_item: string_expression
   | expression
   ;
  
-function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(sWARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {lyyerror(@1,sERROR,"nested functions not allowed");YYABORT;}}
+function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(sWARNING,"do not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(@1,sERROR,"nested functions not allowed");YYABORT;}}
 	function_name {if (exported) create_subr_link($4); create_label($4,cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
 		       create_count_params();}
@@ -497,7 +503,7 @@ function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;
 	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
   ;
 
-endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);yyerror(string);} YYABORT;}
+endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
   | tENDSUB {missing_endsub--;}
   ;
 
@@ -566,7 +572,7 @@ for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_n
           next next_symbol {add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
-next: tEOPROG {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);yyerror(string);} YYABORT;}
+next: tEOPROG {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
   | tNEXT {missing_next--;}
   ;
 
@@ -610,7 +616,7 @@ do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command
   ;
 
 
-loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);yyerror(string);} YYABORT;}
+loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
   | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
@@ -622,7 +628,7 @@ while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_c
             wend
   ;	    
 
-wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);yyerror(string);} YYABORT;}
+wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
   | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
@@ -632,7 +638,7 @@ repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add
 	     until
   ;
 
-until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);yyerror(string);} YYABORT;}
+until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
   | tUNTIL '(' expression ')'
 	       {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
@@ -644,7 +650,7 @@ if_clause: tIF expression {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel
            endif
   ;
 
-endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);yyerror(string);} YYABORT;}
+endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
   | tENDIF {missing_endif--;}
   ;
 

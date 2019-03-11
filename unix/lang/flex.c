@@ -1826,7 +1826,7 @@ case YY_STATE_EOF(PASTLNO):
 case YY_STATE_EOF(PASTIMPORT):
 {
   if (severity_threshold <= sDEBUG) {
-    sprintf(string,"closing file '%s'",currlib->short_name);
+    sprintf(string,"Closing file '%s'",currlib->short_name);
     error(sDEBUG,string);
   }
   if (--include_depth<0) {
@@ -1836,6 +1836,7 @@ case YY_STATE_EOF(PASTIMPORT):
       yy_delete_buffer(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(include_stack[include_depth]);
     }
+    report_if_missing(sERROR,"Premature end of file",TRUE);
     leave_lib();
     return tSEP;
   }
@@ -1879,7 +1880,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-{if (fi_pending && check_compat) error(sWARNING,"short-if has changed in version 2.71");return tSEP;}
+{if (fi_pending && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

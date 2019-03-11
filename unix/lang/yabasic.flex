@@ -50,7 +50,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 %%
 <<EOF>> {
   if (severity_threshold <= sDEBUG) {
-    sprintf(string,"closing file '%s'",currlib->short_name);
+    sprintf(string,"Closing file '%s'",currlib->short_name);
     error(sDEBUG,string);
   }
   if (--include_depth<0) {
@@ -60,6 +60,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
       yy_delete_buffer(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(include_stack[include_depth]);
     }
+    report_if_missing(sERROR,"Premature end of file",TRUE);
     leave_lib();
     return tSEP;
   }
@@ -79,7 +80,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 \n\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 \n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
-: {if (fi_pending && check_compat) error(sWARNING,"short-if has changed in version 2.71");return tSEP;}
+: {if (fi_pending && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 
 REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
 \/\/.* {return tSEP;}  /* comments span 'til end of line */

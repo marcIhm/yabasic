@@ -122,9 +122,13 @@ int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
 
-void report_if_missing(int severity,char *text) {
+void report_if_missing(int severity,char *text,int eof) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
-    error(severity,text);
+    if (eof) {
+       error_without_position(severity,text);
+    } else {
+       error(severity,text);
+    }
     string[0]='\0';
     if (missing_endif)
       sprintf(string,"if-statement starting at line %d has seen no 'endif' yet",missing_endif_line);
@@ -136,7 +140,9 @@ void report_if_missing(int severity,char *text) {
       sprintf(string,"repeat-loop starting at line %d has seen no 'until' yet",missing_until_line);
     else if (missing_loop)
       sprintf(string,"do-loop starting at line %d has seen no 'loop' yet",missing_loop_line);
-    if (string[0]) error(severity,string);
+    if (string[0]) {
+      error_without_position(severity,string);
+    }
   }
 }
 
@@ -715,50 +721,50 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   147,   147,   150,   151,   151,   155,   156,   157,   158,
-     159,   160,   161,   162,   163,   164,   165,   166,   167,   168,
-     169,   170,   171,   172,   173,   173,   174,   174,   175,   176,
-     177,   178,   179,   180,   181,   181,   183,   183,   185,   186,
-     187,   188,   189,   190,   191,   192,   193,   194,   195,   195,
-     196,   196,   197,   198,   199,   200,   201,   202,   203,   204,
-     205,   213,   214,   215,   216,   217,   219,   220,   221,   222,
-     223,   224,   225,   226,   227,   228,   229,   230,   231,   232,
-     233,   234,   235,   236,   237,   238,   239,   240,   241,   242,
-     243,   244,   245,   246,   247,   248,   249,   250,   252,   253,
-     254,   255,   256,   257,   258,   259,   260,   264,   265,   266,
-     267,   268,   272,   273,   274,   275,   276,   277,   280,   281,
-     284,   285,   286,   287,   288,   291,   292,   295,   296,   299,
-     300,   301,   302,   303,   304,   307,   308,   309,   310,   311,
-     312,   313,   314,   315,   316,   317,   318,   319,   320,   321,
-     322,   323,   324,   325,   326,   327,   328,   329,   330,   331,
-     332,   333,   334,   335,   336,   337,   338,   339,   342,   343,
-     346,   346,   347,   347,   348,   349,   350,   351,   352,   353,
-     354,   355,   356,   357,   358,   359,   360,   361,   362,   363,
-     364,   365,   366,   367,   368,   369,   370,   371,   372,   373,
-     374,   375,   376,   377,   380,   383,   386,   389,   390,   391,
-     392,   393,   394,   395,   396,   397,   398,   399,   400,   401,
-     402,   403,   404,   405,   406,   407,   408,   409,   410,   411,
-     412,   413,   414,   415,   416,   417,   418,   419,   420,   421,
-     422,   423,   424,   425,   426,   427,   428,   429,   430,   431,
-     432,   433,   434,   435,   436,   437,   438,   439,   440,   441,
-     442,   443,   444,   445,   446,   447,   448,   449,   450,   453,
-     454,   455,   458,   459,   460,   463,   464,   467,   468,   469,
-     470,   473,   476,   479,   479,   482,   483,   484,   487,   488,
-     491,   492,   495,   491,   500,   501,   504,   505,   508,   509,
-     510,   511,   514,   515,   518,   519,   520,   521,   524,   525,
-     528,   529,   530,   531,   534,   535,   536,   539,   540,   541,
-     542,   545,   546,   550,   564,   545,   569,   570,   573,   574,
-     577,   578,   583,   583,   587,   588,   591,   592,   596,   598,
-     597,   602,   603,   603,   607,   607,   613,   614,   618,   619,
-     618,   625,   626,   630,   630,   635,   636,   640,   641,   641,
-     643,   640,   647,   648,   651,   651,   655,   656,   659,   661,
-     663,   660,   667,   668,   671,   672,   672,   675,   676,   678,
-     679,   683,   684,   687,   688,   690,   691,   695,   696,   697,
-     698,   701,   702,   703,   704,   705,   708,   709,   710,   713,
-     713,   714,   714,   715,   715,   716,   716,   717,   717,   720,
-     721,   724,   725,   726,   727,   728,   729,   730,   731,   732,
-     733,   734,   735,   736,   737,   740,   741,   743,   744,   747,
-     748
+       0,   153,   153,   156,   157,   157,   161,   162,   163,   164,
+     165,   166,   167,   168,   169,   170,   171,   172,   173,   174,
+     175,   176,   177,   178,   179,   179,   180,   180,   181,   182,
+     183,   184,   185,   186,   187,   187,   189,   189,   191,   192,
+     193,   194,   195,   196,   197,   198,   199,   200,   201,   201,
+     202,   202,   203,   204,   205,   206,   207,   208,   209,   210,
+     211,   219,   220,   221,   222,   223,   225,   226,   227,   228,
+     229,   230,   231,   232,   233,   234,   235,   236,   237,   238,
+     239,   240,   241,   242,   243,   244,   245,   246,   247,   248,
+     249,   250,   251,   252,   253,   254,   255,   256,   258,   259,
+     260,   261,   262,   263,   264,   265,   266,   270,   271,   272,
+     273,   274,   278,   279,   280,   281,   282,   283,   286,   287,
+     290,   291,   292,   293,   294,   297,   298,   301,   302,   305,
+     306,   307,   308,   309,   310,   313,   314,   315,   316,   317,
+     318,   319,   320,   321,   322,   323,   324,   325,   326,   327,
+     328,   329,   330,   331,   332,   333,   334,   335,   336,   337,
+     338,   339,   340,   341,   342,   343,   344,   345,   348,   349,
+     352,   352,   353,   353,   354,   355,   356,   357,   358,   359,
+     360,   361,   362,   363,   364,   365,   366,   367,   368,   369,
+     370,   371,   372,   373,   374,   375,   376,   377,   378,   379,
+     380,   381,   382,   383,   386,   389,   392,   395,   396,   397,
+     398,   399,   400,   401,   402,   403,   404,   405,   406,   407,
+     408,   409,   410,   411,   412,   413,   414,   415,   416,   417,
+     418,   419,   420,   421,   422,   423,   424,   425,   426,   427,
+     428,   429,   430,   431,   432,   433,   434,   435,   436,   437,
+     438,   439,   440,   441,   442,   443,   444,   445,   446,   447,
+     448,   449,   450,   451,   452,   453,   454,   455,   456,   459,
+     460,   461,   464,   465,   466,   469,   470,   473,   474,   475,
+     476,   479,   482,   485,   485,   488,   489,   490,   493,   494,
+     497,   498,   501,   497,   506,   507,   510,   511,   514,   515,
+     516,   517,   520,   521,   524,   525,   526,   527,   530,   531,
+     534,   535,   536,   537,   540,   541,   542,   545,   546,   547,
+     548,   551,   552,   556,   570,   551,   575,   576,   579,   580,
+     583,   584,   589,   589,   593,   594,   597,   598,   602,   604,
+     603,   608,   609,   609,   613,   613,   619,   620,   624,   625,
+     624,   631,   632,   636,   636,   641,   642,   646,   647,   647,
+     649,   646,   653,   654,   657,   657,   661,   662,   665,   667,
+     669,   666,   673,   674,   677,   678,   678,   681,   682,   684,
+     685,   689,   690,   693,   694,   696,   697,   701,   702,   703,
+     704,   707,   708,   709,   710,   711,   714,   715,   716,   719,
+     719,   720,   720,   721,   721,   722,   722,   723,   723,   726,
+     727,   730,   731,   732,   733,   734,   735,   736,   737,   738,
+     739,   740,   741,   742,   743,   746,   747,   749,   750,   753,
+     754
 };
 #endif
 
@@ -3159,7 +3165,7 @@ yyreduce:
 
   case 11:
 
-    {report_if_missing(sERROR,"can not import a library in a loop or an if-statement");}
+    {report_if_missing(sERROR,"can not import a library in a loop or an if-statement",FALSE);}
 
     break;
 
@@ -4673,7 +4679,7 @@ yyreduce:
 
   case 290:
 
-    {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(sWARNING,"do not define a function in a loop or an if-statement");if (function_type!=ftNONE) {lyyerror((yylsp[-1]),sERROR,"nested functions not allowed");YYABORT;}}
+    {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing(sWARNING,"do not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror((yylsp[-1]),sERROR,"nested functions not allowed");YYABORT;}}
 
     break;
 
@@ -4699,7 +4705,7 @@ yyreduce:
 
   case 294:
 
-    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of file",missing_endsub_line);yyerror(string);} YYABORT;}
+    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 
@@ -4865,7 +4871,7 @@ yyreduce:
 
   case 326:
 
-    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen not 'next' at end of file",missing_next_line);yyerror(string);} YYABORT;}
+    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 
@@ -4933,7 +4939,7 @@ yyreduce:
 
   case 346:
 
-    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of file",missing_loop_line);yyerror(string);} YYABORT;}
+    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 
@@ -4958,7 +4964,7 @@ yyreduce:
 
   case 351:
 
-    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of file",missing_wend_line);yyerror(string);} YYABORT;}
+    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 
@@ -4976,7 +4982,7 @@ yyreduce:
 
   case 355:
 
-    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of file",missing_until_line);yyerror(string);} YYABORT;}
+    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 
@@ -5012,7 +5018,7 @@ yyreduce:
 
   case 362:
 
-    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of file",missing_endif_line);yyerror(string);} YYABORT;}
+    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
 
     break;
 

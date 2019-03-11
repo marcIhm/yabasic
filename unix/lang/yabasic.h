@@ -216,7 +216,8 @@ extern char *current_function;	/* name of currently parsed function */
 extern int yydebug;
 extern int missing_endif;
 extern int missing_endif_line;
-
+void report_if_missing(int,char *,int);
+    
 /*-------------------------- defs and undefs ------------------------*/
 
 /* undef symbols */
