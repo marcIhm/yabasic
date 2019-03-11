@@ -1,7 +1,3 @@
-Version 2.82.0 (February 17, 2019)
-  - Advanced version of autoconf and other tools
-  - Fix in tests
-  - Fixed nested import of libraries
-  - Libraries can now be found in the directory of the main file too
-  - Error messages try to show and mark the offending part of the code
-  - Hexadecimal numerical literals are supported, e.g. print 0xff
+Version 2.82.1 (March 11, 2019)
+  - Allowing comments after import statement
+  - Fixes regarding error messages
