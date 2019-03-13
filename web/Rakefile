@@ -5,6 +5,8 @@ require 'fileutils'
 include FileUtils
 require 'erb'
 require_relative '../unix/utils.rb'
+require 'net/ftp'
+require 'io/console'
 
 desc 'Check git'
 task :git do 
@@ -22,10 +24,12 @@ html_with_all_news = nil
 
 desc 'Collect news'
 task :version => :git do
-  version = File.read('../windows/resources/yabver.txt').chomp.strip
+  version_file = '../windows/resources/yabver.txt'
+  version = File.read(version_file).chomp.strip
   puts "Version #{version}"
-  news = News.new('../unix/lang/NEWS')
-  fail "Versions from NEWS and yabver.txt do not match" if news.version != version
+  news_file = '../unix/lang/NEWS'
+  news = News.new(news_file)
+  fail "Versions from #{news_file} (#{news.version}) and #{version_file} (#{version}) do not match" if news.version != version
   html_with_latest_news = news.as_html_all(4)
   fragname = "fragment_log.html"
   frag = File.new(fragname).read
@@ -111,6 +115,48 @@ task :remove => :copy do
   end
 end
 
+desc 'Create and push new tag'
+task :tag => :copy do
+  tags = %x{ git tag --list}.lines.map(&:chomp)
+  new_tag = File.open('../yabasic.version').read
+  if tags.include?(new_tag)
+    puts "Tag #{new_tag} is already present.\n\nPress RETURN to continue: "
+    gets
+  else
+    puts "Creating new tag #{new_tag} with this message:",File.open('../tag-message').read,"\nPress RETURN to continue: "
+    gets
+    sh "git tag -a #{new_tag} -F ../tag-message" do |ok,res|
+      fail "Could not create tag: #{res}"
+    end
+  end
+end
+
+desc 'Upload new files'
+task :upload => :tag do
+  ftp = Net::FTP.new('ftp.2484.de')
+  puts "Please enter password for 2484.de@ftp.2484.de: "
+  password = STDIN.noecho(&:gets).chomp
+  ftp.login('2484.de',password)
+  Dir.chdir('/work/yabasic/products/web') do
+    puts "Uploading html-files"
+    ftp.chdir('yabasic')
+    Dir['*.html'].each do |f|
+      ftp.puttextfile(f)
+      print f," "
+    end
+    Dir.chdir('download') do
+      puts "Uploading binaries"
+      ftp.chdir('download')
+      Dir['???*'].each do |f|
+        ftp.putbinaryfile(f)
+        print f," "
+      end
+    end
+  end
+  ftp.close
+end
+
 desc 'Invoke site'
-task :default => :remove do
+task :default => :upload do
+  sh 'cygstart chrome www.yabasic.de'
 end
