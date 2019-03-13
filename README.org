@@ -128,6 +128,8 @@
    - Under Windows build in directory web, this does:
      - Create new git tag
      - Upload to www.yabasic.de
+   - Under Windows in directory web:
+     - git push --tags
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
      
