@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+<base target="content">
+<title>Yabasic, Yet another Basic for Unix and Windows</title>
+<meta name="author" content="Marc Ihm">
+<meta name="description" content="Yabasic is a free basic interpreter for Unix and Windows">
+<meta name="keywords" content="yabasic basic free windows unix interpreter">
+<link rel="stylesheet" type="text/css" href="standard.css">
+<style>
+  #sign_name { font-size: 10pt;}
+  #sign_version { font-size: 8pt;}
+  @media screen and (min-width: 700px) {
+    #sign_name { font-size: 14pt;}
+    #sign_version { font-size: 12pt;}
+  }
+</style>
+</head>
+
+<body>
+  <p style="position: fixed; top: 3vh; left: 1vw; z-index: -1;"><span id="sign_name" style="font-weight: 600; background-color: #01AEB2; color: #FFFFA6">&nbsp;Yabasic&nbsp;</span><span id="sign_version" style="color: #01AEB2;"><br/>&nbsp;2.82.1</span></p>
+  <iframe id="toc" style="position: fixed; z-index: 2; left: 1vw; top: 21vh; min-height: 77vh; width: 14vw;" src="toc.html" frameborder="0" scrolling="no"></iframe>
+  <div style="left: 1vw; position: absolute">
+    <table style="border-collapse: collapse; padding: 0">
+      <tr>
+	<td colspan="2">
+	  <iframe style="height: 18vh; width: 98%" src="head.html" frameborder="0" scrolling="no"></iframe>
+	</td>
+      </tr>
+      <tr style="min-height: 100%">
+	<td style="width: 14vw;">
+	  
+	</td>
+	<td>
+	  <iframe style="width: 80vw" src="content_changing.html" name="content" frameborder="0" scrolling="no" onload="style.height = ( contentWindow.document.body.scrollHeight + 60 ) + 'px'; window.scrollTo(0,0);"></iframe>
+	</td>
+      </tr>
+    </table>
+  </div>
+</body>
