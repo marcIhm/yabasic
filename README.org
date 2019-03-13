@@ -112,18 +112,22 @@
    
 ** A typical building sequence
 
-   To build yabasic, go through the stages in this sequence:
+   To build yabasic, go through the steps below. The process is mostly
+   automated, only asking for confirmation at certain key-points; the
+   term "build" (= git + rake) is described further below.
 
    - Implement some features, fix some bugs, write tests, improve the docu
-   - cd to unix/lang:
-     - Edit configure.ac to increment the version of yabasic:
+   - Under Unix build in directory unix/lang do manually:
+     - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
-   - Build under Unix (e.g. fedora) in directory unix
-   - Build under Windows in directory windows
-   - Build under Windows in directory web
-   - In the toplevel-dir: 
-     - Check the correctness of yabasic.version
-     - git tag -a $( cat yabasic.version ) -F tag-message
+   - Under Unix build in directory unix, this does:
+     - Run tests
+     - Create tar, rpm and deb
+   - Under Windows as administrator build in directory windows, this does:
+     - Create setup
+   - Under Windows build in directory web, this does:
+     - Create new git tag
+     - Upload to www.yabasic.de
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
      
@@ -133,7 +137,7 @@
    The tern "build" in the above list refers to these subtasks:
    - "git pull/add/commit/push" as all changes between the platforms
      unix and windows are only propagated by git
-   - "rake" as (almost) all tasks are automated within the Rakefile.
+   - "rake" as all tasks are automated within the Rakefile.
 
    See the previous chapters for a more detailed description of the
    build process.
