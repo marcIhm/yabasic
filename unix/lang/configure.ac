@@ -16,10 +16,6 @@ AC_PROG_CC
 dnl --- set options appropriate for compiler ---
 AC_CHECK_PROG(CCOPTIONS,gcc,-Wall,)
 
-dnl --- check for X-Window system ---
-AC_PATH_XTRA
-AS_IF([test "X$no_x" = "Xyes"],[AC_MSG_WARN([Could not find X11 header files; please install libx11-devel or similar.])])
-
 dnl --- check for required headers ---
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([fcntl.h limits.h stddef.h stdlib.h stdio.h float.h\
@@ -44,21 +40,29 @@ AC_FUNC_SETPGRP
 AC_FUNC_STAT
 AC_CHECK_FUNCS([floor pow select sqrt strchr strerror strpbrk strrchr strstr mkstemp])
 
-dnl --- check for header files ---
-AC_CHECK_HEADER(string.h,AC_DEFINE(HAVE_STRING_HEADER,1,[defined, if string.h is present]))
-AC_CHECK_HEADER(strings.h,AC_DEFINE(HAVE_STRINGS_HEADER,1,[defined, if strings.h is present]))
-
-dnl --- check for curses.h
-AC_CHECK_HEADER(ncurses.h,AC_DEFINE(HAVE_NCURSES_HEADER,1,[defined, if ncurses.h is present]))
-AC_CHECK_HEADER(curses.h,AC_DEFINE(HAVE_CURSES_HEADER,1,[defined, if ncurses.h is present]))
-AS_IF([test "X$ac_cv_header_curses_h" = "Xno" && test "X$ac_cv_header_curses_h" = "Xno"],[AC_MSG_WARN([Could not find curses or ncurses header files; please install ncurses-devel.])])
-
-dnl --- check if curses library is available ---
-AC_CHECK_LIB(ncurses,initscr)
-AC_CHECK_LIB(curses,initscr)
+dnl --- check for curses
+have_curses=no
+have_ncurses=no
+AC_SEARCH_LIBS([initscr],[curses],[have_curses=yes])
+AC_SEARCH_LIBS([initscr],[ncurses],[have_ncurses=yes])
+if test "x${have_curses}" = xyes; then
+    AC_CHECK_HEADERS([curses.h],[],[have_curses=no])
+fi
+if test "x${have_ncurses}" = xyes; then
+    AC_CHECK_HEADERS([ncurses.h],[],[have_ncurses=no])
+fi
+if test "x${have_curses}" = xno && "x${have_ncurses}" = xno ; then
+    AC_MSG_ERROR([Did not find curses/ncurses library and header])
+fi
 
 dnl --- check for specific functions within ncurses
 AC_CHECK_FUNCS(getnstr)
+
+dnl --- check for X-Window system ---
+AC_PATH_XTRA
+if test "x${no_x}" = xyes ; then
+    AC_MSG_ERROR([Did not find X11 library and header])
+fi
 
 dnl --- check for timing functions and libraries ---
 AC_CHECK_FUNCS(setitimer)

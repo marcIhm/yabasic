@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Mon Mar 11 20:17:45 UTC 2019"
+#define BUILD_TIME "Sun Mar 17 20:07:49 UTC 2019"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -25,8 +25,8 @@
 /* Define to 1 if you have the <ctype.h> header file. */
 #define HAVE_CTYPE_H 1
 
-/* defined, if ncurses.h is present */
-#define HAVE_CURSES_HEADER 1
+/* Define to 1 if you have the <curses.h> header file. */
+#define HAVE_CURSES_H 1
 
 /* Define to 1 if you have the `difftime' function. */
 #define HAVE_DIFFTIME 1
@@ -58,12 +58,6 @@
 /* Define to 1 if you have the `clock_gettime' library (-lclock_gettime). */
 /* #undef HAVE_LIBCLOCK_GETTIME */
 
-/* Define to 1 if you have the `curses' library (-lcurses). */
-#define HAVE_LIBCURSES 1
-
-/* Define to 1 if you have the `ncurses' library (-lncurses). */
-#define HAVE_LIBNCURSES 1
-
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1
 
@@ -79,8 +73,8 @@
 /* Define to 1 if you have the `mkstemp' function. */
 #define HAVE_MKSTEMP 1
 
-/* defined, if ncurses.h is present */
-#define HAVE_NCURSES_HEADER 1
+/* Define to 1 if you have the <ncurses.h> header file. */
+#define HAVE_NCURSES_H 1
 
 /* Define to 1 if you have the `pow' function. */
 /* #undef HAVE_POW */
@@ -125,14 +119,8 @@
 /* Define to 1 if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
 
-/* defined, if strings.h is present */
-#define HAVE_STRINGS_HEADER 1
-
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
-
-/* defined, if string.h is present */
-#define HAVE_STRING_HEADER 1
 
 /* Define to 1 if you have the `strpbrk' function. */
 #define HAVE_STRPBRK 1
