@@ -105,8 +105,9 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_yabasic_OBJECTS = main.$(OBJEXT) function.$(OBJEXT) io.$(OBJEXT) \
-	graphic.$(OBJEXT) symbol.$(OBJEXT) flow.$(OBJEXT) \
-	flex.$(OBJEXT) bison.$(OBJEXT) whereami.$(OBJEXT)
+	graphic.$(OBJEXT) symbol.$(OBJEXT) external.$(OBJEXT) \
+	flow.$(OBJEXT) flex.$(OBJEXT) bison.$(OBJEXT) \
+	whereami.$(OBJEXT)
 yabasic_OBJECTS = $(am_yabasic_OBJECTS)
 yabasic_LDADD = $(LDADD)
 yabasic_DEPENDENCIES =
@@ -129,10 +130,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/bison.Po ./$(DEPDIR)/flex.Po \
-	./$(DEPDIR)/flow.Po ./$(DEPDIR)/function.Po \
-	./$(DEPDIR)/graphic.Po ./$(DEPDIR)/io.Po ./$(DEPDIR)/main.Po \
-	./$(DEPDIR)/symbol.Po ./$(DEPDIR)/whereami.Po
+am__depfiles_remade = ./$(DEPDIR)/bison.Po ./$(DEPDIR)/external.Po \
+	./$(DEPDIR)/flex.Po ./$(DEPDIR)/flow.Po \
+	./$(DEPDIR)/function.Po ./$(DEPDIR)/graphic.Po \
+	./$(DEPDIR)/io.Po ./$(DEPDIR)/main.Po ./$(DEPDIR)/symbol.Po \
+	./$(DEPDIR)/whereami.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -531,7 +533,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c flow.c flex.c bison.c whereami.c yabasic.h bison.h whereami.h
+yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c external.c flow.c flex.c bison.c whereami.c yabasic.h bison.h whereami.h
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@
 AM_CPPFLAGS = -DUNIX $(X_CFLAGS)
@@ -659,6 +661,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bison.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/external.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flex.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flow.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function.Po@am__quote@ # am--include-marker
@@ -1339,6 +1342,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/bison.Po
+	-rm -f ./$(DEPDIR)/external.Po
 	-rm -f ./$(DEPDIR)/flex.Po
 	-rm -f ./$(DEPDIR)/flow.Po
 	-rm -f ./$(DEPDIR)/function.Po
@@ -1395,6 +1399,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/bison.Po
+	-rm -f ./$(DEPDIR)/external.Po
 	-rm -f ./$(DEPDIR)/flex.Po
 	-rm -f ./$(DEPDIR)/flow.Po
 	-rm -f ./$(DEPDIR)/function.Po

@@ -632,14 +632,14 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
-ALLOCA
 X_EXTRA_LIBS
 X_LIBS
 X_PRE_LIBS
 X_CFLAGS
 XMKMF
-POW_LIB
 LIBOBJS
+POW_LIB
+ALLOCA
 CCOPTIONS
 CPP
 LT_SYS_LIBRARY_PATH
@@ -2274,7 +2274,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-#AC_CONFIG_LINKS
 am__api_version='1.16'
 
 ac_aux_dir=
@@ -12758,67 +12757,7 @@ fi
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sys/wait.h that is POSIX.1 compatible" >&5
-$as_echo_n "checking for sys/wait.h that is POSIX.1 compatible... " >&6; }
-if ${ac_cv_header_sys_wait_h+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <sys/types.h>
-#include <sys/wait.h>
-#ifndef WEXITSTATUS
-# define WEXITSTATUS(stat_val) ((unsigned int) (stat_val) >> 8)
-#endif
-#ifndef WIFEXITED
-# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
-#endif
-
-int
-main ()
-{
-  int s;
-  wait (&s);
-  s = WIFEXITED (s) ? WEXITSTATUS (s) : 1;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_header_sys_wait_h=yes
-else
-  ac_cv_header_sys_wait_h=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_header_sys_wait_h" >&5
-$as_echo "$ac_cv_header_sys_wait_h" >&6; }
-if test $ac_cv_header_sys_wait_h = yes; then
-
-$as_echo "#define HAVE_SYS_WAIT_H 1" >>confdefs.h
-
-fi
-
-for ac_header in fcntl.h limits.h stddef.h stdlib.h stdio.h float.h\
-                  math.h time.h sys/time.h string.h strings.h Intrinsic.h\
-                  unistd.h signal.h ctype.h malloc.h sys/prctl.h
-do :
-  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
-ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
-if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
-
-else
-  \
-		  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Header file is missing (see above)" >&5
-$as_echo "$as_me: WARNING: Header file is missing (see above)" >&2;}
-fi
-
-done
-
-for ac_header in string.h strings.h
+for ac_header in malloc.h alloc.h prctl.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -12830,88 +12769,6 @@ _ACEOF
 fi
 
 done
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for an ANSI C-conforming const" >&5
-$as_echo_n "checking for an ANSI C-conforming const... " >&6; }
-if ${ac_cv_c_const+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-#ifndef __cplusplus
-  /* Ultrix mips cc rejects this sort of thing.  */
-  typedef int charset[2];
-  const charset cs = { 0, 0 };
-  /* SunOS 4.1.1 cc rejects this.  */
-  char const *const *pcpcc;
-  char **ppc;
-  /* NEC SVR4.0.2 mips cc rejects this.  */
-  struct point {int x, y;};
-  static struct point const zero = {0,0};
-  /* AIX XL C 1.02.0.0 rejects this.
-     It does not let you subtract one const X* pointer from another in
-     an arm of an if-expression whose if-part is not a constant
-     expression */
-  const char *g = "string";
-  pcpcc = &g + (g ? g-g : 0);
-  /* HPUX 7.0 cc rejects these. */
-  ++pcpcc;
-  ppc = (char**) pcpcc;
-  pcpcc = (char const *const *) ppc;
-  { /* SCO 3.2v4 cc rejects this sort of thing.  */
-    char tx;
-    char *t = &tx;
-    char const *s = 0 ? (char *) 0 : (char const *) 0;
-
-    *t++ = 0;
-    if (s) return 0;
-  }
-  { /* Someone thinks the Sun supposedly-ANSI compiler will reject this.  */
-    int x[] = {25, 17};
-    const int *foo = &x[0];
-    ++foo;
-  }
-  { /* Sun SC1.0 ANSI compiler rejects this -- but not the above. */
-    typedef const int *iptr;
-    iptr p = 0;
-    ++p;
-  }
-  { /* AIX XL C 1.02.0.0 rejects this sort of thing, saying
-       "k.c", line 2.27: 1506-025 (S) Operand must be a modifiable lvalue. */
-    struct s { int j; const int *ap[3]; } bx;
-    struct s *b = &bx; b->j = 5;
-  }
-  { /* ULTRIX-32 V3.1 (Rev 9) vcc rejects this */
-    const int foo = 10;
-    if (!foo) return 0;
-  }
-  return !cs[0] && !zero.x;
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_c_const=yes
-else
-  ac_cv_c_const=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_const" >&5
-$as_echo "$ac_cv_c_const" >&6; }
-if test $ac_cv_c_const = no; then
-
-$as_echo "#define const /**/" >>confdefs.h
-
-fi
 
 ac_fn_c_check_type "$LINENO" "size_t" "ac_cv_type_size_t" "$ac_includes_default"
 if test "x$ac_cv_type_size_t" = xyes; then :
@@ -12924,463 +12781,204 @@ _ACEOF
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether time.h and sys/time.h may both be included" >&5
-$as_echo_n "checking whether time.h and sys/time.h may both be included... " >&6; }
-if ${ac_cv_header_time+:} false; then :
+# The Ultrix 4.2 mips builtin alloca declared by alloca.h only works
+# for constant arguments.  Useless!
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for working alloca.h" >&5
+$as_echo_n "checking for working alloca.h... " >&6; }
+if ${ac_cv_working_alloca_h+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <sys/types.h>
-#include <sys/time.h>
-#include <time.h>
-
+#include <alloca.h>
 int
 main ()
 {
-if ((struct tm *) 0)
-return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_header_time=yes
-else
-  ac_cv_header_time=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_header_time" >&5
-$as_echo "$ac_cv_header_time" >&6; }
-if test $ac_cv_header_time = yes; then
-
-$as_echo "#define TIME_WITH_SYS_TIME 1" >>confdefs.h
-
-fi
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for error_at_line" >&5
-$as_echo_n "checking for error_at_line... " >&6; }
-if ${ac_cv_lib_error_at_line+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <error.h>
-int
-main ()
-{
-error_at_line (0, 0, "", 0, "an error occurred");
+char *p = (char *) alloca (2 * sizeof (int));
+			  if (p) return 0;
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_error_at_line=yes
+  ac_cv_working_alloca_h=yes
 else
-  ac_cv_lib_error_at_line=no
+  ac_cv_working_alloca_h=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_error_at_line" >&5
-$as_echo "$ac_cv_lib_error_at_line" >&6; }
-if test $ac_cv_lib_error_at_line = no; then
-  case " $LIBOBJS " in
-  *" error.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS error.$ac_objext"
- ;;
-esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_working_alloca_h" >&5
+$as_echo "$ac_cv_working_alloca_h" >&6; }
+if test $ac_cv_working_alloca_h = yes; then
+
+$as_echo "#define HAVE_ALLOCA_H 1" >>confdefs.h
 
 fi
 
-ac_fn_c_check_type "$LINENO" "pid_t" "ac_cv_type_pid_t" "$ac_includes_default"
-if test "x$ac_cv_type_pid_t" = xyes; then :
-
-else
-
-cat >>confdefs.h <<_ACEOF
-#define pid_t int
-_ACEOF
-
-fi
-
-for ac_header in vfork.h
-do :
-  ac_fn_c_check_header_mongrel "$LINENO" "vfork.h" "ac_cv_header_vfork_h" "$ac_includes_default"
-if test "x$ac_cv_header_vfork_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_VFORK_H 1
-_ACEOF
-
-fi
-
-done
-
-for ac_func in fork vfork
-do :
-  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
-ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
-if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-done
-
-if test "x$ac_cv_func_fork" = xyes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working fork" >&5
-$as_echo_n "checking for working fork... " >&6; }
-if ${ac_cv_func_fork_works+:} false; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for alloca" >&5
+$as_echo_n "checking for alloca... " >&6; }
+if ${ac_cv_func_alloca_works+:} false; then :
   $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ac_cv_func_fork_works=cross
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-
-	  /* By Ruediger Kuhlmann. */
-	  return fork () < 0;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_func_fork_works=yes
-else
-  ac_cv_func_fork_works=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_fork_works" >&5
-$as_echo "$ac_cv_func_fork_works" >&6; }
-
-else
-  ac_cv_func_fork_works=$ac_cv_func_fork
-fi
-if test "x$ac_cv_func_fork_works" = xcross; then
-  case $host in
-    *-*-amigaos* | *-*-msdosdjgpp*)
-      # Override, as these systems have only a dummy fork() stub
-      ac_cv_func_fork_works=no
-      ;;
-    *)
-      ac_cv_func_fork_works=yes
-      ;;
-  esac
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: result $ac_cv_func_fork_works guessed because of cross compilation" >&5
-$as_echo "$as_me: WARNING: result $ac_cv_func_fork_works guessed because of cross compilation" >&2;}
-fi
-ac_cv_func_vfork_works=$ac_cv_func_vfork
-if test "x$ac_cv_func_vfork" = xyes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working vfork" >&5
-$as_echo_n "checking for working vfork... " >&6; }
-if ${ac_cv_func_vfork_works+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ac_cv_func_vfork_works=cross
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-/* Thanks to Paul Eggert for this test.  */
-$ac_includes_default
-#include <sys/wait.h>
-#ifdef HAVE_VFORK_H
-# include <vfork.h>
-#endif
-/* On some sparc systems, changes by the child to local and incoming
-   argument registers are propagated back to the parent.  The compiler
-   is told about this with #include <vfork.h>, but some compilers
-   (e.g. gcc -O) don't grok <vfork.h>.  Test for this by using a
-   static variable whose address is put into a register that is
-   clobbered by the vfork.  */
-static void
-#ifdef __cplusplus
-sparc_address_test (int arg)
+#ifdef __GNUC__
+# define alloca __builtin_alloca
+#else
+# ifdef _MSC_VER
+#  include <malloc.h>
+#  define alloca _alloca
 # else
-sparc_address_test (arg) int arg;
-#endif
-{
-  static pid_t child;
-  if (!child) {
-    child = vfork ();
-    if (child < 0) {
-      perror ("vfork");
-      _exit(2);
-    }
-    if (!child) {
-      arg = getpid();
-      write(-1, "", 0);
-      _exit (arg);
-    }
-  }
-}
-
-int
-main ()
-{
-  pid_t parent = getpid ();
-  pid_t child;
-
-  sparc_address_test (0);
-
-  child = vfork ();
-
-  if (child == 0) {
-    /* Here is another test for sparc vfork register problems.  This
-       test uses lots of local variables, at least as many local
-       variables as main has allocated so far including compiler
-       temporaries.  4 locals are enough for gcc 1.40.3 on a Solaris
-       4.1.3 sparc, but we use 8 to be safe.  A buggy compiler should
-       reuse the register of parent for one of the local variables,
-       since it will think that parent can't possibly be used any more
-       in this routine.  Assigning to the local variable will thus
-       munge parent in the parent process.  */
-    pid_t
-      p = getpid(), p1 = getpid(), p2 = getpid(), p3 = getpid(),
-      p4 = getpid(), p5 = getpid(), p6 = getpid(), p7 = getpid();
-    /* Convince the compiler that p..p7 are live; otherwise, it might
-       use the same hardware register for all 8 local variables.  */
-    if (p != p1 || p != p2 || p != p3 || p != p4
-	|| p != p5 || p != p6 || p != p7)
-      _exit(1);
-
-    /* On some systems (e.g. IRIX 3.3), vfork doesn't separate parent
-       from child file descriptors.  If the child closes a descriptor
-       before it execs or exits, this munges the parent's descriptor
-       as well.  Test for this by closing stdout in the child.  */
-    _exit(close(fileno(stdout)) != 0);
-  } else {
-    int status;
-    struct stat st;
-
-    while (wait(&status) != child)
-      ;
-    return (
-	 /* Was there some problem with vforking?  */
-	 child < 0
-
-	 /* Did the child fail?  (This shouldn't happen.)  */
-	 || status
-
-	 /* Did the vfork/compiler bug occur?  */
-	 || parent != getpid()
-
-	 /* Did the file descriptor bug occur?  */
-	 || fstat(fileno(stdout), &st) != 0
-	 );
-  }
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_func_vfork_works=yes
-else
-  ac_cv_func_vfork_works=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_vfork_works" >&5
-$as_echo "$ac_cv_func_vfork_works" >&6; }
-
-fi;
-if test "x$ac_cv_func_fork_works" = xcross; then
-  ac_cv_func_vfork_works=$ac_cv_func_vfork
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: result $ac_cv_func_vfork_works guessed because of cross compilation" >&5
-$as_echo "$as_me: WARNING: result $ac_cv_func_vfork_works guessed because of cross compilation" >&2;}
-fi
-
-if test "x$ac_cv_func_vfork_works" = xyes; then
-
-$as_echo "#define HAVE_WORKING_VFORK 1" >>confdefs.h
-
-else
-
-$as_echo "#define vfork fork" >>confdefs.h
-
-fi
-if test "x$ac_cv_func_fork_works" = xyes; then
-
-$as_echo "#define HAVE_WORKING_FORK 1" >>confdefs.h
-
-fi
-
-for ac_header in sys/select.h sys/socket.h
-do :
-  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
-ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
-if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-
-done
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking types of arguments for select" >&5
-$as_echo_n "checking types of arguments for select... " >&6; }
-if ${ac_cv_func_select_args+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  for ac_arg234 in 'fd_set *' 'int *' 'void *'; do
- for ac_arg1 in 'int' 'size_t' 'unsigned long int' 'unsigned int'; do
-  for ac_arg5 in 'struct timeval *' 'const struct timeval *'; do
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
+#  ifdef HAVE_ALLOCA_H
+#   include <alloca.h>
+#  else
+#   ifdef _AIX
+ #pragma alloca
+#   else
+#    ifndef alloca /* predefined by HP cc +Olibcalls */
+void *alloca (size_t);
+#    endif
+#   endif
+#  endif
+# endif
 #endif
 
 int
 main ()
 {
-extern int select ($ac_arg1,
-					    $ac_arg234, $ac_arg234, $ac_arg234,
-					    $ac_arg5);
+char *p = (char *) alloca (1);
+				    if (p) return 0;
   ;
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_func_select_args="$ac_arg1,$ac_arg234,$ac_arg5"; break 3
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_func_alloca_works=yes
+else
+  ac_cv_func_alloca_works=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  done
- done
-done
-# Provide a safe default value.
-: "${ac_cv_func_select_args=int,int *,struct timeval *}"
-
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_select_args" >&5
-$as_echo "$ac_cv_func_select_args" >&6; }
-ac_save_IFS=$IFS; IFS=','
-set dummy `echo "$ac_cv_func_select_args" | sed 's/\*/\*/g'`
-IFS=$ac_save_IFS
-shift
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_alloca_works" >&5
+$as_echo "$ac_cv_func_alloca_works" >&6; }
 
-cat >>confdefs.h <<_ACEOF
-#define SELECT_TYPE_ARG1 $1
+if test $ac_cv_func_alloca_works = yes; then
+
+$as_echo "#define HAVE_ALLOCA 1" >>confdefs.h
+
+else
+  # The SVR3 libPW and SVR4 libucb both contain incompatible functions
+# that cause trouble.  Some versions do not even contain alloca or
+# contain a buggy version.  If you still want to use their alloca,
+# use ar to extract alloca.o from them instead of compiling alloca.c.
+
+ALLOCA=\${LIBOBJDIR}alloca.$ac_objext
+
+$as_echo "#define C_ALLOCA 1" >>confdefs.h
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether \`alloca.c' needs Cray hooks" >&5
+$as_echo_n "checking whether \`alloca.c' needs Cray hooks... " >&6; }
+if ${ac_cv_os_cray+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#if defined CRAY && ! defined CRAY2
+webecray
+#else
+wenotbecray
+#endif
+
 _ACEOF
-
-
-cat >>confdefs.h <<_ACEOF
-#define SELECT_TYPE_ARG234 ($2)
-_ACEOF
-
-
-cat >>confdefs.h <<_ACEOF
-#define SELECT_TYPE_ARG5 ($3)
-_ACEOF
-
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "webecray" >/dev/null 2>&1; then :
+  ac_cv_os_cray=yes
+else
+  ac_cv_os_cray=no
+fi
 rm -f conftest*
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking return type of signal handlers" >&5
-$as_echo_n "checking return type of signal handlers... " >&6; }
-if ${ac_cv_type_signal+:} false; then :
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_os_cray" >&5
+$as_echo "$ac_cv_os_cray" >&6; }
+if test $ac_cv_os_cray = yes; then
+  for ac_func in _getb67 GETB67 getb67; do
+    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
+if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
+
+cat >>confdefs.h <<_ACEOF
+#define CRAY_STACKSEG_END $ac_func
+_ACEOF
+
+    break
+fi
+
+  done
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking stack direction for C alloca" >&5
+$as_echo_n "checking stack direction for C alloca... " >&6; }
+if ${ac_cv_c_stack_direction+:} false; then :
   $as_echo_n "(cached) " >&6
+else
+  if test "$cross_compiling" = yes; then :
+  ac_cv_c_stack_direction=0
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <sys/types.h>
-#include <signal.h>
+$ac_includes_default
+int
+find_stack_direction (int *addr, int depth)
+{
+  int dir, dummy = 0;
+  if (! addr)
+    addr = &dummy;
+  *addr = addr < &dummy ? 1 : addr == &dummy ? 0 : -1;
+  dir = depth ? find_stack_direction (addr, depth - 1) : 0;
+  return dir + dummy;
+}
 
 int
-main ()
+main (int argc, char **argv)
 {
-return *(signal (0, 0)) (0) == 1;
-  ;
-  return 0;
+  return find_stack_direction (0, argc + !argv + 20) < 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_type_signal=int
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_c_stack_direction=1
 else
-  ac_cv_type_signal=void
+  ac_cv_c_stack_direction=-1
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_type_signal" >&5
-$as_echo "$ac_cv_type_signal" >&6; }
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_stack_direction" >&5
+$as_echo "$ac_cv_c_stack_direction" >&6; }
+cat >>confdefs.h <<_ACEOF
+#define STACK_DIRECTION $ac_cv_c_stack_direction
+_ACEOF
+
+
+fi
+
+
+ac_fn_c_check_type "$LINENO" "size_t" "ac_cv_type_size_t" "$ac_includes_default"
+if test "x$ac_cv_type_size_t" = xyes; then :
+
+else
 
 cat >>confdefs.h <<_ACEOF
-#define RETSIGTYPE $ac_cv_type_signal
+#define size_t unsigned int
 _ACEOF
 
-
-for ac_func in strftime
-do :
-  ac_fn_c_check_func "$LINENO" "strftime" "ac_cv_func_strftime"
-if test "x$ac_cv_func_strftime" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_STRFTIME 1
-_ACEOF
-
-else
-  # strftime is in -lintl on SCO UNIX.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for strftime in -lintl" >&5
-$as_echo_n "checking for strftime in -lintl... " >&6; }
-if ${ac_cv_lib_intl_strftime+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lintl  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char strftime ();
-int
-main ()
-{
-return strftime ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_intl_strftime=yes
-else
-  ac_cv_lib_intl_strftime=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_intl_strftime" >&5
-$as_echo "$ac_cv_lib_intl_strftime" >&6; }
-if test "x$ac_cv_lib_intl_strftime" = xyes; then :
-  $as_echo "#define HAVE_STRFTIME 1" >>confdefs.h
-
-LIBS="-lintl $LIBS"
 fi
 
-fi
-done
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working strtod" >&5
 $as_echo_n "checking for working strtod... " >&6; }
@@ -13495,155 +13093,7 @@ fi
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether setpgrp takes no argument" >&5
-$as_echo_n "checking whether setpgrp takes no argument... " >&6; }
-if ${ac_cv_func_setpgrp_void+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  as_fn_error $? "cannot check setpgrp when cross compiling" "$LINENO" 5
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-/* If this system has a BSD-style setpgrp which takes arguments,
-  setpgrp(1, 1) will fail with ESRCH and return -1, in that case
-  exit successfully. */
-  return setpgrp (1,1) != -1;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_func_setpgrp_void=no
-else
-  ac_cv_func_setpgrp_void=yes
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_setpgrp_void" >&5
-$as_echo "$ac_cv_func_setpgrp_void" >&6; }
-if test $ac_cv_func_setpgrp_void = yes; then
-
-$as_echo "#define SETPGRP_VOID 1" >>confdefs.h
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether lstat correctly handles trailing slash" >&5
-$as_echo_n "checking whether lstat correctly handles trailing slash... " >&6; }
-if ${ac_cv_func_lstat_dereferences_slashed_symlink+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  rm -f conftest.sym conftest.file
-echo >conftest.file
-if test "$as_ln_s" = "ln -s" && ln -s conftest.file conftest.sym; then
-  if test "$cross_compiling" = yes; then :
-  ac_cv_func_lstat_dereferences_slashed_symlink=no
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-struct stat sbuf;
-     /* Linux will dereference the symlink and fail, as required by POSIX.
-	That is better in the sense that it means we will not
-	have to compile and use the lstat wrapper.  */
-     return lstat ("conftest.sym/", &sbuf) == 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_func_lstat_dereferences_slashed_symlink=yes
-else
-  ac_cv_func_lstat_dereferences_slashed_symlink=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-else
-  # If the `ln -s' command failed, then we probably don't even
-  # have an lstat function.
-  ac_cv_func_lstat_dereferences_slashed_symlink=no
-fi
-rm -f conftest.sym conftest.file
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_lstat_dereferences_slashed_symlink" >&5
-$as_echo "$ac_cv_func_lstat_dereferences_slashed_symlink" >&6; }
-
-test $ac_cv_func_lstat_dereferences_slashed_symlink = yes &&
-
-cat >>confdefs.h <<_ACEOF
-#define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
-_ACEOF
-
-
-if test "x$ac_cv_func_lstat_dereferences_slashed_symlink" = xno; then
-  case " $LIBOBJS " in
-  *" lstat.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS lstat.$ac_objext"
- ;;
-esac
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether stat accepts an empty string" >&5
-$as_echo_n "checking whether stat accepts an empty string... " >&6; }
-if ${ac_cv_func_stat_empty_string_bug+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ac_cv_func_stat_empty_string_bug=yes
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-main ()
-{
-struct stat sbuf;
-  return stat ("", &sbuf) == 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_func_stat_empty_string_bug=no
-else
-  ac_cv_func_stat_empty_string_bug=yes
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_stat_empty_string_bug" >&5
-$as_echo "$ac_cv_func_stat_empty_string_bug" >&6; }
-if test $ac_cv_func_stat_empty_string_bug = yes; then
-  case " $LIBOBJS " in
-  *" stat.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS stat.$ac_objext"
- ;;
-esac
-
-
-cat >>confdefs.h <<_ACEOF
-#define HAVE_STAT_EMPTY_STRING_BUG 1
-_ACEOF
-
-fi
-
-for ac_func in floor pow select sqrt strchr strerror strpbrk strrchr strstr mkstemp
+for ac_func in strerror mkstemp
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -13655,6 +13105,88 @@ _ACEOF
 fi
 done
 
+
+have_ffi=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing ffi_call" >&5
+$as_echo_n "checking for library containing ffi_call... " >&6; }
+if ${ac_cv_search_ffi_call+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char ffi_call ();
+int
+main ()
+{
+return ffi_call ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' ffi; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_search_ffi_call=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext
+  if ${ac_cv_search_ffi_call+:} false; then :
+  break
+fi
+done
+if ${ac_cv_search_ffi_call+:} false; then :
+
+else
+  ac_cv_search_ffi_call=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_ffi_call" >&5
+$as_echo "$ac_cv_search_ffi_call" >&6; }
+ac_res=$ac_cv_search_ffi_call
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  have_ffi=yes
+fi
+
+if test "x${have_ffi}" = xyes; then
+    for ac_header in ffi.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "ffi.h" "ac_cv_header_ffi_h" "$ac_includes_default"
+if test "x$ac_cv_header_ffi_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_FFI_H 1
+_ACEOF
+
+else
+  have_ffi=no
+fi
+
+done
+
+fi
+if test "x${have_ffi}" = xyes ; then
+
+$as_echo "#define HAVE_LIBFFI /**/" >>confdefs.h
+
+else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Did not find curses/ncurses library and header, calling foreign libraries will not be possible" >&5
+$as_echo "$as_me: WARNING: Did not find curses/ncurses library and header, calling foreign libraries will not be possible" >&2;}
+fi
 
 have_curses=no
 have_ncurses=no
@@ -13805,7 +13337,6 @@ fi
 if test "x${have_curses}" = xno && "x${have_ncurses}" = xno ; then
     as_fn_error $? "Did not find curses/ncurses library and header" "$LINENO" 5
 fi
-
 for ac_func in getnstr
 do :
   ac_fn_c_check_func "$LINENO" "getnstr" "ac_cv_func_getnstr"
@@ -14504,272 +14035,6 @@ fi
 if test "x${no_x}" = xyes ; then
     as_fn_error $? "Did not find X11 library and header" "$LINENO" 5
 fi
-
-for ac_func in setitimer
-do :
-  ac_fn_c_check_func "$LINENO" "setitimer" "ac_cv_func_setitimer"
-if test "x$ac_cv_func_setitimer" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_SETITIMER 1
-_ACEOF
-
-fi
-done
-
-for ac_func in difftime
-do :
-  ac_fn_c_check_func "$LINENO" "difftime" "ac_cv_func_difftime"
-if test "x$ac_cv_func_difftime" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_DIFFTIME 1
-_ACEOF
-
-fi
-done
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for rt posix4 in -lclock_gettime" >&5
-$as_echo_n "checking for rt posix4 in -lclock_gettime... " >&6; }
-if ${ac_cv_lib_clock_gettime_rt_posix4+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lclock_gettime  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char rt posix4 ();
-int
-main ()
-{
-return rt posix4 ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_clock_gettime_rt_posix4=yes
-else
-  ac_cv_lib_clock_gettime_rt_posix4=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_clock_gettime_rt_posix4" >&5
-$as_echo "$ac_cv_lib_clock_gettime_rt_posix4" >&6; }
-if test "x$ac_cv_lib_clock_gettime_rt_posix4" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBCLOCK_GETTIME 1
-_ACEOF
-
-  LIBS="-lclock_gettime $LIBS"
-
-fi
-
-for ac_func in clock_gettime
-do :
-  ac_fn_c_check_func "$LINENO" "clock_gettime" "ac_cv_func_clock_gettime"
-if test "x$ac_cv_func_clock_gettime" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_CLOCK_GETTIME 1
-_ACEOF
-
-fi
-done
-
-
-# The Ultrix 4.2 mips builtin alloca declared by alloca.h only works
-# for constant arguments.  Useless!
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for working alloca.h" >&5
-$as_echo_n "checking for working alloca.h... " >&6; }
-if ${ac_cv_working_alloca_h+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <alloca.h>
-int
-main ()
-{
-char *p = (char *) alloca (2 * sizeof (int));
-			  if (p) return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_working_alloca_h=yes
-else
-  ac_cv_working_alloca_h=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_working_alloca_h" >&5
-$as_echo "$ac_cv_working_alloca_h" >&6; }
-if test $ac_cv_working_alloca_h = yes; then
-
-$as_echo "#define HAVE_ALLOCA_H 1" >>confdefs.h
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for alloca" >&5
-$as_echo_n "checking for alloca... " >&6; }
-if ${ac_cv_func_alloca_works+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifdef __GNUC__
-# define alloca __builtin_alloca
-#else
-# ifdef _MSC_VER
-#  include <malloc.h>
-#  define alloca _alloca
-# else
-#  ifdef HAVE_ALLOCA_H
-#   include <alloca.h>
-#  else
-#   ifdef _AIX
- #pragma alloca
-#   else
-#    ifndef alloca /* predefined by HP cc +Olibcalls */
-void *alloca (size_t);
-#    endif
-#   endif
-#  endif
-# endif
-#endif
-
-int
-main ()
-{
-char *p = (char *) alloca (1);
-				    if (p) return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_func_alloca_works=yes
-else
-  ac_cv_func_alloca_works=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_alloca_works" >&5
-$as_echo "$ac_cv_func_alloca_works" >&6; }
-
-if test $ac_cv_func_alloca_works = yes; then
-
-$as_echo "#define HAVE_ALLOCA 1" >>confdefs.h
-
-else
-  # The SVR3 libPW and SVR4 libucb both contain incompatible functions
-# that cause trouble.  Some versions do not even contain alloca or
-# contain a buggy version.  If you still want to use their alloca,
-# use ar to extract alloca.o from them instead of compiling alloca.c.
-
-ALLOCA=\${LIBOBJDIR}alloca.$ac_objext
-
-$as_echo "#define C_ALLOCA 1" >>confdefs.h
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether \`alloca.c' needs Cray hooks" >&5
-$as_echo_n "checking whether \`alloca.c' needs Cray hooks... " >&6; }
-if ${ac_cv_os_cray+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#if defined CRAY && ! defined CRAY2
-webecray
-#else
-wenotbecray
-#endif
-
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "webecray" >/dev/null 2>&1; then :
-  ac_cv_os_cray=yes
-else
-  ac_cv_os_cray=no
-fi
-rm -f conftest*
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_os_cray" >&5
-$as_echo "$ac_cv_os_cray" >&6; }
-if test $ac_cv_os_cray = yes; then
-  for ac_func in _getb67 GETB67 getb67; do
-    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
-ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
-if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
-
-cat >>confdefs.h <<_ACEOF
-#define CRAY_STACKSEG_END $ac_func
-_ACEOF
-
-    break
-fi
-
-  done
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking stack direction for C alloca" >&5
-$as_echo_n "checking stack direction for C alloca... " >&6; }
-if ${ac_cv_c_stack_direction+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ac_cv_c_stack_direction=0
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$ac_includes_default
-int
-find_stack_direction (int *addr, int depth)
-{
-  int dir, dummy = 0;
-  if (! addr)
-    addr = &dummy;
-  *addr = addr < &dummy ? 1 : addr == &dummy ? 0 : -1;
-  dir = depth ? find_stack_direction (addr, depth - 1) : 0;
-  return dir + dummy;
-}
-
-int
-main (int argc, char **argv)
-{
-  return find_stack_direction (0, argc + !argv + 20) < 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ac_cv_c_stack_direction=1
-else
-  ac_cv_c_stack_direction=-1
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_stack_direction" >&5
-$as_echo "$ac_cv_c_stack_direction" >&6; }
-cat >>confdefs.h <<_ACEOF
-#define STACK_DIRECTION $ac_cv_c_stack_direction
-_ACEOF
-
-
-fi
-
 
 
 cat >>confdefs.h <<_ACEOF

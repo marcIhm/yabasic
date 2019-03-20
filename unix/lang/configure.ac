@@ -3,7 +3,6 @@ dnl  Process this file with 'autoconf' to get a configure-script
 
 AC_INIT([yabasic], [2.82.1])
 AC_CONFIG_SRCDIR([main.c])
-#AC_CONFIG_LINKS
 AM_INIT_AUTOMAKE
 LT_INIT
 
@@ -28,6 +27,18 @@ dnl  if strtod is not present, create replacement
 AC_FUNC_STRTOD
 dnl  crete define, if functions not available
 AC_CHECK_FUNCS([strerror mkstemp])
+
+dnl  check for libffi, not required
+have_ffi=no
+AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
+if test "x${have_ffi}" = xyes; then
+    AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
+fi
+if test "x${have_ffi}" = xyes ; then
+    AC_DEFINE([HAVE_LIBFFI],,[libffi and headers available])
+else
+    AC_MSG_WARN([Did not find curses/ncurses library and header, calling foreign libraries will not be possible])
+fi
 
 dnl  check for curses
 have_curses=no

@@ -18,53 +18,29 @@
    */
 #undef HAVE_ALLOCA_H
 
-/* Define to 1 if you have the `clock_gettime' function. */
-#undef HAVE_CLOCK_GETTIME
-
-/* Define to 1 if you have the <ctype.h> header file. */
-#undef HAVE_CTYPE_H
+/* Define to 1 if you have the <alloc.h> header file. */
+#undef HAVE_ALLOC_H
 
 /* Define to 1 if you have the <curses.h> header file. */
 #undef HAVE_CURSES_H
 
-/* Define to 1 if you have the `difftime' function. */
-#undef HAVE_DIFFTIME
-
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to 1 if you have the <fcntl.h> header file. */
-#undef HAVE_FCNTL_H
-
-/* Define to 1 if you have the <float.h> header file. */
-#undef HAVE_FLOAT_H
-
-/* Define to 1 if you have the `floor' function. */
-#undef HAVE_FLOOR
-
-/* Define to 1 if you have the `fork' function. */
-#undef HAVE_FORK
+/* Define to 1 if you have the <ffi.h> header file. */
+#undef HAVE_FFI_H
 
 /* Define to 1 if you have the `getnstr' function. */
 #undef HAVE_GETNSTR
 
-/* Define to 1 if you have the <Intrinsic.h> header file. */
-#undef HAVE_INTRINSIC_H
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `clock_gettime' library (-lclock_gettime). */
-#undef HAVE_LIBCLOCK_GETTIME
-
-/* Define to 1 if you have the <limits.h> header file. */
-#undef HAVE_LIMITS_H
+/* libffi and headers available */
+#undef HAVE_LIBFFI
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
-
-/* Define to 1 if you have the <math.h> header file. */
-#undef HAVE_MATH_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
@@ -75,45 +51,17 @@
 /* Define to 1 if you have the <ncurses.h> header file. */
 #undef HAVE_NCURSES_H
 
-/* Define to 1 if you have the `pow' function. */
-#undef HAVE_POW
-
-/* Define to 1 if you have the `select' function. */
-#undef HAVE_SELECT
-
-/* Define to 1 if you have the `setitimer' function. */
-#undef HAVE_SETITIMER
-
-/* Define to 1 if you have the <signal.h> header file. */
-#undef HAVE_SIGNAL_H
-
-/* Define to 1 if you have the `sqrt' function. */
-#undef HAVE_SQRT
-
-/* Define to 1 if `stat' has the bug that it succeeds when given the
-   zero-length file name argument. */
-#undef HAVE_STAT_EMPTY_STRING_BUG
-
-/* Define to 1 if you have the <stddef.h> header file. */
-#undef HAVE_STDDEF_H
+/* Define to 1 if you have the <prctl.h> header file. */
+#undef HAVE_PRCTL_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
-/* Define to 1 if you have the <stdio.h> header file. */
-#undef HAVE_STDIO_H
-
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the `strchr' function. */
-#undef HAVE_STRCHR
-
 /* Define to 1 if you have the `strerror' function. */
 #undef HAVE_STRERROR
-
-/* Define to 1 if you have the `strftime' function. */
-#undef HAVE_STRFTIME
 
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
@@ -121,57 +69,14 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the `strpbrk' function. */
-#undef HAVE_STRPBRK
-
-/* Define to 1 if you have the `strrchr' function. */
-#undef HAVE_STRRCHR
-
-/* Define to 1 if you have the `strstr' function. */
-#undef HAVE_STRSTR
-
-/* Define to 1 if you have the <sys/prctl.h> header file. */
-#undef HAVE_SYS_PRCTL_H
-
-/* Define to 1 if you have the <sys/select.h> header file. */
-#undef HAVE_SYS_SELECT_H
-
-/* Define to 1 if you have the <sys/socket.h> header file. */
-#undef HAVE_SYS_SOCKET_H
-
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
-
-/* Define to 1 if you have the <sys/time.h> header file. */
-#undef HAVE_SYS_TIME_H
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
-#undef HAVE_SYS_WAIT_H
-
-/* Define to 1 if you have the <time.h> header file. */
-#undef HAVE_TIME_H
-
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Define to 1 if you have the `vfork' function. */
-#undef HAVE_VFORK
-
-/* Define to 1 if you have the <vfork.h> header file. */
-#undef HAVE_VFORK_H
-
-/* Define to 1 if `fork' works. */
-#undef HAVE_WORKING_FORK
-
-/* Define to 1 if `vfork' works. */
-#undef HAVE_WORKING_VFORK
-
-/* Define to 1 if `lstat' dereferences a symlink specified with a trailing
-   slash. */
-#undef LSTAT_FOLLOWS_SLASHED_SYMLINK
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
@@ -197,21 +102,6 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
-
-/* Define to the type of arg 1 for `select'. */
-#undef SELECT_TYPE_ARG1
-
-/* Define to the type of args 2, 3 and 4 for `select'. */
-#undef SELECT_TYPE_ARG234
-
-/* Define to the type of arg 5 for `select'. */
-#undef SELECT_TYPE_ARG5
-
-/* Define to 1 if the `setpgrp' function takes no argument. */
-#undef SETPGRP_VOID
-
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at runtime.
@@ -223,9 +113,6 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
-
 /* architecture of build machine */
 #undef UNIX_ARCHITECTURE
 
@@ -235,14 +122,5 @@
 /* Define to 1 if the X Window System is missing or not being used. */
 #undef X_DISPLAY_MISSING
 
-/* Define to empty if `const' does not conform to ANSI C. */
-#undef const
-
-/* Define to `int' if <sys/types.h> does not define. */
-#undef pid_t
-
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
-
-/* Define as `fork' if `vfork' does not work. */
-#undef vfork
