@@ -1,0 +1,36 @@
+## An example for yabasic (www.yabasic.de).
+## This file is part of yabasic and may be copied under the terms of
+## 	MIT License which can be found in the file LICENSE.
+
+syntax "yabasic" "\.yab$"
+
+# uncomment the following two lines if using relatively new versions of GNU nano.
+# if something goes wrong, there will be a hint when starting nano.
+
+comment "//"
+comment "REM"
+
+color red "\<[0-9_]+\>"
+icolor brightwhite "\<[A-Z_][A-Za-z0-9_]*\>"
+icolor green "\<(ABS|ACOS|AND|ARRAYDIM|ARRAYDIMENSION|ARRAYSIZE|AS|ASC|ASIN|AT|ATAN)\>"
+icolor green "\<(BEEP|BELL|BIN|BIND|BITBLIT|BITBLT|BOX|BREAK)\>"
+icolor green "\<(CASE|CHR|CIRCLE|CLEAR|CLOSE|COLOR|COLOUR|COMPILE|CONTINUE|COS|CURVE)\>"
+icolor green "\<(DATA|DATE|DEC|DEFAULT|DIM|DO|DOT)\>"
+icolor green "\<(ELSE|ELSEIF|ELSIF|END|ENDIF|EOF|EOR|ERROR|EXECUTE|EXIT|EXP|EXPORT)\>"
+icolor green "\<(FI|FILL|FILLED|FOR|FRAC|GETBIT|GETSCREEN|GLOB|GOSUB|GOTO|HEX)\>"
+icolor green "\<(IF|INKEY|INPUT|INSTR|INT|INTERRUPT|LABEL|LEFT|LEN|LET|LINE|LOCAL|LOG|LOOP|LOWER|LTRIM)\>"
+icolor green "\<(MAX|MID|MIN|MOD|MOUSEB|MOUSEBUTTON|MOUSEMOD|MOUSEMODIFIER|MOUSEX|MOUSEY)\>"
+icolor green "\<(NEW|NEXT|NOT|NUMPARAM|ON|OPEN|OR|ORIGIN)\>"
+icolor green "\<(PAUSE|PEEK|POKE|PRINT|PRINTER|PUTBIT|PUTSCREEN)\>"
+icolor green "\<(RAN|READ|READING|RECT|RECTANGLE|REDIM|REPEAT|RESTORE|RETURN|REVERSE|RIGHT|RINSTR|RTRIM)\>"
+icolor green "\<(SCREEN|SEEK|SIG|SIN|SLEEP|SPLIT|SPLIT|SQR|SQRT|STATIC|STEP|STR|SUB|SUBROUTINE|SWITCH|SYSTEM)\>"
+icolor green "\<(TAN|TELL|TEXT|THEN|TIME|TO|TOKEN|TRIANGLE|TRIM)\>"
+icolor green "\<(UNTIL|UPPER|USING|VAL|WAIT|WEND|WHILE|WINDOW|WRITING|XOR)\>"
+
+# Strings
+color white "<[^= ]*>" ""(\\.|[^"])*""
+
+# Comments.
+color yellow "(^|[[:space:]])\/\/.*$"
+icolor yellow "(^|[[:space:]])REM.*$"
+
