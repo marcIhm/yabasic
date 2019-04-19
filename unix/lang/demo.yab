@@ -170,7 +170,7 @@ label bitmap
   count=0
   label pong
     count=count+1
-    if (o$<>"") putbit o$,xo-2,yo-2
+    if o$<>"" putbit o$,xo-2,yo-2
     if (count>1000) then
       phi=ran(2*pi):dx=2*sin(phi):dy=2*cos(phi)
       sleep 2

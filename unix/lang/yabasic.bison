@@ -623,7 +623,7 @@ next_symbol:  {pop(stSTRING);}/* can be omitted */
   ;
 
 switch_number_or_string: tSWITCH {push_switch_id();add_command(cBEGIN_SWITCH_MARK,NULL,NULL);} 
-                number_or_string sep_list case_list default tSEND {report_if_missing("cannot close switch-construct: another control structure has not ended yet",FALSE);add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);pop_switch_id();}
+                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);pop_switch_id();}
   ;
 
 sep_list: tSEP 
@@ -653,7 +653,7 @@ do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command
 
 
 loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
-  | tLOOP {missing_loop--;report_if_missing("cannot close do-loop: another control structure has not ended yet",FALSE);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   | tENDIF {report_conflicting_close("a closing loop is expected before endif",'e');}
   | tWEND {report_conflicting_close("a closing loop is expected before wend",'w');}
   | tUNTIL {report_conflicting_close("a closing loop is expected before until",'l');}
@@ -669,7 +669,7 @@ while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_c
   ;	    
 
 wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
-  | tWEND {missing_wend--;report_if_missing("cannot close while-loop: another control structure has not ended yet",FALSE);swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   ;
 
 
@@ -679,7 +679,7 @@ repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add
   ;
 
 until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
-  | tUNTIL expression {missing_until--;report_if_missing("cannot close repeat-loop: another control structure has not ended yet",FALSE);add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tUNTIL expression {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
   | tENDIF {report_conflicting_close("a closing until is expected before endif",'e');}
   | tWEND {report_conflicting_close("a closing until is expected before wend",'w');}
   | tLOOP {report_conflicting_close("a closing until is expected before loop",'l');}
@@ -694,7 +694,7 @@ if_clause: tIF expression {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel
   ;
 
 endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
-  | tENDIF {missing_endif--;report_if_missing("cannot close if-statement: another control structure has not ended yet",FALSE);}
+  | tENDIF {missing_endif--;}
   | tWEND {report_conflicting_close("a closing endif is expected before wend",'w');}
   | tUNTIL {report_conflicting_close("a closing endif is expected before until",'l');}
   | tLOOP {report_conflicting_close("a closing endif is expected before loop",'l');}
@@ -702,8 +702,12 @@ endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %
   ;
 
 short_if:  tIF expression {in_short_if++;add_command(cDECIDE,NULL,NULL);pushlabel();}
-	statement_list tENDIF {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
-	statement_list tIMPLICITENDIF {poplabel();}
+        statement_list
+	end_of_if
+  ;
+
+end_of_if: tENDIF {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
+  | tIMPLICITENDIF {poplabel();}
   ;
 
 else_part: /* can be omitted */
