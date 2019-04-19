@@ -1113,6 +1113,7 @@ initialize (void)
     explanation[cUSER_FUNCTION] = "USER_FUNCTION";
     explanation[cFUNCTION_OR_ARRAY] = "FUNCTION_OR_ARRAY";
     explanation[cSTRINGFUNCTION_OR_ARRAY] = "STRINGFUNCTION_OR_ARRAY";
+    explanation[cEXTCALL] = "EXTERNAL_CALL";
     explanation[cPUSHFREE] = "PUSHFREE";
     explanation[cPOPDBLSYM] = "POPDBLSYM";
     explanation[cPOP] = "POP";

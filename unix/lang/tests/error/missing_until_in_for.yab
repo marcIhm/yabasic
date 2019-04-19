@@ -1,0 +1,10 @@
+#expect#---Error in missing_until_in_for.yab, line 10: a closing until is expected before next
+#expect#   next
+#expect#   ^~~~
+#expect#---Error: repeat-loop starting at line 9 has seen no 'until' yet
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
+for a=1 to 2
+  REM    The next line has no until
+  repeat
+next

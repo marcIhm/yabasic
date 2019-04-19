@@ -4,7 +4,7 @@
     written by Marc Ihm 1995-2019
     more info at www.yabasic.de
 
-    external.c --- code for calling external libraries
+    extcall.c --- code for calling external libraries
 
     This file is part of yabasic and may be copied under the terms of
     MIT License which can be found in the file LICENSE.

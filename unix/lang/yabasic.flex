@@ -29,7 +29,7 @@ int library_chain_length=0; /* length of library_chain */
 struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
 struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
-int fi_pending=0; /* true, if within a short if */
+int in_short_if=0; /* true, if within a short if */
 int len_of_lineno=0; /* length of last line number */
 %}
 
@@ -60,7 +60,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
       yy_delete_buffer(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(include_stack[include_depth]);
     }
-    report_if_missing(sERROR,"Premature end of file",TRUE);
+    report_if_missing("Premature end of file",TRUE);
     leave_lib();
     return tSEP;
   }
@@ -78,13 +78,13 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 <PASTLNO>.* {yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
 <PASTLNO>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
 
-\n\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
-\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
-: {if (fi_pending && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
+\n\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
+: {if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 
 REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
 \/\/.* {return tSEP;}  /* comments span 'til end of line */
-REM\n {yycolumn=1; if (fi_pending) {fi_pending--;yyless(0);return tENDIF;};return tSEP;}
+REM\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 REM {yymore();}
 
 IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMPORT;}
@@ -268,6 +268,7 @@ SYSTEM return tSYSTEM;
 PEEK return tPEEK;
 "PEEK$" return tPEEK2;
 POKE return tPOKE;
+EXT_CALL return tEXTCALL;
 TOKEN return tTOKEN;
 "TOKEN$" return tTOKENALT;
 SPLIT return tSPLIT;
@@ -314,7 +315,6 @@ FALSE {yylval.fnum=0; return tFNUM;}
   return tSYMBOL;
 }
 
- /* Symbols with a trailing $-sign are treated special */
 {NAME}\$ {
   yylval.symbol=(char *)my_strdup(yytext);
   return tSTRSYM;
@@ -323,7 +323,7 @@ FALSE {yylval.fnum=0; return tFNUM;}
 \"[^\"]*(\"|\n) {
   int cnt;
   if (yytext[yyleng-1]=='\n') yycolumn=1;
-  if (yytext[yyleng-1]=='\n' && fi_pending) {fi_pending--;yyless(0);return tENDIF;}
+  if (yytext[yyleng-1]=='\n' && in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;}
   if (yytext[yyleng-1]=='\n') {
   	yylval.string=NULL;
   	return tSTRING;

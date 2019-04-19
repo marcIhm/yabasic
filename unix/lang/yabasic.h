@@ -64,10 +64,10 @@ check your compiler settings
 #include <X11/keysymdef.h>
 #include <unistd.h>
 #include <fcntl.h>
-#ifdef HAVE_NCURSES_HEADER
+#ifdef HAVE_NCURSES_H
 #include <ncurses.h>
 #else
-#ifdef HAVE_CURSES_HEADER
+#ifdef HAVE_CURSES_H
 #include <curses.h>
 #endif
 #endif
@@ -206,7 +206,7 @@ extern int labelcount;		/* count self-generated labels */
 extern struct library *library_stack[];	/* stack for library file names */
 extern struct library *currlib;	/* current libfile as relevant to bison */
 extern int inlib;		/* true, while in library */
-extern int fi_pending;		/* true, if within a short if */
+extern int in_short_if;		/* true, if within a short if */
 extern int library_chain_length;	/* length of library_chain */
 extern struct library *library_chain[];	/* list of all library file names */
 extern int include_depth; /* current position in libfile_stack */
@@ -216,7 +216,9 @@ extern char *current_function;	/* name of currently parsed function */
 extern int yydebug;
 extern int missing_endif;
 extern int missing_endif_line;
-void report_if_missing(int,char *,int);
+void report_if_missing(char *,int);
+void report_conflicting_close(char *,int);
+void collect_missing_clauses(char *, char);
     
 /*-------------------------- defs and undefs ------------------------*/
 
@@ -317,7 +319,7 @@ enum cmd_type {
     cREQUIRE, cPUSHFREE, cMAKELOCAL, cMAKESTATIC, cCOUNT_PARAMS,	/* functions and procedures */
     cCALL, cQCALL, cPUSHSYMLIST, cPOPSYMLIST, cRETURN_FROM_CALL,
     cUSER_FUNCTION, cCHECK_RETURN_VALUE, cEND_FUNCTION,
-    cFUNCTION_OR_ARRAY, cSTRINGFUNCTION_OR_ARRAY,
+    cFUNCTION_OR_ARRAY, cSTRINGFUNCTION_OR_ARRAY, cEXTCALL,
 
     cPOKE, cPOKEFILE, cSWAP, cDUPLICATE, cDOCU,	/* internals */
 
