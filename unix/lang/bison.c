@@ -154,25 +154,25 @@ void collect_missing_clauses(char *string, char exclude) {
 
   if (missing_next && exclude!='n') {
     if (string[0]) strcat(string,"; ");
-    sprintf(string,"for-loop starting at line %d has seen no 'next' yet",missing_next_line);
+    sprintf(buff,"for-loop starting at line %d has seen no 'next' yet",missing_next_line);
     strcat(string, buff);
   }
 
   if (missing_wend && exclude!='w') {
     if (string[0]) strcat(string,"; ");
-    sprintf(string,"while-loop starting at line %d has seen no 'wend' yet",missing_wend_line);
+    sprintf(buff,"while-loop starting at line %d has seen no 'wend' yet",missing_wend_line);
     strcat(string, buff);
   }
 
   if (missing_until && exclude!='u') {
     if (string[0]) strcat(string,"; ");
-    sprintf(string,"repeat-loop starting at line %d has seen no 'until' yet",missing_until_line);
+    sprintf(buff,"repeat-loop starting at line %d has seen no 'until' yet",missing_until_line);
     strcat(string, buff);
   }
   
   if (missing_loop && exclude!='l') {
     if (string[0]) strcat(string,"; ");
-    sprintf(string,"do-loop starting at line %d has seen no 'loop' yet",missing_loop_line);
+    sprintf(buff,"do-loop starting at line %d has seen no 'loop' yet",missing_loop_line);
     strcat(string, buff);
   }
 }
