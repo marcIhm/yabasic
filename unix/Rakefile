@@ -9,6 +9,7 @@ require 'matrix'
 require_relative 'utils'
 
 yab_app_dir = '/usr/local/share/applications/yabasic'
+nano_dir = '/usr/share/nano'
 vs=Hash.new
 vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
 
@@ -163,13 +164,14 @@ desc 'Create rpm'
 task :rpm => :products_dir do
   cd "lang" do
     sh "make install DESTDIR=#{Dir.pwd}/pkg"
-    cp '../editors/yabasic.nanorc','pkg'
     mkdir_p "pkg/#{yab_app_dir}"
     %w( demo.yab yabasic.htm ).each do |file|
       cp file, "pkg/#{yab_app_dir}"
     end
+    mkdir_p "pkg/#{nano_dir}"
+    cp '../editors/yabasic.nanorc','pkg/#{nano_dir}'
     %w( rpm deb ).each do |fmt|
-      sh "fpm -f -s dir yabasic.nanorc=/usr/share/nano -t #{fmt} -n yabasic -v #{vs['yabasic']} -C pkg"
+      sh "fpm -f -s dir -t #{fmt} -n yabasic -v #{vs['yabasic']} -C pkg"
     end
     mv "yabasic-#{vs['yabasic']}-1.x86_64.rpm",'../../products'
     mv "yabasic_#{vs['yabasic']}_amd64.deb",'../../products'
