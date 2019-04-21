@@ -37,7 +37,19 @@ fi
 if test "x${have_ffi}" = xyes ; then
     AC_DEFINE([HAVE_LIBFFI],,[libffi and headers available])
 else
-    AC_MSG_WARN([Did not find curses/ncurses library and header, calling foreign libraries will not be possible])
+    AC_MSG_WARN([Did not find libffi library and header, calling foreign libraries will not be possible])
+fi
+
+dnl  check for dlopen, not required
+have_dlopen=no
+AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
+if test "x${have_dl}" = xyes; then
+    AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
+fi
+if test "x${have_dl}" = xyes ; then
+    AC_DEFINE([HAVE_DL],,[dlopen and headers available])
+else
+    AC_MSG_WARN([Did not find dlopen library and header, calling foreign libraries will not be possible])
 fi
 
 dnl  check for curses

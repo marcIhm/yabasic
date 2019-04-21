@@ -161,7 +161,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tINT tCEIL tFLOOR tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
-%token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tEXTCALL
+%token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tEXTERNAL tEXTERNAL2
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -289,8 +289,6 @@ statement:  /* empty */
   | tPOKE string_expression ',' expression {create_poke('d');}
   | tPOKE hashed_number ',' string_expression {create_poke('S');}
   | tPOKE hashed_number ',' expression {create_poke('D');}
-  | tEXTCALL string_expression ',' string_expression ',' string_expression {add_command(cPUSHFREE,NULL,NULL);add_command(cEXTCALL,NULL,NULL);}
-  | tEXTCALL string_expression ',' string_expression ',' string_expression ',' call_list {add_command(cEXTCALL,NULL,NULL);}
   | tEND {add_command(cEND,NULL,NULL);}
   | tEXIT {create_pushdbl(0);add_command(cEXIT,NULL,NULL);}
   | tEXIT expression {add_command(cEXIT,NULL,NULL);}
@@ -366,6 +364,8 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tTIME '(' ')' {create_function(fTIME);}
   | tPEEK2 '(' string_expression ')' {create_function(fPEEK2);}
   | tPEEK2 '(' string_expression ',' string_expression ')' {create_function(fPEEK3);}
+  | tEXTERNAL '(' call_list ')' {create_function(fEXTERNAL,NULL,NULL);}
+  | tEXTERNAL2 '(' call_list ')' {create_function(fEXTERNAL2,NULL,NULL);}
   | tTOKENALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cTOKENALT2,NULL,NULL);}
   | tTOKENALT '(' string_scalar_or_array ')' {add_command(cTOKENALT,NULL,NULL);}
   | tSPLITALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cSPLITALT2,NULL,NULL);}
