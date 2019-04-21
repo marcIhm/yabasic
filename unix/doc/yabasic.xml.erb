@@ -1676,8 +1676,8 @@ print acos(0.5),acos(cos(pi))
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-if (a and b) &hellip;
-while (a and b) &hellip;
+if a and b &hellip;
+while a and b &hellip;
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
@@ -2224,7 +2224,7 @@ for a=1 to 10
   print "Hi"
 next a
 
-while(1)
+while 1
   break
   print "Hi"
 wend
@@ -2232,7 +2232,7 @@ wend
 repeat
   break
   print "Hi"
-until(0)
+until 0
 
 switch 1
 case 1:break
@@ -3562,7 +3562,7 @@ end if
 	  <informalexample>
 	    <programlisting>
 a=open("foo.bar")
-while(not eof(a)) 
+while not eof(a)
   input #a,a$
   print a$
 end while
@@ -4400,7 +4400,7 @@ print hex$(foo)
 	  <informalexample>
 	    <programlisting>
 open 1,"foo"
-while(!eof(1))
+while !eof(1)
   print right$("0"+hex$(peek(1)),2)," ";
   i=i+1
   if (mod(i,10)=0) print
@@ -4649,7 +4649,7 @@ print "Press any key or press 'q' to stop."
 repeat
   a$=inkey$
   print a$
-until(a$="q")
+until a$="q"
           </programlisting>
 	    <para>This program simply returns the key pressed. You may use it, to learn, which strings are returned for the special keys on your keyboard (e.g. function-keys).</para>
 	  </informalexample>
@@ -4689,7 +4689,7 @@ input #1 a$
 	    <programlisting>
 input "Please enter the name of a file to read: " a$
 open 1,a$
-while(!eof(1))
+while !eof(1)
   input #1 b$
   print b$
 wend
@@ -4710,7 +4710,8 @@ read:
 a$
 open
 1,a$
-while(!eof(1))
+while
+!eof(1)
 input
 #1
 b$
@@ -5712,7 +5713,7 @@ next a
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-if (not a&lt;b) then &hellip;
+if not a&lt;b then &hellip;
 bad=!okay
 </synopsis>
 	</refsynopsisdiv>
@@ -6040,7 +6041,7 @@ open "foo.bar" for writing as #1
 print #1 "Hallo !"
 close #1
 if (not open(1,"foo.bar")) error "Could not open 'foo.bar' for reading"
-while(not eof(1)) 
+while not eof(1)
   line input #1 a$
   print a$
 wend
@@ -6145,8 +6146,8 @@ next a
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-if (a or b) &hellip;
-while (a or b) &hellip;
+if a or b &hellip;
+while a or b &hellip;
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
@@ -6448,7 +6449,7 @@ a=peek(#1)
 	    <programlisting>
 open "foo" for reading as #1
 open "bar" for writing as #2
-while(not eof(#1))
+while not eof(#1)
   poke #2,chr$(peek(#1));
 wend
           </programlisting>
@@ -6589,7 +6590,7 @@ print peek$("foo")
 	  <informalexample>
 	    <programlisting>
 print "You have supplied these arguments: "
-while(peek("argument"))
+while peek("argument")
   print peek("argument"),peek$("argument")
 wend
           </programlisting>
@@ -7294,7 +7295,7 @@ rem
 	  <synopsis>
 repeat 
   &hellip;
-until (&hellip;)
+until &hellip;
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
@@ -7313,7 +7314,7 @@ repeat
   print x
   print "Press any key for the next number, or 'q' to quit"
   if (inkey$="q") break
-until(x=10)
+until x=10
           </programlisting>
 	    <para>This program is pretty much useless, but self-explanatory.</para>
 	  </informalexample>
@@ -7605,7 +7606,7 @@ a$=rtrim$(b$)
 open 1,"foo"
 dim lines$(100)
 l=1
-while(not eof(1))
+while not eof(1)
   input #1 a$
   a$=rtrim$(a$)
   if (right$(line$,1)="\\") then
@@ -8878,12 +8879,12 @@ end sub
 	  <synopsis>
 repeat 
   &hellip;
-until (&hellip;)
+until &hellip;
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>until</function>-keyword ends a loop, which has been introduced by the <function><link linkend="ref_repeat">repeat</link></function>-keyword. <function>until</function> requires a condition in braces (or an expression, see <link linkend="ref_conditions_and_expressions">here</link> for details) as an argument; the loop will continue <emphasis>until</emphasis> this condition evaluates to true.</para>
+	  <para>The <function>until</function>-keyword ends a loop, which has been introduced by the <function><link linkend="ref_repeat">repeat</link></function>-keyword. <function>until</function> requires an expression (see <link linkend="ref_conditions_and_expressions">here</link> for details) as an argument; the loop will continue <emphasis>until</emphasis> this condition evaluates to true.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -8896,7 +8897,7 @@ repeat
   s=-(s+sig(s))
   c=c+1/s
   print c
-until(abs(l-c)&lt;0.000001)
+until abs(l-c)&lt;0.000001
           </programlisting>
 	    <para>This program calculates the sequence 1/1-1/2+1/3-1/4+1/5-1/6+1/7-1/8+ &hellip; ; please let me know, if you know against which value this converges.</para>
 	  </informalexample>
@@ -9063,7 +9064,7 @@ wait 4
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-while(a&lt;b)
+while a&lt;b
   &hellip;
 wend
 </synopsis>
@@ -9079,7 +9080,7 @@ wend
 	    <programlisting>
 line input "Please enter a sentence: " a$
 p=instr(a$,"e")
-while(p)
+while p
   mid$(a$,p,1)="E"
   p=instr(a$,"e")
 wend
@@ -9104,14 +9105,14 @@ print a$
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-while(&hellip;)
+while &hellip;
   &hellip;
 wend
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>while</function>-keyword starts a <function>while</function>-loop, i.e. a loop that is executed as long as the condition (which is specified in braces after the keyword <function>while</function>) evaluates to <constant>true</constant>.</para>
+	  <para>The <function>while</function>-keyword starts a <function>while</function>-loop, i.e. a loop that is executed as long as the condition (which is specified after the keyword <function>while</function>) evaluates to <constant>true</constant>.</para>
 	  <para>Note, that the body of such a <function>while</function>-loop will not be executed at all, if the condition following the <function>while</function>-keyword is not true initially.</para>
 	  <para>If you want to leave the loop prematurely, you may use the <function><link linkend="ref_break">break</link></function>-statement.</para>
 	</refsect1>
@@ -9120,7 +9121,7 @@ wend
 	  <informalexample>
 	    <programlisting>
 open #1,"foo"
-while(!eof(1))
+while !eof(1)
   line input #1 a$
   print a$
 wend
@@ -9887,7 +9888,7 @@ repeat
   input "Please enter the first number, to add " a
   input "Please enter the second number, to add " b
   print a+b
-until(a=0 and b=0)
+until a=0 and b=0
 </programlisting>
       <para>This program requests two numbers, which it than adds. The process is repeated until you enter zero (or nothing) twice.</para>
     </sect1>
