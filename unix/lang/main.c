@@ -996,7 +996,7 @@ initialize (void)
     stackroot = (struct stackentry *) my_malloc (sizeof (struct stackentry));
     stackroot->next = NULL;
     stackroot->prev = NULL;
-    stackhead = stackroot;	/* stack of double values */
+    stackhead = stackroot;	/* central processing stack */
 
     /* initialize command stack */
     /* create first: */
