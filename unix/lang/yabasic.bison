@@ -358,14 +358,13 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
+  | tEXTERNAL2 '(' call_list ')' {create_function(fEXTERNAL2,NULL,NULL);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
   | tTIME '(' ')' {create_function(fTIME);}
   | tPEEK2 '(' string_expression ')' {create_function(fPEEK2);}
   | tPEEK2 '(' string_expression ',' string_expression ')' {create_function(fPEEK3);}
-  | tEXTERNAL '(' call_list ')' {create_function(fEXTERNAL,NULL,NULL);}
-  | tEXTERNAL2 '(' call_list ')' {create_function(fEXTERNAL2,NULL,NULL);}
   | tTOKENALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cTOKENALT2,NULL,NULL);}
   | tTOKENALT '(' string_scalar_or_array ')' {add_command(cTOKENALT,NULL,NULL);}
   | tSPLITALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cSPLITALT2,NULL,NULL);}
@@ -457,6 +456,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tRINSTR '(' string_expression ',' string_expression ')' {create_function(fRINSTR);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
+  | tEXTERNAL '(' call_list ')' {create_function(fEXTERNAL,NULL,NULL);}
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}

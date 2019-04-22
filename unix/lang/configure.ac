@@ -31,25 +31,22 @@ AC_CHECK_FUNCS([strerror mkstemp])
 dnl  check for libffi, not required
 have_ffi=no
 AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
-if test "x${have_ffi}" = xyes; then
-    AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
-fi
-if test "x${have_ffi}" = xyes ; then
-    AC_DEFINE([HAVE_LIBFFI],,[libffi and headers available])
-else
-    AC_MSG_WARN([Did not find libffi library and header, calling foreign libraries will not be possible])
+AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
+if test "x${have_ffi}" = xno; then
+    AC_MSG_WARN([Did not find libffi library and/or header, calling foreign libraries will not be possible])
 fi
 
 dnl  check for dlopen, not required
 have_dlopen=no
 AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
-if test "x${have_dl}" = xyes; then
-    AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
+AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
+if test "x${have_dl}" = xno; then
+    AC_MSG_WARN([Did not find dlopen library and/or header, calling foreign libraries will not be possible])
 fi
-if test "x${have_dl}" = xyes ; then
-    AC_DEFINE([HAVE_DL],,[dlopen and headers available])
-else
-    AC_MSG_WARN([Did not find dlopen library and header, calling foreign libraries will not be possible])
+
+dnl  calling foreign libraries requires both dlopen and libffi
+if test "x${have_dl}" = xyes and "x${have_ffi}" = xyes; then
+    AC_DEFINE([HAVE_DL_FFI],,[libffi and dlopen available])
 fi
 
 dnl  check for curses

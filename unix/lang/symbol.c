@@ -28,7 +28,6 @@ extern int switch_id;
 /* ------------- local functions ---------------- */
 
 static struct symbol *create_symbol (int, char *);	/* create a new symbol */
-static void stackdesc (int, char *);	/* give back string describing stackentry */
 static void freesym (struct symbol *);	/* free contents of symbol */
 static int ind_to_off (int *, int *);	/* convert array of indices to single offset */
 static void off_to_ind (int, int *, int *);	/* convert a single offset to an array of indices */

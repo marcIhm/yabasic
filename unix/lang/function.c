@@ -788,6 +788,16 @@ function (struct command *current)	/* performs a function */
         pointer = do_system2 (str);
         result = stSTRING;
         break;
+    case fEXTERNAL:
+	value = 0.0
+	external (type, &value, &pointer);
+        result = stNUMBER;
+        break;
+    case fEXTERNAL2:
+	pointer = my_strdup ("")
+	external (type, &value, &pointer);
+        result = stSTRING;
+        break;
     case fPEEK:
         str = a1->pointer;
         value = peek (str);

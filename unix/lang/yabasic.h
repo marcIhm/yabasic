@@ -89,7 +89,10 @@ check your compiler settings
 #define OPEN_HAS_MODE 2
 #define OPEN_PRINTER 8
 #define STDIO_STREAM 1234
+#include <ffi.h>
+
 /* -------- variables needed in all files and defined in ... -------- */
+
 /* main.c */
 extern struct command *current;	/* currently executed command */
 extern struct command *cmdroot;	/* first command */
@@ -187,7 +190,6 @@ extern BOOL Commandline;	/* true if launched from command line */
 #else
 extern int backpid;		/* pid of process waiting for redraw events */
 #endif
-
 
 /* function.c */
 extern struct command *datapointer;	/* current location for read-command */
@@ -562,6 +564,9 @@ LRESULT CALLBACK mywindowproc (HWND, unsigned, UINT, DWORD);
 void calc_psscale (void);	/* calculate scale-factor for postscript */
 #endif
 
+/* external.c */
+void external (int,double *,char **);  /* load and execute function from external library */
+
 /* function.c */
 void create_exception (int);	/* create command 'exception' */
 void exception (struct command *);	/* change handling of exceptions */
@@ -639,6 +644,7 @@ void dump_sym ();		/* dump the stack of lists of symbols */
 void dump_sub (int);		/* dump the stack of subroutine calls */
 void function_or_array (struct command *);	/* decide whether to do perform function or array */
 int count_args (int);	/* count number of arguments on stack */
+void stackdesc (int, char *);	/* give back string describing stackentry */
 
 
 /* flow.c */
