@@ -89,7 +89,6 @@ check your compiler settings
 #define OPEN_HAS_MODE 2
 #define OPEN_PRINTER 8
 #define STDIO_STREAM 1234
-#include <ffi.h>
 
 /* -------- variables needed in all files and defined in ... -------- */
 

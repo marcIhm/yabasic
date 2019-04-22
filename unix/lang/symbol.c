@@ -414,7 +414,7 @@ pop (int etype)
 }
 
 
-static void
+void
 stackdesc (int type, char *desc)	/* give back string describing stackentry */
 {
     switch (type) {

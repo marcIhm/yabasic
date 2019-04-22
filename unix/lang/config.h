@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Fri Apr 19 15:51:39 UTC 2019"
+#define BUILD_TIME "Mon Apr 22 11:49:47 UTC 2019"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -28,17 +28,17 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
 
+/* libffi and dlopen available */
+#define HAVE_DL_FFI 1
+
 /* Define to 1 if you have the <ffi.h> header file. */
-/* #undef HAVE_FFI_H */
+#define HAVE_FFI_H 1
 
 /* Define to 1 if you have the `getnstr' function. */
 #define HAVE_GETNSTR 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
-
-/* libffi and headers available */
-/* #undef HAVE_LIBFFI */
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #define HAVE_MALLOC_H 1

@@ -16,39 +16,50 @@
 #ifndef YABASIC_INCLUDED
 #include "yabasic.h"		/* all prototypes and structures */
 #endif
+
+/* ------------- define a stub only, if feature is not available ---------------- */
+
+#if defined(UNIX) && !defined(HAVE_DL_FFI)
+void
+external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+{
+    error(sERROR, "this build of yabasic does not support calling external libraries");
+    return;
+}
+#else
+
 #define NUM_FFI_TYPES 25
 
+#include <ffi.h>
+#include <stdint.h>
 
 /* ------------- types ---------------- */
 union FFI_VAL {
-    void ffivoid;
-    uint8 ffiuint8;
-    sint8 ffisint8;
-    uint16 ffiuint16;
-    sint16 ffisint16;
-    uint32 ffiuint32;
-    sint32 ffisint32;
-    uint64 ffiuint64;
-    sint64 ffisint64;
-    float ffifloat;
-    double ffidouble;
-    uchar ffiuchar;
-    schar ffischar;
+    uint8_t ffiuint8;
+    int8_t ffisint8;
+    uint16_t ffiuint16;
+    int16_t ffisint16;
+    uint32_t ffiuint32;
+    int32_t ffisint32;
+    uint64_t ffiuint64;
+    int64_t ffisint64;
+    float_t ffifloat;
+    double_t ffidouble;
+    char ffischar;
     ushort ffiushort;
-    sshort ffisshort;
+    short ffisshort;
     uint ffiuint;
-    sint ffisint;
+    int ffisint;
     ulong ffiulong;
-    slong ffislong;
-    longdouble ffilongdouble;
-    pointer ffipointer;
+    long ffislong;
+    void *ffipointer;
 };
 
 /* ------------- local functions ---------------- */
 static int check_ffi_type (char *, ffi_type *, int, int, int);
 static int parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
-static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double) /* cast and assign double value from yabasic into given (numeric) ffi_type */
-static double cast_from_ffi_type (union FFI_VAL *, ffi_type) /* cast and return value from ffi_type to double */
+static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
+static double cast_from_ffi_type (union FFI_VAL *, ffi_type); /* cast and return value from ffi_type to double */
 
 /* ------------- global variables ---------------- */
 
@@ -68,7 +79,7 @@ ffi_type rtype; /* expected return type of function */
 
 /* ------------- subroutines ---------------- */
 
-static void
+void
 external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
     if (!parse_stack) return;
@@ -83,11 +94,6 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
     int i,j;
     int opt_error = TRUE;
     
-#if defined(UNIX) && !defined(HAVE_DL_FFI)
-    error(sERROR, "this build of yabasic does not support calling external libraries");
-    return;
-#endif
-
     /* go through list of arguments multiple times, check types and transfer them to libffi structures */
     st = stackhead;
     do {
@@ -208,3 +214,5 @@ static double
 cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
 {
 }
+
+#endif /* HAVE_DL_FFI */

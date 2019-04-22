@@ -27,6 +27,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* libffi and dlopen available */
+#undef HAVE_DL_FFI
+
 /* Define to 1 if you have the <ffi.h> header file. */
 #undef HAVE_FFI_H
 
@@ -35,9 +38,6 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* libffi and headers available */
-#undef HAVE_LIBFFI
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H

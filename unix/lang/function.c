@@ -789,12 +789,12 @@ function (struct command *current)	/* performs a function */
         result = stSTRING;
         break;
     case fEXTERNAL:
-	value = 0.0
+	value = 0.0;
 	external (type, &value, &pointer);
         result = stNUMBER;
         break;
     case fEXTERNAL2:
-	pointer = my_strdup ("")
+	pointer = my_strdup ("");
 	external (type, &value, &pointer);
         result = stSTRING;
         break;

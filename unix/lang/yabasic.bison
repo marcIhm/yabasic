@@ -358,7 +358,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
-  | tEXTERNAL2 '(' call_list ')' {create_function(fEXTERNAL2,NULL,NULL);}
+  | tEXTERNAL2 '(' call_list ')' {create_function(fEXTERNAL2);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -456,7 +456,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tRINSTR '(' string_expression ',' string_expression ')' {create_function(fRINSTR);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
-  | tEXTERNAL '(' call_list ')' {create_function(fEXTERNAL,NULL,NULL);}
+  | tEXTERNAL '(' call_list ')' {create_function(fEXTERNAL);}
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}

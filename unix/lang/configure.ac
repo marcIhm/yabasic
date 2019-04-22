@@ -45,8 +45,9 @@ if test "x${have_dl}" = xno; then
 fi
 
 dnl  calling foreign libraries requires both dlopen and libffi
-if test "x${have_dl}" = xyes and "x${have_ffi}" = xyes; then
-    AC_DEFINE([HAVE_DL_FFI],,[libffi and dlopen available])
+if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes; then
+    AC_MSG_NOTICE([support for calling foreign libraries will be available])
+    AC_DEFINE([HAVE_DL_FFI],1,[libffi and dlopen available])
 fi
 
 dnl  check for curses
