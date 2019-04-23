@@ -95,7 +95,7 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
     last_external_error_text[0] = '\0';
     last_external_okay = 0;
     
-    if (!parse_stack) {
+    if (!parse_stack ()) {
 	cleanup ();
 	return;
     }

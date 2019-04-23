@@ -101,7 +101,8 @@ extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
-extern char *explanation[];	/* explanations of commands */
+extern char *cexplanation[];	/* explanations of commands */
+extern char *fexplanation[];	/* explanations of functions */
 extern char **yabargv;		/* arguments for yabasic */
 extern int yabargc;		/* number of arguments in yabargv */
 extern time_t compilation_start, compilation_end, execution_end;
@@ -272,6 +273,7 @@ enum stream_modes {
 
 enum functions {
     /* functions in yabasic (sorted by number of arguments) */
+    fFIRST_FUNCTION,		/* no function, just marks start of list */
     fRAN2, fDATE, fTIME,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
@@ -286,7 +288,8 @@ enum functions {
     fTWOARGS,
     fMID, fINSTR2, fRINSTR2, fSTR3,
     fTHREEARGS,
-    fGETBIT, fGETCHAR
+    fGETBIT, fGETCHAR,
+    fLAST_FUNCTION,		/* no function, just marks end of list */
 };
 
 enum arraymode {

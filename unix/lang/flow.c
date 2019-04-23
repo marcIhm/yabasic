@@ -249,7 +249,7 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         cmd->pointer = cmd->symname;
         cmd->symname = NULL;
 	if (severity_threshold <= sDEBUG) {
-	    sprintf(errorstring, "converting '%s' to '%s'",explanation[cFUNCTION_OR_ARRAY],explanation[cFUNCTION]);
+	    sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cFUNCTION]);
 	    error(sDEBUG, errorstring);
 	}
     } else {
@@ -261,7 +261,7 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         cmd->type = cDOARRAY;
         cmd->args = -1;
 	if ( severity_threshold <= sDEBUG) {
-	    sprintf(errorstring, "converting '%s' to '%s'",explanation[cFUNCTION_OR_ARRAY],explanation[cDOARRAY]);
+	    sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cDOARRAY]);
 	    error(sDEBUG, errorstring);
 	}
     }
@@ -698,7 +698,7 @@ pop_multi (struct command *cmd) /* pop and discard multiple values from stack */
 void load_pop_multi (struct command *cmd, int to_pop) /* put correct value into preceding pop_multi-statement */
 {
     if (cmd->prev->type != cPOP_MULTI) {
-	sprintf(string, "while trying to load pop_multi; preceding command is rather '%s'", explanation[cmd->prev->type]);
+	sprintf(string, "while trying to load pop_multi; preceding command is rather '%s'", cexplanation[cmd->prev->type]);
 	error(sFATAL, string);
     }
     cmd->prev->tag = to_pop;
@@ -764,7 +764,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "converting '%s' to '%s'",explanation[cBREAK_MULTI],explanation[cQGOTO]);
+	sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cBREAK_MULTI],cexplanation[cQGOTO]);
         error (sDEBUG, errorstring);
     }
     load_pop_multi(cmd, to_pop);
@@ -803,7 +803,7 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf( errorstring, "converting '%s' to '%s'",explanation[cCONTINUE],explanation[cQGOTO]);
+	sprintf( errorstring, "converting '%s' to '%s'",cexplanation[cCONTINUE],cexplanation[cQGOTO]);
 	error (sDEBUG, errorstring);
     }
     load_pop_multi(cmd, to_pop);
@@ -841,7 +841,7 @@ next_case (struct command *cmd)	/* find next_case_here statement */
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring,"converting '%s' to '%s'",explanation[cNEXT_CASE],explanation[cQGOTO]);
+	sprintf(errorstring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
         error (sDEBUG, errorstring);
     }
     cmd->jump = current = curr;

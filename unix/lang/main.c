@@ -85,7 +85,8 @@ int hold_docu = FALSE;		/* TRUE, if docu should be printed in portions */
 #ifdef WINDOWS
 DWORD InitialConsole;		/* initial state of console window */
 #endif
-char *explanation[cLAST_COMMAND - cFIRST_COMMAND + 1];	/* explanations of commands */
+char *cexplanation[cLAST_COMMAND - cFIRST_COMMAND + 1];	        /* explanations of commands */
+char *fexplanation[fLAST_FUNCTION - fFIRST_FUNCTION + 1];	/* explanations of functions */
 char *explicit = NULL;		/* yabasic commands given on the command line */
 char **yabargv;			/* arguments for yabasic */
 int yabargc;			/* number of arguments in yabargv */
@@ -318,10 +319,9 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	sprintf (dest, "%s Illegal %d %n", head, type, &n);
     } else {
 	if (symname)
-	    sprintf (dest, "%s %s (%s) %n", head, explanation[type],
-		     symname, &n);
+	    sprintf (dest, "%s %s (%s) %n", head, cexplanation[type], symname, &n);
 	else {
-	    sprintf (dest, "%s %s %n", head, explanation[type], &n);
+	    sprintf (dest, "%s %s %n", head, cexplanation[type], &n);
 	}
 	if (diag && *diag) {
 	    dest += n;
@@ -486,7 +486,7 @@ dump_commands (char *dumpfilename)
 
     for (cmd=cmdroot; cmd; cmd=cmd->next) {
         int len;
-        len=strlen(explanation[cmd->type]);
+        len=strlen(cexplanation[cmd->type]);
         if (len>max_explanation_length) {
             max_explanation_length=len;
         }
@@ -502,7 +502,7 @@ dump_commands (char *dumpfilename)
 
     for (cmd=cmdroot; cmd; cmd=cmd->next) {
         sprintf(string,"");
-        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,explanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
+        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,cexplanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
         if (cmd->type==cEND) {
             break;
         }
@@ -1054,163 +1054,249 @@ initialize (void)
     printerfile = NULL;		/* no ps-file yet */
 #endif
 
-    /* array with explanation */
+    /* array with explanation of commands */
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
-        explanation[i] = NULL;
+        cexplanation[i] = NULL;
     }
-    explanation[cFIRST_COMMAND] = "FIRST_COMMAND";
-    explanation[cFINDNOP] = "FINDNOP";
-    explanation[cEXCEPTION] = "EXCEPTION";
-    explanation[cLABEL] = "LABEL";
-    explanation[cLINK_SUBR] = "cLINK_SUBR";
-    explanation[cTOKEN] = "TOKEN";
-    explanation[cTOKEN2] = "TOKEN2";
-    explanation[cTOKENALT] = "TOKENALT";
-    explanation[cTOKENALT2] = "TOKENALT2";
-    explanation[cSPLIT] = "SPLIT";
-    explanation[cSPLIT2] = "SPLIT2";
-    explanation[cSPLITALT] = "SPLITALT";
-    explanation[cSPLITALT2] = "SPLITALT2";
-    explanation[cGOTO] = "GOTO";
-    explanation[cQGOTO] = "QGOTO";
-    explanation[cGOSUB] = "GOSUB";
-    explanation[cQGOSUB] = "QGOSUB";
-    explanation[cCALL] = "CALL";
-    explanation[cQCALL] = "QCALL";
-    explanation[cRETURN_FROM_GOSUB] = "RETURN_FROM_GOSUB";
-    explanation[cRETURN_FROM_CALL] = "RETURN_FROM_CALL";
-    explanation[cCHECK_RETURN_VALUE] = "CHECK_RETURN_VALUE";
-    explanation[cSWAP] = "SWAP";
-    explanation[cDECIDE] = "DECIDE";
-    explanation[cANDSHORT] = "ANDSHORT";
-    explanation[cORSHORT] = "ORSHORT";
-    explanation[cSKIPPER] = "SKIPPER";
-    explanation[cSKIPONCE] = "SKIPONCE";
-    explanation[cRESETSKIPONCE] = "RESETSKIPONCE";
-    explanation[cNOP] = "NOP";
-    explanation[cEND_FUNCTION] = "END_FUNCTION";
-    explanation[cDIM] = "DIM";
-    explanation[cFUNCTION] = "FUNCTION";
-    explanation[cDOARRAY] = "DOARRAY";
-    explanation[cDBLADD] = "DBLADD";
-    explanation[cDBLMIN] = "DBLMIN";
-    explanation[cDBLMUL] = "DBLMUL";
-    explanation[cDBLDIV] = "DBLDIV";
-    explanation[cDBLPOW] = "DBLPOW";
-    explanation[cNEGATE] = "NEGATE";
-    explanation[cPUSHDBLSYM] = "PUSHDBLSYM";
-    explanation[cREQUIRE] = "REQUIRE";
-    explanation[cCLEARREFS] = "CLEARREFS";
-    explanation[cPUSHSYMLIST] = "PUSHSYMLIST";
-    explanation[cPOPSYMLIST] = "POPSYMLIST";
-    explanation[cMAKELOCAL] = "MAKELOCAL";
-    explanation[cCOUNT_PARAMS] = "COUNT_PARAMS";
-    explanation[cMAKESTATIC] = "MAKESTATIC";
-    explanation[cARRAYLINK] = "ARRAYLINK";
-    explanation[cPUSHARRAYREF] = "PUSHARRAYREF";
-    explanation[cARDIM] = "ARRAYDIMENSION";
-    explanation[cARSIZE] = "ARRAYSIZE";
-    explanation[cUSER_FUNCTION] = "USER_FUNCTION";
-    explanation[cFUNCTION_OR_ARRAY] = "FUNCTION_OR_ARRAY";
-    explanation[cSTRINGFUNCTION_OR_ARRAY] = "STRINGFUNCTION_OR_ARRAY";
-    explanation[cPUSHFREE] = "PUSHFREE";
-    explanation[cPOPDBLSYM] = "POPDBLSYM";
-    explanation[cPOP] = "POP";
-    explanation[cPUSHDBL] = "PUSHDBL";
-    explanation[cPOKE] = "POKE";
-    explanation[cPOKEFILE] = "POKEFILE";
-    explanation[cAND] = "AND";
-    explanation[cOR] = "OR";
-    explanation[cNOT] = "NOT";
-    explanation[cLT] = "LT";
-    explanation[cGT] = "GT";
-    explanation[cLE] = "LE";
-    explanation[cGE] = "GE";
-    explanation[cEQ] = "EQ";
-    explanation[cNE] = "NE";
-    explanation[cSTREQ] = "STREQ";
-    explanation[cSTRNE] = "STRNE";
-    explanation[cSTRLT] = "STRLT";
-    explanation[cSTRLE] = "STRLE";
-    explanation[cSTRGT] = "STRGT";
-    explanation[cSTRGE] = "STRGE";
-    explanation[cPUSHSTRSYM] = "PUSHSTRSYM";
-    explanation[cPOPSTRSYM] = "POPSTRSYM";
-    explanation[cPUSHSTR] = "PUSHSTR";
-    explanation[cCONCAT] = "CONCAT";
-    explanation[cPUSHSTRPTR] = "PUSHSTRPTR";
-    explanation[cCHANGESTRING] = "CHANGESTRING";
-    explanation[cGLOB] = "GLOB";
-    explanation[cPRINT] = "PRINT";
-    explanation[cREAD] = "READ";
-    explanation[cRESTORE] = "RESTORE";
-    explanation[cQRESTORE] = "QRESTORE";
-    explanation[cREADDATA] = "READDATA";
-    explanation[cONESTRING] = "ONESTRING";
-    explanation[cDATA] = "DATA";
-    explanation[cOPEN] = "OPEN";
-    explanation[cCHECKOPEN] = "CHECKOPEN";
-    explanation[cCHECKSEEK] = "CHECKSEEK";
-    explanation[cCOMPILE] = "COMPILE";
-    explanation[cEXECUTE] = "EXECUTE";
-    explanation[cEXECUTE2] = "EXECUTE$";
-    explanation[cCLOSE] = "CLOSE";
-    explanation[cSEEK] = "SEEK";
-    explanation[cSEEK2] = "SEEK2";
-    explanation[cPUSHSTREAM] = "cPUSHSTREAM";
-    explanation[cPOPSTREAM] = "cPOPSTREAM";
-    explanation[cWAIT] = "WAIT";
-    explanation[cBELL] = "BELL";
-    explanation[cMOVE] = "MOVE";
-    explanation[cMOVEORIGIN] = "MOVEORIGIN";
-    explanation[cRECT] = "RECT";
-    explanation[cCLEARSCR] = "CLEARSCR";
-    explanation[cOPENWIN] = "OPENWIN";
-    explanation[cDOT] = "DOT";
-    explanation[cPUTBIT] = "PUTBIT";
-    explanation[cPUTCHAR] = "PUTCHAR";
-    explanation[cLINE] = "LINE";
-    explanation[cGCOLOUR] = "GCOLOUR";
-    explanation[cGCOLOUR2] = "GCOLOUR2";
-    explanation[cGBACKCOLOUR] = "GBACKCOLOUR";
-    explanation[cGBACKCOLOUR2] = "GBACKCOLOUR2";
-    explanation[cCIRCLE] = "CIRCLE";
-    explanation[cTRIANGLE] = "TRIANGLE";
-    explanation[cTEXT1] = "TEXT1";
-    explanation[cTEXT2] = "TEXT2";
-    explanation[cTEXT3] = "TEXT3";
-    explanation[cCLOSEWIN] = "CLOSEWIN";
-    explanation[cCLEARWIN] = "CLEARWIN";
-    explanation[cOPENPRN] = "OPENPRN";
-    explanation[cCLOSEPRN] = "CLOSEPRN";
-    explanation[cTESTEOF] = "TESTEOF";
-    explanation[cCOLOUR] = "COLOUR";
-    explanation[cDUPLICATE] = "DUPLICATE";
-    explanation[cDOCU] = "DOCU";
-    explanation[cEND] = "END";
-    explanation[cEXIT] = "EXIT";
-    explanation[cBIND] = "BIND";
-    explanation[cERROR] = "ERROR";
-    explanation[cSTARTFOR] = "STARTFOR";
-    explanation[cFORCHECK] = "FORCHECK";
-    explanation[cFORINCREMENT] = "FORINCREMENT";
-    explanation[cBEGIN_SWITCH_MARK] = "BEGIN_SWITCH_MARK";
-    explanation[cEND_SWITCH_MARK] = "END_SWITCH_MARK";
-    explanation[cBEGIN_LOOP_MARK] = "BEGIN_LOOP_MARK";
-    explanation[cEND_LOOP_MARK] = "END_LOOP_MARK";
-    explanation[cSWITCH_COMPARE] = "SWITCH_COMPARE";
-    explanation[cNEXT_CASE] = "NEXT_CASE";
-    explanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
-    explanation[cBREAK_MULTI] = "BREAK_MULTI";
-    explanation[cCONTINUE] = "CONTINUE";
-    explanation[cBREAK_HERE] = "BREAK_HERE";
-    explanation[cCONTINUE_HERE] = "CONTINUE_HERE";
-    explanation[cPOP_MULTI] = "POP_MULTI";
-    explanation[cCHKPROMPT] = "CHKPROMPT";
-    explanation[cLAST_COMMAND] = "???";
+    cexplanation[cFIRST_COMMAND] = "FIRST_COMMAND";
+    cexplanation[cFINDNOP] = "FINDNOP";
+    cexplanation[cEXCEPTION] = "EXCEPTION";
+    cexplanation[cLABEL] = "LABEL";
+    cexplanation[cLINK_SUBR] = "cLINK_SUBR";
+    cexplanation[cTOKEN] = "TOKEN";
+    cexplanation[cTOKEN2] = "TOKEN2";
+    cexplanation[cTOKENALT] = "TOKENALT";
+    cexplanation[cTOKENALT2] = "TOKENALT2";
+    cexplanation[cSPLIT] = "SPLIT";
+    cexplanation[cSPLIT2] = "SPLIT2";
+    cexplanation[cSPLITALT] = "SPLITALT";
+    cexplanation[cSPLITALT2] = "SPLITALT2";
+    cexplanation[cGOTO] = "GOTO";
+    cexplanation[cQGOTO] = "QGOTO";
+    cexplanation[cGOSUB] = "GOSUB";
+    cexplanation[cQGOSUB] = "QGOSUB";
+    cexplanation[cCALL] = "CALL";
+    cexplanation[cQCALL] = "QCALL";
+    cexplanation[cRETURN_FROM_GOSUB] = "RETURN_FROM_GOSUB";
+    cexplanation[cRETURN_FROM_CALL] = "RETURN_FROM_CALL";
+    cexplanation[cCHECK_RETURN_VALUE] = "CHECK_RETURN_VALUE";
+    cexplanation[cSWAP] = "SWAP";
+    cexplanation[cDECIDE] = "DECIDE";
+    cexplanation[cANDSHORT] = "ANDSHORT";
+    cexplanation[cORSHORT] = "ORSHORT";
+    cexplanation[cSKIPPER] = "SKIPPER";
+    cexplanation[cSKIPONCE] = "SKIPONCE";
+    cexplanation[cRESETSKIPONCE] = "RESETSKIPONCE";
+    cexplanation[cNOP] = "NOP";
+    cexplanation[cEND_FUNCTION] = "END_FUNCTION";
+    cexplanation[cDIM] = "DIM";
+    cexplanation[cFUNCTION] = "FUNCTION";
+    cexplanation[cDOARRAY] = "DOARRAY";
+    cexplanation[cDBLADD] = "DBLADD";
+    cexplanation[cDBLMIN] = "DBLMIN";
+    cexplanation[cDBLMUL] = "DBLMUL";
+    cexplanation[cDBLDIV] = "DBLDIV";
+    cexplanation[cDBLPOW] = "DBLPOW";
+    cexplanation[cNEGATE] = "NEGATE";
+    cexplanation[cPUSHDBLSYM] = "PUSHDBLSYM";
+    cexplanation[cREQUIRE] = "REQUIRE";
+    cexplanation[cCLEARREFS] = "CLEARREFS";
+    cexplanation[cPUSHSYMLIST] = "PUSHSYMLIST";
+    cexplanation[cPOPSYMLIST] = "POPSYMLIST";
+    cexplanation[cMAKELOCAL] = "MAKELOCAL";
+    cexplanation[cCOUNT_PARAMS] = "COUNT_PARAMS";
+    cexplanation[cMAKESTATIC] = "MAKESTATIC";
+    cexplanation[cARRAYLINK] = "ARRAYLINK";
+    cexplanation[cPUSHARRAYREF] = "PUSHARRAYREF";
+    cexplanation[cARDIM] = "ARRAYDIMENSION";
+    cexplanation[cARSIZE] = "ARRAYSIZE";
+    cexplanation[cUSER_FUNCTION] = "USER_FUNCTION";
+    cexplanation[cFUNCTION_OR_ARRAY] = "FUNCTION_OR_ARRAY";
+    cexplanation[cSTRINGFUNCTION_OR_ARRAY] = "STRINGFUNCTION_OR_ARRAY";
+    cexplanation[cPUSHFREE] = "PUSHFREE";
+    cexplanation[cPOPDBLSYM] = "POPDBLSYM";
+    cexplanation[cPOP] = "POP";
+    cexplanation[cPUSHDBL] = "PUSHDBL";
+    cexplanation[cPOKE] = "POKE";
+    cexplanation[cPOKEFILE] = "POKEFILE";
+    cexplanation[cAND] = "AND";
+    cexplanation[cOR] = "OR";
+    cexplanation[cNOT] = "NOT";
+    cexplanation[cLT] = "LT";
+    cexplanation[cGT] = "GT";
+    cexplanation[cLE] = "LE";
+    cexplanation[cGE] = "GE";
+    cexplanation[cEQ] = "EQ";
+    cexplanation[cNE] = "NE";
+    cexplanation[cSTREQ] = "STREQ";
+    cexplanation[cSTRNE] = "STRNE";
+    cexplanation[cSTRLT] = "STRLT";
+    cexplanation[cSTRLE] = "STRLE";
+    cexplanation[cSTRGT] = "STRGT";
+    cexplanation[cSTRGE] = "STRGE";
+    cexplanation[cPUSHSTRSYM] = "PUSHSTRSYM";
+    cexplanation[cPOPSTRSYM] = "POPSTRSYM";
+    cexplanation[cPUSHSTR] = "PUSHSTR";
+    cexplanation[cCONCAT] = "CONCAT";
+    cexplanation[cPUSHSTRPTR] = "PUSHSTRPTR";
+    cexplanation[cCHANGESTRING] = "CHANGESTRING";
+    cexplanation[cGLOB] = "GLOB";
+    cexplanation[cPRINT] = "PRINT";
+    cexplanation[cREAD] = "READ";
+    cexplanation[cRESTORE] = "RESTORE";
+    cexplanation[cQRESTORE] = "QRESTORE";
+    cexplanation[cREADDATA] = "READDATA";
+    cexplanation[cONESTRING] = "ONESTRING";
+    cexplanation[cDATA] = "DATA";
+    cexplanation[cOPEN] = "OPEN";
+    cexplanation[cCHECKOPEN] = "CHECKOPEN";
+    cexplanation[cCHECKSEEK] = "CHECKSEEK";
+    cexplanation[cCOMPILE] = "COMPILE";
+    cexplanation[cEXECUTE] = "EXECUTE";
+    cexplanation[cEXECUTE2] = "EXECUTE$";
+    cexplanation[cCLOSE] = "CLOSE";
+    cexplanation[cSEEK] = "SEEK";
+    cexplanation[cSEEK2] = "SEEK2";
+    cexplanation[cPUSHSTREAM] = "cPUSHSTREAM";
+    cexplanation[cPOPSTREAM] = "cPOPSTREAM";
+    cexplanation[cWAIT] = "WAIT";
+    cexplanation[cBELL] = "BELL";
+    cexplanation[cMOVE] = "MOVE";
+    cexplanation[cMOVEORIGIN] = "MOVEORIGIN";
+    cexplanation[cRECT] = "RECT";
+    cexplanation[cCLEARSCR] = "CLEARSCR";
+    cexplanation[cOPENWIN] = "OPENWIN";
+    cexplanation[cDOT] = "DOT";
+    cexplanation[cPUTBIT] = "PUTBIT";
+    cexplanation[cPUTCHAR] = "PUTCHAR";
+    cexplanation[cLINE] = "LINE";
+    cexplanation[cGCOLOUR] = "GCOLOUR";
+    cexplanation[cGCOLOUR2] = "GCOLOUR2";
+    cexplanation[cGBACKCOLOUR] = "GBACKCOLOUR";
+    cexplanation[cGBACKCOLOUR2] = "GBACKCOLOUR2";
+    cexplanation[cCIRCLE] = "CIRCLE";
+    cexplanation[cTRIANGLE] = "TRIANGLE";
+    cexplanation[cTEXT1] = "TEXT1";
+    cexplanation[cTEXT2] = "TEXT2";
+    cexplanation[cTEXT3] = "TEXT3";
+    cexplanation[cCLOSEWIN] = "CLOSEWIN";
+    cexplanation[cCLEARWIN] = "CLEARWIN";
+    cexplanation[cOPENPRN] = "OPENPRN";
+    cexplanation[cCLOSEPRN] = "CLOSEPRN";
+    cexplanation[cTESTEOF] = "TESTEOF";
+    cexplanation[cCOLOUR] = "COLOUR";
+    cexplanation[cDUPLICATE] = "DUPLICATE";
+    cexplanation[cDOCU] = "DOCU";
+    cexplanation[cEND] = "END";
+    cexplanation[cEXIT] = "EXIT";
+    cexplanation[cBIND] = "BIND";
+    cexplanation[cERROR] = "ERROR";
+    cexplanation[cSTARTFOR] = "STARTFOR";
+    cexplanation[cFORCHECK] = "FORCHECK";
+    cexplanation[cFORINCREMENT] = "FORINCREMENT";
+    cexplanation[cBEGIN_SWITCH_MARK] = "BEGIN_SWITCH_MARK";
+    cexplanation[cEND_SWITCH_MARK] = "END_SWITCH_MARK";
+    cexplanation[cBEGIN_LOOP_MARK] = "BEGIN_LOOP_MARK";
+    cexplanation[cEND_LOOP_MARK] = "END_LOOP_MARK";
+    cexplanation[cSWITCH_COMPARE] = "SWITCH_COMPARE";
+    cexplanation[cNEXT_CASE] = "NEXT_CASE";
+    cexplanation[cNEXT_CASE_HERE] = "NEXT_CASE_HERE";
+    cexplanation[cBREAK_MULTI] = "BREAK_MULTI";
+    cexplanation[cCONTINUE] = "CONTINUE";
+    cexplanation[cBREAK_HERE] = "BREAK_HERE";
+    cexplanation[cCONTINUE_HERE] = "CONTINUE_HERE";
+    cexplanation[cPOP_MULTI] = "POP_MULTI";
+    cexplanation[cCHKPROMPT] = "CHKPROMPT";
+    cexplanation[cLAST_COMMAND] = "LAST_COMMAND";
     for (i = cFIRST_COMMAND; i <= cLAST_COMMAND; i++) {
-	if (!explanation[i]) {
-	    sprintf (string, "command %d has no description (command after %s)", i, explanation[i-1]);
+	if (!cexplanation[i]) {
+	    sprintf (string, "command %d has no description (command after %s)", i, cexplanation[i-1]);
+	    error (sERROR,string);
+	}
+    }
+
+    /* array with explanation of functions */
+    for (i = fFIRST_FUNCTION; i <= fLAST_FUNCTION; i++) {
+        fexplanation[i] = NULL;
+    }
+    fexplanation[fFIRST_FUNCTION] = "FIRST_FUNCTION";
+    fexplanation[fRAN2] = "RAN2";
+    fexplanation[fDATE] = "DATE";
+    fexplanation[fTIME] = "TIME";
+    fexplanation[fZEROARGS] = "ZEROARGS";
+    fexplanation[fINKEY] = "INKEY";
+    fexplanation[fMOUSEX] = "MOUSEX";
+    fexplanation[fMOUSEY] = "MOUSEY";
+    fexplanation[fMOUSEB] = "MOUSEB";
+    fexplanation[fMOUSEMOD] = "MOUSEMOD";
+    fexplanation[fSIN] = "SIN";
+    fexplanation[fASIN] = "ASIN";
+    fexplanation[fCOS] = "COS";
+    fexplanation[fACOS] = "ACOS";
+    fexplanation[fTAN] = "TAN";
+    fexplanation[fATAN] = "ATAN";
+    fexplanation[fSYSTEM] = "SYSTEM";
+    fexplanation[fSYSTEM2] = "SYSTEM2";
+    fexplanation[fPEEK] = "PEEK";
+    fexplanation[fPEEK2] = "PEEK2";
+    fexplanation[fPEEK4] = "PEEK4";
+    fexplanation[fEXTERNAL] = "EXTERNAL";
+    fexplanation[fEXTERNAL2] = "EXTERNAL2";
+    fexplanation[fTELL] = "TELL";
+    fexplanation[fEXP] = "EXP";
+    fexplanation[fLOG] = "LOG";
+    fexplanation[fLEN] = "LEN";
+    fexplanation[fSTR] = "STR";
+    fexplanation[fSQRT] = "SQRT";
+    fexplanation[fSQR] = "SQR";
+    fexplanation[fFRAC] = "FRAC";
+    fexplanation[fABS] = "ABS";
+    fexplanation[fSIG] = "SIG";
+    fexplanation[fRAN] = "RAN";
+    fexplanation[fINT] = "INT";
+    fexplanation[fCEIL] = "CEIL";
+    fexplanation[fFLOOR] = "FLOOR";
+    fexplanation[fVAL] = "VAL";
+    fexplanation[fASC] = "ASC";
+    fexplanation[fHEX] = "HEX";
+    fexplanation[fBIN] = "BIN";
+    fexplanation[fDEC] = "DEC";
+    fexplanation[fUPPER] = "UPPER";
+    fexplanation[fLOWER] = "LOWER";
+    fexplanation[fCHOMP] = "CHOMP";
+    fexplanation[fLTRIM] = "LTRIM";
+    fexplanation[fRTRIM] = "RTRIM";
+    fexplanation[fTRIM] = "TRIM";
+    fexplanation[fCHR] = "CHR";
+    fexplanation[fONEARGS] = "ONEARGS";
+    fexplanation[fDEC2] = "DEC2";
+    fexplanation[fATAN2] = "ATAN2";
+    fexplanation[fLEFT] = "LEFT";
+    fexplanation[fAND] = "AND";
+    fexplanation[fOR] = "OR";
+    fexplanation[fEOR] = "EOR";
+    fexplanation[fLOG2] = "LOG2";
+    fexplanation[fRIGHT] = "RIGHT";
+    fexplanation[fINSTR] = "INSTR";
+    fexplanation[fRINSTR] = "RINSTR";
+    fexplanation[fSTR2] = "STR2";
+    fexplanation[fMOD] = "MOD";
+    fexplanation[fMIN] = "MIN";
+    fexplanation[fMAX] = "MAX";
+    fexplanation[fPEEK3] = "PEEK3";
+    fexplanation[fMID2] = "MID2";
+    fexplanation[fTWOARGS] = "TWOARGS";
+    fexplanation[fMID] = "MID";
+    fexplanation[fINSTR2] = "INSTR2";
+    fexplanation[fRINSTR2] = "RINSTR2";
+    fexplanation[fSTR3] = "STR3";
+    fexplanation[fTHREEARGS] = "THREEARGS";
+    fexplanation[fGETBIT] = "GETBIT";
+    fexplanation[fGETCHAR] = "GETCHAR";
+    fexplanation[fLAST_FUNCTION] = "LAST_FUNCTION";
+    for (i = fFIRST_FUNCTION; i <= fLAST_FUNCTION; i++) {
+	if (!fexplanation[i]) {
+	    sprintf (string, "function %d has no description (command after %s)", i, fexplanation[i-1]);
 	    error (sERROR,string);
 	}
     }
@@ -1691,8 +1777,8 @@ run_it ()
             default:
                 sprintf (string,
                          "Command %s (%d, right before '%s') not implemented",
-                         explanation[current->type], current->type,
-                         explanation[current->type + 1]);
+                         cexplanation[current->type], current->type,
+                         cexplanation[current->type + 1]);
                 error (sERROR, string);
             }
         }
