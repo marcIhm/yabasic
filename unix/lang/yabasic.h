@@ -141,6 +141,10 @@ extern int winpid;		/* pid of process waiting for window keys */
 extern int termpid;		/* pid of process waiting for terminal keys */
 #endif
 
+/* external.c */
+extern char last_external_error_text[]; /* last error message produced by external call */
+extern int last_external_okay;         /* true, if last external call has been okay */
+
 /* graphic.c */
 /* printing and plotting */
 extern int print_to_file;	/* print to file ? */

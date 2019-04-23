@@ -1549,6 +1549,8 @@ peek (char *dest)		/* peek into internals */
         return errorcode;
     } else if (!strcmp (dest, "isbound")) {
         return is_bound;
+    } else if (!strcmp (dest, "last_external_okay")) {
+        return (double) last_external_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
 	return now-compilation_start;
@@ -1625,6 +1627,8 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
 #endif
     } else if (!strcmp (dest, "font")) {
         return my_strdup (fontname);
+    } else if (!strcmp (dest, "last_external_error_text")) {
+	return my_strdup (last_external_error_text);
     } else if (!strcmp (dest, "argument") || !strcmp (dest, "arguments")) {
         if (yabargc > 0) {
             s = yabargv[0];

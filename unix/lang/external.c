@@ -32,6 +32,7 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 
 #include <ffi.h>
 #include <stdint.h>
+#include <dlfcn.h>
 
 /* ------------- types ---------------- */
 union FFI_VAL {
@@ -60,11 +61,14 @@ static int check_ffi_type (char *, ffi_type *, int, int, int);
 static int parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
 static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
 static double cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
+static void cleanup (); /* free and cleanup structures after use */
 
 /* ------------- global variables ---------------- */
 
-char *libname;  /* name of library to call */
-char *funame;   /* name of function to call */
+char *libname = NULL;    /* name of library to call */
+void *lib_handle = NULL; /* handle to library */
+char *funame = NULL;     /* name of function to call */
+int opt_error = TRUE;    /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
 
 ffi_cif cif;    /* structure describing arguments for libffi */
 int argcnt = 0; /* number of arguments for function, i.e. length of both following lists */
@@ -72,16 +76,81 @@ ffi_type **args; /* list of types for all individual arguments */
 union FFI_VAL *values;   /* actual values that should be passed, see union FFI_VAL above */
 ffi_type rtype; /* expected return type of function */
 
+/* ------------- externally visible variables ---------------- */
+
+char last_external_error_text[INBUFFLEN] = "";    /* last error message produced by external call */
+int last_external_okay = 1;                       /* true, if last external call has been okay */
 
 /* ------------- subroutines ---------------- */
 
 void
 external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
-    if (!parse_stack) return;
-    my_free(args);
-    my_free(values);
+    void (*fu)(void);
+    char *call_err;
+    int ffi_ret;
+    union FFI_VAL ffi_result;
+    void *lib;
+
+    last_external_error_text[0] = '\0';
+    last_external_okay = 0;
+    
+    if (!parse_stack) {
+	cleanup ();
+	return;
+    }
+
+    /* Initialize the cif */
+    if ((ffi_ret = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, argcnt, &rtype, args)) != FFI_OK) {
+	if (ffi_ret == FFI_BAD_TYPEDEF) {
+	    sprintf(string, "invalid type specification for function '%s' from library '%s'; check your arguments", funame, libname);
+	} else {
+	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
+	}
+	error(sERROR,string);
+	cleanup ();
+	return;
+    }
+    
+    lib = dlopen(libname, RTLD_LAZY);
+    if (!lib) {
+	sprintf(string, "could not load library '%s'",libname);
+	if (opt_error) {
+	    error(sERROR,string);
+	} else {
+	    strcpy (last_external_error_text, string);
+	}
+	cleanup ();
+	return;
+    }
+    dlerror();    /* Clear any existing error */
+
+    fu = (void (*)(void)) dlsym(lib, funame);
+    call_err = dlerror();
+    if (call_err != NULL) {
+	sprintf(string,"could not invoke function '%s' in library '%s': %s", funame, libname, call_err);
+	if (opt_error) {
+	    error(sERROR, string);
+	} else {
+	    strcpy (last_external_error_text, string);
+	}
+	cleanup ();
+	return;
+    }
+
+    ffi_call(&cif, fu, &ffi_result, (void **)values);
+    
+    if (type == fEXTERNAL) {
+	*pvalue = cast_from_ffi_type (&ffi_result, &rtype);
+    } else {
+	my_free (*ppointer);
+	*ppointer = my_strdup ((char *)ffi_result.ffipointer);
+    }
+	
+    cleanup ();
+    last_external_okay = 1;
 }
+
 
 static int
 parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
@@ -90,7 +159,6 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
     static char stfound[50];
     int listlen = -1;
     int i,j;
-    int opt_error = TRUE;
     
     /* go through list of arguments multiple times, check types and transfer them to libffi structures */
     st = stackhead;
@@ -162,11 +230,8 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
             cast_to_ffi_type (values+j,args[j],st->next->value);
         }
     }
-	
-    /* Initialize the cif */
-    if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, argcnt, &rtype, args) == FFI_OK) {
-    }    
 }
+
 
 static int
 check_ffi_type (char *type_string, ffi_type *type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
@@ -200,6 +265,7 @@ check_ffi_type (char *type_string, ffi_type *type_ptr, int pos, int skip_first, 
     return FALSE;
 }
 
+
 static void
 cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and assign double value from yabasic into specified (numeric) ffi_type */
 {
@@ -223,6 +289,7 @@ cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and 
     if (type == &ffi_type_slong) (*value).ffislong = (long) num;
 }
 
+
 static double
 cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
 {
@@ -244,6 +311,22 @@ cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return val
     if (type == &ffi_type_sint) return (double) (*value).ffisint;
     if (type == &ffi_type_ulong) return (double) (*value).ffiulong;
     if (type == &ffi_type_slong) return (double) (*value).ffislong;
+}
+
+static void cleanup () /* free and cleanup structures after use */
+{
+    if (lib_handle) {
+	dlclose(lib_handle);
+	lib_handle = NULL;
+    }
+    if (args) {
+	my_free(args);
+	args = NULL;
+    }
+    if (values) {
+	my_free(values);
+	values = NULL;
+    }
 }
 
 #endif /* HAVE_DL_FFI */
