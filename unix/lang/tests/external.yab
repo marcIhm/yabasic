@@ -1,0 +1,4 @@
+#!./yabasic
+
+if external("libm.so.6","double","cos","double",2) <> cos(2) error "no match"
+

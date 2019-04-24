@@ -11,6 +11,13 @@
 
 */
 
+/* See: 
+
+     https://eli.thegreenplace.net/2013/03/04/flexible-runtime-interface-to-shared-libraries-with-libffi 
+
+   for an advanced example by Eli Bendersky
+*/
+
 /* ------------- includes ---------------- */
 
 #ifndef YABASIC_INCLUDED
@@ -54,10 +61,11 @@ union FFI_VAL {
     ulong ffiulong;
     long ffislong;
     void *ffipointer;
+    char filler[64];
 };
 
 /* ------------- local functions ---------------- */
-static int check_ffi_type (char *, ffi_type *, int, int, int);
+static int check_ffi_type (char *, ffi_type **, int, int, int);
 static int parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
 static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
 static double cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
@@ -72,9 +80,10 @@ int opt_error = TRUE;    /* should problems with library lead to yabasic-errors 
 
 ffi_cif cif;    /* structure describing arguments for libffi */
 int argcnt = 0; /* number of arguments for function, i.e. length of both following lists */
-ffi_type **args; /* list of types for all individual arguments */
-union FFI_VAL *values;   /* actual values that should be passed, see union FFI_VAL above */
-ffi_type rtype; /* expected return type of function */
+ffi_type **tvalues; /* list of types for all individual values */
+union FFI_VAL *values;   /* actual values that should be passed to call, see union FFI_VAL above */
+union FFI_VAL **pvalues;     /* pointers to values */
+ffi_type *rtype; /* expected return type of function */
 
 /* ------------- externally visible variables ---------------- */
 
@@ -86,7 +95,7 @@ int last_external_okay = 1;                       /* true, if last external call
 void
 external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
-    void (*fu)(void);
+    void *fu;
     char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
@@ -101,9 +110,9 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
     }
 
     /* Initialize the cif */
-    if ((ffi_ret = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, argcnt, &rtype, args)) != FFI_OK) {
+    if ((ffi_ret = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, argcnt, rtype, tvalues)) != FFI_OK) {
 	if (ffi_ret == FFI_BAD_TYPEDEF) {
-	    sprintf(string, "invalid type specification for function '%s' from library '%s'; check your arguments", funame, libname);
+	    sprintf(string, "invalid type specification for function '%s' from library '%s'; check arguments", funame, libname);
 	} else {
 	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
 	}
@@ -123,12 +132,23 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 	cleanup ();
 	return;
     }
+
     dlerror();    /* Clear any existing error */
 
-    fu = (void (*)(void)) dlsym(lib, funame);
+    fu = dlsym(lib, funame);
+    if (!fu) {
+	sprintf(string, "could not find function '%s'",funame);
+	if (opt_error) {
+	    error(sERROR,string);
+	} else {
+	    strcpy (last_external_error_text, string);
+	}
+	cleanup ();
+	return;
+    }
     call_err = dlerror();
     if (call_err != NULL) {
-	sprintf(string,"could not invoke function '%s' in library '%s': %s", funame, libname, call_err);
+	sprintf(string,"could not find function '%s' in library '%s': %s", funame, libname, call_err);
 	if (opt_error) {
 	    error(sERROR, string);
 	} else {
@@ -138,10 +158,10 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 	return;
     }
 
-    ffi_call(&cif, fu, &ffi_result, (void **)values);
+    ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
     if (type == fEXTERNAL) {
-	*pvalue = cast_from_ffi_type (&ffi_result, &rtype);
+	*pvalue = cast_from_ffi_type (&ffi_result, rtype);
     } else {
 	my_free (*ppointer);
 	*ppointer = my_strdup ((char *)ffi_result.ffipointer);
@@ -166,6 +186,13 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 	st = st->prev;
 	listlen++;
     } while (st->type != stFREE);
+
+    /* pop arguments here */
+    for(i=0;i<listlen;i++) {
+	pop (stSTRING_OR_NUMBER);
+    }
+    pop (stFREE);
+
     stfirst = st->next;
     
     if (listlen<3) {
@@ -217,24 +244,28 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 	argcnt++;
     }
 
-    args = (ffi_type **) my_malloc(argcnt*sizeof(void *));
-    values = (void *) my_malloc(argcnt*sizeof(void *));
+    tvalues = (ffi_type **) my_malloc(argcnt*sizeof(void *));
+    values = (union FFI_VAL *) my_malloc(argcnt*sizeof(union FFI_VAL));
+    pvalues = (union FFI_VAL **) my_malloc(argcnt*sizeof(void *));
 
     st = stfirstarg;
     for(i=3,j=0;i<3+2*argcnt;i+=2,st=st->next->next,j++) {
 	if (st->next->type == stSTRING) {
-	    if (!check_ffi_type (st->pointer, args[j], i, NUM_FFI_TYPES-1, 0)) return FALSE;
+	    if (!check_ffi_type (st->pointer, tvalues+j, i, NUM_FFI_TYPES-1, 0)) return FALSE;
 	    values[j].ffipointer = (char *)st->next->pointer;
 	} else {
-	    if (!check_ffi_type (st->pointer, args[j], i, 1, 1)) return FALSE;
-            cast_to_ffi_type (values+j,args[j],st->next->value);
+	    if (!check_ffi_type (st->pointer, tvalues+j, i, 1, 1)) return FALSE;
+            cast_to_ffi_type (values+j,tvalues[j],st->next->value);
         }
+	pvalues[j] = values + j;
     }
+
+    return TRUE;
 }
 
 
 static int
-check_ffi_type (char *type_string, ffi_type *type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
+check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
 {
     int i;
     static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "ushort", "short", "uint", "int", "ulong", "long", "string"};
@@ -253,7 +284,7 @@ check_ffi_type (char *type_string, ffi_type *type_ptr, int pos, int skip_first, 
 
     for(i=skip_first;i<NUM_FFI_TYPES-skip_last;i++) {
 	if (!strcmp(type_string,ffi_types_string[i])) {
-	    type_ptr=ffi_types_ptr[i];
+	    *type_ptr=ffi_types_ptr[i];
 	    return TRUE;
 	}
     }
@@ -319,13 +350,17 @@ static void cleanup () /* free and cleanup structures after use */
 	dlclose(lib_handle);
 	lib_handle = NULL;
     }
-    if (args) {
-	my_free(args);
-	args = NULL;
+    if (tvalues) {
+	my_free(tvalues);
+	tvalues = NULL;
     }
     if (values) {
 	my_free(values);
 	values = NULL;
+    }
+    if (pvalues) {
+	my_free(pvalues);
+	pvalues = NULL;
     }
 }
 

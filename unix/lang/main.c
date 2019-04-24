@@ -274,10 +274,6 @@ main (int argc, char **argv)
 
     if (severity_so_far < sERROR && !check_compat) {
         program_state = RUNNING;
-	if (severity_threshold <= sDEBUG) {
-	    printf ("---Program parsed, press RETURN to continue with its execution: ");
-	    fgets (string, INBUFFLEN, stdin);
-        }
         run_it ();
     } else {
         program_state = FINISHED;
@@ -390,7 +386,7 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	    }
 	    dest += n;
 	}
-	if (i > 5) {
+	if (i > 7) {
 	    sprintf (dest, ";+%d%n", i - 5, &n);
 	    dest += n;
 	}
@@ -2323,8 +2319,6 @@ isbound (void)			/* check if this interpreter is bound to a program */
         }
 	fprintf (stderr, "\n");
         error (sNOTE, "End of program, that will be executed");
-	printf ("---Press RETURN to continue with its parsing: ");
-	fgets (string, INBUFFLEN, stdin);
 	if (!seekback (inter, offset, TRUE)) return 0;
     }
     bound_program = inter;

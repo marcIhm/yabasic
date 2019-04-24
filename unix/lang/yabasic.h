@@ -274,11 +274,11 @@ enum stream_modes {
 enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
-    fRAN2, fDATE, fTIME,
+    fRAN2, fDATE, fTIME, fEXTERNAL, fEXTERNAL2, 
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
-    fATAN, fSYSTEM, fSYSTEM2, fPEEK, fPEEK2, fPEEK4, fEXTERNAL, fEXTERNAL2, fTELL, fEXP, fLOG, fLEN,
+    fATAN, fSYSTEM, fSYSTEM2, fPEEK, fPEEK2, fPEEK4, fTELL, fEXP, fLOG, fLEN,
     fSTR,
     fSQRT, fSQR, fFRAC, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 

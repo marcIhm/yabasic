@@ -376,7 +376,7 @@ create_function (int type)	/* create command 'function' */
 
     cmd = add_command (cFUNCTION, FALSE, NULL);
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "Function '%s'",fexplanation[type]);
+	sprintf(errorstring, "function '%s'",fexplanation[type]);
 	error (sDEBUG, errorstring);
     }
     cmd->args = type;
@@ -409,7 +409,7 @@ function (struct command *current)	/* performs a function */
     }
 
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "Function '%s'",fexplanation[type]);
+	sprintf(errorstring, "function '%s'",fexplanation[type]);
 	error (sDEBUG, errorstring);
     }
 

@@ -394,7 +394,7 @@ pop (int etype)
     /* expected and found don't match */
     stackdesc (etype, expected);
     stackdesc (ftype, found);
-    sprintf (string, "expected '%s' but found '%s'", expected, found);
+    sprintf (string, "pop from stack: expected '%s' but found '%s'", expected, found);
     if (etype == stNUMBER || etype == stSTRING
             || etype == stSTRING_OR_NUMBER) {
         s = push ();
