@@ -15,7 +15,7 @@
 
      https://eli.thegreenplace.net/2013/03/04/flexible-runtime-interface-to-shared-libraries-with-libffi 
 
-   for an advanced example by Eli Bendersky
+   for an interesting example on using libffi by Eli Bendersky
 */
 
 /* ------------- includes ---------------- */
