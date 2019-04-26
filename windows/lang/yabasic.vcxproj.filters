@@ -27,6 +27,9 @@
     <ClInclude Include="..\..\unix\lang\whereami.h">
       <Filter>Header-Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="ffi.h">
+      <Filter>Header-Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="yabasic.rc">
@@ -64,6 +67,9 @@
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\unix\lang\whereami.c">
+      <Filter>Quellcodedateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\unix\lang\external.c">
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
   </ItemGroup>
