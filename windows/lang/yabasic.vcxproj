@@ -66,6 +66,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>yabasic</TargetName>
     <IncludePath>C:\work\yabasic\windows\lang;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\work\yabasic\windows\lang;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

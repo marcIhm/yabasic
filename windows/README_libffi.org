@@ -3,7 +3,7 @@ How to get and compile libffi in order to build yabasic under Windows:
 
 - Clone https://github.com/winlibs/libffi
 - Build win32/vc14_x64/libffi-msvc.sln with Visual C++ 2015
-- The result is win32/vc14_x64/x64/Release/libffi.lib
+- The result is win32/vc14_x86/Release/libffi.lib
   - copy it to yabasic/windows/lang
   - this file is not part of yabasics repository (listed in .gitignore)
 - Maybe update yabasic/windows/lang/ffi.h and other headers from 

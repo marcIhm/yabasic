@@ -35,11 +35,13 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 }
 #else
 
-#define NUM_FFI_TYPES 18
+#define NUM_FFI_TYPES 15
 
 #include <ffi.h>
 #include <stdint.h>
+#ifdef UNIX
 #include <dlfcn.h>
+#endif
 
 /* ------------- types ---------------- */
 union FFI_VAL {
@@ -54,11 +56,8 @@ union FFI_VAL {
     float_t ffifloat;
     double_t ffidouble;
     char ffischar;
-    ushort ffiushort;
     short ffisshort;
-    uint ffiuint;
     int ffisint;
-    ulong ffiulong;
     long ffislong;
     void *ffipointer;
     char filler[64];
@@ -74,7 +73,11 @@ static void cleanup (); /* free and cleanup structures after use */
 /* ------------- global variables ---------------- */
 
 char *libname = NULL;    /* name of library to call */
-void *lib_handle = NULL; /* handle to library */
+#ifdef UNIX
+void *lib = NULL;        /* handle to library */
+#else
+HINSTANCE lib = NULL;    /* handle to library */
+#endif
 char *funame = NULL;     /* name of function to call */
 int opt_error = TRUE;    /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
 
@@ -95,11 +98,10 @@ int last_external_okay = 1;                       /* true, if last external call
 void
 external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
-    void *fu;
     char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
-    void *lib;
+	void *fu;
 
     last_external_error_text[0] = '\0';
     last_external_okay = 0;
@@ -121,31 +123,41 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 	return;
     }
     
+#ifdef UNIX
     lib = dlopen(libname, RTLD_LAZY);
+#else
+	lib = LoadLibrary(libname);
+#endif
+
     if (!lib) {
-	sprintf(string, "could not load library '%s'",libname);
-	if (opt_error) {
+	  sprintf(string, "could not load library '%s'",libname);
+	  if (opt_error) {
 	    error(sERROR,string);
-	} else {
+	  } else {
 	    strcpy (last_external_error_text, string);
-	}
-	cleanup ();
-	return;
+	  }
+	  cleanup ();
+	  return;
     }
 
+#ifdef UNIX
     dlerror();    /* Clear any existing error */
-
     fu = dlsym(lib, funame);
-    if (!fu) {
-	sprintf(string, "could not find function '%s'",funame);
+#else
+	fu = GetProcAddress(lib, funame);
+#endif
+
+	if (!fu) {
+	  sprintf(string, "could not find function '%s'",funame);
 	if (opt_error) {
-	    error(sERROR,string);
+	  error(sERROR,string);
 	} else {
-	    strcpy (last_external_error_text, string);
+	  strcpy (last_external_error_text, string);
 	}
 	cleanup ();
 	return;
     }
+#ifdef UNIX
     call_err = dlerror();
     if (call_err != NULL) {
 	sprintf(string,"could not find function '%s' in library '%s': %s", funame, libname, call_err);
@@ -157,6 +169,7 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 	cleanup ();
 	return;
     }
+#endif
 
     ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
@@ -268,7 +281,7 @@ static int
 check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
 {
     int i;
-    static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "ushort", "short", "uint", "int", "ulong", "long", "string"};
+    static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "short", "int", "long", "string"};
     static ffi_type *ffi_types_ptr[NUM_FFI_TYPES];
     static int ffi_types_ptr_initialized = FALSE;
 
@@ -276,9 +289,9 @@ check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first,
 	ffi_types_ptr[0] = &ffi_type_uint8;   ffi_types_ptr[1] = &ffi_type_sint8;  ffi_types_ptr[2] = &ffi_type_uint16;
 	ffi_types_ptr[3] = &ffi_type_sint16;  ffi_types_ptr[4] = &ffi_type_uint32; ffi_types_ptr[5] = &ffi_type_sint32;
 	ffi_types_ptr[6] = &ffi_type_uint64;  ffi_types_ptr[7] = &ffi_type_sint64; ffi_types_ptr[8] = &ffi_type_float;
-	ffi_types_ptr[9] = &ffi_type_double;  ffi_types_ptr[10] = &ffi_type_schar; ffi_types_ptr[11] = &ffi_type_ushort;
-	ffi_types_ptr[12] = &ffi_type_sshort; ffi_types_ptr[13] = &ffi_type_uint;  ffi_types_ptr[14] = &ffi_type_sint;
-	ffi_types_ptr[15] = &ffi_type_ulong;  ffi_types_ptr[16] = &ffi_type_slong; ffi_types_ptr[17] = &ffi_type_pointer;
+	ffi_types_ptr[9] = &ffi_type_double;  ffi_types_ptr[10] = &ffi_type_schar; 
+	ffi_types_ptr[11] = &ffi_type_sshort; ffi_types_ptr[12] = &ffi_type_sint;
+	ffi_types_ptr[13] = &ffi_type_slong; ffi_types_ptr[14] = &ffi_type_pointer;
 	ffi_types_ptr_initialized = TRUE;
     }
 
@@ -312,11 +325,8 @@ cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and 
     if (type == &ffi_type_float) (*value).ffifloat = (float_t) num;
     if (type == &ffi_type_double) (*value).ffidouble = (double_t) num;
     if (type == &ffi_type_schar) (*value).ffischar = (char) num;
-    if (type == &ffi_type_ushort) (*value).ffiushort = (ushort) num;
     if (type == &ffi_type_sshort) (*value).ffisshort = (short) num;
-    if (type == &ffi_type_uint) (*value).ffiuint = (uint) num;
     if (type == &ffi_type_sint) (*value).ffisint = (int) num;
-    if (type == &ffi_type_ulong) (*value).ffiulong = (ulong) num;
     if (type == &ffi_type_slong) (*value).ffislong = (long) num;
 }
 
@@ -336,19 +346,20 @@ cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return val
     if (type == &ffi_type_float) return (double) (*value).ffifloat;
     if (type == &ffi_type_double) return (double) (*value).ffidouble;
     if (type == &ffi_type_schar) return (double) (*value).ffischar;
-    if (type == &ffi_type_ushort) return (double) (*value).ffiushort;
     if (type == &ffi_type_sshort) return (double) (*value).ffisshort;
-    if (type == &ffi_type_uint) return (double) (*value).ffiuint;
     if (type == &ffi_type_sint) return (double) (*value).ffisint;
-    if (type == &ffi_type_ulong) return (double) (*value).ffiulong;
     if (type == &ffi_type_slong) return (double) (*value).ffislong;
 }
 
 static void cleanup () /* free and cleanup structures after use */
 {
-    if (lib_handle) {
-	dlclose(lib_handle);
-	lib_handle = NULL;
+    if (lib) {
+#ifdef UNIX
+	dlclose(lib);
+#else
+		FreeLibrary(lib);
+#endif
+	lib = NULL;
     }
     if (tvalues) {
 	my_free(tvalues);
