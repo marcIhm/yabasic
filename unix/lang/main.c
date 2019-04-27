@@ -23,7 +23,7 @@
 /* ------------- defines ---------------- */
 
 #define DONE {current=current->next;break;}	/* reduces type-work */
-#define COPYRIGHT "Copyright 1995-2018 by Marc Ihm, according to the MIT License"
+#define COPYRIGHT "Copyright 1995-2019 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\nconfigured for "\

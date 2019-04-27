@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2017
+    written by Marc Ihm 1995-2019
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -23,8 +23,7 @@
 */
 
 #if defined(UNIX) && defined(WINDOWS)
-UNIX and WINDOWS are defined at once;
-check your compiler settings
+#error UNIX and WINDOWS are defined together; check your compiler settings
 #endif
 /* ------------- includes ---------------- */
 #include <config.h>

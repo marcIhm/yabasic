@@ -1562,9 +1562,9 @@ peek (char *dest)		/* peek into internals */
         return (double) last_external_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
-	return now-compilation_start;
+	return (double)(now-compilation_start);
     } else if (!strcmp (dest, "millisrunning")) {
-	return current_millis() - millis_compilation_start;
+	return (double)(current_millis() - millis_compilation_start);
     } else if (dest[0] == '#') {
         error (sERROR, "don't use quotes when peeking into a file");
         return 0;

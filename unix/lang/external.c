@@ -36,6 +36,9 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 #else
 
 #define NUM_FFI_TYPES 15
+#ifdef WINDOWS
+#define FFI_BUILDING
+#endif
 
 #include <ffi.h>
 #include <stdint.h>
@@ -218,7 +221,7 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
     for(i=0;i<3;i++) {
 	if (st->type != stSTRING) {
 	    stackdesc (st->type, stfound);
-	    sprintf(string, "argument at position %d needs to be a string, not %s",stfound);
+	    sprintf(string, "argument at position %d needs to be a string, not %s",i,stfound);
 	    error (sERROR, string);
 	    return FALSE;
 	}
@@ -349,6 +352,8 @@ cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return val
     if (type == &ffi_type_sshort) return (double) (*value).ffisshort;
     if (type == &ffi_type_sint) return (double) (*value).ffisint;
     if (type == &ffi_type_slong) return (double) (*value).ffislong;
+	error(sFATAL, "internal error, unknown type");
+	return 0.0;
 }
 
 static void cleanup () /* free and cleanup structures after use */
