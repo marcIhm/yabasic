@@ -24,6 +24,11 @@
 #include "yabasic.h"		/* all prototypes and structures */
 #endif
 
+/* ------------- externally visible variables ---------------- */
+
+char last_external_error_text[INBUFFLEN] = "";    /* last error message produced by external call */
+int last_external_okay = 1;                       /* true, if last external call has been okay */
+
 /* ------------- define a stub only, if feature is not available ---------------- */
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
@@ -91,11 +96,6 @@ ffi_type **tvalues; /* list of types for all individual values */
 union FFI_VAL *values;   /* actual values that should be passed to call, see union FFI_VAL above */
 union FFI_VAL **pvalues;     /* pointers to values */
 ffi_type *rtype; /* expected return type of function */
-
-/* ------------- externally visible variables ---------------- */
-
-char last_external_error_text[INBUFFLEN] = "";    /* last error message produced by external call */
-int last_external_okay = 1;                       /* true, if last external call has been okay */
 
 /* ------------- subroutines ---------------- */
 
