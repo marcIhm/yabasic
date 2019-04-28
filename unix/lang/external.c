@@ -83,9 +83,10 @@ HINSTANCE lib = NULL;    /* handle to library */
 #endif
 char *funame = NULL;     /* name of function to call */
 int opt_error = TRUE;    /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
+int opt_copy_result_string = TRUE;    /* should the result string be copied */
 
 ffi_cif cif;    /* structure describing arguments for libffi */
-int argcnt = 0; /* number of arguments for function, i.e. length of both following lists */
+int argcnt;    /* number of arguments for function, i.e. length of both following lists */
 ffi_type **tvalues; /* list of types for all individual values */
 union FFI_VAL *values;   /* actual values that should be passed to call, see union FFI_VAL above */
 union FFI_VAL **pvalues;     /* pointers to values */
@@ -180,7 +181,10 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 	*pvalue = cast_from_ffi_type (&ffi_result, rtype);
     } else {
 	my_free (*ppointer);
-	*ppointer = my_strdup ((char *)ffi_result.ffipointer);
+	if (opt_copy_result_string) 
+	    *ppointer = my_strdup ((char *)ffi_result.ffipointer);
+	else
+	    *ppointer = (char *)ffi_result.ffipointer;
     }
 	
     cleanup ();
@@ -195,6 +199,8 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
     static char stfound[50];
     int listlen = -1;
     int i,j;
+    char *opt_str;
+    int opt_has_no;
     
     /* go through list of arguments multiple times, check types and transfer them to libffi structures */
     st = stackhead;
@@ -232,6 +238,7 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
       }
  
     stfirstarg = st;
+    argcnt = 0;
     for(i=3;i<listlen-1;i+=2,st=st->next->next) {
 	if (st->type != stSTRING) {
 	    stackdesc (st->type, stfound);
@@ -239,23 +246,28 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 	    error (sERROR, string);
 	    return FALSE;
 	}
-	    if (!strcmp(st->pointer,"options")) { /* parse rest of arguments as options */
+	if (!strcmp(st->pointer,"options")) { /* parse rest of arguments as options */
             st=st->next;
-	    for(j=i+1;j<listlen;j++,st=st->next) {
+	    i++;
+	    for(;i<listlen;i++,st=st->next) {
 		if (st->type != stSTRING) {
 		    stackdesc (st->type, stfound);
-		    sprintf(string, "argument at position %d needs to be an option string, not %s",j,stfound);
+		    sprintf(string, "argument at position %d needs to be an option string, not %s",i,stfound);
 		    error (sERROR, string);
 		    return FALSE;
                 }
-		if (!strcmp(st->pointer,"error"))
-                   opt_error=TRUE;
-                else if (!strcmp(st->pointer,"noerror"))
-                   opt_error=FALSE;
+		opt_str = st->pointer;
+		opt_has_no = (strncmp(opt_str,"no_",3) == 0);
+		if (opt_has_no) opt_str += 3;
+		if (!strcmp(opt_str,"error"))
+		    opt_error = !opt_has_no;
+                else if (!strcmp(opt_str,"copy_result_string"))
+		    opt_copy_result_string = !opt_has_no;
                 else {
-                   error (sERROR,"options can only be 'error' and 'noerror'");
+                   error (sERROR,"options can only be 'error' and 'copy_result_string' optionally preceeded by 'no_'");
 		}
 	    }
+	    break;
         }
 	argcnt++;
     }
