@@ -265,86 +265,6 @@ yabasic*font: 9x15
   </chapter>
   
 
-  <chapter id="chapter_topics">
-    <title>Some features of <application>yabasic</application>, explained by topic</title>
-    <para>This chapter has sections for some of the major features of <application>yabasic</application> and names a few commands related with each area. So, depending on your interest, you find the most important commands of this area named; the other commands from this area may then be discovered through the links in the <emphasis>see also</emphasis>-section.</para>
-    <sect1>
-      <title><function>print</function>, <function>input</function> and others</title>
-      <para>The <function><link linkend="ref_print">print</link></function>-command is used to put text on the text screen. Here, the term <wordasword>text screen</wordasword> stands for your terminal (under Unix) or the console window (under Windows).</para>
-      <para>At the bottom line, <function>print</function> simply outputs its argument to the text window. However, once you have called <function><link linkend="ref_clear_screen">clear screen</link></function> you may use advanced features like printing colors or copying areas of text with <function><link linkend="ref_getscreen">getscreen$</link></function> or <function><link linkend="ref_putscreen">putscreen</link></function>.</para>
-      <para>You may ask the user for input with the <function><link linkend="ref_input">input</link></function>-command; use <function><link linkend="ref_inkey">inkey$</link></function> to get each key as soon as it is pressed.</para>
-    </sect1>
-
-    <sect1>
-      <title>Control statements: loops, <function>if</function> and <function>switch</function></title>
-      <para>Of course, <application>yabasic</application> has the <function><link linkend="ref_goto">goto</link></function>- and <function><link linkend="ref_gosub">gosub</link></function>-statements; you may go to a <function><link linkend="ref_label">label</link></function> or a <emphasis>line number</emphasis> (which is just a special kind of label). <function><link linkend="ref_goto">goto</link></function>, despite its bad reputation (<citation><function>goto</function> considered harmful</citation>), has still its good uses; however in many cases you are probably better off with loops like <function><link linkend="ref_repeat">repeat</link></function>-<function><link linkend="ref_until">until</link></function>, <function><link linkend="ref_while">while</link></function>-<function><link linkend="ref_wend">wend</link></function> or <function><link linkend="ref_do">do</link></function>-<function><link linkend="ref_loop">loop</link></function>; you may leave any of these loops with the <function><link linkend="ref_break">break</link></function>-statement or start the next iteration immediately with <function><link linkend="ref_continue">continue</link></function>.</para>
-      <para>Decisions can be made with the <function><link linkend="ref_if">if</link></function>-statement, which comes either in a <emphasis>short</emphasis> and a <emphasis>long</emphasis> form. The short form has no <function><link linkend="ref_then">then</link></function>-keyword and extends up to the end of the line. The long form extends up to the final <function><link linkend="ref_endif">endif</link></function> and may use some of the keywords <function><link linkend="ref_then">then</link></function> (which introduces the long form), <function><link linkend="ref_else">else</link></function> or <function><link linkend="ref_elsif">elsif</link></function>.</para>
-      <para>If you want to test the result of an expression against many different values, you should probably use the <function><link linkend="ref_switch">switch</link></function>-statement.</para>
-    </sect1>
-
-
-    <sect1>
-      <title>Drawing and painting</title>
-      <para>You need to call <function><link linkend="ref_open_window">open window</link></function> before you may draw anything with either <function><link linkend="ref_line">line</link></function>, <function><link linkend="ref_circle">circle</link></function>, <function><link linkend="ref_rectangle">rectangle</link></function> or <function><link linkend="ref_triangle">triangle</link></function>; all of these statements may be decorated with <function><link linkend="ref_clear">clear</link></function> or <function><link linkend="ref_fill">fill</link></function>. If you want to change the colour for drawing, use <function><link linkend="ref_colour">colour</link></function>. Note however, that there can only be a single window open at any given moment in time.</para>
-      <para>Everything you have drawn can be send to your printer too, if you use the <function><link linkend="ref_open_printer">open printer</link></function> command.</para>
-      <para>To allow for some (very) limited version of animated graphics, <application>yabasic</application> offers the commands <function><link linkend="ref_getbit">getbit$</link></function> and <function><link linkend="ref_putbit">putbit</link></function>, which retrieve rectangular regions from the graphics-window into a string or vice versa.</para>
-      <para>If you want to sense mouse-clicks, you may use the <function><link linkend="ref_inkey">inkey$</link></function>-function.</para>
-    </sect1>
-
-    <sect1>
-      <title>Reading from and writing to files</title>
-      <para>Before you may read or write a file, you need to <function><link linkend="ref_open">open</link></function> it; once you are done, you should <function><link linkend="ref_close">close</link></function> it. Each open file is designated by a simple number, which might be stored within a variable and must be supplied if you want to access the file. This is simply done by putting a hash ('<literal>#</literal>') followed by the number of the file after the keyword <function><link linkend="ref_input">input</link></function> (for reading from) or <function><link linkend="ref_print">print</link></function> (for writing to a file) respectively.</para>
-      <para>If you need more control, you may consider reading and writing one byte at a time, using the multi-purpose commands <function><link linkend="ref_peek">peek</link></function> and <function><link linkend="ref_poke">poke</link></function>.</para>
-    </sect1>
-
-    <sect1>
-      <title>Subroutines and Libraries</title>
-      <para>The best way to break any <application>yabasic</application>-program into smaller, more manageable chunks are <emphasis>subroutines</emphasis> and <emphasis>libraries</emphasis>. They are <application>yabasic</application>'s most advanced means of structuring a program.</para>
-      <para>Subroutines are created with the command <function><link linkend="ref_sub">sub</link></function>. they accept parameters and may return a value. Subroutines can be called much like any builtin function of <application>yabasic</application>; therefore they allow one to <emphasis>extend</emphasis> the language itself.</para>
-      <para>Once you have created a set of related subroutines and you feel that they could be useful in other programs too, you may collect them into a <emphasis>library</emphasis>. Such a library is contained within a separate file and may be included in any of your programs, using the keyword <function><link linkend="ref_import">import</link></function>, which see.</para>
-    </sect1>
-
-    <sect1>
-      <title>String processing</title>
-      <para><application>yabasic</application> has a set of functions to extract parts from a string: <function><link linkend="ref_left">left$</link></function>, <function><link linkend="ref_mid">mid$</link></function> and <function><link linkend="ref_right">right$</link></function>. Note, that all of them can be assigned to, i.e. they may <emphasis>change</emphasis> part of a string.</para>
-      <para>If you want to split a string into tokens you should use the functions <function><link linkend="ref_token">token</link></function> or <function><link linkend="ref_split">split</link></function>.</para>
-      <para>Some functions are handy for normalizing a string: <function><link linkend="ref_upper">upper$</link></function> and <function><link linkend="ref_lower">lower$</link></function> convert a string to all upper or lower case respectively, whereas <function><link linkend="ref_chomp">chomp$</link></function> cuts of any trailing newline character, but only if present.</para>
-      <para><function><link linkend="ref_chr">chr$</link></function> and <function><link linkend="ref_str">str$</link></function> convert a string into a number, both in different ways.</para>
-      <para>To analyze a string use <function><link linkend="ref_instr">instr</link></function> (finding one string within the other) or <function><link linkend="ref_glob">glob</link></function> (testing a string against a simple pattern).</para>
-      <para>To concatenate strings use the operator <function>+</function> like in <function>a$ + b$</function>.</para>
-      <para>You may also see the complete list of a <link linkend="top_strings">string processing functions</link>.</para>
-    </sect1>
-
-    <sect1>
-      <title>Arithmetic and numbers</title>
-      <para><application>Yabasic</application> handles numbers and arithmetic: You may calculate trigonometric functions like <function><link linkend="ref_sin">sin</link></function> or <function><link linkend="ref_atan">atan</link></function>, or logarithms (with <function><link linkend="ref_log">log</link></function>). Bitwise operations, like <function><link linkend="ref_arithmetic_and">and</link></function> or <function><link linkend="ref_arithmetic_or">or</link></function> are available as well <function><link linkend="ref_min">min</link></function> or <function><link linkend="ref_max">max</link></function> (calculate the minimum or maximum of its argument) or <function><link linkend="ref_mod">mod</link></function> or <function><link linkend="ref_int">int</link></function> (reminder of a division or integer part or a number).</para>
-      <para>Conversion between numerical bases can be done with <function><link linkend="ref_hex">hex$</link></function> and <function><link linkend="ref_dec">dec</link></function>. And you may write hexadecimal constants in the usual way, e.g. <programlisting>print 0xff</programlisting>. All calculations in <application>yabasic</application> are done with double precision.
-      </para>
-    </sect1>
-
-    <sect1>
-      <title>Data and such</title>
-      <para>You may store data within your program within <function><link linkend="ref_data">data</link></function>-statements; during execution you will probably want to <function><link linkend="ref_read">read</link></function> it into <emphasis>arrays</emphasis>, which must have been <function><link linkend="ref_dim">dim</link></function>ed before.</para>
-    </sect1>
-
-    <sect1>
-      <title>Other interesting commands.</title>
-      <itemizedlist>
-	<listitem>
-	  <para><application>Yabasic</application> programs may start other programs with the commands <function><link linkend="ref_system">system</link></function> and <function><link linkend="ref_system2">system$</link></function>.</para>	
-	</listitem>
-	<listitem>
-	  <para><function><link linkend="ref_peek">peek</link></function> and <function><link linkend="ref_poke">poke</link></function> allow one to get and set internal information; either for the operating system (i.e. Unix or Windows) or <application>yabasic</application> itself.</para>
-	</listitem>
-	<listitem>
-	  <para>The current time or date can be retrieved with (guess what !) <function><link linkend="ref_time">time$</link></function> and <function><link linkend="ref_date">date$</link></function>.</para>
-	</listitem>
-      </itemizedlist>
-    </sect1>
-  </chapter>
-
-
-
   <chapter id="chapter_topics_list">
     <title>All commands and functions of <application>yabasic</application> listed by topic</title>
 
@@ -1264,6 +1184,39 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
+    <sect1 renderas="sect2" id="top_outside">
+      <title>Invoking functionality outside of yabasic</title>
+      <variablelist>
+	<varlistentry>
+	  <term><link linkend="ref_system">system()</link></term>
+	  <listitem>
+	    hand the name of an external command over to your operating system and return its exitcode
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_system2">system$()</link></term>
+	  <listitem>
+	    hand the name of an external command over to your operating system and return its output
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_external">external()</link></term>
+	  <listitem>
+	    invoke a function from an external library, cast its return value into a <application>yabasic</application>-number
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term><link linkend="ref_external2">external$()</link></term>
+	  <listitem>
+	    invoke a function from an external library, cast its return value into a <application>yabasic</application>-string
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+    </sect1>
     <sect1 renderas="sect2" id="top_other">
       <title>Other commands</title>
       <variablelist>
@@ -1374,20 +1327,6 @@ yabasic*font: 9x15
 	  </listitem>
 	</varlistentry>
 
-
-	<varlistentry>
-	  <term><link linkend="ref_system">system()</link></term>
-	  <listitem>
-	    hand a statement over to your operating system and return its exitcode
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_system2">system$()</link></term>
-	  <listitem>
-	    hand a statement over to your operating system and return its output
-	  </listitem>
-	</varlistentry>
 
 	<varlistentry>
 	  <term><link linkend="ref_time">time$</link></term>
@@ -3695,7 +3634,7 @@ print euler
 	  <title>Description</title>
 	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name may be specified as a string expression.</para>
 	  <para>This feature is the only way to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) during the course of execution of your program.</para>
-	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example).</para>
+	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example below).</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -8323,7 +8262,7 @@ end switch
 	</refmeta>
 	<refnamediv>
 	  <refname>system()</refname>
-	  <refpurpose>hand a statement over to your operating system and return its exitcode</refpurpose>
+	  <refpurpose>hand the name of an external command over to your operating system and return its exitcode</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -8362,7 +8301,7 @@ endif
 	</refmeta>
 	<refnamediv>
 	  <refname>system$()</refname>
-	  <refpurpose>hand a statement over to your operating system and return its output</refpurpose>
+	  <refpurpose>hand the name of an external command over to your operating system and return its output</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -9663,7 +9602,7 @@ how to use these words in <application>yabasic</application>.
 
 
   <chapter id="chapter_ref_concepts">
-    <title>Some general concepts and terms</title>
+    <title>Some features and general concepts of <application>yabasic</application></title>
     <para>This chapter presents some general concepts and terms, which deserve a description on their own, but are not associated with a single command or function in <application>yabasic</application>. Most of these topics do not lend themselves to be read alone, rather they might be read (or skimmed) as background material if an entry from the <link linkend="chapter_ref_words">alphabetical list of commands</link> refers to them.</para>
     <sect1 renderas="sect2" id="ref_logical_shortcuts">
       <title>Logical shortcuts</title>
@@ -9892,272 +9831,41 @@ until a=0 and b=0
 </programlisting>
       <para>This program requests two numbers, which it than adds. The process is repeated until you enter zero (or nothing) twice.</para>
     </sect1>
+
     <sect1>
-      <title>The demo of yabasic</title>
-      <para>The listing below is the <emphasis>demo</emphasis> of yabasic. Note, that parts of this demo have been written <emphasis>before</emphasis> some of the more advanced features (e.g <emphasis>subroutines</emphasis>) of <application>yabasic</application> have been implemented. So please do not take this as a particular good example of <application>yabasic</application>-code.</para>
+      <title>Graphics with bitmaps</title>
+      <para><application>yabasic</application> allows to retrieve and put back rectangular regions of the screen with simple commands:</para>
       <programlisting>
-//
-//      This program demos yabasic
-//
+open window 200,200
 
-
-//      Check, if screen is large enough
-clear screen
-sw=peek("screenwidth"):sh=peek("screenheight")
-if (sw&lt;78 or sh&lt;24) then
-  print
-  print "  Sorry, but your screen is to small to run this demo !"
-  print
-  end
-endif
-sw=78:sh=24
-
-//  Initialize everything
-restore mmdata
-read mmnum:dim mmtext$(mmnum)
-for a=1 to mmnum:read mmtext$(a):next a
-
-//  Main loop selection of demo
-ysel=1
-label mainloop
-clear screen
-print colour("cyan","magenta") at(7,2) "################################"
-print colour("cyan","magenta") at(7,3) "################################"
-print colour("cyan","magenta") at(7,4) "################################"
-print colour("yellow","blue") at(8,3) " This is the demo for yabasic "
-yoff=7
-for a=1 to mmnum
-  if (a=mmnum) then ydisp=1:else ydisp=0:fi
-  if (a=ysel) then
-    print colour("blue","green") at(5,yoff+ydisp+a) mmtext$(a);
-  else
-    print at(5,yoff+ydisp+a) mmtext$(a);
-  endif
-next a
-print at(3,sh-3) "Move selection with CURSOR KEYS (or u and d),"
-print at(3,sh-2) "Press RETURN or SPACE to choose, ESC to quit."
-
-
-do    // loop for keys pressed
-  rev=1
-  do    // loop for blinking
-    k$=inkey$(0.4)
-    if (k$="") then
-      if (ysel=mmnum) then
-        if (rev=1) then 
-          print colour("blue","green") at(5,yoff+mmnum+1) mmtext$(mmnum);
-          rev=0
-        else
-          print colour("yellow","red") at(5,yoff+mmnum+1) mmtext$(mmnum);
-          rev=1
-        endif
-      endif
-    else    // key has been pressed, leave loop
-      break
-    endif
-  loop    // loop for blinking
-
-  yalt=ysel
-  if (k$="up" or k$="u") then 
-    if (ysel=1) then ysel=mmnum else ysel=ysel-1 fi
-    redraw():heal():continue
-  fi
-  if (k$="down" or k$="d") then 
-    if (ysel=mmnum) then ysel=1 else ysel=ysel+1 fi
-    redraw():heal():continue
-  fi
-  if (k$=" " or k$="enter" or k$="right") then 
-    on ysel gosub overview,bitmap,tetraeder,endit
-    goto mainloop
-  fi
-  if (k$="esc") then
-    endit()
-  fi
-  beep
-  print at(3,sh-5) "Invalid key: ",k$,"         "
-loop    // loop for keys pressed
-
-
-//  redraw line
-sub redraw()
-  if (yalt=mmnum) then ydisp=1:else ydisp=0:fi
-  print at(5,yoff+yalt+ydisp) mmtext$(yalt);
-  if (ysel=mmnum) then ydisp=1:else ydisp=0:fi
-  print colour("blue","green") at(5,yoff+ysel+ydisp) mmtext$(ysel);
-  return
-end sub
-
-
-//  erase a line
-sub heal()
-  print at(3,sh-5) "                                                       "
-  return
-end sub
-
-
-//  Go here to exit
-label endit
-  print at(3,sh-8) "Hope you liked it ...\n   ";
-  exit
-return
-
-
-//  Present a short overview
-label overview
-  clear screen
-  print
-  print "  Yabasic is a quite traditional basic: It comes with"
-  print "  print, input, for-next-loops, goto, gosub, while and"
-  print "  repeat. It has user defined procedures and libraries,"
-  print "  however, it is not object oriented.\n"
-  print "  Yabasic makes it easy to open a window, draw lines"
-  print "  and print the resulting picture.\n"
-  print "  Yabasic programs are interpreted and run under Unix"
-  print "  and Windows. The Yabasic interpreter (around 200K)"
-  print "  and any Yabasic program can be glued together to"
-  print "  form a standalone executable.\n" 
-  print "  Yabasic is free software, i.e. subject to the"
-  print "  MIT License.\n"
-  print "\n\n\n  While you read this, I am calculating prime numbers,\n"
-  print "  Press any key to return to main menu ..."
-  can=1
-  print at(6,17) "This is a prime number: "
-  label nextcan
-  can=can+2
-  for i=2 to sqrt(can):if (frac(can/i)=0) then goto notprime:fi:next i
-  print at(32,17) can;
-  label notprime
-  if (lower$(inkey$(0))&lt;&gt;"") then 
-    print at(10,sh) "Wrapping around once ...";
-    for x=1 to sw
-      a$=getscreen$(0,0,1,sh-2)
-      b$=getscreen$(1,0,sw-1,sh-2)
-      putscreen b$,0,0
-      putscreen a$,sw-1,0
-    next x
-    sleep 2
-    return
-  fi
-goto nextcan
-
-
-//  Show some animated bitmaps
-label bitmap
-  clear screen
-  print 
-  print "Yabasic offers some commands for drawing simple graphics."
-  print reverse at(5,12) " Press any key to return to main menu ... "
-
-  n=20
-  open window 400,400
-
-  for b=20 to 0 step -1
-    color 255-b*12,0,b*12
-    fill circle 200,200,b
-  next b
-  c$=getbit$(179,179,221,221)
-  for a=1 to 2000
-    color ran(255),ran(255),ran(255)
-    x=ran(500)-100:y=ran(500)-100
-    fill rectangle ran(500)-100,ran(500)-100,ran(500)-100,ran(500)-100
+rem prepare picture of a star
+dim p(3,2)
+for off=0 to 90 step 30
+  for a=0 to 2
+    phi = (off + 120*a)*2*pi/360
+    p(a,0) = 50 + 20*cos(phi)
+    p(a,1) = 50 + 20*sin(phi)
   next a
+  fill triangle p(0,0),p(0,1),p(1,0),p(1,1),p(2,0),p(2,1)
+next off
 
-  x=200:y=200:phi=ran(2*pi):dx=2*sin(phi):dy=2*cos(phi)
-  o$=""
-  count=0
-  label pong
-    count=count+1
-    if (o$&lt;&gt;"") putbit o$,xo-2,yo-2
-    if (count&gt;1000) then
-      phi=ran(2*pi):dx=2*sin(phi):dy=2*cos(phi)
-      sleep 2
-      count=0
-    endif
-    xo=x:yo=y
-    x=x+dx:y=y+dy
-    o$=getbit$(x-2,y-2,x+46,y+46)
-    putbit c$,x,y,"t"
-    if (x&lt;0 or x&gt;360) dx=-dx
-    if (y&lt;0 or y&gt;360) dy=-dy
-    if (inkey$(0)&lt;&gt;"") then
-      close window
-      return
-    endif
-  goto pong
-return
-
-label tetraeder
-
-open window 400,400
+star$ = getbit$(30,30,80,80)
 clear window
-clear screen
-print reverse at(5,12) " Press any key to return to main menu ... "	
 
-dim opoints(4,3)
-restore points
-for n=1 to 4:for p=1 to 3:read opoints(n,p):next p:next n
+for a=0 to 200 step 10
+  line a,0 to a,200:line 0,a to 200,a: rem draw some pattern on the screen
+next a
 
-dim triangles(4,3)
-restore triangles
-for n=1 to 4:for p=1 to 3:read triangles(n,p):next p:next n
-
-phi=0:dphi=0.1:psi=0:dpsi=0.05
-dim points(4,3)
-
-r=60:g=20
-dr=0.5:dg=1.2:db=3
-label main
-
-  phi=phi+dphi
-  psi=psi+dpsi
-  for n=1 to 4
-    points(n,1)=opoints(n,1)*cos(phi)-opoints(n,2)*sin(phi)
-    points(n,2)=opoints(n,2)*cos(phi)+opoints(n,1)*sin(phi)
-    p2=          points(n,2)*cos(psi)-opoints(n,3)*sin(psi)
-    points(n,3)=opoints(n,3)*cos(psi)+ points(n,2)*sin(psi)
-    points(n,2)=p2
-  next n
-
-  r=r+dr:if (r&lt;0 or r&gt;60) dr=-dr
-  g=g+dg:if (g&lt;0 or g&gt;60) dg=-dg
-  b=b+db:if (b&lt;0 or b&gt;60) db=-db
-  dm=dm+0.01
-  m=120-80*sin(dm)
-  for n=1 to 4
-    p1=triangles(n,1)
-    p2=triangles(n,2)
-    p3=triangles(n,3)
-    n1=points(p1,1)+points(p2,1)+points(p3,1)
-    n2=points(p1,2)+points(p2,2)+points(p3,2)
-    n3=points(p1,3)+points(p2,3)+points(p3,3)
-    if (n3&gt;0) then
-      sp=n1*0.5-n2*0.7-n3*0.6
-      color 60+r+30*sp,60+g+30*sp,60+b+30*sp
-      fill triangle 200+m*points(p1,1),200+m*points(p1,2),200+m*points(p2,1),200+m*points(p2,2),200+m*points(p3,1),200+m*points(p3,2)
-    endif
-  next n
-  if (inkey$(0.1)&lt;&gt;"") close window:return
-  clear window
-goto main
-
-label points
-data  -1,-1,+1,  +1,-1,-1,  +1,+1,+1,  -1,+1,-1
-label triangles
-data  1,2,4,  2,3,4,  1,3,4,  1,2,3
-
-//  Data section ...
-label mmdata
-//  Data for main menu: Number and text of entries in main menu
-data 4
-data "   Yabasic in a nutshell   "
-data "   Some graphics           "
-data "   A rotating Tetraeder    "
-data "   Exit this demo          "
-
-   </programlisting>
-
+for a=10 to 150 step 5
+  saved$=getbit$(a,80,a+40,120): rem save old content of window
+  putbit star$ to a,80,"t": rem put star at new location
+  pause 0.5
+  putbit saved$ to a,80: rem restore old window content
+next a
+</programlisting>
+      <para>This program moves moves the picture of a star across the graphics window. The first part of the program draws such a star and then retrieves the bitmap with <function>getbit$()</function>. <application>Yabasic</application> stores bitmaps within ordinary strings and so the star-bitmap can simply be stored within the variable <function>star$</function>.</para>
+<para>Once the program has prepared the bitmap-string, it puts it back into the window with the <function>putbit</putbit>-command and various locations. Each time before the star-bitmap is put into the window, the prior content is saved within the variable <function>saved$</function> and restored later.</para>
     </sect1>
-
   </chapter>
 
 
