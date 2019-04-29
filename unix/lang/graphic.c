@@ -1955,7 +1955,7 @@ putbit (void)
 #endif /*  */
     mode = pop (stSTRING)->pointer;
     if (print_to_file) {
-        error (sERROR, "Cannot bitblit to printer");
+        error (sERROR, "Cannot putbit to printer");
         return;
     }
     if (!winopened) {
@@ -1971,7 +1971,7 @@ putbit (void)
         m = 't';
     } else {
         sprintf (string,
-                 "Invalid mode for bitblit: '%s', only 'solid' and 'transparent' are allowed",
+                 "Invalid mode for putbit: '%s', only 'solid' and 'transparent' are allowed",
                  mode);
         error (sERROR, string);
     }
@@ -2037,7 +2037,6 @@ putbit (void)
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             if (!readrgb (NULL, &red, &green, &blue)) {
-                error (sERROR, "Invalid bitmap");
                 return;
             }
             should_pixel = rgb_to_pixel (red, green, blue);
@@ -2200,10 +2199,12 @@ readrgb (char *bits, unsigned short *red, unsigned short *green,
 {
     /* read rgb bit from string one after another */
     static char *bitpt;
+    static char *bitstart;
     int r, g, b;
 
     if (bits) {
         bitpt = bits;
+	bitstart = bits;
         return 1;
     }
     if (sscanf (bitpt, "%02x%02x%02x", &r, &g, &b) == 3) {
@@ -2213,6 +2214,8 @@ readrgb (char *bits, unsigned short *red, unsigned short *green,
         bitpt += 6;
         return 1;
     }
+    sprintf(errorstring,"Invalid bitmap: could not extract three hex-values from given string at position %d: '%06s'",bitpt-bitstart,bitpt);
+    error (sERROR, "Invalid bitmap");
     return 0;
 }
 
