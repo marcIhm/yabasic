@@ -39,7 +39,7 @@ static void itransform (int *, int *);	/* integer variant of transform() */
 static int grafinit (void);	/* initialize grafics (either X or Windows) */
 static char *newrgb (int, int);	/* create a new bitmap string */
 static void addrgb (char *, unsigned short, unsigned short, unsigned short);	/* add one rgb pixel to bitstring */
-static int readrgb (char *, unsigned short *, unsigned short *, unsigned short *);	/* read rgb pixel from string one after another */
+static int readrgb (char *, int, unsigned short *, unsigned short *, unsigned short *);	/* read rgb pixel from string one after another */
 static int change_font (char *);	/* change font */
 static int rgb_to_pixel (int, int, int); /* create a pixel value from rgb values */
 
@@ -1942,7 +1942,7 @@ putbit (void)
     char *mode, *pm, *bitstring, *pb;
     char m;
     int xe, ye, we, he;
-    int x, y, xdest, ydest, w, h, n, badimage;
+    int x, y, xdest, ydest, w, h, n;
     unsigned short red, green, blue;
 
 #ifdef UNIX
@@ -1965,7 +1965,7 @@ putbit (void)
     for (pm = mode; *pm; pm++) {
         *pm = tolower (*pm);
     }
-    if (strlen (mode) && !strncmp (mode, "solid", strlen (mode))) {
+    if (!strncmp (mode, "solid", strlen (mode))) {
         m = 's';
     } else if (strlen (mode) && !strncmp (mode, "transparent", strlen (mode))) {
         m = 't';
@@ -1979,21 +1979,10 @@ putbit (void)
     xdest = (int) pop (stNUMBER)->value;
     itransform (&xdest, &ydest);
     bitstring = pop (stSTRING)->pointer;
-    badimage = FALSE;
-    if (sscanf (bitstring, "rgb %d,%d:%n", &w, &h, &n) != 2) {
-        badimage = TRUE;
-    }
-    for (pb = bitstring + n; *pb; pb++) {
-        *pb = tolower (*pb);
-        if (!strchr ("0123456789abcdef", *pb)) {
-            badimage = TRUE;
-            break;
-        }
-    }
-    if (badimage || w < 0 || h < 0) {
-        error (sERROR,
-               "Invalid bitmap (must start with 'rgb X,Y:', where X and Y are >0)");
-        return;
+    if (sscanf (bitstring, "rgb %d,%d:%n", &w, &h, &n) != 2 || w < 0 || h < 0) {
+		error(sERROR,
+			"Invalid bitmap (must start with 'rgb X,Y:', where X and Y are >0)");
+		return;
     }
     if (xdest >= winwidth || ydest >= winheight || xdest + w < 0
             || ydest + h < 0) {
@@ -2017,9 +2006,7 @@ putbit (void)
     if (he > winheight - ye) {
         he = winheight - ye;
     }
-    if (!readrgb (bitstring + n, &red, &green, &blue)) {
-        return;
-    }
+	readrgb(bitstring, n, NULL, NULL, NULL);
 #ifdef UNIX
     if (xe + we > 0 && ye + he > 0) {
         XGetGCValues (display, gc, GCPlaneMask, &vals);
@@ -2036,7 +2023,9 @@ putbit (void)
 #endif /*  */
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
-            if (!readrgb (NULL, &red, &green, &blue)) {
+            if (!readrgb (NULL, 0, &red, &green, &blue)) {
+				sprintf(errorstring, "error while reading line %d of %d, pixel %d of %d from string", y + 1, h, x + 1, w);
+					error(sERROR, errorstring);
                 return;
             }
             should_pixel = rgb_to_pixel (red, green, blue);
@@ -2194,28 +2183,33 @@ addrgb (char *bits, unsigned short red, unsigned short green,
 
 
 static int
-readrgb (char *bits, unsigned short *red, unsigned short *green,
+readrgb (char *bits, int off, unsigned short *red, unsigned short *green,
          unsigned short *blue)
 {
     /* read rgb bit from string one after another */
     static char *bitpt;
     static char *bitstart;
     int r, g, b;
+	int scanned;
 
     if (bits) {
-        bitpt = bits;
-	bitstart = bits;
+        bitpt = bits + off;
+	    bitstart = bits;
         return 1;
     }
-    if (sscanf (bitpt, "%02x%02x%02x", &r, &g, &b) == 3) {
+	scanned = sscanf(bitpt, "%02x%02x%02x", &r, &g, &b);
+    if ( scanned == 3) {
         *red = r;
         *green = g;
         *blue = b;
         bitpt += 6;
         return 1;
     }
-    sprintf(errorstring,"Invalid bitmap: could not extract three hex-values from given string at position %d: '%06s'",bitpt-bitstart,bitpt);
-    error (sERROR, "Invalid bitmap");
+	if (scanned == EOF)
+		sprintf(errorstring, "Invalid bitmap: unexpected end of supplied string");
+	else
+		sprintf(errorstring,"Invalid bitmap: could only extract %d hex-values from supplied string at position %d: '%.6s'",scanned, bitpt-bitstart,bitpt);
+    error (sERROR, errorstring);
     return 0;
 }
 
