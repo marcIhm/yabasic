@@ -152,7 +152,7 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 #endif
 
 	if (!fu) {
-	  sprintf(string, "could not find function '%s'",funame);
+	    sprintf(string, "could not find function '%s' in library '%s'",funame,libname);
 	if (opt_error) {
 	  error(sERROR,string);
 	} else {
