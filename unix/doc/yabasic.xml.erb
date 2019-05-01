@@ -3844,7 +3844,7 @@ Calling subroutine baz (NOT okay) ...
 	</refmeta>
 	<refnamediv>
 	  <refname>external()</refname>
-	  <refpurpose>call a function from an external non-yabasic library</refpurpose>
+	  <refpurpose>call a function from an external non-<application>yabasic</application> library or dll</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -3853,26 +3853,41 @@ print external("libhello","int","sayhello","string","world")
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>external</function>-function calls a function from an external library, which is <emphasis>not</emphasis> written in <application>yabasic</application>.</para>
+	  <para>The <function>external</function>-function calls a function from an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>.</para>
+	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
+	  <para>To show, how to use the <function>external</function>-function, lets assume, that you want to calculate the cosine of an angle, but do not want to use the builtin <function>cos</function>-function but rather call out to an external library. Depending on your operating system (Windows or Linux), this function either contained in <filename>libm.so.6</filename> or <filename>msvcrt.dll</filename>.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
-open 1,"foo"
-while !eof(1)
-  print right$("0"+hex$(peek(1)),2)," ";
-  i=i+1
-  if (mod(i,10)=0) print
-end while
-print
-          </programlisting>
-	    <para>This program reads the file <computeroutput>foo</computeroutput> and prints its output as a <emphasis>hex</emphasis>-dump using the <function>hex</function>-function.</para>
+if peek$("os") = "unix" then
+  lib$ = "/lib64/libm.so.6"
+else
+  lib$ = "msvcrt.dll"
+fi
+print external(lib$,"double","cos","double",2)	      
+          </programlisting>	  
 	  </informalexample>
+	  <para>The <function>external</function>-function needs at minimum 3 arguments (in the example above, there are 5 arguments):</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string, containing the name of the library, e.g. "/lib64/libm.so.6".</para>
+	    </listitem>
+	    <listitem>
+	      <para>A string describing the type, that the function (specified with the next argument) returns.</para>
+	    </listitem>
+	    <listitem>
+	      <para></para>
+	    </listitem>
+	  </itemizedlist>
+	</refsect1>
+	<refsect1>
+	  <title>Type specifications</title>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_dec">dec</link></function><function><link linkend="ref_bin">bin</link></function></para>
+	  <para><function><link linkend="ref_external2">external2</link></function>, <function><link linkend="ref_system">system</link></function>, <function><link linkend="ref_system2">system$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -9392,245 +9407,6 @@ print 2**0.5
 	</refsect1>
       </refentry>
     </sect1>
-
-    <sect1 renderas="sect2" id="reserved_word">
-      <title>Reserved Words</title>
-<para>Here is a list of all reserved words in
-<application>yabasic</application>. Please make sure, that you do not try to
-use one of them as the name of a variable or subroutine. Or, the other way
-around: If you get some mysterious error from <application>yabasic</application>
-and you just can't figure out why, then you might be using one of the reserved words
-below, without knowing.
-</para>
-<para>Anyway, here is the list:</para>
-      <informaltable frame="none">
-	<tgroup cols="5">
-	  <tbody>
-<row>
-<entry><function>ABS</function></entry>
-<entry><function>ACOS</function></entry>
-<entry><function>AND</function></entry>
-<entry><function>ARRAYDIM</function></entry>
-<entry><function>ARRAYDIMENSION</function></entry>
-</row>
-<row>
-<entry><function>ARRAYSIZE</function></entry>
-<entry><function>AS</function></entry>
-<entry><function>ASC</function></entry>
-<entry><function>ASIN</function></entry>
-<entry><function>AT</function></entry>
-</row>
-<row>
-<entry><function>ATAN</function></entry>
-<entry><function>BEEP</function></entry>
-<entry><function>BELL</function></entry>
-<entry><function>BIN$</function></entry>
-<entry><function>BIND</function></entry>
-</row>
-<row>
-<entry><function>BITBLIT</function></entry>
-<entry><function>BITBLIT$</function></entry>
-<entry><function>BITBLT</function></entry>
-<entry><function>BITBLT$</function></entry>
-<entry><function>BOX</function></entry>
-</row>
-<row>
-<entry><function>BREAK</function></entry>
-<entry><function>CASE</function></entry>
-<entry><function>CHR$</function></entry>
-<entry><function>CIRCLE</function></entry>
-<entry><function>CLEAR</function></entry>
-</row>
-<row>
-<entry><function>CLOSE</function></entry>
-<entry><function>COLOR</function></entry>
-<entry><function>COLOUR</function></entry>
-<entry><function>COMPILE</function></entry>
-<entry><function>CONTINUE</function></entry>
-</row>
-<row>
-<entry><function>COS</function></entry>
-<entry><function>CURVE</function></entry>
-<entry><function>DATA</function></entry>
-<entry><function>DATE$</function></entry>
-<entry><function>DEC</function></entry>
-</row>
-<row>
-<entry><function>DEFAULT</function></entry>
-<entry><function>DIM</function></entry>
-<entry><function>DO</function></entry>
-<entry><function>DOT</function></entry>
-<entry><function>ELSE</function></entry>
-</row>
-<row>
-<entry><function>ELSEIF</function></entry>
-<entry><function>ELSIF</function></entry>
-<entry><function>END</function></entry>
-<entry><function>ENDIF</function></entry>
-<entry><function>EOF</function></entry>
-</row>
-<row>
-<entry><function>EOR</function></entry>
-<entry><function>ERROR</function></entry>
-<entry><function>EXECUTE</function></entry>
-<entry><function>EXECUTE$</function></entry>
-<entry><function>EXIT</function></entry>
-</row>
-<row>
-<entry><function>EXP</function></entry>
-<entry><function>EXPORT</function></entry>
-<entry><function>FI</function></entry>
-<entry><function>FILL</function></entry>
-<entry><function>FILLED</function></entry>
-</row>
-<row>
-<entry><function>FOR</function></entry>
-<entry><function>FRAC</function></entry>
-<entry><function>GETBIT$</function></entry>
-<entry><function>GETSCREEN$</function></entry>
-<entry><function>GLOB</function></entry>
-</row>
-<row>
-<entry><function>GOSUB</function></entry>
-<entry><function>GOTO</function></entry>
-<entry><function>HEX$</function></entry>
-<entry><function>IF</function></entry>
-<entry><function>INKEY$</function></entry>
-</row>
-<row>
-<entry><function>INPUT</function></entry>
-<entry><function>INSTR</function></entry>
-<entry><function>INT</function></entry>
-<entry><function>INTERRUPT</function></entry>
-<entry><function>LABEL</function></entry>
-</row>
-<row>
-<entry><function>LEFT$</function></entry>
-<entry><function>LEN</function></entry>
-<entry><function>LET</function></entry>
-<entry><function>LINE</function></entry>
-<entry><function>LOCAL</function></entry>
-</row>
-<row>
-<entry><function>LOG</function></entry>
-<entry><function>LOOP</function></entry>
-<entry><function>LOWER$</function></entry>
-<entry><function>LTRIM$</function></entry>
-<entry><function>MAX</function></entry>
-</row>
-<row>
-<entry><function>MID$</function></entry>
-<entry><function>MIN</function></entry>
-<entry><function>MOD</function></entry>
-<entry><function>MOUSEB</function></entry>
-<entry><function>MOUSEBUTTON</function></entry>
-</row>
-<row>
-<entry><function>MOUSEMOD</function></entry>
-<entry><function>MOUSEMODIFIER</function></entry>
-<entry><function>MOUSEX</function></entry>
-<entry><function>MOUSEY</function></entry>
-<entry><function>NEW</function></entry>
-</row>
-<row>
-<entry><function>NEXT</function></entry>
-<entry><function>NOT</function></entry>
-<entry><function>NUMPARAM</function></entry>
-<entry><function>ON</function></entry>
-<entry><function>OPEN</function></entry>
-</row>
-<row>
-<entry><function>OR</function></entry>
-<entry><function>ORIGIN</function></entry>
-<entry><function>PAUSE</function></entry>
-<entry><function>PEEK</function></entry>
-<entry><function>PEEK$</function></entry>
-</row>
-<row>
-<entry><function>POKE</function></entry>
-<entry><function>PRINT</function></entry>
-<entry><function>PRINTER</function></entry>
-<entry><function>PUTBIT</function></entry>
-<entry><function>PUTSCREEN</function></entry>
-</row>
-<row>
-<entry><function>RAN</function></entry>
-<entry><function>READ</function></entry>
-<entry><function>READING</function></entry>
-<entry><function>RECT</function></entry>
-<entry><function>RECTANGLE</function></entry>
-</row>
-<row>
-<entry><function>REDIM</function></entry>
-<entry><function>REPEAT</function></entry>
-<entry><function>RESTORE</function></entry>
-<entry><function>RETURN</function></entry>
-<entry><function>REVERSE</function></entry>
-</row>
-<row>
-<entry><function>RIGHT$</function></entry>
-<entry><function>RINSTR</function></entry>
-<entry><function>RTRIM$</function></entry>
-<entry><function>SCREEN</function></entry>
-<entry><function>SEEK</function></entry>
-</row>
-<row>
-<entry><function>SIG</function></entry>
-<entry><function>SIN</function></entry>
-<entry><function>SLEEP</function></entry>
-<entry><function>SPLIT</function></entry>
-<entry><function>SPLIT$</function></entry>
-</row>
-<row>
-<entry><function>SQR</function></entry>
-<entry><function>SQRT</function></entry>
-<entry><function>STATIC</function></entry>
-<entry><function>STEP</function></entry>
-<entry><function>STR$</function></entry>
-</row>
-<row>
-<entry><function>SUB</function></entry>
-<entry><function>SUBROUTINE</function></entry>
-<entry><function>SWITCH</function></entry>
-<entry><function>SYSTEM</function></entry>
-<entry><function>SYSTEM$</function></entry>
-</row>
-<row>
-<entry><function>TAN</function></entry>
-<entry><function>TELL</function></entry>
-<entry><function>TEXT</function></entry>
-<entry><function>THEN</function></entry>
-<entry><function>TIME$</function></entry>
-</row>
-<row>
-<entry><function>TO</function></entry>
-<entry><function>TOKEN</function></entry>
-<entry><function>TOKEN$</function></entry>
-<entry><function>TRIANGLE</function></entry>
-<entry><function>TRIM$</function></entry>
-</row>
-<row>
-<entry><function>UNTIL</function></entry>
-<entry><function>UPPER$</function></entry>
-<entry><function>USING</function></entry>
-<entry><function>VAL</function></entry>
-<entry><function>WAIT</function></entry>
-</row>
-<row>
-<entry><function>WEND</function></entry>
-<entry><function>WHILE</function></entry>
-<entry><function>WINDOW</function></entry>
-<entry><function>WRITING</function></entry>
-<entry><function>XOR</function></entry>
-</row>
-	  </tbody>
-	</tgroup>
-      </informaltable>
-<para>
-Please see <link linkend="chapter_ref_words">here</link> for explanations on
-how to use these words in <application>yabasic</application>.
-</para>
-</sect1>
   </chapter>
 
 
@@ -9768,7 +9544,7 @@ array would be a time (and resource) consuming operation; passing just a referen
      characters as long as you know their position (as a hex-number) within the 
      <acronym>ascii</acronym>-charset: 
      For example \x012 is transformed into the character <function>chr$(18)</function> (or <function>chr$(dec("12",16))</function>. Note that \x requires a
-     hexa-decimal number (and the hexa-decimal string "12" corresponds to the decimal number 18).</para> 
+     hexa-decimal number (and the hexadecimal string "12" corresponds to the decimal number 18).</para> 
     </sect1>
 
 
