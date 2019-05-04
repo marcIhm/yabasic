@@ -198,16 +198,18 @@ extern int yydebug;
     tPEEK = 408,
     tPEEK2 = 409,
     tPOKE = 410,
-    tEXTERNAL = 411,
-    tEXTERNAL2 = 412,
-    tDATE = 413,
-    tTIME = 414,
-    tTOKEN = 415,
-    tTOKENALT = 416,
-    tSPLIT = 417,
-    tSPLITALT = 418,
-    tGLOB = 419,
-    UMINUS = 420
+    tEXTLIB = 411,
+    tEXTLIB2 = 412,
+    tEXTSTRUCT = 413,
+    tEXTSTRUCT2 = 414,
+    tDATE = 415,
+    tTIME = 416,
+    tTOKEN = 417,
+    tTOKENALT = 418,
+    tSPLIT = 419,
+    tSPLITALT = 420,
+    tGLOB = 421,
+    UMINUS = 422
   };
 #endif
 

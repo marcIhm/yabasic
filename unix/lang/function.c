@@ -797,15 +797,22 @@ function (struct command *current)	/* performs a function */
         pointer = do_system2 (str);
         result = stSTRING;
         break;
-    case fEXTERNAL:
-	value = 0.0;
-	external (type, &value, &pointer);
+    case fEXTLIB:
+	extlib (type, &value, &pointer);
         result = stNUMBER;
         break;
-    case fEXTERNAL2:
-	pointer = my_strdup ("");
-	external (type, &value, &pointer);
+    case fEXTLIB2:
+	extlib (type, &value, &pointer);
         result = stSTRING;
+        break;
+    case fEXTSTRUCT_NEW:
+    case fEXTSTRUCT_DUMP:
+	extstruct ('f', type, &value, &pointer);
+        result = stSTRING;
+        break;
+    case fEXTSTRUCT_GET_NUMBER:
+	extstruct ('f', type, &value, &pointer);
+        result = stNUMBER;
         break;
     case fPEEK:
         str = a1->pointer;

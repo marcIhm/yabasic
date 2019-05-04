@@ -273,7 +273,7 @@ enum stream_modes {
 enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
-    fRAN2, fDATE, fTIME, fEXTERNAL, fEXTERNAL2, 
+    fRAN2, fDATE, fTIME, fEXTLIB, fEXTLIB2, fEXTSTRUCT_NEW, fEXTSTRUCT_DUMP, fEXTSTRUCT_GET_NUMBER, 
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -346,6 +346,8 @@ enum cmd_type {
     cOPENPRN, cCLOSEPRN, cMOVEORIGIN, cRECT, cGCOLOUR, cGCOLOUR2,
     cGBACKCOLOUR, cGBACKCOLOUR2, cPUTBIT, cPUTCHAR,
 
+    cEXTSTRUCT_SET_NUMBER, cEXTSTRUCT_FREE,    /* external libraries */
+    
     cLAST_COMMAND			/* no command, just marks end of list */
 };
 
@@ -570,7 +572,8 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 #endif
 
 /* external.c */
-void external (int,double *,char **);  /* load and execute function from external library */
+void extlib (int,double *,char **);  /* load and execute function from external library */
+void extstruct (char,int,double *,char **);  /* manipulate a c-structure for passing to an external library */
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */

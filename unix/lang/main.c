@@ -1165,6 +1165,8 @@ initialize (void)
     cexplanation[cDOT] = "DOT";
     cexplanation[cPUTBIT] = "PUTBIT";
     cexplanation[cPUTCHAR] = "PUTCHAR";
+    cexplanation[cEXTSTRUCT_SET_NUMBER] = "EXTSTRUCT_SET_NUMBER";
+    cexplanation[cEXTSTRUCT_FREE] = "EXTSTRUCT_FREE";
     cexplanation[cLINE] = "LINE";
     cexplanation[cGCOLOUR] = "GCOLOUR";
     cexplanation[cGCOLOUR2] = "GCOLOUR2";
@@ -1236,8 +1238,11 @@ initialize (void)
     fexplanation[fPEEK] = "PEEK";
     fexplanation[fPEEK2] = "PEEK2";
     fexplanation[fPEEK4] = "PEEK4";
-    fexplanation[fEXTERNAL] = "EXTERNAL";
-    fexplanation[fEXTERNAL2] = "EXTERNAL2";
+    fexplanation[fEXTLIB] = "EXTLIB";
+    fexplanation[fEXTLIB2] = "EXTLIB2";
+    fexplanation[fEXTSTRUCT_NEW] = "EXTSTRUCT_NEW";
+    fexplanation[fEXTSTRUCT_DUMP] = "EXTSTRUCT_DUMP";
+    fexplanation[fEXTSTRUCT_GET_NUMBER] = "EXTSTRUCT_GET_NUMBER";
     fexplanation[fTELL] = "TELL";
     fexplanation[fEXP] = "EXP";
     fexplanation[fLOG] = "LOG";

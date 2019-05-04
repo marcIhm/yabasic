@@ -33,7 +33,12 @@ int last_external_okay = 1;                       /* true, if last external call
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
 void
-external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+extlib (int type, double *pvalue, char **ppointer)  /* load and execute function from external library */
+{
+    error(sERROR, "this build of yabasic does not support calling external libraries");
+    return;
+}
+extstruct (int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to an external library */
 {
     error(sERROR, "this build of yabasic does not support calling external libraries");
     return;
@@ -77,6 +82,7 @@ static int parse_stack (); /* verify and process arguments from yabasic stack in
 static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
 static double cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
 static void cleanup (); /* free and cleanup structures after use */
+static int check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
 
 /* ------------- global variables ---------------- */
 
@@ -100,7 +106,7 @@ ffi_type *rtype; /* expected return type of function */
 /* ------------- subroutines ---------------- */
 
 void
-external (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+extlib (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
     char *call_err;
     int ffi_ret;
@@ -177,10 +183,9 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 
     ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
-    if (type == fEXTERNAL) {
+    if (type == fEXTLIB) {
 	*pvalue = cast_from_ffi_type (&ffi_result, rtype);
     } else {
-	my_free (*ppointer);
 	if (opt_copy_result_string) 
 	    *ppointer = my_strdup ((char *)ffi_result.ffipointer);
 	else
@@ -192,6 +197,102 @@ external (int type,double *pvalue,char **ppointer)  /* load and execute function
 }
 
 
+void
+extstruct (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to an external library */
+{
+    struct stackentry *st, *args[5];
+    int listlen = -1;
+    int i,found;
+
+    /* type can be one of cEXTSTRUCT, fEXTSTRUCT, fEXTSTRUCT2; however, fXX and cXX are different enums, they might come
+       out equal, so we also need the char c_or_f to decide with confidence */
+    
+    st = stackhead;
+    do {
+	st = st->prev;
+	listlen++;
+    } while (st->type != stFREE);
+
+    /* pop arguments here, because the function is declared to have zero args */
+    for(i=0;i<listlen;i++) {
+	pop (stSTRING_OR_NUMBER);
+    }
+    pop (stFREE);
+
+    /* collect arguments to extstruct function/command conveniently in array */
+    for(i=0;i<5;i++) {args[i] = NULL;}
+    for(i=0;i<listlen;i++) {args[i] = st->next; st = st->next;}
+
+    if (!check_type_and_action(c_or_f,type,args[0]->pointer)) return;
+    
+    if (!strcmp(args[0]->pointer, "new")) {		
+    }
+
+    if (!strcmp(args[0]->pointer, "free")) {
+    }
+
+    if (!strcmp(args[0]->pointer, "dump")) {
+    }
+
+    if (!strcmp(args[0]->pointer, "set")) {
+    }
+
+    if (!strcmp(args[0]->pointer, "get")) {
+    }
+
+    return;
+}
+
+    
+static int
+check_type_and_action(char c_or_f, int type, char *action) /* make sure, that information from grammar and from arguments match */
+{
+    int i,found;
+    static char *funs[] = {"new","dump","get"};
+    static int numfuns = 3;
+    static char *cmds[] = {"free","set"};
+    static int numcmds = 2;
+    static char *fcs[] = {"new","dump","get","free","set"};
+    static int typesfcs[] = {fEXTSTRUCT_NEW, fEXTSTRUCT_DUMP, fEXTSTRUCT_GET_NUMBER, cEXTSTRUCT_FREE, cEXTSTRUCT_SET_NUMBER};
+    static int numfcs = 5;
+    
+    /* report on invalid action */
+    found = false;
+    for(i=0;i<numfcs;i++) {
+	if (!strcmp(action,fcs[i])) found = true;
+    }
+    if (!found) {
+	sprintf(errorstring, "invalid action '%s' on extstruct", action);
+	error(sERROR, errorstring);
+	return false;
+    }
+       
+    /* report, if chosen action does not match language construct (function or command) */
+    for(i=0;i<numfuns;i++) {
+	if (c_or_f == 'c' && !strcmp(action,funs[i])) {
+	    sprintf(errorstring, "action '%s' should be invoked with the extstruct-function, not the command", action);
+	    error(sERROR,errorstring);
+	    return false;
+	}
+    }
+    for(i=0;i<numcmds;i++) {
+	if (c_or_f == 'f' && !strcmp(action,cmds[i])) {
+	    sprintf(errorstring, "action '%s' should be invoked with the extrstruct-command, not the function", action);
+	    return false;
+	}
+    }
+
+    /* report, if action given as string argument does not match, what can be deduced from grammer (passed as parameter type) */
+    for(i=0;i<numfcs;i++) {
+	if (!strcmp(action,fcs[i]) && type!=typesfcs[i]) {
+	    sprintf(errorstring,"invalid combination of arguments for action '%s' on an extstruct",fcs[i]);
+	    error(sERROR,errorstring);
+	    return false;
+	}
+    }
+}
+
+  
 static int
 parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
 {
@@ -209,7 +310,7 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 	listlen++;
     } while (st->type != stFREE);
 
-    /* pop arguments here */
+    /* pop arguments here, because the function is declared to have zero args */
     for(i=0;i<listlen;i++) {
 	pop (stSTRING_OR_NUMBER);
     }
