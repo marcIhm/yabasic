@@ -3875,12 +3875,22 @@ print external(lib$,"double","cos","double",2)
 	      <para>A string, containing the name of the library, e.g. "/lib64/libm.so.6".</para>
 	    </listitem>
 	    <listitem>
-	      <para>A string describing the type, that the function (specified with the next argument) returns.</para>
+	      <para>A string describing the type, that the function (specified with the next argument) returns. See below for a list of all such types.</para>
 	    </listitem>
 	    <listitem>
-	      <para></para>
+	      <para>The name of the function, that should be called (in the example above: "cos")</para>
 	    </listitem>
 	  </itemizedlist>
+	  <para>If the external function does not require arguments itself, this is everything needed to call <function>external</function>. However (as for the <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, <function>external</function> needs two additional arguments on its own:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string describing the type of the parameter to the external function. See below for a list of all such types.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The name of the function, that should be called (in the example above: "cos")</para>
+	    </listitem>
+	  </itemizedlist>
+
 	</refsect1>
 	<refsect1>
 	  <title>Type specifications</title>
