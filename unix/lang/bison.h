@@ -198,18 +198,21 @@ extern int yydebug;
     tPEEK = 408,
     tPEEK2 = 409,
     tPOKE = 410,
-    tEXTLIB = 411,
-    tEXTLIB2 = 412,
-    tEXTSTRUCT = 413,
-    tEXTSTRUCT2 = 414,
-    tDATE = 415,
-    tTIME = 416,
-    tTOKEN = 417,
-    tTOKENALT = 418,
-    tSPLIT = 419,
-    tSPLITALT = 420,
-    tGLOB = 421,
-    UMINUS = 422
+    tFOREIGN_FUNCTION_CALL = 411,
+    tFOREIGN_FUNCTION_CALL2 = 412,
+    tFOREIGN_STRUCTURE_NEW = 413,
+    tFOREIGN_STRUCTURE_FREE = 414,
+    tFOREIGN_STRUCTURE_DUMP = 415,
+    tFOREIGN_STRUCTURE_SET = 416,
+    tFOREIGN_STRUCTURE_GET = 417,
+    tDATE = 418,
+    tTIME = 419,
+    tTOKEN = 420,
+    tTOKENALT = 421,
+    tSPLIT = 422,
+    tSPLITALT = 423,
+    tGLOB = 424,
+    UMINUS = 425
   };
 #endif
 

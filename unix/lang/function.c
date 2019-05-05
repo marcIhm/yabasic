@@ -797,21 +797,21 @@ function (struct command *current)	/* performs a function */
         pointer = do_system2 (str);
         result = stSTRING;
         break;
-    case fEXTLIB:
-	extlib (type, &value, &pointer);
+    case fFOREIGN_FUNCTION_CALL:
+	foreign_function_call (type, &value, &pointer);
         result = stNUMBER;
         break;
-    case fEXTLIB2:
-	extlib (type, &value, &pointer);
+    case fFOREIGN_FUNCTION_CALL2:
+	foreign_function_call (type, &value, &pointer);
         result = stSTRING;
         break;
-    case fEXTSTRUCT_NEW:
-    case fEXTSTRUCT_DUMP:
-	extstruct ('f', type, &value, &pointer);
+    case fFOREIGN_STRUCTURE_NEW:
+    case fFOREIGN_STRUCTURE_DUMP:
+	foreign_structure ('f', type, &value, &pointer);
         result = stSTRING;
         break;
-    case fEXTSTRUCT_GET_NUMBER:
-	extstruct ('f', type, &value, &pointer);
+    case fFOREIGN_STRUCTURE_GET_NUMBER:
+	foreign_structure ('f', type, &value, &pointer);
         result = stNUMBER;
         break;
     case fPEEK:
@@ -1565,8 +1565,8 @@ peek (char *dest)		/* peek into internals */
         return errorcode;
     } else if (!strcmp (dest, "isbound")) {
         return is_bound;
-    } else if (!strcmp (dest, "last_external_okay")) {
-        return (double) last_external_okay;
+    } else if (!strcmp (dest, "last_foreign_function_call_okay") || !strcmp (dest, "last_fgnfn_call_okay")) {
+        return (double) last_foreign_function_call_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
 	return (double)(now-compilation_start);
@@ -1643,8 +1643,8 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
 #endif
     } else if (!strcmp (dest, "font")) {
         return my_strdup (fontname);
-    } else if (!strcmp (dest, "last_external_error_text")) {
-	return my_strdup (last_external_error_text);
+    } else if (!strcmp (dest, "last_foreign_function_call_error_text") || !strcmp (dest, "last_fgnfn_call_error_text")) {
+	return my_strdup (last_foreign_function_call_error_text);
     } else if (!strcmp (dest, "argument") || !strcmp (dest, "arguments")) {
         if (yabargc > 0) {
             s = yabargv[0];

@@ -1165,8 +1165,8 @@ initialize (void)
     cexplanation[cDOT] = "DOT";
     cexplanation[cPUTBIT] = "PUTBIT";
     cexplanation[cPUTCHAR] = "PUTCHAR";
-    cexplanation[cEXTSTRUCT_SET_NUMBER] = "EXTSTRUCT_SET_NUMBER";
-    cexplanation[cEXTSTRUCT_FREE] = "EXTSTRUCT_FREE";
+    cexplanation[cFOREIGN_STRUCTURE_SET_NUMBER] = "FOREIGN_STRUCTURE_SET_NUMBER";
+    cexplanation[cFOREIGN_STRUCTURE_FREE] = "FOREIGN_STRUCTURE_FREE";
     cexplanation[cLINE] = "LINE";
     cexplanation[cGCOLOUR] = "GCOLOUR";
     cexplanation[cGCOLOUR2] = "GCOLOUR2";
@@ -1238,11 +1238,11 @@ initialize (void)
     fexplanation[fPEEK] = "PEEK";
     fexplanation[fPEEK2] = "PEEK2";
     fexplanation[fPEEK4] = "PEEK4";
-    fexplanation[fEXTLIB] = "EXTLIB";
-    fexplanation[fEXTLIB2] = "EXTLIB2";
-    fexplanation[fEXTSTRUCT_NEW] = "EXTSTRUCT_NEW";
-    fexplanation[fEXTSTRUCT_DUMP] = "EXTSTRUCT_DUMP";
-    fexplanation[fEXTSTRUCT_GET_NUMBER] = "EXTSTRUCT_GET_NUMBER";
+    fexplanation[fFOREIGN_FUNCTION_CALL] = "FOREIGN_FUNCTION_CALL";
+    fexplanation[fFOREIGN_FUNCTION_CALL2] = "FOREIGN_FUNCTION_CALL2";
+    fexplanation[fFOREIGN_STRUCTURE_NEW] = "FOREIGN_STRUCTURE_NEW";
+    fexplanation[fFOREIGN_STRUCTURE_DUMP] = "FOREIGN_STRUCTURE_DUMP";
+    fexplanation[fFOREIGN_STRUCTURE_GET_NUMBER] = "FOREIGN_STRUCTURE_GET_NUMBER";
     fexplanation[fTELL] = "TELL";
     fexplanation[fEXP] = "EXP";
     fexplanation[fLOG] = "LOG";

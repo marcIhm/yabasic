@@ -161,7 +161,8 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tINT tCEIL tFLOOR tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
-%token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tEXTLIB tEXTLIB2 tEXTSTRUCT tEXTSTRUCT2
+%token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFOREIGN_FUNCTION_CALL tFOREIGN_FUNCTION_CALL2
+%token tFOREIGN_STRUCTURE_NEW tFOREIGN_STRUCTURE_FREE tFOREIGN_STRUCTURE_DUMP tFOREIGN_STRUCTURE_SET tFOREIGN_STRUCTURE_GET
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -294,10 +295,8 @@ statement:  /* empty */
   | tEXIT expression {add_command(cEXIT,NULL,NULL);}
   | tDOCU {create_docu($1);}
   | tBIND string_expression {add_command(cBIND,NULL,NULL);}
-  | tEXTSTRUCT string_expression {lyyerror(sERROR,"command extstruct needs at minimum two string arguments");}
-  | tEXTSTRUCT string_expression ',' expression {lyyerror(sERROR,"command extstruct needs at minimum two string arguments");}
-  | tEXTSTRUCT string_expression ',' string_expression {add_command(cPUSHFREE,NULL,NULL); add_command(cEXTSTRUCT_FREE,NULL,NULL);} /* free */ 
-  | tEXTSTRUCT string_expression ',' string_expression ',' expression ',' string_expression ',' expression {add_command(cPUSHFREE,NULL,NULL); add_command(cEXTSTRUCT_SET_NUMBER, NULL, NULL);} /* set */
+  | tFOREIGN_STRUCTURE_FREE string_expression ',' string_expression {add_command(cPUSHFREE,NULL,NULL); add_command(cFOREIGN_STRUCTURE_FREE,NULL,NULL);}
+  | tFOREIGN_STRUCTURE_SET string_expression ',' string_expression ',' expression ',' string_expression ',' expression {add_command(cPUSHFREE,NULL,NULL); add_command(cFOREIGN_STRUCTURE_SET_NUMBER, NULL, NULL);} 
   ;
 
 
@@ -362,11 +361,9 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
-  | tEXTLIB2 '(' call_list ')' {create_function(fEXTLIB2);}
-  | tEXTSTRUCT2 '(' expression ')'  {lyyerror(sERROR,"function extstruct needs a string as its first argument");}
-  | tEXTSTRUCT2 '(' string_expression ')'  {lyyerror(sERROR,"function extstruct needs more than a single string-argument");}
-  | tEXTSTRUCT2 '(' string_expression ',' expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fEXTSTRUCT_NEW);} /* new */
-  | tEXTSTRUCT2 '(' string_expression ',' string_expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fEXTSTRUCT_DUMP);} /* dump */
+  | tFOREIGN_FUNCTION_CALL2 '(' call_list ')' {create_function(fFOREIGN_FUNCTION_CALL2);}
+  | tFOREIGN_STRUCTURE_NEW '(' string_expression ',' expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_NEW);}
+  | tFOREIGN_STRUCTURE_DUMP '(' string_expression ',' string_expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_DUMP);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -464,8 +461,8 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tRINSTR '(' string_expression ',' string_expression ')' {create_function(fRINSTR);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
-  | tEXTLIB '(' call_list ')' {create_function(fEXTLIB);}
-  | tEXTSTRUCT '(' string_expression ',' expression ',' string_expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fEXTSTRUCT_GET_NUMBER);} /* get */
+  | tFOREIGN_FUNCTION_CALL '(' call_list ')' {create_function(fFOREIGN_FUNCTION_CALL);}
+  | tFOREIGN_STRUCTURE_GET '(' string_expression ',' expression ',' string_expression ')' {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_GET_NUMBER);} 
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}

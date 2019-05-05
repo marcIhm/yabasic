@@ -4,7 +4,7 @@
     written by Marc Ihm 1995-2019
     more info at www.yabasic.de
 
-    extcall.c --- code for calling external libraries
+    foreign.c --- code for calling foreign libraries
 
     This file is part of yabasic and may be copied under the terms of
     MIT License which can be found in the file LICENSE.
@@ -26,21 +26,21 @@
 
 /* ------------- externally visible variables ---------------- */
 
-char last_external_error_text[INBUFFLEN] = "";    /* last error message produced by external call */
-int last_external_okay = 1;                       /* true, if last external call has been okay */
+char last_foreign_function_call_error_text[INBUFFLEN] = "";    /* last error message produced by foreign call */
+int last_foreign_function_call_okay = 1;                       /* true, if last foreign call has been okay */
 
 /* ------------- define a stub only, if feature is not available ---------------- */
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
 void
-extlib (int type, double *pvalue, char **ppointer)  /* load and execute function from external library */
+foreign_function_call (int type, double *pvalue, char **ppointer)  /* load and execute function from foreign library */
 {
-    error(sERROR, "this build of yabasic does not support calling external libraries");
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
-extstruct (int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to an external library */
+foreign_structure (int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to a foreign library */
 {
-    error(sERROR, "this build of yabasic does not support calling external libraries");
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
 #else
@@ -77,12 +77,12 @@ union FFI_VAL {
 };
 
 /* ------------- local functions ---------------- */
-static int check_ffi_type (char *, ffi_type **, int, int, int);
-static int parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
-static void cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
-static double cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
-static void cleanup (); /* free and cleanup structures after use */
-static int check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
+static int foreign_check_ffi_type (char *, ffi_type **, int, int, int);
+static int foreign_function_parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
+static void foreign_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
+static double foreign_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
+static void foreign_function_cleanup (); /* free and cleanup structures after use */
+static int foreign_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
 
 /* ------------- global variables ---------------- */
 
@@ -106,18 +106,18 @@ ffi_type *rtype; /* expected return type of function */
 /* ------------- subroutines ---------------- */
 
 void
-extlib (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
     char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
 	void *fu;
 
-    last_external_error_text[0] = '\0';
-    last_external_okay = 0;
+    last_foreign_function_call_error_text[0] = '\0';
+    last_foreign_function_call_okay = 0;
     
-    if (!parse_stack ()) {
-	cleanup ();
+    if (!foreign_function_parse_stack ()) {
+	foreign_function_cleanup ();
 	return;
     }
 
@@ -129,7 +129,7 @@ extlib (int type,double *pvalue,char **ppointer)  /* load and execute function f
 	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
 	}
 	error(sERROR,string);
-	cleanup ();
+	foreign_function_cleanup ();
 	return;
     }
     
@@ -144,9 +144,9 @@ extlib (int type,double *pvalue,char **ppointer)  /* load and execute function f
 	  if (opt_error) {
 	    error(sERROR,string);
 	  } else {
-	    strcpy (last_external_error_text, string);
+	    strcpy (last_foreign_function_call_error_text, string);
 	  }
-	  cleanup ();
+	  foreign_function_cleanup ();
 	  return;
     }
 
@@ -158,33 +158,33 @@ extlib (int type,double *pvalue,char **ppointer)  /* load and execute function f
 #endif
 
 	if (!fu) {
-	    sprintf(string, "could not find function '%s' in library '%s'",funame,libname);
+	    sprintf(string, "could not find function '%s' in foreign library '%s'",funame,libname);
 	if (opt_error) {
 	  error(sERROR,string);
 	} else {
-	  strcpy (last_external_error_text, string);
+	  strcpy (last_foreign_function_call_error_text, string);
 	}
-	cleanup ();
+	foreign_function_cleanup ();
 	return;
     }
 #ifdef UNIX
     call_err = dlerror();
     if (call_err != NULL) {
-	sprintf(string,"could not find function '%s' in library '%s': %s", funame, libname, call_err);
+	sprintf(string,"could not find function '%s' in foreign library '%s': %s", funame, libname, call_err);
 	if (opt_error) {
 	    error(sERROR, string);
 	} else {
-	    strcpy (last_external_error_text, string);
+	    strcpy (last_foreign_function_call_error_text, string);
 	}
-	cleanup ();
+	foreign_function_cleanup ();
 	return;
     }
 #endif
 
     ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
-    if (type == fEXTLIB) {
-	*pvalue = cast_from_ffi_type (&ffi_result, rtype);
+    if (type == fFOREIGN_FUNCTION_CALL) {
+	*pvalue = foreign_cast_from_ffi_type (&ffi_result, rtype);
     } else {
 	if (opt_copy_result_string) 
 	    *ppointer = my_strdup ((char *)ffi_result.ffipointer);
@@ -192,13 +192,13 @@ extlib (int type,double *pvalue,char **ppointer)  /* load and execute function f
 	    *ppointer = (char *)ffi_result.ffipointer;
     }
 	
-    cleanup ();
-    last_external_okay = 1;
+    foreign_function_cleanup ();
+    last_foreign_function_call_okay = 1;
 }
 
 
 void
-extstruct (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to an external library */
+foreign_structure (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to a foreign library */
 {
     struct stackentry *st, *args[5];
     int listlen = -1;
@@ -223,8 +223,6 @@ extstruct (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulat
     for(i=0;i<5;i++) {args[i] = NULL;}
     for(i=0;i<listlen;i++) {args[i] = st->next; st = st->next;}
 
-    if (!check_type_and_action(c_or_f,type,args[0]->pointer)) return;
-    
     if (!strcmp(args[0]->pointer, "new")) {		
     }
 
@@ -245,56 +243,7 @@ extstruct (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulat
 
     
 static int
-check_type_and_action(char c_or_f, int type, char *action) /* make sure, that information from grammar and from arguments match */
-{
-    int i,found;
-    static char *funs[] = {"new","dump","get"};
-    static int numfuns = 3;
-    static char *cmds[] = {"free","set"};
-    static int numcmds = 2;
-    static char *fcs[] = {"new","dump","get","free","set"};
-    static int typesfcs[] = {fEXTSTRUCT_NEW, fEXTSTRUCT_DUMP, fEXTSTRUCT_GET_NUMBER, cEXTSTRUCT_FREE, cEXTSTRUCT_SET_NUMBER};
-    static int numfcs = 5;
-    
-    /* report on invalid action */
-    found = false;
-    for(i=0;i<numfcs;i++) {
-	if (!strcmp(action,fcs[i])) found = true;
-    }
-    if (!found) {
-	sprintf(errorstring, "invalid action '%s' on extstruct", action);
-	error(sERROR, errorstring);
-	return false;
-    }
-       
-    /* report, if chosen action does not match language construct (function or command) */
-    for(i=0;i<numfuns;i++) {
-	if (c_or_f == 'c' && !strcmp(action,funs[i])) {
-	    sprintf(errorstring, "action '%s' should be invoked with the extstruct-function, not the command", action);
-	    error(sERROR,errorstring);
-	    return false;
-	}
-    }
-    for(i=0;i<numcmds;i++) {
-	if (c_or_f == 'f' && !strcmp(action,cmds[i])) {
-	    sprintf(errorstring, "action '%s' should be invoked with the extrstruct-command, not the function", action);
-	    return false;
-	}
-    }
-
-    /* report, if action given as string argument does not match, what can be deduced from grammer (passed as parameter type) */
-    for(i=0;i<numfcs;i++) {
-	if (!strcmp(action,fcs[i]) && type!=typesfcs[i]) {
-	    sprintf(errorstring,"invalid combination of arguments for action '%s' on an extstruct",fcs[i]);
-	    error(sERROR,errorstring);
-	    return false;
-	}
-    }
-}
-
-  
-static int
-parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
+foreign_function_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
 {
     struct stackentry *st,*stfirst,*stfirstarg;
     static char stfound[50];
@@ -333,7 +282,7 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 	    return FALSE;
 	}
 	if (i==0) libname=st->pointer;
-	if (i==1 && !check_ffi_type (st->pointer, &rtype, 1, 0, 0)) return FALSE;
+	if (i==1 && !foreign_check_ffi_type (st->pointer, &rtype, 1, 0, 0)) return FALSE;
 	if (i==2) funame=st->pointer;
 	st = st->next;
       }
@@ -380,11 +329,11 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
     st = stfirstarg;
     for(i=3,j=0;i<3+2*argcnt;i+=2,st=st->next->next,j++) {
 	if (st->next->type == stSTRING) {
-	    if (!check_ffi_type (st->pointer, tvalues+j, i, NUM_FFI_TYPES-1, 0)) return FALSE;
+	    if (!foreign_check_ffi_type (st->pointer, tvalues+j, i, NUM_FFI_TYPES-1, 0)) return FALSE;
 	    values[j].ffipointer = (char *)st->next->pointer;
 	} else {
-	    if (!check_ffi_type (st->pointer, tvalues+j, i, 1, 1)) return FALSE;
-            cast_to_ffi_type (values+j,tvalues[j],st->next->value);
+	    if (!foreign_check_ffi_type (st->pointer, tvalues+j, i, 1, 1)) return FALSE;
+            foreign_cast_to_ffi_type (values+j,tvalues[j],st->next->value);
         }
 	pvalues[j] = values + j;
     }
@@ -394,7 +343,7 @@ parse_stack () /* verify and process arguments from yabasic stack into libffi st
 
 
 static int
-check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
+foreign_check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
 {
     int i;
     static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "short", "int", "long", "string"};
@@ -427,7 +376,7 @@ check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first,
 
 
 static void
-cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and assign double value from yabasic into specified (numeric) ffi_type */
+foreign_cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and assign double value from yabasic into specified (numeric) ffi_type */
 {
     if (type == &ffi_type_uint8) (*value).ffiuint8 = (uint8_t) num;
     if (type == &ffi_type_uint8) (*value).ffiuint8 = (uint8_t) num;
@@ -448,7 +397,7 @@ cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and 
 
 
 static double
-cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
+foreign_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
 {
     if (type == &ffi_type_uint8) return (double) (*value).ffiuint8;
     if (type == &ffi_type_uint8) return (double) (*value).ffiuint8;
@@ -469,7 +418,7 @@ cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return val
 	return 0.0;
 }
 
-static void cleanup () /* free and cleanup structures after use */
+static void foreign_function_cleanup () /* free and cleanup structures after use */
 {
     if (lib) {
 #ifdef UNIX
