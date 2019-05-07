@@ -365,13 +365,13 @@ extern int yydebug;
     tPEEK = 408,
     tPEEK2 = 409,
     tPOKE = 410,
-    tFOREIGN_FUNCTION_CALL = 411,
-    tFOREIGN_FUNCTION_CALL2 = 412,
-    tFOREIGN_STRUCTURE_NEW = 413,
-    tFOREIGN_STRUCTURE_FREE = 414,
-    tFOREIGN_STRUCTURE_DUMP = 415,
-    tFOREIGN_STRUCTURE_SET = 416,
-    tFOREIGN_STRUCTURE_GET = 417,
+    tFGNFN_CALL = 411,
+    tFGNFN_CALL2 = 412,
+    tFGNST_NEW = 413,
+    tFGNST_FREE = 414,
+    tFGNST_DUMP = 415,
+    tFGNST_SET = 416,
+    tFGNST_GET = 417,
     tDATE = 418,
     tTIME = 419,
     tTOKEN = 420,
@@ -836,12 +836,10 @@ static const char *const yytname[] =
   "tASC", "tHEX", "tDEC", "tBIN", "tUPPER", "tLOWER", "tMOUSEX", "tMOUSEY",
   "tMOUSEB", "tMOUSEMOD", "tTRIM", "tLTRIM", "tRTRIM", "tINSTR", "tRINSTR",
   "tCHOMP", "tSYSTEM", "tSYSTEM2", "tPEEK", "tPEEK2", "tPOKE",
-  "tFOREIGN_FUNCTION_CALL", "tFOREIGN_FUNCTION_CALL2",
-  "tFOREIGN_STRUCTURE_NEW", "tFOREIGN_STRUCTURE_FREE",
-  "tFOREIGN_STRUCTURE_DUMP", "tFOREIGN_STRUCTURE_SET",
-  "tFOREIGN_STRUCTURE_GET", "tDATE", "tTIME", "tTOKEN", "tTOKENALT",
-  "tSPLIT", "tSPLITALT", "tGLOB", "'-'", "'+'", "'*'", "'/'", "UMINUS",
-  "'('", "')'", "';'", "','", "'#'", "$accept", "program",
+  "tFGNFN_CALL", "tFGNFN_CALL2", "tFGNST_NEW", "tFGNST_FREE",
+  "tFGNST_DUMP", "tFGNST_SET", "tFGNST_GET", "tDATE", "tTIME", "tTOKEN",
+  "tTOKENALT", "tSPLIT", "tSPLITALT", "tGLOB", "'-'", "'+'", "'*'", "'/'",
+  "UMINUS", "'('", "')'", "';'", "','", "'#'", "$accept", "program",
   "statement_list", "$@1", "statement", "$@2", "$@3", "$@4", "$@5", "$@6",
   "$@7", "clear_fill_clause", "string_assignment", "to", "open_clause",
   "seek_clause", "string_scalar_or_array", "string_expression",
@@ -3761,13 +3759,13 @@ yyreduce:
 
   case 107:
 
-    {add_command(cPUSHFREE,NULL,NULL); add_command(cFOREIGN_STRUCTURE_FREE,NULL,NULL);}
+    {add_command(cFGNST_FREE,NULL,NULL);}
 
     break;
 
   case 108:
 
-    {add_command(cPUSHFREE,NULL,NULL); add_command(cFOREIGN_STRUCTURE_SET_NUMBER, NULL, NULL);}
+    {add_command(cFGNST_SET_NUMBER, NULL, NULL);}
 
     break;
 
@@ -4025,19 +4023,19 @@ yyreduce:
 
   case 155:
 
-    {create_function(fFOREIGN_FUNCTION_CALL2);}
+    {create_function(fFGNFN_CALL2);}
 
     break;
 
   case 156:
 
-    {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_NEW);}
+    {create_function(fFGNST_NEW);}
 
     break;
 
   case 157:
 
-    {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_DUMP);}
+    {create_function(fFGNST_DUMP);}
 
     break;
 
@@ -4547,13 +4545,13 @@ yyreduce:
 
   case 245:
 
-    {create_function(fFOREIGN_FUNCTION_CALL);}
+    {create_function(fFGNFN_CALL);}
 
     break;
 
   case 246:
 
-    {add_command(cPUSHFREE,NULL,NULL); create_function(fFOREIGN_STRUCTURE_GET_NUMBER);}
+    {create_function(fFGNST_GET_NUMBER);}
 
     break;
 

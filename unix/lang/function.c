@@ -797,20 +797,20 @@ function (struct command *current)	/* performs a function */
         pointer = do_system2 (str);
         result = stSTRING;
         break;
-    case fFOREIGN_FUNCTION_CALL:
+    case fFGNFN_CALL:
 	foreign_function_call (type, &value, &pointer);
         result = stNUMBER;
         break;
-    case fFOREIGN_FUNCTION_CALL2:
+    case fFGNFN_CALL2:
 	foreign_function_call (type, &value, &pointer);
         result = stSTRING;
         break;
-    case fFOREIGN_STRUCTURE_NEW:
-    case fFOREIGN_STRUCTURE_DUMP:
+    case fFGNST_NEW:
+    case fFGNST_DUMP:
 	foreign_structure ('f', type, &value, &pointer);
         result = stSTRING;
         break;
-    case fFOREIGN_STRUCTURE_GET_NUMBER:
+    case fFGNST_GET_NUMBER:
 	foreign_structure ('f', type, &value, &pointer);
         result = stNUMBER;
         break;

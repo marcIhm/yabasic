@@ -26,19 +26,14 @@
 
 /* ------------- externally visible variables ---------------- */
 
-char last_foreign_function_call_error_text[INBUFFLEN] = "";    /* last error message produced by foreign call */
-int last_foreign_function_call_okay = 1;                       /* true, if last foreign call has been okay */
+char last_fgnfn_call_error_text[INBUFFLEN] = "";    /* last error message produced by foreign call */
+int last_fgnfn_call_okay = 1;                       /* true, if last foreign call has been okay */
 
 /* ------------- define a stub only, if feature is not available ---------------- */
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
 void
-foreign_function_call (int type, double *pvalue, char **ppointer)  /* load and execute function from foreign library */
-{
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
-    return;
-}
-foreign_structure (int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to a foreign library */
+fgnfn_call (int type, double *pvalue, char **ppointer)  /* load and execute function from foreign library */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
@@ -77,12 +72,12 @@ union FFI_VAL {
 };
 
 /* ------------- local functions ---------------- */
-static int foreign_check_ffi_type (char *, ffi_type **, int, int, int);
-static int foreign_function_parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
-static void foreign_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
-static double foreign_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
-static void foreign_function_cleanup (); /* free and cleanup structures after use */
-static int foreign_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
+static int fgn_check_ffi_type (char *, ffi_type **, int, int);
+static int fgnfn_parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
+static void fgn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
+static double fgn_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
+static void fgnfn_cleanup (); /* free and cleanup structures after use */
+static int fgn_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
 
 /* ------------- global variables ---------------- */
 
@@ -101,23 +96,24 @@ int argcnt;    /* number of arguments for function, i.e. length of both followin
 ffi_type **tvalues; /* list of types for all individual values */
 union FFI_VAL *values;   /* actual values that should be passed to call, see union FFI_VAL above */
 union FFI_VAL **pvalues;     /* pointers to values */
-ffi_type *rtype; /* expected return type of function */
 
 /* ------------- subroutines ---------------- */
 
 void
-foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
     char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
-	void *fu;
-
-    last_foreign_function_call_error_text[0] = '\0';
-    last_foreign_function_call_okay = 0;
+    void *fu;
+    ffi_type *rtype; /* expected return type of function */
     
-    if (!foreign_function_parse_stack ()) {
-	foreign_function_cleanup ();
+
+    last_fgnfn_call_error_text[0] = '\0';
+    last_fgnfn_call_okay = 0;
+    
+    if (!fgnfn_parse_stack ()) {
+	fgnfn_cleanup ();
 	return;
     }
 
@@ -129,7 +125,7 @@ foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and exe
 	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
 	}
 	error(sERROR,string);
-	foreign_function_cleanup ();
+	fgnfn_cleanup ();
 	return;
     }
     
@@ -144,9 +140,9 @@ foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and exe
 	  if (opt_error) {
 	    error(sERROR,string);
 	  } else {
-	    strcpy (last_foreign_function_call_error_text, string);
+	    strcpy (last_fgnfn_call_error_text, string);
 	  }
-	  foreign_function_cleanup ();
+	  fgnfn_cleanup ();
 	  return;
     }
 
@@ -162,9 +158,9 @@ foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and exe
 	if (opt_error) {
 	  error(sERROR,string);
 	} else {
-	  strcpy (last_foreign_function_call_error_text, string);
+	  strcpy (last_fgnfn_call_error_text, string);
 	}
-	foreign_function_cleanup ();
+	fgnfn_cleanup ();
 	return;
     }
 #ifdef UNIX
@@ -174,17 +170,17 @@ foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and exe
 	if (opt_error) {
 	    error(sERROR, string);
 	} else {
-	    strcpy (last_foreign_function_call_error_text, string);
+	    strcpy (last_fgnfn_call_error_text, string);
 	}
-	foreign_function_cleanup ();
+	fgnfn_cleanup ();
 	return;
     }
 #endif
 
     ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
-    if (type == fFOREIGN_FUNCTION_CALL) {
-	*pvalue = foreign_cast_from_ffi_type (&ffi_result, rtype);
+    if (type == fFGNFN_CALL) {
+	*pvalue = fgn_cast_from_ffi_type (&ffi_result, rtype);
     } else {
 	if (opt_copy_result_string) 
 	    *ppointer = my_strdup ((char *)ffi_result.ffipointer);
@@ -192,58 +188,125 @@ foreign_function_call (int type,double *pvalue,char **ppointer)  /* load and exe
 	    *ppointer = (char *)ffi_result.ffipointer;
     }
 	
-    foreign_function_cleanup ();
-    last_foreign_function_call_okay = 1;
+    fgnfn_cleanup ();
+    last_fgnfn_call_okay = 1;
+}
+
+
+char *
+fgnst_new ()  /* create a new foreign structure */
+{
+    int size;
+    void *struct;
+    
+    size = pop (stNUMBER)->value;
+    if (size<0) {
+	sprintf(errorstring,"size of structure cannot be less than zero, not %d",size);
+	error(sERROR, errorstring);
+	return my_strdup("");
+    }
+    struct = my_malloc (size);
+    memset (struct, 0, size);
+    sprintf(string,"fgnst:%d:%p");
+    return my_strdup(string);
 }
 
 
 void
-foreign_structure (char c_or_f, int type, double *pvalue, char **ppointer)  /* manipulate a c-structure for passing to a foreign library */
+fgnst_free ()  /* free a foreign structure */
 {
-    struct stackentry *st, *args[5];
-    int listlen = -1;
-    int i,found;
+    int size;
+    void *ptr;
 
-    /* type can be one of cEXTSTRUCT, fEXTSTRUCT, fEXTSTRUCT2; however, fXX and cXX are different enums, they might come
-       out equal, so we also need the char c_or_f to decide with confidence */
-    
-    st = stackhead;
-    do {
-	st = st->prev;
-	listlen++;
-    } while (st->type != stFREE);
-
-    /* pop arguments here, because the function is declared to have zero args */
-    for(i=0;i<listlen;i++) {
-	pop (stSTRING_OR_NUMBER);
-    }
-    pop (stFREE);
-
-    /* collect arguments to extstruct function/command conveniently in array */
-    for(i=0;i<5;i++) {args[i] = NULL;}
-    for(i=0;i<listlen;i++) {args[i] = st->next; st = st->next;}
-
-    if (!strcmp(args[0]->pointer, "new")) {		
-    }
-
-    if (!strcmp(args[0]->pointer, "free")) {
-    }
-
-    if (!strcmp(args[0]->pointer, "dump")) {
-    }
-
-    if (!strcmp(args[0]->pointer, "set")) {
-    }
-
-    if (!strcmp(args[0]->pointer, "get")) {
-    }
-
+    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    my_free(ptr);
     return;
 }
 
+
+char
+fgnst_dump ()  /* dump a foreign structure into readable form */
+{
+    int size;
+    void *ptr;
+    char *dump,*d;
+    int i;
+
+    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    d = dump = my_malloc(2*size);
+    for(i=0;i<size;i++) {
+	d += sprintf (d, "%02X", ptr[i]);
+    }
+    return dump;
+}
+
+
+void
+fgnst_set ()  /* set a value within a foreign structure */
+{
+    int size;
+    void *ptr;
+    double val;
+    int offset;
+    char *type;
+    ffi_type *valtype; /* expected return type of function */
+
+    val = pop (stNUMBER)->value;
+    type = pop (stSTRING)->pointer;
+    offset = pop (stNUMBER)->value;
+    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (!fgn_check_ffi_type(type, &type, 0, 1)) return;
+    if (offset<0 || offset+valtype.size > size) {
+	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
+		offset, type, valtype.size, size);
+	error(sERROR, errorstring);
+	return;
+    }
+    fgn_cast_to_ffi_type (ptr+offset, valtype, val);
     
+    return;
+}
+
+
+double
+fgnst_get ()  /* get a value from a foreign structure */
+{
+    int size;
+    void *ptr;
+    double val;
+    int offset;
+    char *type;
+    ffi_type *valtype; /* expected return type of function */
+
+    type = pop (stSTRING)->pointer;
+    offset = pop (stNUMBER)->value;
+    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
+    if (!fgn_check_ffi_type(type, &type, 0, 1)) return 0.0;
+    if (offset<0 || offset+valtype.size > size) {
+	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
+		offset, type, valtype.size, size);
+	error(sERROR, errorstring);
+	return 0.0;
+    }
+
+    return fgn_cast_from_ffi_type (ptr+offset, valtype, val);
+}
+
+
+int
+fgnst_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
+{
+    if (sscanf(handle, "fgnst:%d:%p", size, ptr) != 2) {
+	sprintf(errorstring,"invalid handle for foreign structure: '%s'", handle);
+	error(sERROR, errorstring);
+	return false;
+    }
+    return true;
+}
+
+
 static int
-foreign_function_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
+fgnfn_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
 {
     struct stackentry *st,*stfirst,*stfirstarg;
     static char stfound[50];
@@ -282,7 +345,7 @@ foreign_function_parse_stack () /* verify and process arguments from yabasic sta
 	    return FALSE;
 	}
 	if (i==0) libname=st->pointer;
-	if (i==1 && !foreign_check_ffi_type (st->pointer, &rtype, 1, 0, 0)) return FALSE;
+	if (i==1 && !fgn_check_ffi_type (st->pointer, &rtype, 0, 0)) return FALSE;
 	if (i==2) funame=st->pointer;
 	st = st->next;
       }
@@ -329,11 +392,11 @@ foreign_function_parse_stack () /* verify and process arguments from yabasic sta
     st = stfirstarg;
     for(i=3,j=0;i<3+2*argcnt;i+=2,st=st->next->next,j++) {
 	if (st->next->type == stSTRING) {
-	    if (!foreign_check_ffi_type (st->pointer, tvalues+j, i, NUM_FFI_TYPES-1, 0)) return FALSE;
+	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, NUM_FFI_TYPES-1, 0)) return FALSE;
 	    values[j].ffipointer = (char *)st->next->pointer;
 	} else {
-	    if (!foreign_check_ffi_type (st->pointer, tvalues+j, i, 1, 1)) return FALSE;
-            foreign_cast_to_ffi_type (values+j,tvalues[j],st->next->value);
+	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, 0, 1)) return FALSE;
+            fgn_cast_to_ffi_type (values+j,tvalues[j],st->next->value);
         }
 	pvalues[j] = values + j;
     }
@@ -343,7 +406,7 @@ foreign_function_parse_stack () /* verify and process arguments from yabasic sta
 
 
 static int
-foreign_check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
+fgn_check_ffi_type (char *type_string, ffi_type **type_ptr, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
 {
     int i;
     static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "short", "int", "long", "string"};
@@ -376,7 +439,7 @@ foreign_check_ffi_type (char *type_string, ffi_type **type_ptr, int pos, int ski
 
 
 static void
-foreign_cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and assign double value from yabasic into specified (numeric) ffi_type */
+fgn_cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast and assign double value from yabasic into specified (numeric) ffi_type */
 {
     if (type == &ffi_type_uint8) (*value).ffiuint8 = (uint8_t) num;
     if (type == &ffi_type_uint8) (*value).ffiuint8 = (uint8_t) num;
@@ -397,7 +460,7 @@ foreign_cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* c
 
 
 static double
-foreign_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
+fgn_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return value from ffi_type to double */
 {
     if (type == &ffi_type_uint8) return (double) (*value).ffiuint8;
     if (type == &ffi_type_uint8) return (double) (*value).ffiuint8;
@@ -414,11 +477,12 @@ foreign_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and re
     if (type == &ffi_type_sshort) return (double) (*value).ffisshort;
     if (type == &ffi_type_sint) return (double) (*value).ffisint;
     if (type == &ffi_type_slong) return (double) (*value).ffislong;
-	error(sFATAL, "internal error, unknown type");
-	return 0.0;
+    error(sFATAL, "internal error, unknown type");
+    return 0.0;
 }
 
-static void foreign_function_cleanup () /* free and cleanup structures after use */
+
+static void fgnfn_cleanup () /* free and cleanup structures after use */
 {
     if (lib) {
 #ifdef UNIX
