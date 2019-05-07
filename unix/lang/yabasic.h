@@ -142,8 +142,8 @@ extern int termpid;		/* pid of process waiting for terminal keys */
 #endif
 
 /* foreign.c */
-extern char last_foreign_function_call_error_text[]; /* last error message produced by foreign call */
-extern int last_foreign_function_call_okay;         /* true, if last foreign call has been okay */
+extern char last_fgnfn_call_error_text[]; /* last error message produced by foreign call */
+extern int last_fgnfn_call_okay;         /* true, if last foreign call has been okay */
 
 /* graphic.c */
 /* printing and plotting */
@@ -273,7 +273,7 @@ enum stream_modes {
 enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
-    fRAN2, fDATE, fTIME, fFOREIGN_FUNCTION_CALL, fFOREIGN_FUNCTION_CALL2, fFOREIGN_STRUCTURE_NEW, fFOREIGN_STRUCTURE_DUMP, fFOREIGN_STRUCTURE_GET_NUMBER, 
+    fRAN2, fDATE, fTIME, fFGNFN_CALL, fFGNFN_CALL2, fFGNST_NEW, fFGNST_DUMP, fFGNST_GET_NUMBER, 
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -346,7 +346,7 @@ enum cmd_type {
     cOPENPRN, cCLOSEPRN, cMOVEORIGIN, cRECT, cGCOLOUR, cGCOLOUR2,
     cGBACKCOLOUR, cGBACKCOLOUR2, cPUTBIT, cPUTCHAR,
 
-    cFOREIGN_STRUCTURE_SET_NUMBER, cFOREIGN_STRUCTURE_FREE,    /* foreignforeign libraries */
+    cFGNST_SET_NUMBER, cFGNST_FREE,    /* foreign libraries */
     
     cLAST_COMMAND			/* no command, just marks end of list */
 };
@@ -572,8 +572,12 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 #endif
 
 /* foreign.c */
-void foreign_function_call (int,double *,char **);  /* load and execute function from a foreign library */
-void foreign_structure (char,int,double *,char **);  /* manipulate a c-structure for passing to a foreign library */
+void fgnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
+char *fgnst_new (void);  /* create a new foreign structure */
+void fgnst_free (void);  /* free a foreign structure */
+char fgnst_dump (void);  /* dump a foreign structure into readable form */
+void fgnst_set_number (void);  /* set a value within a foreign structure */
+double fgnst_get (void);  /* get a value from a foreign structure */
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */

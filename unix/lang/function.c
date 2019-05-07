@@ -1566,7 +1566,7 @@ peek (char *dest)		/* peek into internals */
     } else if (!strcmp (dest, "isbound")) {
         return is_bound;
     } else if (!strcmp (dest, "last_foreign_function_call_okay") || !strcmp (dest, "last_fgnfn_call_okay")) {
-        return (double) last_foreign_function_call_okay;
+        return (double) last_fgnfn_call_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
 	return (double)(now-compilation_start);

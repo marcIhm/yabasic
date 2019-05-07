@@ -38,6 +38,36 @@ fgnfn_call (int type, double *pvalue, char **ppointer)  /* load and execute func
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
+char *
+fgnst_new ()  /* create a new foreign structure */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
+void
+fgnst_free ()  /* free a foreign structure */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
+char
+fgnst_dump ()  /* dump a foreign structure into readable form */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
+void
+fgnst_set_number ()  /* set a value within a foreign structure */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
+double
+fgnst_get ()  /* get a value from a foreign structure */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
 #else
 
 #define NUM_FFI_TYPES 15
@@ -197,7 +227,7 @@ char *
 fgnst_new ()  /* create a new foreign structure */
 {
     int size;
-    void *struct;
+    void *strct;
     
     size = pop (stNUMBER)->value;
     if (size<0) {
@@ -205,8 +235,8 @@ fgnst_new ()  /* create a new foreign structure */
 	error(sERROR, errorstring);
 	return my_strdup("");
     }
-    struct = my_malloc (size);
-    memset (struct, 0, size);
+    strct = my_malloc (size);
+    memset (strct, 0, size);
     sprintf(string,"fgnst:%d:%p");
     return my_strdup(string);
 }
@@ -242,7 +272,7 @@ fgnst_dump ()  /* dump a foreign structure into readable form */
 
 
 void
-fgnst_set ()  /* set a value within a foreign structure */
+fgnst_set_number ()  /* set a value within a foreign structure */
 {
     int size;
     void *ptr;

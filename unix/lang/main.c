@@ -1769,10 +1769,10 @@ run_it ()
                 mybind (pop (stSTRING)->pointer);
                 DONE;
 	    case cFGNST_SET_NUMBER:
-		fnst_set_number ();
+		fgnst_set_number ();
 		DONE;
 	    case cFGNST_FREE:
-		fnst_free ();
+		fgnst_free ();
 		DONE;
             case cEND:
                 endreason = rEOF;
