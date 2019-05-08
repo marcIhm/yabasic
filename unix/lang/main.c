@@ -1769,7 +1769,7 @@ run_it ()
                 mybind (pop (stSTRING)->pointer);
                 DONE;
 	    case cFGNST_SET_NUMBER:
-		fgnst_set_number ();
+		fgnst_set ();
 		DONE;
 	    case cFGNST_FREE:
 		fgnst_free ();

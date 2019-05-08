@@ -575,8 +575,8 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 void fgnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
 char *fgnst_new (void);  /* create a new foreign structure */
 void fgnst_free (void);  /* free a foreign structure */
-char fgnst_dump (void);  /* dump a foreign structure into readable form */
-void fgnst_set_number (void);  /* set a value within a foreign structure */
+char *fgnst_dump (void);  /* dump a foreign structure into readable form */
+void fgnst_set (void);  /* set a value within a foreign structure */
 double fgnst_get (void);  /* get a value from a foreign structure */
 
 /* function.c */

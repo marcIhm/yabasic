@@ -50,14 +50,14 @@ fgnst_free ()  /* free a foreign structure */
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
-char
+char *
 fgnst_dump ()  /* dump a foreign structure into readable form */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
-    return;
+    return my_strdup("");
 }
 void
-fgnst_set_number ()  /* set a value within a foreign structure */
+fgnst_set ()  /* set a value within a foreign structure */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
@@ -66,7 +66,7 @@ double
 fgnst_get ()  /* get a value from a foreign structure */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
-    return;
+    return 0.0;
 }
 #else
 
@@ -108,6 +108,7 @@ static void fgn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast 
 static double fgn_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
 static void fgnfn_cleanup (); /* free and cleanup structures after use */
 static int fgn_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
+int fgnst_parse_handle (char *, int *, void *);  /* parse handle */
 
 /* ------------- global variables ---------------- */
 
@@ -248,13 +249,13 @@ fgnst_free ()  /* free a foreign structure */
     int size;
     void *ptr;
 
-    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (fgnst_parse_handle (pop (stSTRING)->pointer, &size, &ptr)) return;
     my_free(ptr);
     return;
 }
 
 
-char
+char *
 fgnst_dump ()  /* dump a foreign structure into readable form */
 {
     int size;
@@ -272,7 +273,7 @@ fgnst_dump ()  /* dump a foreign structure into readable form */
 
 
 void
-fgnst_set_number ()  /* set a value within a foreign structure */
+fgnst_set ()  /* set a value within a foreign structure */
 {
     int size;
     void *ptr;

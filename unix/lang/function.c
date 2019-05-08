@@ -798,20 +798,20 @@ function (struct command *current)	/* performs a function */
         result = stSTRING;
         break;
     case fFGNFN_CALL:
-	foreign_function_call (type, &value, &pointer);
+	fgnfn_call (type, &value, &pointer);
         result = stNUMBER;
         break;
     case fFGNFN_CALL2:
-	foreign_function_call (type, &value, &pointer);
+	fgnfn_call (type, &value, &pointer);
         result = stSTRING;
         break;
     case fFGNST_NEW:
     case fFGNST_DUMP:
-	foreign_structure ('f', type, &value, &pointer);
-        result = stSTRING;
+	pointer = fgnst_dump ();
+	result = stNUMBER;
         break;
     case fFGNST_GET_NUMBER:
-	foreign_structure ('f', type, &value, &pointer);
+	value = fgnst_get ();
         result = stNUMBER;
         break;
     case fPEEK:
@@ -1644,7 +1644,7 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
     } else if (!strcmp (dest, "font")) {
         return my_strdup (fontname);
     } else if (!strcmp (dest, "last_foreign_function_call_error_text") || !strcmp (dest, "last_fgnfn_call_error_text")) {
-	return my_strdup (last_foreign_function_call_error_text);
+	return my_strdup (last_fgnfn_call_error_text);
     } else if (!strcmp (dest, "argument") || !strcmp (dest, "arguments")) {
         if (yabargc > 0) {
             s = yabargv[0];
