@@ -805,13 +805,13 @@ function (struct command *current)	/* performs a function */
 	fgnfn_call (type, &value, &pointer);
         result = stSTRING;
         break;
-    case fFGNST_NEW:
-    case fFGNST_DUMP:
-	pointer = fgnst_dump ();
+    case fFGNBF_NEW:
+    case fFGNBF_DUMP:
+	pointer = fgnbf_dump ();
 	result = stNUMBER;
         break;
-    case fFGNST_GET_NUMBER:
-	value = fgnst_get ();
+    case fFGNBF_GET_NUMBER:
+	value = fgnbf_get ();
         result = stNUMBER;
         break;
     case fPEEK:

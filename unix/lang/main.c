@@ -1165,8 +1165,9 @@ initialize (void)
     cexplanation[cDOT] = "DOT";
     cexplanation[cPUTBIT] = "PUTBIT";
     cexplanation[cPUTCHAR] = "PUTCHAR";
-    cexplanation[cFGNST_SET_NUMBER] = "FGNST_SET_NUMBER";
-    cexplanation[cFGNST_FREE] = "FGNST_FREE";
+    cexplanation[cFGNBF_SET_NUMBER] = "FGNBF_SET_NUMBER";
+    cexplanation[cFGNBF_SET_STRING] = "FGNBF_SET_STRING";
+    cexplanation[cFGNBF_FREE] = "FGNBF_FREE";
     cexplanation[cLINE] = "LINE";
     cexplanation[cGCOLOUR] = "GCOLOUR";
     cexplanation[cGCOLOUR2] = "GCOLOUR2";
@@ -1240,9 +1241,9 @@ initialize (void)
     fexplanation[fPEEK4] = "PEEK4";
     fexplanation[fFGNFN_CALL] = "FGNFN_CALL";
     fexplanation[fFGNFN_CALL2] = "FGNFN_CALL2";
-    fexplanation[fFGNST_NEW] = "FGNST_NEW";
-    fexplanation[fFGNST_DUMP] = "FGNST_DUMP";
-    fexplanation[fFGNST_GET_NUMBER] = "FGNST_GET_NUMBER";
+    fexplanation[fFGNBF_NEW] = "FGNBF_NEW";
+    fexplanation[fFGNBF_DUMP] = "FGNBF_DUMP";
+    fexplanation[fFGNBF_GET_NUMBER] = "FGNBF_GET_NUMBER";
     fexplanation[fTELL] = "TELL";
     fexplanation[fEXP] = "EXP";
     fexplanation[fLOG] = "LOG";
@@ -1768,11 +1769,11 @@ run_it ()
             case cBIND:
                 mybind (pop (stSTRING)->pointer);
                 DONE;
-	    case cFGNST_SET_NUMBER:
-		fgnst_set ();
+	    case cFGNBF_SET_NUMBER:
+		fgnbf_set ();
 		DONE;
-	    case cFGNST_FREE:
-		fgnst_free ();
+	    case cFGNBF_FREE:
+		fgnbf_free ();
 		DONE;
             case cEND:
                 endreason = rEOF;

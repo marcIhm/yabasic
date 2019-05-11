@@ -162,7 +162,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFGNFN_CALL tFGNFN_CALL2
-%token tFGNST_NEW tFGNST_FREE tFGNST_DUMP tFGNST_SET tFGNST_GET
+%token tFGNBF_NEW tFGNBF_FREE tFGNBF_DUMP tFGNBF_SET tFGNBF_GET tFGNBF_GET2
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -295,8 +295,9 @@ statement:  /* empty */
   | tEXIT expression {add_command(cEXIT,NULL,NULL);}
   | tDOCU {create_docu($1);}
   | tBIND string_expression {add_command(cBIND,NULL,NULL);}
-  | tFGNST_FREE string_expression ',' string_expression {add_command(cFGNST_FREE,NULL,NULL);}
-  | tFGNST_SET string_expression ',' string_expression ',' expression ',' string_expression ',' expression {add_command(cFGNST_SET_NUMBER, NULL, NULL);} 
+  | tFGNBF_FREE string_expression ',' string_expression {add_command(cFGNBF_FREE,NULL,NULL);}
+  | tFGNBF_SET string_expression ',' string_expression ',' expression ',' string_expression ',' expression {add_command(cFGNBF_SET_NUMBER, NULL, NULL);} 
+  | tFGNBF_SET string_expression ',' string_expression ',' expression ',' string_expression ',' string_expression {add_command(cFGNBF_SET_STRING, NULL, NULL);} 
   ;
 
 
@@ -362,8 +363,8 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
   | tFGNFN_CALL2 '(' call_list ')' {create_function(fFGNFN_CALL2);}
-  | tFGNST_NEW '(' string_expression ',' expression ')' {create_function(fFGNST_NEW);}
-  | tFGNST_DUMP '(' string_expression ',' string_expression ')' {create_function(fFGNST_DUMP);}
+  | tFGNBF_NEW '(' string_expression ',' expression ')' {create_function(fFGNBF_NEW);}
+  | tFGNBF_DUMP '(' string_expression ',' string_expression ')' {create_function(fFGNBF_DUMP);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -379,6 +380,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tHEX '(' expression ')' {create_function(fHEX);}
   | tBIN '(' expression ')' {create_function(fBIN);}
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tFGNBF_GET2 '(' string_expression ',' expression ',' expression ')' {create_function(fFGNBF_GET_STRING);} 
   ;
 
 assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
@@ -462,7 +464,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
   | tFGNFN_CALL '(' call_list ')' {create_function(fFGNFN_CALL);}
-  | tFGNST_GET '(' string_expression ',' expression ',' string_expression ')' {create_function(fFGNST_GET_NUMBER);} 
+  | tFGNBF_GET '(' string_expression ',' expression ',' string_expression ')' {create_function(fFGNBF_GET_NUMBER);} 
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}

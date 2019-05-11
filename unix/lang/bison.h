@@ -200,19 +200,20 @@ extern int yydebug;
     tPOKE = 410,
     tFGNFN_CALL = 411,
     tFGNFN_CALL2 = 412,
-    tFGNST_NEW = 413,
-    tFGNST_FREE = 414,
-    tFGNST_DUMP = 415,
-    tFGNST_SET = 416,
-    tFGNST_GET = 417,
-    tDATE = 418,
-    tTIME = 419,
-    tTOKEN = 420,
-    tTOKENALT = 421,
-    tSPLIT = 422,
-    tSPLITALT = 423,
-    tGLOB = 424,
-    UMINUS = 425
+    tFGNBF_NEW = 413,
+    tFGNBF_FREE = 414,
+    tFGNBF_DUMP = 415,
+    tFGNBF_SET = 416,
+    tFGNBF_GET = 417,
+    tFGNBF_GET2 = 418,
+    tDATE = 419,
+    tTIME = 420,
+    tTOKEN = 421,
+    tTOKENALT = 422,
+    tSPLIT = 423,
+    tSPLITALT = 424,
+    tGLOB = 425,
+    UMINUS = 426
   };
 #endif
 

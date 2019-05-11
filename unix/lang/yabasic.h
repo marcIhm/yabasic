@@ -273,7 +273,8 @@ enum stream_modes {
 enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
-    fRAN2, fDATE, fTIME, fFGNFN_CALL, fFGNFN_CALL2, fFGNST_NEW, fFGNST_DUMP, fFGNST_GET_NUMBER, 
+    fRAN2, fDATE, fTIME,
+    fFGNFN_CALL, fFGNFN_CALL2, fFGNBF_NEW, fFGNBF_DUMP, fFGNBF_GET_NUMBER, fFGNBF_GET_STRING,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -346,7 +347,7 @@ enum cmd_type {
     cOPENPRN, cCLOSEPRN, cMOVEORIGIN, cRECT, cGCOLOUR, cGCOLOUR2,
     cGBACKCOLOUR, cGBACKCOLOUR2, cPUTBIT, cPUTCHAR,
 
-    cFGNST_SET_NUMBER, cFGNST_FREE,    /* foreign libraries */
+    cFGNBF_SET_NUMBER, cFGNBF_SET_STRING, cFGNBF_FREE,    /* foreign libraries */
     
     cLAST_COMMAND			/* no command, just marks end of list */
 };
@@ -573,11 +574,11 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 
 /* foreign.c */
 void fgnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
-char *fgnst_new (void);  /* create a new foreign structure */
-void fgnst_free (void);  /* free a foreign structure */
-char *fgnst_dump (void);  /* dump a foreign structure into readable form */
-void fgnst_set (void);  /* set a value within a foreign structure */
-double fgnst_get (void);  /* get a value from a foreign structure */
+char *fgnbf_new (void);  /* create a new foreign structure */
+void fgnbf_free (void);  /* free a foreign structure */
+char *fgnbf_dump (void);  /* dump a foreign structure into readable form */
+void fgnbf_set (void);  /* set a value within a foreign structure */
+double fgnbf_get (void);  /* get a value from a foreign structure */
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */

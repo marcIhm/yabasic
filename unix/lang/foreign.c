@@ -51,19 +51,19 @@ fgnst_free ()  /* free a foreign structure */
     return;
 }
 char *
-fgnst_dump ()  /* dump a foreign structure into readable form */
+fgnbf_dump ()  /* dump a foreign structure into readable form */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return my_strdup("");
 }
 void
-fgnst_set ()  /* set a value within a foreign structure */
+fgnbf_set ()  /* set a value within a foreign structure */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
 double
-fgnst_get ()  /* get a value from a foreign structure */
+fgnbf_get ()  /* get a value from a foreign structure */
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return 0.0;
@@ -108,7 +108,7 @@ static void fgn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast 
 static double fgn_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
 static void fgnfn_cleanup (); /* free and cleanup structures after use */
 static int fgn_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
-int fgnst_parse_handle (char *, int *, void *);  /* parse handle */
+int fgnbf_parse_handle (char *, int *, void *);  /* parse handle */
 
 /* ------------- global variables ---------------- */
 
@@ -225,7 +225,7 @@ fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 
 
 char *
-fgnst_new ()  /* create a new foreign structure */
+fgnbf_new ()  /* create a new foreign structure */
 {
     int size;
     void *strct;
@@ -238,42 +238,42 @@ fgnst_new ()  /* create a new foreign structure */
     }
     strct = my_malloc (size);
     memset (strct, 0, size);
-    sprintf(string,"fgnst:%d:%p");
+    sprintf(string,"fgnbf:%d:%p");
     return my_strdup(string);
 }
 
 
 void
-fgnst_free ()  /* free a foreign structure */
+fgnbf_free ()  /* free a foreign structure */
 {
     int size;
     void *ptr;
 
-    if (fgnst_parse_handle (pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (fgnbf_parse_handle (pop (stSTRING)->pointer, &size, &ptr)) return;
     my_free(ptr);
     return;
 }
 
 
 char *
-fgnst_dump ()  /* dump a foreign structure into readable form */
+fgnbf_dump ()  /* dump a foreign structure into readable form */
 {
     int size;
-    void *ptr;
+    char *ptr;
     char *dump,*d;
     int i;
 
-    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
     d = dump = my_malloc(2*size);
     for(i=0;i<size;i++) {
-	d += sprintf (d, "%02X", ptr[i]);
+	d += sprintf (d, "%02X", (int) ptr[i]);
     }
     return dump;
 }
 
 
 void
-fgnst_set ()  /* set a value within a foreign structure */
+fgnbf_set ()  /* set a value within a foreign structure */
 {
     int size;
     void *ptr;
@@ -285,11 +285,11 @@ fgnst_set ()  /* set a value within a foreign structure */
     val = pop (stNUMBER)->value;
     type = pop (stSTRING)->pointer;
     offset = pop (stNUMBER)->value;
-    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (!fgn_check_ffi_type(type, &type, 0, 1)) return;
-    if (offset<0 || offset+valtype.size > size) {
+    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (!fgn_check_ffi_type(type, &valtype, 0, 1)) return;
+    if (offset<0 || offset+valtype->size > size) {
 	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
-		offset, type, valtype.size, size);
+		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
 	return;
     }
@@ -300,34 +300,33 @@ fgnst_set ()  /* set a value within a foreign structure */
 
 
 double
-fgnst_get ()  /* get a value from a foreign structure */
+fgnbf_get ()  /* get a value from a foreign structure */
 {
     int size;
     void *ptr;
-    double val;
     int offset;
     char *type;
     ffi_type *valtype; /* expected return type of function */
 
     type = pop (stSTRING)->pointer;
     offset = pop (stNUMBER)->value;
-    if (fgnst_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
-    if (!fgn_check_ffi_type(type, &type, 0, 1)) return 0.0;
-    if (offset<0 || offset+valtype.size > size) {
+    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
+    if (!fgn_check_ffi_type(type, &valtype, 0, 1)) return 0.0;
+    if (offset<0 || offset+valtype->size > size) {
 	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
-		offset, type, valtype.size, size);
+		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
 	return 0.0;
     }
 
-    return fgn_cast_from_ffi_type (ptr+offset, valtype, val);
+    return fgn_cast_from_ffi_type (ptr+offset, valtype);
 }
 
 
 int
-fgnst_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
+fgnbf_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
 {
-    if (sscanf(handle, "fgnst:%d:%p", size, ptr) != 2) {
+    if (sscanf(handle, "fgnbf:%d:%p", size, ptr) != 2) {
 	sprintf(errorstring,"invalid handle for foreign structure: '%s'", handle);
 	error(sERROR, errorstring);
 	return false;
@@ -345,6 +344,8 @@ fgnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
     int i,j;
     char *opt_str;
     int opt_has_no;
+    ffi_type *rtype; /* expected return type of function */
+
     
     /* go through list of arguments multiple times, check types and transfer them to libffi structures */
     st = stackhead;
