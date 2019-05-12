@@ -26,47 +26,59 @@
 
 /* ------------- externally visible variables ---------------- */
 
-char last_fgnfn_call_error_text[INBUFFLEN] = "";    /* last error message produced by foreign call */
-int last_fgnfn_call_okay = 1;                       /* true, if last foreign call has been okay */
+char last_frnfn_call_error_text[INBUFFLEN] = "";    /* last error message produced by foreign call */
+int last_frnfn_call_okay = 1;                       /* true, if last foreign call has been okay */
 
 /* ------------- define a stub only, if feature is not available ---------------- */
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
 void
-fgnfn_call (int type, double *pvalue, char **ppointer)  /* load and execute function from foreign library */
+frnfn_call (int type, double *pvalue, char **ppointer)
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
 char *
-fgnst_new ()  /* create a new foreign structure */
+frnbf_new ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
 void
-fgnst_free ()  /* free a foreign structure */
+frnbf_free ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
 char *
-fgnbf_dump ()  /* dump a foreign structure into readable form */
+frnbf_dump ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return my_strdup("");
 }
 void
-fgnbf_set ()  /* set a value within a foreign structure */
+frnbf_set ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
+void
+frnbf_set2 ()
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return my_strdup("");
+}
 double
-fgnbf_get ()  /* get a value from a foreign structure */
+frnbf_get ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return 0.0;
+}
+char *
+frnbf_get2 ()  /* get a string from a foreign buffer */
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return my_strdup("");
 }
 #else
 
@@ -103,12 +115,12 @@ union FFI_VAL {
 
 /* ------------- local functions ---------------- */
 static int fgn_check_ffi_type (char *, ffi_type **, int, int);
-static int fgnfn_parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
+static int frnfn_parse_stack (); /* verify and process arguments from yabasic stack into libffi structures */
 static void fgn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double); /* cast and assign double value from yabasic into given (numeric) ffi_type */
 static double fgn_cast_from_ffi_type (union FFI_VAL *, ffi_type *); /* cast and return value from ffi_type to double */
-static void fgnfn_cleanup (); /* free and cleanup structures after use */
+static void frnfn_cleanup (); /* free and cleanup structures after use */
 static int fgn_check_type_and_action(char, int, char *); /* make sure, that information from grammar and from arguments match */
-int fgnbf_parse_handle (char *, int *, void *);  /* parse handle */
+int frnbf_parse_handle (char *, int *, void *);  /* parse handle */
 
 /* ------------- global variables ---------------- */
 
@@ -120,7 +132,6 @@ HINSTANCE lib = NULL;    /* handle to library */
 #endif
 char *funame = NULL;     /* name of function to call */
 int opt_error = TRUE;    /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
-int opt_copy_result_string = TRUE;    /* should the result string be copied */
 
 ffi_cif cif;    /* structure describing arguments for libffi */
 int argcnt;    /* number of arguments for function, i.e. length of both following lists */
@@ -131,20 +142,21 @@ union FFI_VAL **pvalues;     /* pointers to values */
 /* ------------- subroutines ---------------- */
 
 void
-fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
+frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
     char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
     void *fu;
     ffi_type *rtype; /* expected return type of function */
+    int is_struct_not_string; /* distinguish return types */
     
 
-    last_fgnfn_call_error_text[0] = '\0';
-    last_fgnfn_call_okay = 0;
+    last_frnfn_call_error_text[0] = '\0';
+    last_frnfn_call_okay = 0;
     
-    if (!fgnfn_parse_stack ()) {
-	fgnfn_cleanup ();
+    if (!frnfn_parse_stack ()) {
+	frnfn_cleanup ();
 	return;
     }
 
@@ -156,14 +168,14 @@ fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
 	}
 	error(sERROR,string);
-	fgnfn_cleanup ();
+	frnfn_cleanup ();
 	return;
     }
     
 #ifdef UNIX
     lib = dlopen(libname, RTLD_LAZY);
 #else
-	lib = LoadLibrary(libname);
+    lib = LoadLibrary(libname);
 #endif
 
     if (!lib) {
@@ -171,9 +183,9 @@ fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 	  if (opt_error) {
 	    error(sERROR,string);
 	  } else {
-	    strcpy (last_fgnfn_call_error_text, string);
+	    strcpy (last_frnfn_call_error_text, string);
 	  }
-	  fgnfn_cleanup ();
+	  frnfn_cleanup ();
 	  return;
     }
 
@@ -181,17 +193,17 @@ fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
     dlerror();    /* Clear any existing error */
     fu = dlsym(lib, funame);
 #else
-	fu = GetProcAddress(lib, funame);
+    fu = GetProcAddress(lib, funame);
 #endif
 
-	if (!fu) {
-	    sprintf(string, "could not find function '%s' in foreign library '%s'",funame,libname);
+    if (!fu) {
+	sprintf(string, "could not find function '%s' in foreign library '%s'",funame,libname);
 	if (opt_error) {
-	  error(sERROR,string);
+	    error(sERROR,string);
 	} else {
-	  strcpy (last_fgnfn_call_error_text, string);
+	    strcpy (last_frnfn_call_error_text, string);
 	}
-	fgnfn_cleanup ();
+	frnfn_cleanup ();
 	return;
     }
 #ifdef UNIX
@@ -201,69 +213,67 @@ fgnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 	if (opt_error) {
 	    error(sERROR, string);
 	} else {
-	    strcpy (last_fgnfn_call_error_text, string);
+	    strcpy (last_frnfn_call_error_text, string);
 	}
-	fgnfn_cleanup ();
+	frnfn_cleanup ();
 	return;
     }
 #endif
 
     ffi_call(&cif, FFI_FN(fu), &ffi_result, (void **)pvalues);
     
-    if (type == fFGNFN_CALL) {
+    if (type == fFRNFN_CALL) {
 	*pvalue = fgn_cast_from_ffi_type (&ffi_result, rtype);
     } else {
-	if (opt_copy_result_string) 
-	    *ppointer = my_strdup ((char *)ffi_result.ffipointer);
-	else
-	    *ppointer = (char *)ffi_result.ffipointer;
+	sprintf(string,"frnbf:%d:%p",ffi_result.size,ffi_result.ffipointer);
+	*ppointer my_strdup(string);
     }
 	
-    fgnfn_cleanup ();
-    last_fgnfn_call_okay = 1;
+    frnfn_cleanup ();
+    last_frnfn_call_okay = 1;
 }
 
 
 char *
-fgnbf_new ()  /* create a new foreign structure */
+frnbf_new ()  /* create a new foreign buffer */
 {
     int size;
-    void *strct;
+    void *buff;
     
     size = pop (stNUMBER)->value;
     if (size<0) {
-	sprintf(errorstring,"size of structure cannot be less than zero, not %d",size);
+	sprintf(errorstring,"size of buffer cannot be less than zero, not %d",size);
 	error(sERROR, errorstring);
 	return my_strdup("");
     }
-    strct = my_malloc (size);
-    memset (strct, 0, size);
-    sprintf(string,"fgnbf:%d:%p");
+    buff = my_malloc (size);
+    memset (buff, 0, size);
+    sprintf(string,"frnbf:%d:%p",size,buff);
     return my_strdup(string);
 }
 
 
 void
-fgnbf_free ()  /* free a foreign structure */
+frnbf_free ()  /* free a foreign buffer */
 {
     int size;
     void *ptr;
 
-    if (fgnbf_parse_handle (pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (frnbf_parse_handle (pop (stSTRING)->pointer, &size, &ptr)) return;
     my_free(ptr);
     return;
 }
 
 
 char *
-fgnbf_dump ()  /* dump a foreign structure into readable form */
+frnbf_dump ()  /* dump a foreign buffer into readable form */
 {
     int size;
     char *ptr;
     char *dump,*d;
     int i;
 
-    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
     d = dump = my_malloc(2*size);
     for(i=0;i<size;i++) {
 	d += sprintf (d, "%02X", (int) ptr[i]);
@@ -273,7 +283,7 @@ fgnbf_dump ()  /* dump a foreign structure into readable form */
 
 
 void
-fgnbf_set ()  /* set a value within a foreign structure */
+frnbf_set ()  /* set a value within a foreign buffer */
 {
     int size;
     void *ptr;
@@ -285,10 +295,10 @@ fgnbf_set ()  /* set a value within a foreign structure */
     val = pop (stNUMBER)->value;
     type = pop (stSTRING)->pointer;
     offset = pop (stNUMBER)->value;
-    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (!fgn_check_ffi_type(type, &valtype, 0, 1)) return;
+    if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (!fgn_check_ffi_type(type, &valtype, 0, 2)) return;
     if (offset<0 || offset+valtype->size > size) {
-	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
+	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
 	return;
@@ -299,8 +309,34 @@ fgnbf_set ()  /* set a value within a foreign structure */
 }
 
 
+void
+frnbf_set2 ()  /* set a string within a foreign buffer */
+{
+    int size;
+    void *ptr;
+    char *str;
+    int slen;
+    int offset;
+    ffi_type *valtype; /* expected return type of function */
+
+    str = pop (stNUMBER)->pointer;
+    slen = strlen(str);
+    offset = pop (stNUMBER)->value;
+    if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
+    if (offset<0 || offset+slen > size) {
+	sprintf(errorstring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
+		offset, valtype->size, size);
+	error(sERROR, errorstring);
+	return;
+    }
+    strcpy((char *) ptr+offset, str);
+    
+    return;
+}
+
+
 double
-fgnbf_get ()  /* get a value from a foreign structure */
+frnbf_get ()  /* get a value from a foreign buffer */
 {
     int size;
     void *ptr;
@@ -310,10 +346,10 @@ fgnbf_get ()  /* get a value from a foreign structure */
 
     type = pop (stSTRING)->pointer;
     offset = pop (stNUMBER)->value;
-    if (fgnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
-    if (!fgn_check_ffi_type(type, &valtype, 0, 1)) return 0.0;
+    if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
+    if (!fgn_check_ffi_type(type, &valtype, 0, 2)) return 0.0;
     if (offset<0 || offset+valtype->size > size) {
-	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of structure %d",
+	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
 	return 0.0;
@@ -323,11 +359,32 @@ fgnbf_get ()  /* get a value from a foreign structure */
 }
 
 
-int
-fgnbf_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
+char *
+frnbf_get2 ()  /* get a string from a foreign buffer */
 {
-    if (sscanf(handle, "fgnbf:%d:%p", size, ptr) != 2) {
-	sprintf(errorstring,"invalid handle for foreign structure: '%s'", handle);
+    int size;
+    void *ptr;
+    int offset, len;
+    ffi_type *valtype; /* expected return type of function */
+
+    len = pop (stNUMBER)->value;
+    offset = pop (stNUMBER)->value;
+    if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    if (offset<0 || offset+len > size) {
+	sprintf(errorstring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
+		offset, len, size);
+	error(sERROR, errorstring);
+	return my_strdup("");
+    }
+    return my_strndup (ptr+offset, len);
+}
+
+
+int
+frnbf_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
+{
+    if (sscanf(handle, "frnbf:%d:%p", size, ptr) != 2) {
+	sprintf(errorstring,"invalid handle for foreign buffer: '%s'", handle);
 	error(sERROR, errorstring);
 	return false;
     }
@@ -336,7 +393,7 @@ fgnbf_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
 
 
 static int
-fgnfn_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
+frnfn_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
 {
     struct stackentry *st,*stfirst,*stfirstarg;
     static char stfound[50];
@@ -380,7 +437,7 @@ fgnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 	if (i==1 && !fgn_check_ffi_type (st->pointer, &rtype, 0, 0)) return FALSE;
 	if (i==2) funame=st->pointer;
 	st = st->next;
-      }
+    }
  
     stfirstarg = st;
     argcnt = 0;
@@ -406,10 +463,8 @@ fgnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 		if (opt_has_no) opt_str += 3;
 		if (!strcmp(opt_str,"error"))
 		    opt_error = !opt_has_no;
-                else if (!strcmp(opt_str,"copy_result_string"))
-		    opt_copy_result_string = !opt_has_no;
                 else {
-                   error (sERROR,"options can only be 'error' and 'copy_result_string' optionally preceeded by 'no_'");
+                   error (sERROR,"options can only be 'error' optionally preceeded by 'no_'");
 		}
 	    }
 	    break;
@@ -424,10 +479,10 @@ fgnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
     st = stfirstarg;
     for(i=3,j=0;i<3+2*argcnt;i+=2,st=st->next->next,j++) {
 	if (st->next->type == stSTRING) {
-	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, NUM_FFI_TYPES-1, 0)) return FALSE;
+	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, NUM_FFI_TYPES-2, 0)) return FALSE;
 	    values[j].ffipointer = (char *)st->next->pointer;
 	} else {
-	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, 0, 1)) return FALSE;
+	    if (!fgn_check_ffi_type (st->pointer, tvalues+j, 0, 2)) return FALSE;
             fgn_cast_to_ffi_type (values+j,tvalues[j],st->next->value);
         }
 	pvalues[j] = values + j;
@@ -441,7 +496,7 @@ static int
 fgn_check_ffi_type (char *type_string, ffi_type **type_ptr, int skip_first, int skip_last) /* check ffi type for correctness and maybe produce error message */
 {
     int i;
-    static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "short", "int", "long", "string"};
+    static char *ffi_types_string[NUM_FFI_TYPES] = {"uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64", "float", "double", "char", "short", "int", "long", "buffer", "bf"};
     static ffi_type *ffi_types_ptr[NUM_FFI_TYPES];
     static int ffi_types_ptr_initialized = FALSE;
 
@@ -451,7 +506,7 @@ fgn_check_ffi_type (char *type_string, ffi_type **type_ptr, int skip_first, int 
 	ffi_types_ptr[6] = &ffi_type_uint64;  ffi_types_ptr[7] = &ffi_type_sint64; ffi_types_ptr[8] = &ffi_type_float;
 	ffi_types_ptr[9] = &ffi_type_double;  ffi_types_ptr[10] = &ffi_type_schar; 
 	ffi_types_ptr[11] = &ffi_type_sshort; ffi_types_ptr[12] = &ffi_type_sint;
-	ffi_types_ptr[13] = &ffi_type_slong; ffi_types_ptr[14] = &ffi_type_pointer;
+	ffi_types_ptr[13] = &ffi_type_slong; ffi_types_ptr[14] = &ffi_type_pointer; ffi_types_ptr[15] = &ffi_type_pointer;
 	ffi_types_ptr_initialized = TRUE;
     }
 
@@ -514,7 +569,7 @@ fgn_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return
 }
 
 
-static void fgnfn_cleanup () /* free and cleanup structures after use */
+static void frnfn_cleanup () /* free and cleanup structures after use */
 {
     if (lib) {
 #ifdef UNIX

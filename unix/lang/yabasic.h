@@ -142,8 +142,8 @@ extern int termpid;		/* pid of process waiting for terminal keys */
 #endif
 
 /* foreign.c */
-extern char last_fgnfn_call_error_text[]; /* last error message produced by foreign call */
-extern int last_fgnfn_call_okay;         /* true, if last foreign call has been okay */
+extern char last_frnfn_call_error_text[]; /* last error message produced by foreign call */
+extern int last_frnfn_call_okay;         /* true, if last foreign call has been okay */
 
 /* graphic.c */
 /* printing and plotting */
@@ -274,7 +274,7 @@ enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
     fRAN2, fDATE, fTIME,
-    fFGNFN_CALL, fFGNFN_CALL2, fFGNBF_NEW, fFGNBF_DUMP, fFGNBF_GET_NUMBER, fFGNBF_GET_STRING,
+    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_NEW, fFRNBF_DUMP, fFRNBF_GET_NUMBER, fFRNBF_GET_STRING,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -347,7 +347,7 @@ enum cmd_type {
     cOPENPRN, cCLOSEPRN, cMOVEORIGIN, cRECT, cGCOLOUR, cGCOLOUR2,
     cGBACKCOLOUR, cGBACKCOLOUR2, cPUTBIT, cPUTCHAR,
 
-    cFGNBF_SET_NUMBER, cFGNBF_SET_STRING, cFGNBF_FREE,    /* foreign libraries */
+    cFRNBF_SET_NUMBER, cFRNBF_SET_STRING, cFRNBF_FREE,    /* foreign libraries */
     
     cLAST_COMMAND			/* no command, just marks end of list */
 };
@@ -573,12 +573,14 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 #endif
 
 /* foreign.c */
-void fgnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
-char *fgnbf_new (void);  /* create a new foreign structure */
-void fgnbf_free (void);  /* free a foreign structure */
-char *fgnbf_dump (void);  /* dump a foreign structure into readable form */
-void fgnbf_set (void);  /* set a value within a foreign structure */
-double fgnbf_get (void);  /* get a value from a foreign structure */
+void frnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
+char *frnbf_new (void);  /* create a new foreign structure */
+void frnbf_free (void);  /* free a foreign structure */
+char *frnbf_dump (void);  /* dump a foreign structure into readable form */
+void frnbf_set (void);  /* set a value within a foreign structure */
+void frnbf_set2 (void);  /* set a string within a foreign structure */
+double frnbf_get (void);  /* get a value from a foreign structure */
+char *frnbf_get2 (void);  /* get a string from a foreign structure */
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */

@@ -797,22 +797,26 @@ function (struct command *current)	/* performs a function */
         pointer = do_system2 (str);
         result = stSTRING;
         break;
-    case fFGNFN_CALL:
-	fgnfn_call (type, &value, &pointer);
+    case fFRNFN_CALL:
+	frnfn_call (type, &value, &pointer);
         result = stNUMBER;
         break;
-    case fFGNFN_CALL2:
-	fgnfn_call (type, &value, &pointer);
+    case fFRNFN_CALL2:
+	frnfn_call (type, &value, &pointer);
         result = stSTRING;
         break;
-    case fFGNBF_NEW:
-    case fFGNBF_DUMP:
-	pointer = fgnbf_dump ();
+    case fFRNBF_NEW:
+    case fFRNBF_DUMP:
+	pointer = frnbf_dump ();
 	result = stNUMBER;
         break;
-    case fFGNBF_GET_NUMBER:
-	value = fgnbf_get ();
+    case fFRNBF_GET_NUMBER:
+	value = frnbf_get ();
         result = stNUMBER;
+        break;
+    case fFRNBF_GET_STRING:
+	pointer = frnbf_get2 ();
+        result = stSTRING;
         break;
     case fPEEK:
         str = a1->pointer;
@@ -1565,8 +1569,8 @@ peek (char *dest)		/* peek into internals */
         return errorcode;
     } else if (!strcmp (dest, "isbound")) {
         return is_bound;
-    } else if (!strcmp (dest, "last_foreign_function_call_okay") || !strcmp (dest, "last_fgnfn_call_okay")) {
-        return (double) last_fgnfn_call_okay;
+    } else if (!strcmp (dest, "last_foreign_function_call_okay") || !strcmp (dest, "last_frnfn_call_okay")) {
+        return (double) last_frnfn_call_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
 	time(&now);
 	return (double)(now-compilation_start);
@@ -1643,8 +1647,8 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
 #endif
     } else if (!strcmp (dest, "font")) {
         return my_strdup (fontname);
-    } else if (!strcmp (dest, "last_foreign_function_call_error_text") || !strcmp (dest, "last_fgnfn_call_error_text")) {
-	return my_strdup (last_fgnfn_call_error_text);
+    } else if (!strcmp (dest, "last_foreign_function_call_error_text") || !strcmp (dest, "last_frnfn_call_error_text")) {
+	return my_strdup (last_frnfn_call_error_text);
     } else if (!strcmp (dest, "argument") || !strcmp (dest, "arguments")) {
         if (yabargc > 0) {
             s = yabargv[0];

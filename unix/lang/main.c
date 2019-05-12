@@ -1165,9 +1165,9 @@ initialize (void)
     cexplanation[cDOT] = "DOT";
     cexplanation[cPUTBIT] = "PUTBIT";
     cexplanation[cPUTCHAR] = "PUTCHAR";
-    cexplanation[cFGNBF_SET_NUMBER] = "FGNBF_SET_NUMBER";
-    cexplanation[cFGNBF_SET_STRING] = "FGNBF_SET_STRING";
-    cexplanation[cFGNBF_FREE] = "FGNBF_FREE";
+    cexplanation[cFRNBF_SET_NUMBER] = "FRNBF_SET_NUMBER";
+    cexplanation[cFRNBF_SET_STRING] = "FRNBF_SET_STRING";
+    cexplanation[cFRNBF_FREE] = "FRNBF_FREE";
     cexplanation[cLINE] = "LINE";
     cexplanation[cGCOLOUR] = "GCOLOUR";
     cexplanation[cGCOLOUR2] = "GCOLOUR2";
@@ -1239,11 +1239,12 @@ initialize (void)
     fexplanation[fPEEK] = "PEEK";
     fexplanation[fPEEK2] = "PEEK2";
     fexplanation[fPEEK4] = "PEEK4";
-    fexplanation[fFGNFN_CALL] = "FGNFN_CALL";
-    fexplanation[fFGNFN_CALL2] = "FGNFN_CALL2";
-    fexplanation[fFGNBF_NEW] = "FGNBF_NEW";
-    fexplanation[fFGNBF_DUMP] = "FGNBF_DUMP";
-    fexplanation[fFGNBF_GET_NUMBER] = "FGNBF_GET_NUMBER";
+    fexplanation[fFRNFN_CALL] = "FRNFN_CALL";
+    fexplanation[fFRNFN_CALL2] = "FRNFN_CALL2";
+    fexplanation[fFRNBF_NEW] = "FRNBF_NEW";
+    fexplanation[fFRNBF_DUMP] = "FRNBF_DUMP";
+    fexplanation[fFRNBF_GET_NUMBER] = "FRNBF_GET_NUMBER";
+    fexplanation[fFRNBF_GET_STRING] = "FRNBF_GET_STRING";
     fexplanation[fTELL] = "TELL";
     fexplanation[fEXP] = "EXP";
     fexplanation[fLOG] = "LOG";
@@ -1769,11 +1770,14 @@ run_it ()
             case cBIND:
                 mybind (pop (stSTRING)->pointer);
                 DONE;
-	    case cFGNBF_SET_NUMBER:
-		fgnbf_set ();
+	    case cFRNBF_SET_NUMBER:
+		frnbf_set ();
 		DONE;
-	    case cFGNBF_FREE:
-		fgnbf_free ();
+	    case cFRNBF_SET_STRING:
+		frnbf_set2 ();
+		DONE;
+	    case cFRNBF_FREE:
+		frnbf_free ();
 		DONE;
             case cEND:
                 endreason = rEOF;
