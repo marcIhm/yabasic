@@ -805,10 +805,14 @@ function (struct command *current)	/* performs a function */
 	frnfn_call (type, &value, &pointer);
         result = stSTRING;
         break;
+    case fFRNFN_SIZE:
+	value = frnfn_size (a1->pointer);
+        result = stNUMBER;
+        break;
     case fFRNBF_NEW:
     case fFRNBF_DUMP:
 	pointer = frnbf_dump ();
-	result = stNUMBER;
+	result = stSTRING;
         break;
     case fFRNBF_GET_NUMBER:
 	value = frnbf_get ();

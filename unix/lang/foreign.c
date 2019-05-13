@@ -38,6 +38,12 @@ frnfn_call (int type, double *pvalue, char **ppointer)
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
 }
+double
+frnfn_size (char *type)
+{
+    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    return;
+}
 char *
 frnbf_new ()
 {
@@ -82,7 +88,7 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
 }
 #else
 
-#define NUM_FFI_TYPES 15
+#define NUM_FFI_TYPES 16
 #ifdef WINDOWS
 #define FFI_BUILDING
 #endif
@@ -225,12 +231,21 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
     if (type == fFRNFN_CALL) {
 	*pvalue = fgn_cast_from_ffi_type (&ffi_result, rtype);
     } else {
-	sprintf(string,"frnbf:%d:%p",ffi_result.size,ffi_result.ffipointer);
-	*ppointer my_strdup(string);
+	sprintf(string,"frnbf:%d:%p", -1, ffi_result.ffipointer);
+	*ppointer = my_strdup(string);
     }
 	
     frnfn_cleanup ();
     last_frnfn_call_okay = 1;
+}
+
+double
+frnfn_size (char *type) /* return size of structure */
+{
+    ffi_type *valtype;
+
+    if (!fgn_check_ffi_type(type, &valtype, 0, 2)) return 0.0;
+    return valtype->size;
 }
 
 
@@ -241,8 +256,8 @@ frnbf_new ()  /* create a new foreign buffer */
     void *buff;
     
     size = pop (stNUMBER)->value;
-    if (size<0) {
-	sprintf(errorstring,"size of buffer cannot be less than zero, not %d",size);
+    if (size<-1) {
+	sprintf(errorstring,"size of buffer cannot be less than -1, not %d",size);
 	error(sERROR, errorstring);
 	return my_strdup("");
     }
@@ -297,7 +312,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
     offset = pop (stNUMBER)->value;
     if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
     if (!fgn_check_ffi_type(type, &valtype, 0, 2)) return;
-    if (offset<0 || offset+valtype->size > size) {
+    if (offset<0 || ( size >= 0 && offset+valtype->size > size)) {
 	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
@@ -323,7 +338,7 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
     slen = strlen(str);
     offset = pop (stNUMBER)->value;
     if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (offset<0 || offset+slen > size) {
+    if (offset<0 || (size >= 0 && offset+slen > size)) {
 	sprintf(errorstring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
 		offset, valtype->size, size);
 	error(sERROR, errorstring);
@@ -348,7 +363,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
     offset = pop (stNUMBER)->value;
     if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
     if (!fgn_check_ffi_type(type, &valtype, 0, 2)) return 0.0;
-    if (offset<0 || offset+valtype->size > size) {
+    if (offset<0 || (size >= 0 && offset+valtype->size > size)) {
 	sprintf(errorstring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, errorstring);
@@ -370,7 +385,7 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
     len = pop (stNUMBER)->value;
     offset = pop (stNUMBER)->value;
     if (frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
-    if (offset<0 || offset+len > size) {
+    if (offset<0 || (size >=0 && offset+len > size)) {
 	sprintf(errorstring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
 		offset, len, size);
 	error(sERROR, errorstring);

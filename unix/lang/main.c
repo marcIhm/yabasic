@@ -1241,6 +1241,7 @@ initialize (void)
     fexplanation[fPEEK4] = "PEEK4";
     fexplanation[fFRNFN_CALL] = "FRNFN_CALL";
     fexplanation[fFRNFN_CALL2] = "FRNFN_CALL2";
+    fexplanation[fFRNFN_SIZE] = "FRNFN_SIZE";
     fexplanation[fFRNBF_NEW] = "FRNBF_NEW";
     fexplanation[fFRNBF_DUMP] = "FRNBF_DUMP";
     fexplanation[fFRNBF_GET_NUMBER] = "FRNBF_GET_NUMBER";

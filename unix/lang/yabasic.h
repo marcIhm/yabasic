@@ -274,7 +274,8 @@ enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
     fRAN2, fDATE, fTIME,
-    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_NEW, fFRNBF_DUMP, fFRNBF_GET_NUMBER, fFRNBF_GET_STRING,
+    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_NEW, fFRNBF_DUMP,
+    fFRNBF_GET_NUMBER, fFRNBF_GET_STRING, fFRNFN_SIZE,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -282,7 +283,8 @@ enum functions {
     fSTR,
     fSQRT, fSQR, fFRAC, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 
-    fLTRIM, fRTRIM, fTRIM, fCHR, fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
+    fLTRIM, fRTRIM, fTRIM, fCHR,
+    fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fLOG2,
     fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2,
     fTWOARGS,
@@ -573,14 +575,15 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 #endif
 
 /* foreign.c */
-void frnfn_call (int,double *,char **);  /* load and execute function from a foreign library */
-char *frnbf_new (void);  /* create a new foreign structure */
-void frnbf_free (void);  /* free a foreign structure */
-char *frnbf_dump (void);  /* dump a foreign structure into readable form */
-void frnbf_set (void);  /* set a value within a foreign structure */
-void frnbf_set2 (void);  /* set a string within a foreign structure */
-double frnbf_get (void);  /* get a value from a foreign structure */
-char *frnbf_get2 (void);  /* get a string from a foreign structure */
+void frnfn_call (int,double *,char **);
+double frnfn_size (char *type);
+char *frnbf_new (void);
+void frnbf_free (void);
+char *frnbf_dump (void);
+void frnbf_set (void);
+void frnbf_set2 (void);
+double frnbf_get (void);
+char *frnbf_get2 (void);
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */
