@@ -75,7 +75,7 @@ int is_bound;			/* true, if this executable is bound */
 static char *to_bind = NULL;	/* name bound program to be written */
 FILE *bound_program = NULL;	/* points to embedded yabasic program (if any) */
 char *string;			/* for trash-strings */
-char *errorstring;		/* for error-strings */
+char *estring;		/* for error-strings */
 int errorcode;			/* error-codes */
 static int commandcount;	/* total number of commands */
 int program_state;		/* state of program */
@@ -118,8 +118,8 @@ main (int argc, char **argv)
     int len;
 
     string = (char *) my_malloc (sizeof (char) * INBUFFLEN);
-    errorstring = (char *) my_malloc (sizeof (char) * INBUFFLEN);
-    *errorstring = '\0';
+    estring = (char *) my_malloc (sizeof (char) * INBUFFLEN);
+    *estring = '\0';
     errorcode = 0;
 
     program_state = HATCHED;
@@ -2286,8 +2286,8 @@ isbound (void)			/* check if this interpreter is bound to a program */
     case sNOTE: infolevel_text="NOTE";break;
     case sDEBUG: infolevel_text="DEBUG";break;
     case sDEBUG-1: infolevel_text="DEBUG+BISON";yydebug=1;severity_threshold=sDEBUG;break;};
-    sprintf (errorstring, "Set infolevel to %s", infolevel_text);
-    error (sDEBUG, errorstring);
+    sprintf (estring, "Set infolevel to %s", infolevel_text);
+    error (sDEBUG, estring);
 
     /* length of name of embedded program */
     offset -= remlen + 8;
@@ -2296,8 +2296,8 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (sWARNING, "Could not read length of name of embedded program");
         return 0;
     }
-    sprintf (errorstring, "Length of name of embedded program is %d", namelen);
-    error (sDEBUG, errorstring);
+    sprintf (estring, "Length of name of embedded program is %d", namelen);
+    error (sDEBUG, estring);
     
     /* name of embedded program */
     offset -= remlen + namelen;
@@ -2307,8 +2307,8 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (sWARNING, "Could not read name of embedded program");
         return 0;
     }
-    sprintf (errorstring, "Name of embedded program is '%s'", progname);
-    error (sDEBUG, errorstring);
+    sprintf (estring, "Name of embedded program is '%s'", progname);
+    error (sDEBUG, estring);
 
     /* length of program */
     offset -= remlen + 8;
@@ -2317,8 +2317,8 @@ isbound (void)			/* check if this interpreter is bound to a program */
         error (sWARNING, "Could not read length of embedded program");
         return 0;
     }
-    sprintf (errorstring, "Length of embedded program is %d", proglen);
-    error (sDEBUG, errorstring);
+    sprintf (estring, "Length of embedded program is %d", proglen);
+    error (sDEBUG, estring);
 
     /* seek back to start of embedded program */
     offset -= 4 + proglen; /* only the text 'rem ' without preceding linefeed */
@@ -2347,9 +2347,9 @@ static int
 seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes */
 {
   if (fseek (file, offset, SEEK_END)) {
-    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path,
+    sprintf (estring, "Couldn't seek within '%s': %s", inter_path,
 	     my_strerror (errno));
-    error (sWARNING, errorstring);
+    error (sWARNING, estring);
     return FALSE;
   }
   if (!fgets (string, INBUFFLEN, file)) {
@@ -2358,12 +2358,12 @@ seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes
   }
   string[strlen(string) - strlen("\n")] = '\0';
   if (cookie_found && severity_threshold <= sDEBUG) { 
-    sprintf(errorstring, "Next line from end of embbeded program to be processed is: '%s'", string);
-    error (sDEBUG, errorstring);
+    sprintf(estring, "Next line from end of embbeded program to be processed is: '%s'", string);
+    error (sDEBUG, estring);
   }
   if (fseek (file, offset, SEEK_END)) {
-    sprintf (errorstring, "Couldn't seek within '%s': %s", inter_path, my_strerror (errno));
-    error (sWARNING, errorstring);
+    sprintf (estring, "Couldn't seek within '%s': %s", inter_path, my_strerror (errno));
+    error (sWARNING, estring);
     return FALSE;
   }
     

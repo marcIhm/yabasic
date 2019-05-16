@@ -2024,8 +2024,8 @@ putbit (void)
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             if (!readrgb (NULL, 0, &red, &green, &blue)) {
-				sprintf(errorstring, "error while reading line %d of %d, pixel %d of %d from string", y + 1, h, x + 1, w);
-					error(sERROR, errorstring);
+				sprintf(estring, "error while reading line %d of %d, pixel %d of %d from string", y + 1, h, x + 1, w);
+					error(sERROR, estring);
                 return;
             }
             should_pixel = rgb_to_pixel (red, green, blue);
@@ -2206,10 +2206,10 @@ readrgb (char *bits, int off, unsigned short *red, unsigned short *green,
         return 1;
     }
 	if (scanned == EOF)
-		sprintf(errorstring, "Invalid bitmap: unexpected end of supplied string");
+		sprintf(estring, "Invalid bitmap: unexpected end of supplied string");
 	else
-		sprintf(errorstring,"Invalid bitmap: could only extract %d hex-values from supplied string at position %d: '%.6s'",scanned, bitpt-bitstart,bitpt);
-    error (sERROR, errorstring);
+		sprintf(estring,"Invalid bitmap: could only extract %d hex-values from supplied string at position %d: '%.6s'",scanned, bitpt-bitstart,bitpt);
+    error (sERROR, estring);
     return 0;
 }
 

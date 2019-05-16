@@ -376,8 +376,8 @@ create_function (int type)	/* create command 'function' */
 
     cmd = add_command (cFUNCTION, FALSE, NULL);
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "function '%s'",fexplanation[type]);
-	error (sDEBUG, errorstring);
+	sprintf(estring, "function '%s'",fexplanation[type]);
+	error (sDEBUG, estring);
     }
     cmd->args = type;
 }
@@ -409,8 +409,8 @@ function (struct command *current)	/* performs a function */
     }
 
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "function '%s'",fexplanation[type]);
-	error (sDEBUG, errorstring);
+	sprintf(estring, "function '%s'",fexplanation[type]);
+	error (sDEBUG, estring);
     }
 
     switch (type) {
@@ -1632,7 +1632,7 @@ peek2 (char *dest, struct command *curr)	/* peek into internals */
     } else if (!strcmp (dest, "windoworigin")) {
         return my_strdup (winorigin);
     } else if (!strcmp (dest, "error")) {
-        return my_strdup (errorstring);
+        return my_strdup (estring);
     } else if (!strcmp (dest, "program_file_name")) {
         return my_strdup(main_file_name);
     } else if (!strcmp (dest, "program_name")) {

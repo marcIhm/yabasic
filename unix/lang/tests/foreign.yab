@@ -6,6 +6,6 @@ if frnfn_call("libm.so.6","double","cos","double",2) <> cos(2) error "foreign re
 # but the string representations (with reduced precision) are equal
 if str$(frnfn_call("libm.so.6","float","cosf","float",2)) <> str$(cos(2)) error "foreign result of cosf-function does not match"
 
-if frnfn_call$("/lib64/libc.so.6","string","strstr","string","foobar","string","ob","options","copy_result_string") <> "obar" error "result of strstr does not match"
+if frnfn_call$("/lib64/libc.so.6","string","strstr","string","foobar","string","ob","options","copy_string_result") <> "obar" error "result of strstr does not match"
 
 if frnfn_call("/lib64/libc.so.6","int","strlen","string","foo","string","ob") <> 3 error "result of strstr does not match"

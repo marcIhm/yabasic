@@ -107,7 +107,7 @@ extern int yabargc;		/* number of arguments in yabargv */
 extern time_t compilation_start, compilation_end, execution_end;
 extern long long int millis_compilation_start;
 extern char *string;		/* for trash-strings */
-extern char *errorstring;	/* for error-strings */
+extern char *estring;	/* for error-strings */
 extern int errorcode;		/* error-codes */
 extern char library_path[];	/* full path to search libraries */
 extern int program_state;	/* state of program */

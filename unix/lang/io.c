@@ -732,7 +732,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
             }
         }
         if (!stream) {
-            sprintf(errorstring, "reached maximum number of open files");
+            sprintf(estring, "reached maximum number of open files");
             errorcode = 5;
             goto open_done;
         }
@@ -743,19 +743,19 @@ myopen(struct command *cmd)	/* open specified file for given name */
     p->type = stNUMBER;
 
     if (printer && print_to_file) {
-        sprintf(errorstring,
+        sprintf(estring,
                 "cannot open printer: already printing grafics");
         errorcode = 6;
         goto open_done;
     }
 
     if (badstream(stream, 1)) {
-        sprintf(errorstring, "invalid stream number %d", stream);
+        sprintf(estring, "invalid stream number %d", stream);
         errorcode = 9;
         goto open_done;
     }
     if (stream_modes[stream] != mCLOSED) {
-        sprintf(errorstring, "stream already in use");
+        sprintf(estring, "stream already in use");
         errorcode = 2;
         goto open_done;
     }
@@ -768,7 +768,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
         smode++;
     }
     if (!**pmode) {
-        sprintf(errorstring, "\'%s\' is not a valid filemode", mode);
+        sprintf(estring, "\'%s\' is not a valid filemode", mode);
         errorcode = 3;
         goto open_done;
     }
@@ -777,7 +777,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
 #ifdef UNIX
         lineprinter = popen(name, "w");
         if (!lineprinter) {
-            sprintf (errorstring, "could not open line printer");
+            sprintf (estring, "could not open line printer");
             errorcode = 7;
             goto open_done;
         }
@@ -797,7 +797,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
         di.pOutputFile = (LPTSTR)NULL;
         di.pDatatype = "RAW";
         if (!StartDocPrinter(lineprinter, 1, (LPBYTE)& di)) {
-            sprintf(errorstring, "could not open line printer");
+            sprintf(estring, "could not open line printer");
             errorcode = 7;
             goto open_done;
         }
@@ -807,7 +807,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
     } else {
         handle = fopen(name, mode);
         if (handle == NULL) {
-            sprintf(errorstring, "could not open '%s': %s", name,
+            sprintf(estring, "could not open '%s': %s", name,
                     my_strerror(errno));
             errorcode = 4;
             goto open_done;
@@ -834,7 +834,7 @@ checkopen(void)		/* check, if open has been sucessfully */
 
     result = pop(stNUMBER)->value;
     if (result <= 0) {
-        error (sERROR, errorstring);
+        error (sERROR, estring);
     }
 }
 
@@ -902,7 +902,7 @@ myseek(struct command *cmd)	/* reposition file pointer */
     } else if (!strcmp(mode, "here")) {
         m = SEEK_CUR;
     } else {
-        sprintf(errorstring, "seek mode '%s' is none of begin,end,here",
+        sprintf(estring, "seek mode '%s' is none of begin,end,here",
                 mode);
         errorcode = 12;
         my_free(mode);
@@ -913,12 +913,12 @@ myseek(struct command *cmd)	/* reposition file pointer */
         return;
     }
     if (!(stream_modes[s] & (mREAD | mWRITE))) {
-        sprintf(errorstring, "stream %d not open", s);
+        sprintf(estring, "stream %d not open", s);
         errorcode = 11;
         return;
     }
     if (fseek(streams[s], (long)p, m)) {
-        sprintf(errorstring, "could not position stream %d to byte %d", s,
+        sprintf(estring, "could not position stream %d to byte %d", s,
                 p);
         errorcode = 10;
         return;
@@ -1070,7 +1070,7 @@ int
 badstream(int stream, int errcode)	/* test for valid stream id */
 {
     if (stream != STDIO_STREAM && (stream > FOPEN_MAX - 4 || stream <= 0)) {
-        sprintf(errcode ? errorstring : string,
+        sprintf(errcode ? estring : string,
                 "invalid stream: %d (can handle only streams from 1 to %d)",
                 stream, FOPEN_MAX - 4);
         if (errcode) {

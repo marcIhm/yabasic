@@ -249,8 +249,8 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         cmd->pointer = cmd->symname;
         cmd->symname = NULL;
 	if (severity_threshold <= sDEBUG) {
-	    sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cFUNCTION]);
-	    error(sDEBUG, errorstring);
+	    sprintf(estring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cFUNCTION]);
+	    error(sDEBUG, estring);
 	}
     } else {
         if (cmd->type == cFUNCTION_OR_ARRAY) {
@@ -261,8 +261,8 @@ function_or_array (struct command *cmd)	/* decide whether to perform function or
         cmd->type = cDOARRAY;
         cmd->args = -1;
 	if ( severity_threshold <= sDEBUG) {
-	    sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cDOARRAY]);
-	    error(sDEBUG, errorstring);
+	    sprintf(estring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cDOARRAY]);
+	    error(sDEBUG, estring);
 	}
     }
 }
@@ -758,14 +758,14 @@ mybreak (struct command *cmd)	/* find break_here statement */
 	curr = curr->next;
 	if (!curr) {
 	    curr = cmd;
-	    sprintf(errorstring,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sERROR, errorstring);
+	    sprintf(estring,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+	    error (sERROR, estring);
 	}
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring, "converting '%s' to '%s'",cexplanation[cBREAK_MULTI],cexplanation[cQGOTO]);
-        error (sDEBUG, errorstring);
+	sprintf(estring, "converting '%s' to '%s'",cexplanation[cBREAK_MULTI],cexplanation[cQGOTO]);
+        error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
     cmd->jump = current = curr;
@@ -803,8 +803,8 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf( errorstring, "converting '%s' to '%s'",cexplanation[cCONTINUE],cexplanation[cQGOTO]);
-	error (sDEBUG, errorstring);
+	sprintf( estring, "converting '%s' to '%s'",cexplanation[cCONTINUE],cexplanation[cQGOTO]);
+	error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
     cmd->jump = current = curr;
@@ -835,14 +835,14 @@ next_case (struct command *cmd)	/* find next_case_here statement */
         curr = curr->next;
         if (!curr) {
 	    curr = cmd;
-	    sprintf(errorstring,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sERROR, errorstring);
+	    sprintf(estring,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
+	    error (sERROR, estring);
         }
     }
     cmd->type = cQGOTO;
     if (severity_threshold <= sDEBUG) {
-	sprintf(errorstring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
-        error (sDEBUG, errorstring);
+	sprintf(estring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
+        error (sDEBUG, estring);
     }
     cmd->jump = current = curr;
 }
