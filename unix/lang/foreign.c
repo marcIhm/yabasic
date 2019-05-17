@@ -45,7 +45,7 @@ frnfn_call (int type, double *pvalue, char **ppointer)
     return;
 }
 double
-frnfn_size (char *type)
+frnfn_size ()
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
     return;
@@ -257,11 +257,11 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 }
 
 double
-frnfn_size (char *type) /* return size of structure */
+frnfn_size () /* return size of structure */
 {
     ffi_type *valtype;
 
-    if (!fgn_check_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
+    if (!fgn_check_ffi_type(pop (stSTRING)->pointer, &valtype, NULL, ktSIMPLE)) return 0.0;
     return valtype->size;
 }
 

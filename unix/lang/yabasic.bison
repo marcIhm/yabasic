@@ -363,7 +363,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
   | tFRNFN_CALL2 '(' call_list ')' {create_function(fFRNFN_CALL2);}
-  | tFRNBF_NEW '(' string_expression ',' expression ')' {create_function(fFRNBF_NEW);}
+  | tFRNBF_NEW '(' expression ')' {create_function(fFRNBF_NEW);}
   | tFRNBF_DUMP '(' string_expression ',' string_expression ')' {create_function(fFRNBF_DUMP);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
@@ -464,6 +464,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tRINSTR '(' string_expression ',' string_expression  ',' expression ')' {create_function(fRINSTR2);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);}
   | tFRNFN_CALL '(' call_list ')' {create_function(fFRNFN_CALL);}
+  | tFRNFN_SIZE '(' string_expression ')' {create_function(fFRNFN_SIZE);}
   | tFRNBF_GET '(' string_expression ',' expression ',' string_expression ')' {create_function(fFRNBF_GET_NUMBER);} 
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}

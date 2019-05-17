@@ -1,8 +1,8 @@
 
 
-null$ = frnbf_new()
-now = frnfn_call("libm.so.6","int","time","struct",null$)
-local$ = frnbf_call("libm.so.6","buffer","localtime","int",now)
+null$ = frnbf_new$(0)
+now = frnfn_call("libm.so.6","int","time","buffer",null$)
+local$ = frnfn_call$("libm.so.6","buffer","localtime","int",now)
 offset = 5 * frnfn_size("int")
 print frnbf_get(local$,offset,"int")
 print frnbf_call$("libm.so.6","buffer","asctime","buffer",local$)

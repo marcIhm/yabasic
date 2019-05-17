@@ -806,10 +806,13 @@ function (struct command *current)	/* performs a function */
         result = stSTRING;
         break;
     case fFRNFN_SIZE:
-	value = frnfn_size (a1->pointer);
+	value = frnfn_size ();
         result = stNUMBER;
         break;
     case fFRNBF_NEW:
+	pointer = frnbf_new ();
+        result = stSTRING;
+        break;
     case fFRNBF_DUMP:
 	pointer = frnbf_dump ();
 	result = stSTRING;

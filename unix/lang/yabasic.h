@@ -576,7 +576,7 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 
 /* foreign.c */
 void frnfn_call (int,double *,char **);
-double frnfn_size (char *type);
+double frnfn_size (void);
 char *frnbf_new (void);
 void frnbf_free (void);
 char *frnbf_dump (void);
