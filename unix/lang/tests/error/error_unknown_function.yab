@@ -1,0 +1,4 @@
+#expect# Currently the wrong line is displayed
+print 1
+unknown()
+print 2

@@ -104,8 +104,7 @@ extern char *cexplanation[];	/* explanations of commands */
 extern char *fexplanation[];	/* explanations of functions */
 extern char **yabargv;		/* arguments for yabasic */
 extern int yabargc;		/* number of arguments in yabargv */
-extern time_t compilation_start, compilation_end, execution_end;
-extern long long int millis_compilation_start;
+extern long long int compilation_start, compilation_end, execution_end;
 extern char *string;		/* for trash-strings */
 extern char *estring;	/* for error-strings */
 extern int errorcode;		/* error-codes */
@@ -274,8 +273,8 @@ enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
     fRAN2, fDATE, fTIME,
-    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_NEW, fFRNBF_DUMP,
-    fFRNBF_GET_NUMBER, fFRNBF_GET_STRING, fFRNFN_SIZE,
+    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_ALLOC, fFRNBF_DUMP,
+    fFRNBF_GET_NUMBER, fFRNBF_GET_STRING, fFRNFN_SIZE, fFRNBF_SIZE,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -379,7 +378,7 @@ enum addmodes {
 
 enum states {
     /* current state of program */
-    HATCHED, INITIALIZED, COMPILING, RUNNING, FINISHED
+    spHATCHED, spINITIALIZED, spCOMPILING, spRUNNING, spFINISHED
 };
 
 enum yabkeys {
@@ -577,9 +576,10 @@ void calc_psscale (void);	/* calculate scale-factor for postscript */
 /* foreign.c */
 void frnfn_call (int,double *,char **);
 double frnfn_size (void);
-char *frnbf_new (void);
+char *frnbf_alloc (void);
 void frnbf_free (void);
 char *frnbf_dump (void);
+int frnbf_size ();
 void frnbf_set (void);
 void frnbf_set2 (void);
 double frnbf_get (void);

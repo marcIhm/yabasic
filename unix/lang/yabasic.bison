@@ -162,7 +162,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFRNFN_CALL tFRNFN_CALL2 tFRNFN_SIZE
-%token tFRNBF_NEW tFRNBF_FREE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
+%token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -295,9 +295,9 @@ statement:  /* empty */
   | tEXIT expression {add_command(cEXIT,NULL,NULL);}
   | tDOCU {create_docu($1);}
   | tBIND string_expression {add_command(cBIND,NULL,NULL);}
-  | tFRNBF_FREE string_expression ',' string_expression {add_command(cFRNBF_FREE,NULL,NULL);}
-  | tFRNBF_SET string_expression ',' string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER, NULL, NULL);} 
-  | tFRNBF_SET string_expression ',' string_expression ',' expression ',' string_expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
+  | tFRNBF_FREE string_expression {add_command(cFRNBF_FREE,NULL,NULL);}
+  | tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER, NULL, NULL);} 
+  | tFRNBF_SET string_expression ',' expression ',' string_expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
   ;
 
 
@@ -363,8 +363,8 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
   | tFRNFN_CALL2 '(' call_list ')' {create_function(fFRNFN_CALL2);}
-  | tFRNBF_NEW '(' expression ')' {create_function(fFRNBF_NEW);}
-  | tFRNBF_DUMP '(' string_expression ',' string_expression ')' {create_function(fFRNBF_DUMP);}
+  | tFRNBF_ALLOC '(' expression ')' {create_function(fFRNBF_ALLOC);}
+  | tFRNBF_DUMP '(' string_expression ')' {create_function(fFRNBF_DUMP);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -466,6 +466,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tFRNFN_CALL '(' call_list ')' {create_function(fFRNFN_CALL);}
   | tFRNFN_SIZE '(' string_expression ')' {create_function(fFRNFN_SIZE);}
   | tFRNBF_GET '(' string_expression ',' expression ',' string_expression ')' {create_function(fFRNBF_GET_NUMBER);} 
+  | tFRNBF_SIZE '(' string_expression ')' {create_function(fFRNBF_SIZE);} 
   | tPEEK '(' hashed_number ')' {create_function(fPEEK4);}
   | tPEEK '(' string_expression ')' {create_function(fPEEK);}
   | tMOUSEX '(' string_expression ')' {create_function(fMOUSEX);}

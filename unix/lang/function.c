@@ -784,7 +784,7 @@ function (struct command *current)	/* performs a function */
         time (&datetime);
         strftime (pointer, 100, "%H-%M-%S", localtime (&datetime));
         sprintf (pointer + strlen (pointer), "-%d",
-                 (int) (time (NULL) - compilation_start));
+                 (int) ((current_millis () - compilation_start)/1000));
         result = stSTRING;
         break;
     case fSYSTEM:
@@ -805,17 +805,21 @@ function (struct command *current)	/* performs a function */
 	frnfn_call (type, &value, &pointer);
         result = stSTRING;
         break;
-    case fFRNFN_SIZE:
-	value = frnfn_size ();
-        result = stNUMBER;
-        break;
-    case fFRNBF_NEW:
-	pointer = frnbf_new ();
+    case fFRNBF_ALLOC:
+	pointer = frnbf_alloc ();
         result = stSTRING;
+        break;
+    case fFRNBF_SIZE:
+	value = frnbf_size ();
+	result = stNUMBER;
         break;
     case fFRNBF_DUMP:
 	pointer = frnbf_dump ();
-	result = stSTRING;
+        result = stSTRING;
+        break;
+    case fFRNFN_SIZE:
+	value = frnfn_size ();
+        result = stNUMBER;
         break;
     case fFRNBF_GET_NUMBER:
 	value = frnbf_get ();
@@ -1579,10 +1583,9 @@ peek (char *dest)		/* peek into internals */
     } else if (!strcmp (dest, "last_foreign_function_call_okay") || !strcmp (dest, "last_frnfn_call_okay")) {
         return (double) last_frnfn_call_okay;
     } else if (!strcmp (dest, "secondsrunning")) {
-	time(&now);
-	return (double)(now-compilation_start);
+	return (double)((current_millis () - compilation_start)/1000);
     } else if (!strcmp (dest, "millisrunning")) {
-	return (double)(current_millis() - millis_compilation_start);
+	return (double)(current_millis () - compilation_start);
     } else if (dest[0] == '#') {
         error (sERROR, "don't use quotes when peeking into a file");
         return 0;

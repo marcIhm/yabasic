@@ -43,20 +43,21 @@ extern int yydebug;             /* for bison debugging */
 
 /* ------------- local functions ---------------- */
 
-static void parse_arguments (int, char *argv[]);	/* parse cmd line arguments */
-static void initialize (void);	/* give correct values to pointers etc ... */
-static void run_it (void);	/* execute the compiled code */
-static void end_it (void);	/* perform shutdown operations */
+static void parse_arguments (int, char *argv[]);
+static void set_program_state (int);
+static void initialize (void);
+static void run_it (void);
+static void end_it (void);
 #ifdef WINDOWS
-static void chop_command (char *, int *, char ***);	/* chops WIN95-commandline */
+static void chop_command (char *, int *, char ***);
 #endif
-void create_docu_array (void);	/* create array with documentation */
-int equal (char *, char *, int);	/* helper for processing options */
-static int mybind (char *);	/* bind a program to the interpreter and save it */
-void put_and_count (char *, FILE *, int *);  /* write text to file and increment len */
-
-char *find_interpreter (char *);    /* find interpreter with full path, use code from Gregory Pakosz */
-static int seekback (FILE *, int, int);       /* seek back bytes */
+void create_docu_array (void);
+int equal (char *, char *, int);
+static int mybind (char *);
+void put_and_count (char *, FILE *, int *);
+char *find_interpreter (char *);
+static int seekback (FILE *, int, int);
+int effective_lineno (void);
 
 /* ------------- global variables ---------------- */
 
@@ -94,8 +95,7 @@ static int endreason = rNONE;	/* reason for termination */
 static int exitcode = 0;
 static int signal_arrived = 0;
 /* timing */
-time_t compilation_start, compilation_end, execution_end;
-long long int millis_compilation_start;
+long long int compilation_start, compilation_end, execution_end;
 char library_path[200];		/* full path to search libraries */
 char library_default[200];	/* default full path to search libraries */
 static struct command *docuhead = NULL;	/* first docu in main */
@@ -122,7 +122,7 @@ main (int argc, char **argv)
     *estring = '\0';
     errorcode = 0;
 
-    program_state = HATCHED;
+    program_state = spHATCHED;
     severity_threshold = sWARNING;		/* set the default severity threshold */
 
 #ifdef WINDOWS
@@ -216,84 +216,93 @@ main (int argc, char **argv)
     }
 #endif
 
-    time (&compilation_start);
-    millis_compilation_start = current_millis();
-    last_inkey=my_malloc(INBUFFLEN);
-    last_inkey[0]='\0';
+    compilation_start = compilation_end  = current_millis();
+
+    /* initialize error handling: no errors seen 'til now */
+    severity_so_far = sDEBUG;
+    debug_count = 0;
+    note_count = 0;
+    warning_count = 0;
+    error_count = 0;
+
     error (sDEBUG, "This is yabasic " VERSION ", compiled on " ARCHITECTURE ", configured at " BUILD_TIME);
+
     initialize ();
-    program_state = INITIALIZED;
-
-    error (sNOTE, "calling parser/compiler");
-
-    if (interactive) {
-        printf ("%s", BANNER);
-        printf ("Enter your program and type RETURN twice when done.\n\n");
-        printf
-        ("Your program will execute immediately and cannot be saved;\n");
-        printf
-        ("create your program with an external editor, if you want to keep it.\n");
-#ifdef UNIX
-        printf
-        ("Type 'man yabasic' or see the file yabasic.htm for more information,\n");
-#else
-        printf
-        ("See the documentation within the start-menu for more information,\n");
-#endif
-        printf ("or go to www.yabasic.de for online resources.\n\n");
-    }
-    program_state = COMPILING;
-    if (yyparse () && severity_so_far >= sERROR) {
-        error (sERROR, "Couldn't parse program");
-    }
 
     if ( severity_so_far < sERROR) {
-        create_docu_array ();
+
+	set_program_state (spINITIALIZED);
+	
+	error (sNOTE, "calling parser/compiler");
+
+	if (interactive) {
+	    printf ("%s", BANNER);
+	    printf ("Enter your program and type RETURN twice when done.\n\n");
+	    printf
+		("Your program will execute immediately and cannot be saved;\n");
+	    printf
+		("create your program with an external editor, if you want to keep it.\n");
+#ifdef UNIX
+	    printf
+		("Type 'man yabasic' or see the file yabasic.htm for more information,\n");
+#else
+	    printf
+		("See the documentation within the start-menu for more information,\n");
+#endif
+	    printf ("or go to www.yabasic.de for online resources.\n\n");
+	}
+
+	set_program_state (spCOMPILING);
+	if (yyparse () && severity_so_far >= sERROR) {
+	    error_without_position (sERROR, "Couldn't parse program");
+	}
+
+	if ( severity_so_far < sERROR) {
+	    create_docu_array ();
+	    add_command (cEND, NULL, NULL);
+	}
+
+	sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
+		 commandcount);
+	error (sNOTE, string);
+
+	compilation_end = current_millis();
+
+	if (to_bind) {
+	    if (mybind (to_bind)) {
+		sprintf (string, "Successfully bound '%s' and '%s' into '%s'",
+			 inter_path, main_file_name, to_bind);
+		error (sINFO, string);
+		end_it ();
+	    } else {
+		sprintf (string, "Could not bind '%s' and '%s' into '%s'",
+			 inter_path, main_file_name, to_bind);
+		error (sERROR, string);
+		end_it ();
+	    }
+	}
     }
-
-    add_command (cEND, NULL, NULL);
-    sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
-             commandcount);
-    error (sNOTE, string);
-
-    time (&compilation_end);
-
-    if (to_bind) {
-        if (mybind (to_bind)) {
-            sprintf (string, "Successfully bound '%s' and '%s' into '%s'",
-                     inter_path, main_file_name, to_bind);
-            error (sINFO, string);
-            end_it ();
-        } else {
-            sprintf (string, "Could not bind '%s' and '%s' into '%s'",
-                     inter_path, main_file_name, to_bind);
-            error (sERROR, string);
-            end_it ();
-        }
-    }
-
+    
     if (severity_so_far < sERROR && !check_compat) {
-        program_state = RUNNING;
+        set_program_state (spRUNNING);
         run_it ();
     } else {
-        program_state = FINISHED;
         if (check_compat)
-            printf
-            ("Check for possible compatibility problems done\nProgram will not be executed, %d possible problem(s) reported\n",
-             warning_count);
+            printf ("Check for possible compatibility problems done\nProgram will not be executed, %d possible problem(s) reported\n",
+		    warning_count);
         else {
-            error (sERROR, "Program not executed");
+            error_without_position (sERROR, "Program not executed");
         }
     }
 
-    program_state = FINISHED;
+    set_program_state (spFINISHED);
     sprintf (string, "%d debug(s), %d note(s), %d warning(s), %d error(s)",
              debug_count, note_count, warning_count, error_count);
     error (sNOTE, string);
-    time (&execution_end);
-    sprintf (string, "compilation time %g second(s), execution %g",
-             (double) (compilation_end - compilation_start),
-             (double) (execution_end - compilation_end));
+    execution_end = current_millis ();
+    sprintf (string, "compilation time %.3g second(s), execution %.3g",
+             (double) (compilation_end - compilation_start)/1000,
+             (double) (execution_end - compilation_end)/1000);
     error (sNOTE, string);
     end_it ();
     return !(severity_so_far >= sERROR);
@@ -397,6 +406,15 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
     error (sDEBUG, string);
 }
 
+
+int
+effective_lineno ()
+/* compute effective lineno for error messages */
+{
+    return yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0);
+}
+
+
 struct command *
 add_command (int type, char *symname, char *diag)
 /* get room for new command, and make a link from old one */
@@ -407,7 +425,7 @@ add_command (int type, char *symname, char *diag)
         std_diag ("creating", type, symname, diag);
     }
     cmdhead->type = type;		/* store command */
-    cmdhead->line = yylineno - currlib->yylineno_at_start + 1;
+    cmdhead->line = effective_lineno ();
     cmdhead->first_column = yylloc.first_column;
     cmdhead->last_column = yylloc.last_column;
     cmdhead->lib = currlib;
@@ -953,6 +971,42 @@ end_it (void)			/* perform shutdown-operations */
 
 
 static void
+set_program_state (int state)
+{
+    char *txt;
+
+    if (severity_threshold <= sDEBUG && program_state != state) {
+    
+	switch (state) {
+	case spHATCHED:
+	    txt = "HATCHED";
+	    break;
+	case spINITIALIZED:
+	    txt = "INITIALIZED";
+	    break;
+	case spCOMPILING:
+	    txt = "COMPILING";
+	    break;
+	case spRUNNING:
+	    txt = "RUNNING";
+	    break;
+	case spFINISHED:
+	    txt = "FINISHED";
+	    break;
+	default:
+	    sprintf (estring,"unknown program state: %d");
+	    error (sERROR,estring);
+	    return;
+	}
+	sprintf (estring, "switching to program state %s", txt);
+	error (sDEBUG, estring);
+    }
+
+    program_state = state;
+}
+
+
+static void
 initialize (void)
 /* give correct values to pointers etc ... */
 {
@@ -976,13 +1030,9 @@ initialize (void)
 #ifdef SIGABRT
     signal (SIGABRT, signal_handler);
 #endif
-
-    /* initialize error handling: no errors seen 'til now */
-    severity_so_far = sDEBUG;
-    debug_count = 0;
-    note_count = 0;
-    warning_count = 0;
-    error_count = 0;
+    
+    last_inkey=my_malloc(INBUFFLEN);
+    last_inkey[0]='\0';
 
     /* initialize stack of symbol lists */
     pushsymlist ();
@@ -1241,9 +1291,10 @@ initialize (void)
     fexplanation[fPEEK4] = "PEEK4";
     fexplanation[fFRNFN_CALL] = "FRNFN_CALL";
     fexplanation[fFRNFN_CALL2] = "FRNFN_CALL2";
-    fexplanation[fFRNFN_SIZE] = "FRNFN_SIZE";
-    fexplanation[fFRNBF_NEW] = "FRNBF_NEW";
+    fexplanation[fFRNBF_SIZE] = "FRNBF_SIZE";
+    fexplanation[fFRNBF_ALLOC] = "FRNBF_ALLOC";
     fexplanation[fFRNBF_DUMP] = "FRNBF_DUMP";
+    fexplanation[fFRNFN_SIZE] = "FRNFN_SIZE";
     fexplanation[fFRNBF_GET_NUMBER] = "FRNBF_GET_NUMBER";
     fexplanation[fFRNBF_GET_STRING] = "FRNBF_GET_STRING";
     fexplanation[fTELL] = "TELL";
@@ -1353,7 +1404,7 @@ void
 signal_handler (int sig)	/* handle signals */
 {
     signal (sig, SIG_DFL);
-    if (program_state == FINISHED) {
+    if (program_state == spFINISHED) {
         exit (1);
     }
     signal_arrived = sig;
@@ -1796,7 +1847,7 @@ run_it ()
             }
         }
     }
-    program_state = FINISHED;
+    set_program_state (spFINISHED);
     switch (severity_so_far) {
     case sNOTE:
     case sDEBUG:
@@ -1819,9 +1870,9 @@ void
 error (int severity, char *message)
 /* reports an error to the user and possibly exits */
 {
-    if (program_state == COMPILING) {
-        error_with_position (severity, message, currlib->long_name, yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0) , yylloc.first_column, yylloc.last_column );
-    } else if (program_state == RUNNING && current->line > 0) {
+    if (program_state == spCOMPILING) {
+        error_with_position (severity, message, currlib->long_name, effective_lineno () , yylloc.first_column, yylloc.last_column );
+    } else if (program_state == spRUNNING && current->line > 0) {
         error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
     } else {
         error_without_position (severity, message);
@@ -1871,29 +1922,26 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
             severity_text = "---Fatal";
             break;
         }
-        fprintf (stderr, "%s", severity_text);
 	if (filename && (printed_filename != filename || printed_lineno != lineno)) {
-		fprintf (stderr, " in %s, line %d: %s\n", filename, lineno, message);
-		printed_filename = filename;
-		printed_lineno = lineno;
-        } else {
-	    fprintf (stderr, ": %s\n", message);
+	    fprintf (stderr, "%s in %s, line %d:\n", severity_text, filename, lineno);
+	    printed_filename = filename;
+	    printed_lineno = lineno;
 	}
+	fprintf (stderr, "%s: %s\n", severity_text, message);
 	if (filename && severity == sERROR) {
 	    show_and_mark_line (filename, lineno, first_column, last_column);
 	}
-        if (program_state == RUNNING && severity <= sERROR && severity != sDUMP) {
+        if (program_state == spRUNNING && severity <= sERROR && severity != sDUMP) {
             dump_sub (1);
         }
     }
     if (severity > severity_so_far) severity_so_far = severity;
     if (severity >= sERROR) {
-        program_state = FINISHED;
         endreason = rERROR;
         exitcode = 1;
     }
     if (severity >= sFATAL) {
-        program_state = FINISHED;
+        set_program_state (spFINISHED);
         fprintf (stderr,
                  "---Immediate exit to system, due to a fatal error.\n");
         end_it ();
