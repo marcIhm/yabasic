@@ -324,8 +324,9 @@ frnbf_dump ()  /* dump a foreign buffer into readable form */
 
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
     d = dump = my_malloc(2*size);
+    d[0] = '\0';
     for(i=0;i<size;i++) {
-	d += sprintf (d, "%02X", (int) ptr[i]);
+	d += sprintf (d, "%02X", (unsigned char) ptr[i]);
     }
     return dump;
 }

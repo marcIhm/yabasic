@@ -7,15 +7,17 @@ print "Seconds since the epoch: ",now
 # localtime() requires a pointer to the time-value, so we construct a buffer for one int and put in our int
 now$ = frnbf_alloc$(frnfn_size("int"))
 frnbf_set now$,0,"int",now
+print "Dump of buffer:          ",frnbf_dump$(now$)
 
 # localtime() returns a structure with the componentes (year, day, sec, etc.) as elements
 local$ = frnfn_call$("libm.so.6","buffer","localtime","buffer",now$)
-print "Size of buffer:          ", frnbf_size(local$)
-print "Dumping the buffer:      ", frnbf_dump$(local$)
 
 # assuming, that year is the sixth element of the structure
 offset = 5 * frnfn_size("int")
-print "Current year:            ", frnbf_get(local$,offset,"int")
+print "Current year:            ", frnbf_get(local$,offset,"int") + 1900
+
+# set year to something else
+frnbf_set local$,offset,"int",79
 
 # convert time-structure in localtime into ascii
-print "Current date:            ", frnfn_call$("libm.so.6","string","asctime","buffer",local$)
+print "Current date (changed):  ", frnfn_call$("libm.so.6","string","asctime","buffer",local$)
