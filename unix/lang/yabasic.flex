@@ -78,7 +78,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 <PASTLNO>.* {yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
 <PASTLNO>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
 
-\n\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+\n\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 \n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 : {if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 

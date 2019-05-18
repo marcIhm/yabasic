@@ -1,0 +1,2 @@
+#expect# Currently the wrong line is displayed
+error "explicit error"

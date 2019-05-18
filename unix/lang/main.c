@@ -411,7 +411,16 @@ int
 effective_lineno ()
 /* compute effective lineno for error messages */
 {
-    return yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0);
+    static int last_yy = -1;
+    int this_yy;
+    
+    this_yy = yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0);
+    if (this_yy < last_yy) {
+	return last_yy;
+    } else {
+	last_yy = this_yy;
+	return this_yy;
+    }
 }
 
 

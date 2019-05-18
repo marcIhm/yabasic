@@ -2013,7 +2013,7 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-{yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;}if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+{yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
