@@ -278,7 +278,7 @@ frnbf_alloc ()  /* create a new foreign buffer */
     int size;
     void *buff;
     
-    size = pop (stNUMBER)->value;
+    size = (int) pop (stNUMBER)->value;
     if (size<-1) {
 	sprintf(estring,"size of buffer cannot be less than -1, not %d",size);
 	error(sERROR, estring);
@@ -344,7 +344,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
 
     val = pop (stNUMBER)->value;
     type = pop (stSTRING)->pointer;
-    offset = pop (stNUMBER)->value;
+    offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
     if (!frn_check_ffi_type(type, &valtype, NULL, ktSIMPLE)) return;
     if (offset<0 || ( size >= 0 && offset+valtype->size > size)) {
@@ -353,7 +353,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
 	error(sERROR, estring);
 	return;
     }
-    frn_cast_to_ffi_type (ptr+offset, valtype, val);
+    frn_cast_to_ffi_type ((void*)((char*)ptr+offset), valtype, val);
     
     return;
 }
@@ -371,9 +371,10 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
 
     str = pop (stNUMBER)->pointer;
     slen = strlen(str);
-    offset = pop (stNUMBER)->value;
+    offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (offset<0 || (size >= 0 && offset+slen > size)) {
+	if (!frn_check_ffi_type("string", &valtype, NULL, ktCOMPLEX)) return;
+	if (offset<0 || (size >= 0 && offset+slen > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
 		offset, valtype->size, size);
 	error(sERROR, estring);
@@ -395,7 +396,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
     ffi_type *valtype;
 
     type = pop (stSTRING)->pointer;
-    offset = pop (stNUMBER)->value;
+    offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
     if (!frn_check_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
     if (offset<0 || (size >= 0 && offset+valtype->size > size)) {
@@ -405,7 +406,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
 	return 0.0;
     }
 
-    return frn_cast_from_ffi_type (ptr+offset, valtype);
+    return frn_cast_from_ffi_type ((void*)((char*)ptr+offset), valtype);
 }
 
 
@@ -417,8 +418,8 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
     int offset, len;
     ffi_type *valtype; /* expected return type of function */
 
-    len = pop (stNUMBER)->value;
-    offset = pop (stNUMBER)->value;
+    len = (int) pop (stNUMBER)->value;
+    offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
     if (offset<0 || (size >=0 && offset+len > size)) {
 	sprintf(estring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
@@ -426,19 +427,19 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
 	error(sERROR, estring);
 	return my_strdup("");
     }
-    return my_strndup (ptr+offset, len);
+    return my_strndup ((void*)((char*)ptr+offset), len);
 }
 
 
 int
-frnbf_parse_handle (char *handle, int *size, void *ptr)  /* parse handle */
+frnbf_parse_handle (char *handle, int *size, void **ptr)  /* parse handle */
 {
     if (sscanf(handle, "frnbf:%d:%p", size, ptr) != 2) {
 	sprintf(estring,"invalid handle for foreign buffer: '%s'", handle);
 	error(sERROR, estring);
-	return false;
+	return FALSE;
     }
-    return true;
+    return TRUE;
 }
 
 

@@ -167,9 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\unix\lang\bison.c" />
-    <ClCompile Include="..\..\unix\lang\external.c" />
     <ClCompile Include="..\..\unix\lang\flex.c" />
     <ClCompile Include="..\..\unix\lang\flow.c" />
+    <ClCompile Include="..\..\unix\lang\foreign.c" />
     <ClCompile Include="..\..\unix\lang\function.c" />
     <ClCompile Include="..\..\unix\lang\graphic.c" />
     <ClCompile Include="..\..\unix\lang\io.c" />

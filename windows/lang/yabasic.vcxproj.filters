@@ -69,7 +69,7 @@
     <ClCompile Include="..\..\unix\lang\whereami.c">
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\unix\lang\external.c">
+    <ClCompile Include="..\..\unix\lang\foreign.c">
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
   </ItemGroup>
