@@ -31,11 +31,35 @@ struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
 int in_short_if=0; /* true, if within a short if */
 int len_of_lineno=0; /* length of last line number */
-%}
 
-%{
+/*
+    Remark on yycolumn and yylineno:
+
+    We only need to track yycolumn, yylineno is taken care for us
+    entirely by flex (even during yyless).  To handle yycolumn we need
+    the YY_USER_ACTION which advances yycolumn by the length of each
+    token; additionally we reset it to 1 every time we see a newline.
+
+    The newline normally will be returned as token tSEP; only if the
+    newline terminates a short if-statement (which has no endif), the
+    token tIMPLICITENDIF will be returned. In any case we reset
+    yycolumn appropriately.
+
+    Bison, which consumes the tokens returned by this lexer, often
+    needs to look ahead a few (two ?) tokens to parse correctly, this
+    might trigger the lexer to read into the next line, which will in
+    turn reset yycolumn.
+
+    This needs to be handled correctly in effective_lineno(), which
+    returns the current line number. There are also quite a lot of
+    tests now, which make sure, that the linenumber for error messages
+    is updated correctly.
+	 
+*/
+
 int yycolumn=1;
 #define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
+
 %}
 
 WS [ \t\f\r\v]

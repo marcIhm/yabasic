@@ -409,7 +409,7 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 
 int
 effective_lineno ()
-/* compute effective lineno for error messages */
+/* compute effective lineno for error messages; see the remark in yabasic.flex for some background */
 {
     static int last_yy = -1;
     int this_yy;

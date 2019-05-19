@@ -1,0 +1,2 @@
+#expect# Currently the wrong line is displayed
+if (2>1) this does not compute
