@@ -1,11 +1,19 @@
 
 # In most cases we are fine here, if we do not get a segfault
 
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
 # time() has a pointer argument to store the result too; we pass NULL, so only the return value is relevant
 null$ = frnbf_alloc$(0)
-now = frnfn_call("libm.so.6","int","time","buffer",null$)
+now = frnfn_call(lib$,"int","time","buffer",null$)
 print "Seconds since the epoch: ",now
-if (abs(now-val(system$("date +%s")))>-2) error "Seconds of epoche diverge"
+if peek$("os")<>"windows" then
+  if (abs(now-val(system$("date +%s")))>-2) error "Seconds of epoche diverge"
+endif
 
 # localtime() requires a pointer to the time-value, so we construct a buffer for one int and put in our value
 now$ = frnbf_alloc$(frnfn_size("int"))
@@ -13,7 +21,7 @@ frnbf_set now$,0,"int",now
 print "Dump of buffer:          ",frnbf_dump$(now$)
 
 # localtime() returns a structure with the componentes (year, day, sec, etc.) as elements
-local$ = frnfn_call$("libm.so.6","buffer","localtime","buffer",now$)
+local$ = frnfn_call$(lib$,"buffer","localtime","buffer",now$)
 
 # assuming, that year is the sixth element of the structure
 offset = 5 * frnfn_size("int")
@@ -24,4 +32,4 @@ print "Current year:            ", year + 1900
 frnbf_set local$,offset,"int",year-50
 
 # convert time-structure in localtime into ascii
-print "50 years back:           ", frnfn_call$("libm.so.6","string","asctime","buffer",local$)
+print "50 years back:           ", frnfn_call$(lib$,"string","asctime","buffer",local$)

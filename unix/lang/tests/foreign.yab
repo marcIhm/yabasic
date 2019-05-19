@@ -1,11 +1,23 @@
 #!./yabasic
 
-if frnfn_call("libm.so.6","double","cos","double",2) <> cos(2) error "foreign result of cos-function does not match"
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
+res_cos = frnfn_call(lib$,"double","cos","double",2)
+print "Result of cos(2): ", res_cos
+if res_cos <> cos(2) error "foreign result of cos-function does not match"
 
 # for float values the results only match approximately,
 # but the string representations (with reduced precision) are equal
-if str$(frnfn_call("libm.so.6","float","cosf","float",2)) <> str$(cos(2)) error "foreign result of cosf-function does not match"
+if peek$("os")<>"windows" then
+  if str$(frnfn_call(lib$,"float","cosf","float",2)) <> str$(cos(2)) error "foreign result of cosf-function does not match"
+endif
 
-if frnfn_call$("/lib64/libc.so.6","string","strstr","string","foobar","string","ob","options","copy_string_result") <> "obar" error "result of strstr does not match"
+res_strstr$ = frnfn_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
+print "Result of strstr: ",res_strstr$
+if  res_strstr$ <> "obar" error "result of strstr does not match"
 
-if frnfn_call("/lib64/libc.so.6","int","strlen","string","foo","string","ob") <> 3 error "result of strstr does not match"
+if frnfn_call(lib$,"int","strlen","string","foo","string","ob") <> 3 error "result of strstr does not match"

@@ -1,7 +1,0 @@
-#!./yabasic
-
-if external("msvcrt.dll","double","cos","double",2) <> cos(2) error "external result of cos-function does not match"
-
-if external$("msvcrt.dll","string","strstr","string","foobar","string","ob","options","copy_result_string") <> "obar" error "result of strstr does not match"
-
-if external("msvcrt.dll","int","strlen","string","foo","string","ob") <> 3 error "result of strstr does not match"
