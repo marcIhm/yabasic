@@ -138,7 +138,7 @@ static void frn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double);
 static double frn_cast_from_ffi_type (union FFI_VAL *, ffi_type *);
 static void frnfn_cleanup ();
 static int frn_check_type_and_action(char, int, char *);
-int frnbf_parse_handle (char *, int *, void *);
+int frnbf_parse_handle (char *, int *, void **);
 
 /* ------------- global variables ---------------- */
 
@@ -309,7 +309,7 @@ frnbf_size ()  /* get size of buffer */
     int size;
     char *ptr;
 
-    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0;
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, (void **)&ptr)) return 0;
     return size;
 }
 
@@ -322,7 +322,7 @@ frnbf_dump ()  /* dump a foreign buffer into readable form */
     char *dump,*d;
     int i;
 
-    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, (void **)&ptr)) return my_strdup("");
     d = dump = my_malloc(2*size);
     d[0] = '\0';
     for(i=0;i<size;i++) {
@@ -369,12 +369,12 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
     int offset;
     ffi_type *valtype; /* expected return type of function */
 
-    str = pop (stNUMBER)->pointer;
+    str = pop (stSTRING)->pointer;
     slen = strlen(str);
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-	if (!frn_check_ffi_type("string", &valtype, NULL, ktCOMPLEX)) return;
-	if (offset<0 || (size >= 0 && offset+slen > size)) {
+    if (!frn_check_ffi_type("string", &valtype, NULL, ktCOMPLEX)) return;
+    if (offset<0 || (size >= 0 && offset+slen > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
 		offset, valtype->size, size);
 	error(sERROR, estring);

@@ -297,7 +297,7 @@ statement:  /* empty */
   | tBIND string_expression {add_command(cBIND,NULL,NULL);}
   | tFRNBF_FREE string_expression {add_command(cFRNBF_FREE,NULL,NULL);}
   | tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER, NULL, NULL);} 
-  | tFRNBF_SET string_expression ',' expression ',' string_expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
+  | tFRNBF_SET string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
   ;
 
 

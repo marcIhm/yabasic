@@ -33,3 +33,4 @@ frnbf_set local$,offset,"int",year-50
 
 # convert time-structure in localtime into ascii
 print "50 years back:           ", frnfn_call$(lib$,"string","asctime","buffer",local$)
+
