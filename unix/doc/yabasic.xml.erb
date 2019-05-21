@@ -3837,70 +3837,6 @@ Calling subroutine baz (NOT okay) ...
 	  <para><function><link linkend="ref_sub">sub</link></function>, <function><link linkend="ref_import">import</link></function></para>
 	</refsect1>
       </refentry>
-
-      <refentry id="ref_external">
-	<refmeta>
-	  <refentrytitle>external()</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>external()</refname>
-	  <refpurpose>call a function from an external non-<application>yabasic</application> library or dll</refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-print external("libhello","int","sayhello","string","world")
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>Description</title>
-	  <para>The <function>external</function>-function calls a function from an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>.</para>
-	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
-	  <para>To show, how to use the <function>external</function>-function, lets assume, that you want to calculate the cosine of an angle, but do not want to use the builtin <function>cos</function>-function but rather call out to an external library. Depending on your operating system (Windows or Linux), this function either contained in <filename>libm.so.6</filename> or <filename>msvcrt.dll</filename>.</para>
-	</refsect1>
-	<refsect1>
-	  <title>Example</title>
-	  <informalexample>
-	    <programlisting>
-if peek$("os") = "unix" then
-  lib$ = "/lib64/libm.so.6"
-else
-  lib$ = "msvcrt.dll"
-fi
-print external(lib$,"double","cos","double",2)	      
-          </programlisting>	  
-	  </informalexample>
-	  <para>The <function>external</function>-function needs at minimum 3 arguments (in the example above, there are 5 arguments):</para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>A string, containing the name of the library, e.g. "/lib64/libm.so.6".</para>
-	    </listitem>
-	    <listitem>
-	      <para>A string describing the type, that the function (specified with the next argument) returns. See below for a list of all such types.</para>
-	    </listitem>
-	    <listitem>
-	      <para>The name of the function, that should be called (in the example above: "cos")</para>
-	    </listitem>
-	  </itemizedlist>
-	  <para>If the external function does not require arguments itself, this is everything needed to call <function>external</function>. However (as for the <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, <function>external</function> needs two additional arguments on its own:</para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>A string describing the type of the parameter to the external function. See below for a list of all such types.</para>
-	    </listitem>
-	    <listitem>
-	      <para>The name of the function, that should be called (in the example above: "cos")</para>
-	    </listitem>
-	  </itemizedlist>
-
-	</refsect1>
-	<refsect1>
-	  <title>Type specifications</title>
-	</refsect1>
-	<refsect1>
-	  <title>See also</title>
-	  <para><function><link linkend="ref_external2">external2</link></function>, <function><link linkend="ref_system">system</link></function>, <function><link linkend="ref_system2">system$</link></function></para>
-	</refsect1>
-      </refentry>
-
     </sect1>
 
     <sect1 renderas="sect2" id="ref_f">
@@ -4092,6 +4028,90 @@ label done
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_step">step</link></function>, <function><link linkend="ref_next">next</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_foreign_function_call">
+	<refmeta>
+	  <refentrytitle>foreign_function_call()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>foreign_function_call()</refname>
+	  <refpurpose>call a function from a non-<application>yabasic</application> library or dll</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print foreign_function_call("libtimestwo","int","timestwo","int",3)
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <remark><para>
+	    Abbreviated form: <function>frnfn_call()</function>
+	  </para></remark>
+	  <para>The function <function>foreign_function_call</function> calls a function from an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>, but rather in <application>C</application>. <function>foreign_function_call</function> is central function to provide the <emphasis>foreign function interface</emphasis> of <application>yabasic<application>.</para>
+	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
+	  <para>To demonstrate, how to use <function>foreign_function_call</function>, lets assume, that you want to calculate the cosine of an angle, but do not want to use the builtin <function>cos</function>-function but rather call out to an external library. Depending on your operating system (Windows or Linux), this function either contained in <filename>libm.so.6</filename> or <filename>msvcrt.dll</filename>.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+if peek$("os") = "unix" then
+  lib$ = "libm.so.6"
+else
+  lib$ = "msvcrt.dll"
+fi
+print foreign_function_call(lib$,"double","cos","double",2)	      
+          </programlisting>	  
+	  </informalexample>
+	  <para>The <function>foreign_function_call</function>-function accepts a variable number of arguments; 3 at minimum, 5 in the example above:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string, containing the name of the library, e.g. "libm.so.6".</para>
+	    </listitem>
+	    <listitem>
+	      <para>A string describing the type, that the function (specified with the next argument) returns (in the example: <literal>"double"<literal>). See below for a list of all such types.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The name of the function, that should be called (in the example above: <literal>"cos"</literal>)</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>If the external function does not require arguments itself, the three arguments above are everything needed for <function>foreign_function_call</function>. However (as for  <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, two more arguments for <function>foreign_function_call</function> are needed:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string describing the <emphasis>type</emphasis> of the parameter to the external function (in the example: <literal>"double"</literal>). See below for a list of all such types.</para>
+	    </listitem>
+	    <listitem>
+	      <para>A value, that can be converted to the specified type (in the example: <literal>2</literal>).</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>With all these arguments specified, <application>yabasic</application> will call the foreign function (in the example: <literal>cos</literal>) and return its result; this process can be influenced by specifying <emphasis>options</emphasis> (see below).</para>
+	</refsect1>
+	<refsect1>
+	  <title>Type specifications</title>
+	  <para></para>
+	</refsect1>
+	<refsect1>
+	  <title>Options</title>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_foreign_function_call2">foreign_function_call</link></function>, <function><link linkend="ref_system">system</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_frnfn_call">
+	<refmeta>
+	  <refentrytitle>frnfn_call()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>frnfn_call()</refname>
+	  <refpurpose>Short form of <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function></refpurpose>
+	</refnamediv>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_foreign_function_call">foreign_function_call</link></function></para>
 	</refsect1>
       </refentry>
 
