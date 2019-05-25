@@ -4088,10 +4088,6 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	  <para>With all these arguments specified, <application>yabasic</application> will call the foreign function (in the example: <literal>cos</literal>) and return its result; this process can be influenced by specifying <emphasis>options</emphasis> (see below).</para>
 	</refsect1>
 	<refsect1>
-	  <title>Type specifications</title>
-	  <para><application>Yabasic</application> supports the following strings for specifying one of sixteen types: <literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal>,<literal>buffer</literal>,<literal>string</literal></para>
-	</refsect1>
-	<refsect1>
 	  <title>Options</title>
 	</refsect1>
 	<refsect1>
@@ -9655,68 +9651,39 @@ print "Hello World !"
 	    <para>Under Unix, depending on the way <application>yabasic</application> has been built, this feature might have been disabled; the error message in this case will read like <computeroutput>this build of yabasic does not support calling foreign libraries</computeroutput>. To resolve this issue, you are invited to contact the maintainer.</para>
 	  </note>
 
+	  <note>
+	    <para>This is interesting, but somewhat advanced stuff.</para>
+	  </note>
+
       <para><application>Yabasic</application> allows to employ functionality from 
-an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>, but rather in <application>C</application>; such a library is called a <emphasis>foreign</emphasis> library, as opposed to a library written in yabasic itself. Calling out to a foreign library can be useful, if such a library provides functionality, that can not be replicated in <application>yabasic</application> itself and for which a commandline-interface (which could be used via <function><link linkend="ref_system">system</link></function>) does not exist or is too cumbersome or slow. Examples would be libraries to control specialized hardware or for advanced computation. But only if you feel the need to use such a library, calling foreign libraries might be useful to you.</para>
-<para>The foreign function interface of <application>yabasic</application> relies on the great <ulink url="https://sourceware.org/libffi/">libffi</ulink>-library, which is the established standard for this task.</para>
-</sect1>
+an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>, but rather in <application>C</application>; such a library is called a <emphasis>foreign</emphasis> library, as opposed to a library written in yabasic itself. Calling out to a foreign library can be useful, if such a library provides functionality, that can not be replicated in <application>yabasic</application> itself and for which a commandline-interface (which could be used via <function><link linkend="ref_system">system</link></function>) does not exist or is too cumbersome or slow. Examples would be libraries <application>libVLC</application> or <application>libcurl</application> which offer the functionality of <application>vlc</application> or <application>curl</application> to other programs, especially programs written in <application>yabasic</application>.</para>
+<para>The foreign function interface of <application>yabasic</application> relies on the great <ulink url="https://sourceware.org/libffi/">libffi</ulink>-library, a library making it easy to call other libraries dynamicaaly and the established standard for this task.</para>
 
+<sect2>
+<title>Some Background</title>
+<sect3>
+  <title>Libraries</title>
+  <para>
+  Libraries (e.g. <application>libcurl</application>) are meant to provide functionality to other programs (here: <application>yabasic</application> and your <application>yabasic</application>-program). Libraries and programs must be <emphasis>linked</emphasis> together; this can happen either <emphasis>statically</emphasis> at compile-time or <emphasis>dynamically</emphasis> during the excution of the program. For <application>yabasic</application> as the program, static linking happens at the time, <application>yabasic</application> itself is build, whereas dynamic linking happen during the execution <emphasis>and under control</emphasis> of your <application>yabasic</application>-program. So the foreign function interface deals with dynamic (or <emphasis>runtime</emphasis>) linking to external libraries. This linking is done by <application>yabasic</application> behind the scene, when you invoke <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>; this function, after loading the library, directly calls the specified function therein.</para>
+<para>Which functions are available differs from library to library and you should already have this information before you try the library with <application>yabasic</application>.
+</para>
+</sect3>
 
-      <sect1>
-	<title>Creating a standalone-program from the command line</title>
-	<para>Let's say you have the following <emphasis>very</emphasis> simple program within the file <filename>foo.yab</filename>:</para>
-	<informalexample>
-	  <programlisting>
-print "Hello World !"
-</programlisting>
-	</informalexample>
-	<para>Normally you would start this <application>yabasic</application>-program by typing <userinput>yabasic foo.yab</userinput> and as a result the string <computeroutput>Hello World !</computeroutput> would appear on your screen. However, to create a <emphasis>standalone</emphasis>-program from <filename>foo.yab</filename> you would type:</para>
-	<informalexample>
-	  <para><userinput>yabasic -bind foo.exe foo.yab</userinput></para>
-	</informalexample>
-	<para>This command does <emphasis>not</emphasis> execute your program <filename>foo.yab</filename> but rather create a <emphasis>standalone</emphasis>-program <filename>foo.exe</filename>. Note: under Unix you would probably name the standalone program <filename>foo</filename> or such, omitting the windows-specific ending <filename>.exe</filename>. </para>
-	<para><application>Yabasic</application> will confirm by printing something like: <computeroutput>---Info: Successfully bound 'yabasic' and 'foo.yab' into 'foo.exe'</computeroutput>.</para>
-	<para>After that you will find a program <filename>foo.exe</filename> (which must be made <emphasis>executable</emphasis> with the <command>chmod</command>-command under Unix first). Now, executing this program <filename>foo.exe</filename> (or <filename>foo</filename> under Unix) will produce the output <computeroutput>Hello World !</computeroutput>.</para>
-	<para>This newly created program <filename>foo.exe</filename> might be passed around to anyone, even if he does not have <application>yabasic</application> installed.</para>
-      </sect1>
+	<sect3>
+	  <title>Types</title>
+<para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns at least one. These parameters have a wide variety of types which need to be mapped to the types known by <application>yabasic</application>.</para>
+	  <para><application>Yabasic</application> supports the following strings for specifying one of sixteen types: <literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal>,<literal>buffer</literal>,<literal>string</literal></para>
+	</sect3>
+</sect2>
+<sect2>	  <title>A simple example</title>
+<para></para> </sect2>
 
-      <sect1>
-	<title>Creating a standalone-program from within your program</title>
-	<para>It is possible to write a <application>yabasic</application>-program, that binds itself to the <application>yabasic</application>-interpreter. Here is an example:</para>
-	<informalexample>
-	  <programlisting>
-if (!peek("isbound")) then
-  bind "foo"
-  print "Successfully created the standalone executable 'foo' !"
-  exit
-endif
+<sect2>	  <title>Structurs and buffers</title>
+<para></para> </sect2>
 
-print "Hello World !"
-</programlisting>
-	</informalexample>
-	<para>If you run this program (which may be saved in the file <filename>foo.yab</filename>) via <userinput>yabasic foo.yab</userinput>, the <function><link linkend="ref_peek">peek("isbound")</link></function> in the first line will check, if the program is already part of a standalone-program. If <emphasis>not</emphasis> (i.e. if the <application>yabasic</application>-interpreter and the <application>yabasic</application>-program are separate files) the <function><link linkend="ref_bind">bind</link></function>-command will create a standalone program <filename>foo</filename> containing both. As a result you would see the output <computeroutput>Successfully created the standalone executable 'foo' !</computeroutput>. Note: Under Windows you would probably choose the filename <filename>foo.exe</filename>.</para>
-	<para>Now, if you run this standalone executable <filename>foo</filename> (or <filename>foo.exe</filename>), the very same <application>yabasic</application>-program that is shown above will be executed again. However, this time the <function><link linkend="ref_peek">peek("isbound")</link></function> will return <constant>TRUE</constant> and therefore the condition of the <function>if</function>-statement is <emphasis>false</emphasis> and the three lines after <function>then</function> are <emphasis>not</emphasis> executed. Rather the last <function>print</function>-statement will run, and you will see the output <computeroutput>Hello World !</computeroutput>.</para>
-	<para>That way a <application>yabasic</application>-program may turn itself into a standalone-program.</para>
-      <sect2>
-	<title>Downsides of creating a standalone program</title>
-	<para>Now, before you go out and turn all your <application>yabasic</application>-programs into standalone programs, please take a second to consider the downsides of doing so:</para>
-	<itemizedlist>
-	  <listitem>
-	    <para>The new standalone program will be at least as big as the interpreter itself, so you need to pass a few hundred kilobytes around, just to save people from having to install <application>yabasic</application> themselves.</para>
-	  </listitem>
-	  <listitem>
-	    <para>There is no easy way to extract your <application>yabasic</application>-program from within the standalone program: If you ever want to change it, you need to have it around separately.</para>
-	  </listitem>
-	  <listitem>
-	    <para>If a new version of <application>yabasic</application> becomes available, again you need to recreate all of your standalone programs to take advantage of bugfixes and improvements.</para>
-	  </listitem>
-	</itemizedlist>
-	<para>So, being able to create a standalone program is certainly a good thing, but certainly <emphasis>not</emphasis> a silver bullet.</para>
-      </sect2>
-      <sect2>
-	<title>See also</title>
-	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
-      </sect2>
-</sect1>    
+<sect2>	  <title>A more complex examples</title>
+<para></para> </sect2>
+
   </chapter>
 
   <chapter id="chapter_examples">
