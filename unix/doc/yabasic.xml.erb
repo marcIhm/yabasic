@@ -1539,6 +1539,298 @@ yabasic*font: 9x15
     </sect1>
   </chapter>
 
+    <chapter id="chapter_ref_concepts">
+    <title>Some features and general concepts of <application>yabasic</application></title>
+    <para>This chapter presents some general concepts and terms, which deserve a description on their own, but are not associated with a single command or function in <application>yabasic</application>. Most of these topics do not lend themselves to be read alone, rather they might be read (or skimmed) as background material if an entry from the <link linkend="chapter_ref_words">alphabetical list of commands</link> refers to them.</para>
+    <sect1 renderas="sect2" id="ref_logical_shortcuts">
+      <title>Logical shortcuts</title>
+      <para><emphasis>Logical shortcuts</emphasis> are no special language construct and there is no keyword for them; they are just a way to evaluate <emphasis>logical expressions</emphasis>. Logical expressions (i.e. a series of conditions or comparisons joined by <link linkend="ref_arithmetic_and"><function>and</function></link> or <link linkend="ref_arithmetic_or"><function>or</function></link>) are only evaluated until the final result of the expression can be determined. An example:</para>
+      <informalexample>
+	<programlisting>
+if (a&lt;&gt;0 and b/a&gt;2) print "b is at least twice as big as a"
+</programlisting>
+      </informalexample>
+      <para>
+      The logical expression <literal>a&lt;&gt;0 and b/a&gt;2</literal> consists of two comparisons, both of which must be true, if the <function>print</function> statement should be executed. Now, if the first comparison (<literal>a&lt;&gt;0</literal>) is <constant>false</constant>, the whole logical expression can never be <constant>true</constant> and the second comparison (<literal>b/a&gt;2</literal>) need not be evaluated.
+      </para>
+      <para>This is exactly, how <application>yabasic</application> behaves: The evaluation of a composed logical expressions is terminated immediately, as soon as the final result can be deduced from the already evaluated parts.</para>
+      <para>In practice, this has the following consequences:</para>
+      <itemizedlist>
+	<listitem>
+	  <para>If two or more comparisons are joined with <function>and</function> and one comparison results in <constant>false</constant>, the logical expression is evaluated no further and the overall result is <constant>false</constant>.</para>
+	</listitem>
+	<listitem>
+	  <para>If two or more comparisons are joined with <function>or</function> and one comparison results in <constant>true</constant>, the logical expression is evaluated no further and the result is <constant>true</constant>.</para>
+	</listitem>
+      </itemizedlist>
+      <para><quote>Nice, but whats this good for ?</quote>, I hear you say. Well, just have another look at the example, especially the second comparison (<literal>b/a&gt;2</literal>); dividing <literal>b</literal> by <literal>a</literal> is potentially hazardous: If <literal>a</literal> equals zero, the expression will cause an error and your program will terminate. To avoid this, the first part of the comparison (<literal>a&lt;&gt;0</literal>) checks, if the second one can be evaluated without risk. This pre-checking is the most common usage and primary motivation for <emphasis>logical shortcuts</emphasis> (and the reason why most programming languages implement them).</para>
+    </sect1>
+
+    <sect1 renderas="sect2" id="ref_conditions_and_expressions">
+      <title>Conditions and expressions</title>
+      <para>Well, bottomline there is no difference or distinction between <emphasis>conditions</emphasis> and <emphasis>expressions</emphasis>, at least as <application>yabasic</application> is concerned. So you may assign the result of comparisons to variables or use an arithmetic expression or a simple variable within a condition (e.g. within an <function>if</function>-statement). So the constructs shown in the example below are all totally valid:</para>
+      <informalexample>
+	<programlisting>
+input "Please enter a number between 1 and 10: " a
+
+rem   Assigning the result of a comparison to a variable
+okay=a&gt;=1 and a&lt;=10
+
+rem   Use a variable within an if-statement
+if (not okay) error "Wrong, wrong !"
+</programlisting>
+      </informalexample>
+      <para>So conditions and expressions are really the same thing (at least as long as yabasic is concerned). Therefore the terms <wordasword>conditions</wordasword> and <wordasword>expression</wordasword> can really be used interchangeably, at least in theory. In reality the term <wordasword>condition</wordasword> is used in connection with <function>if</function> or <function>while</function> whereas the term <wordasword>expression</wordasword> tends to be used more often within arithmetic context.</para>
+    </sect1>
+
+    <sect1 renderas="sect2" id="ref_array_references">
+      <title>References on arrays</title>
+      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>. Whereas (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>.</para>
+      <para>If you pass an array reference to one of your own subroutines, you need to be aware, that the subroutine will be able to modify the array you have passed in. So passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis>Speed and space:</emphasis> Creating a copy of an
+array would be a time (and resource) consuming operation; passing just a reference is cheap and fast.</para>
+	</listitem>
+	<listitem>
+	  <para>Returning many values: A subroutine, that wants to give back more than one value, may require an array reference among its arguments and then store its many return values within this array. This is the only way to return more than one value from a subroutine.</para>
+	</listitem>
+      </itemizedlist>
+    </sect1>
+
+
+    <sect1 renderas="sect2" id="ref_windows_filenames">
+      <title>Specifying Filenames under Windows</title>
+      <para>As you probably know, windows uses the character '<literal>\</literal>' to separate the directories within a pathname; an example would be <literal>C:\yabasic\yabasic.exe</literal> (the usual location of the <application>yabasic</application> executable). However, the very same character '<literal>\</literal>' is used to construct <link linkend="ref_escape_sequences">escape sequences</link>, not only in <application>yabasic</application> but in most other programming languages.</para>
+      <para>Therefore the string <literal>"C:\t.dat"</literal> does <emphasis>not</emphasis> specify the file <literal>t.dat</literal> within the directory <literal>C:</literal>; this is because the sequence '<literal>\t</literal>' is translated into the tab-character. To specify this filename, you need to use the string <literal>"C:\\t.dat"</literal> (note the double slash '<literal>\\</literal>').</para>
+    </sect1>
+
+
+    <sect1 renderas="sect2" id="ref_escape_sequences">
+      <title>Escape-sequences</title>
+      <para><emphasis>Escape-sequences</emphasis> are the preferred way of specifying 'special' characters. They are introduced by the '\'-character and followed by one of a few regular letters, e.g. '\n' or '\r' (see the table below).</para>
+      <para>Escape-sequences may occur within any string at any position; they are replaced at <emphasis>parsetime</emphasis> (opposed to <emphasis>runtime</emphasis>), i.e. as soon as <application>yabasic</application> discovers the string, with their corresponding <emphasis>special</emphasis> character. As a consequence of this <function>len("\a")</function> returns 1, because <application>yabasic</application> replaces <function>"\a"</function> with the matching special character just before the program executes.</para>
+      <table frame="all">
+	<title>Escape sequences</title>
+	<tgroup cols="2">
+	  <thead>
+	    <row>
+	      <entry>Escape Sequence</entry>
+	      <entry>Matching special character</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <row>
+	      <entry><computeroutput>\n</computeroutput></entry>
+	      <entry><emphasis>newline</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\t</computeroutput></entry>
+	      <entry><emphasis>tabulator</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\v</computeroutput></entry>
+	      <entry><emphasis>vertical tabulator</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\b</computeroutput></entry>
+	      <entry><emphasis>backspace</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\r</computeroutput></entry>
+	      <entry><emphasis>carriage return</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\f</computeroutput></entry>
+	      <entry><emphasis>formfeed</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\a</computeroutput></entry>
+	      <entry><emphasis>alert</emphasis> (i.e. a beeping sound)</entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\\</computeroutput></entry>
+	      <entry><emphasis>backslash</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\'</computeroutput></entry>
+	      <entry><emphasis>single quote</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\"</computeroutput></entry>
+	      <entry><emphasis>double quote</emphasis></entry>
+	    </row>
+	    <row>
+	      <entry><computeroutput>\x</computeroutput><emphasis>HEX</emphasis></entry>
+	      <entry><function>chr$(</function><emphasis>HEX</emphasis><function>)</function> (see below)</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+      <para>Note, that an escape sequences of the form \xHEX allows one to encode arbitrary
+     characters as long as you know their position (as a hex-number) within the 
+     <acronym>ascii</acronym>-charset: 
+     For example \x012 is transformed into the character <function>chr$(18)</function> (or <function>chr$(dec("12",16))</function>. Note that \x requires a
+     hexa-decimal number (and the hexadecimal string "12" corresponds to the decimal number 18).</para> 
+    </sect1>
+
+
+    <sect1 renderas="sect2" id="ref_standalone">
+      <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
+      <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
+      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries it does <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three bits in yabasic, that you may use:</para>
+      <itemizedlist>
+	<listitem>
+	  <para>The <function><link linkend="ref_bind">bind</link></function>-command, which does the actual job of creating the standalone program from the <application>yabasic</application>-interpreter and your program.</para>
+	</listitem>
+	<listitem>
+	  <para>The command-line Option <literal>--bind</literal> (see <link linkend="chapter_options">options</link>), which does the same from the command-line.</para>
+	</listitem>
+	<listitem>
+	  <para>The special <function><link linkend="ref_peek">peek("isbound")</link></function>, which may be used to check, if the <application>yabasic</application>-program containing this <function>peek</function> is bound to the interpreter as part of a standalone program.</para>
+	</listitem>
+      </itemizedlist>
+      <para>With these bits you know enough to create a standalone-program. Actually there are two ways to do this: on the command line and from within your program.</para>
+      <sect2>
+	<title>Creating a standalone-program from the command line</title>
+	<para>Let's say you have the following <emphasis>very</emphasis> simple program within the file <filename>foo.yab</filename>:</para>
+	<informalexample>
+	  <programlisting>
+print "Hello World !"
+</programlisting>
+	</informalexample>
+	<para>Normally you would start this <application>yabasic</application>-program by typing <userinput>yabasic foo.yab</userinput> and as a result the string <computeroutput>Hello World !</computeroutput> would appear on your screen. However, to create a <emphasis>standalone</emphasis>-program from <filename>foo.yab</filename> you would type:</para>
+	<informalexample>
+	  <para><userinput>yabasic -bind foo.exe foo.yab</userinput></para>
+	</informalexample>
+	<para>This command does <emphasis>not</emphasis> execute your program <filename>foo.yab</filename> but rather create a <emphasis>standalone</emphasis>-program <filename>foo.exe</filename>. Note: under Unix you would probably name the standalone program <filename>foo</filename> or such, omitting the windows-specific ending <filename>.exe</filename>. </para>
+	<para><application>Yabasic</application> will confirm by printing something like: <computeroutput>---Info: Successfully bound 'yabasic' and 'foo.yab' into 'foo.exe'</computeroutput>.</para>
+	<para>After that you will find a program <filename>foo.exe</filename> (which must be made <emphasis>executable</emphasis> with the <command>chmod</command>-command under Unix first). Now, executing this program <filename>foo.exe</filename> (or <filename>foo</filename> under Unix) will produce the output <computeroutput>Hello World !</computeroutput>.</para>
+	<para>This newly created program <filename>foo.exe</filename> might be passed around to anyone, even if he does not have <application>yabasic</application> installed.</para>
+      </sect2>
+      <sect2>
+	<title>Creating a standalone-program from within your program</title>
+	<para>It is possible to write a <application>yabasic</application>-program, that binds itself to the <application>yabasic</application>-interpreter. Here is an example:</para>
+	<informalexample>
+	  <programlisting>
+if (!peek("isbound")) then
+  bind "foo"
+  print "Successfully created the standalone executable 'foo' !"
+  exit
+endif
+
+print "Hello World !"
+</programlisting>
+	</informalexample>
+	<para>If you run this program (which may be saved in the file <filename>foo.yab</filename>) via <userinput>yabasic foo.yab</userinput>, the <function><link linkend="ref_peek">peek("isbound")</link></function> in the first line will check, if the program is already part of a standalone-program. If <emphasis>not</emphasis> (i.e. if the <application>yabasic</application>-interpreter and the <application>yabasic</application>-program are separate files) the <function><link linkend="ref_bind">bind</link></function>-command will create a standalone program <filename>foo</filename> containing both. As a result you would see the output <computeroutput>Successfully created the standalone executable 'foo' !</computeroutput>. Note: Under Windows you would probably choose the filename <filename>foo.exe</filename>.</para>
+	<para>Now, if you run this standalone executable <filename>foo</filename> (or <filename>foo.exe</filename>), the very same <application>yabasic</application>-program that is shown above will be executed again. However, this time the <function><link linkend="ref_peek">peek("isbound")</link></function> will return <constant>TRUE</constant> and therefore the condition of the <function>if</function>-statement is <emphasis>false</emphasis> and the three lines after <function>then</function> are <emphasis>not</emphasis> executed. Rather the last <function>print</function>-statement will run, and you will see the output <computeroutput>Hello World !</computeroutput>.</para>
+	<para>That way a <application>yabasic</application>-program may turn itself into a standalone-program.</para>
+      </sect2>
+      <sect2>
+	<title>Downsides of creating a standalone program</title>
+	<para>Now, before you go out and turn all your <application>yabasic</application>-programs into standalone programs, please take a second to consider the downsides of doing so:</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>The new standalone program will be at least as big as the interpreter itself, so you need to pass a few hundred kilobytes around, just to save people from having to install <application>yabasic</application> themselves.</para>
+	  </listitem>
+	  <listitem>
+	    <para>There is no easy way to extract your <application>yabasic</application>-program from within the standalone program: If you ever want to change it, you need to have it around separately.</para>
+	  </listitem>
+	  <listitem>
+	    <para>If a new version of <application>yabasic</application> becomes available, again you need to recreate all of your standalone programs to take advantage of bugfixes and improvements.</para>
+	  </listitem>
+	</itemizedlist>
+	<para>So, being able to create a standalone program is certainly a good thing, but certainly <emphasis>not</emphasis> a silver bullet.</para>
+      </sect2>
+      <sect2>
+	<title>See also</title>
+	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
+      </sect2>
+    </sect1>
+
+
+    <sect1 renderas="sect2" id="ref_ffi">
+      <title>Interaction with functions from a non-<application>yabasic</application> library or dll</title>
+	  <note>
+	    <para>Under Unix, depending on the way <application>yabasic</application> has been built, this feature might have been disabled; the error message in this case will read like <computeroutput>this build of yabasic does not support calling foreign libraries</computeroutput>. To resolve this issue, you are invited to contact the maintainer.</para>
+	  </note>
+
+	  <note>
+	    <para>This is interesting, but somewhat advanced stuff. You will need a good understanding of various concepts of the <application>C</application>-language, especially <emphasis>pointers</emphasis> and <emphasis>structures</emphasis> as well as allocating and freeing blocks of memory. Any mistakes or errors during calls to foreign functions or buffers may easily crash <application>yabasic</application>.</para>
+	  </note>
+
+      <para><application>Yabasic</application> allows to employ functionality from 
+an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>, but rather in <application>C</application>; such a library is called a <emphasis>foreign</emphasis> library, as opposed to a library written in yabasic itself. Calling out to a foreign library can be useful, if such a library provides functionality, that can not be replicated in <application>yabasic</application> itself and for which a commandline-interface (which could be used via <function><link linkend="ref_system">system</link></function>) does not exist or is too cumbersome or slow. Examples would be libraries <application>libVLC</application> or <application>libcurl</application> which offer the functionality of <application>vlc</application> or <application>curl</application> to other programs, especially programs written in <application>yabasic</application>.</para>
+<para>The foreign function interface of <application>yabasic</application> relies on the great <ulink url="https://sourceware.org/libffi/">libffi</ulink>-library, a library making it easy to call other libraries dynamicaaly and the established standard for this task.</para>
+
+<sect2>
+<title>Some Background</title>
+<sect3>
+  <title>Libraries</title>
+  <para>
+  Libraries (e.g. <application>libcurl</application>) are meant to provide functionality to other programs (here: <application>yabasic</application> and your <application>yabasic</application>-program). Libraries and programs must be <emphasis>linked</emphasis> together; this can happen either <emphasis>statically</emphasis> at compile-time or <emphasis>dynamically</emphasis> during the excution of the program. For <application>yabasic</application> as the program, static linking happens at the time, <application>yabasic</application> itself is build, whereas dynamic linking happen during the execution <emphasis>and under control</emphasis> of your <application>yabasic</application>-program. So the foreign function interface deals with dynamic (or <emphasis>runtime</emphasis>) linking to external libraries. This linking is done by <application>yabasic</application> behind the scene, when you invoke <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>; this function, after loading the library, directly calls the specified function therein.</para>
+<para>Which functions are available differs from library to library and you should already have this information before you try the library with <application>yabasic</application>.
+</para>
+</sect3>
+
+<sect3>
+  <title>Types</title>
+  <para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns exactly one. These parameters have a wide variety of types which need to be mapped to the two types (numbers and strings) known by <application>yabasic</application>. Here are the types available for foreign functions, grouped by the way, they are handled in <application>yabasic</application>:</para>
+  <variablelist>
+    <title>Types</title>
+    <varlistentry>
+      <term><literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal></term>
+    <listitem><para>In <application>C</application> all these types are used to represent numbers (integer or floating point) with various degrees of precision. When invoking <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> you need to pass strings, which specify the right type as well as the actual <application>yabasic</application>-value, which will then be converted accordingly. Which types a foreign function expects can be looked up e.g. from its manpage.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>string</literal></term>
+    <listitem><para>Strings for foreign functions directly map to strings of <application>yabasic</application>. So if you specify this type for a parameter of a foreign function, the matching value is simply a <application>yabasic</application> string. If you specify <literal>string</literal> as the return value of a foreign function you should use the variant of calling it, which returns a string, i.e. <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>buffer</literal></term>
+    <listitem><para>You should specify a <emphasis>buffer</emphasis> as the type of a parameter or the return type, if the foreign function expects a structure or a pointer to a memory area; see <link linkend="structures_and_buffers">structures and buffers</link> for details.</para></listitem>
+  </varlistentry>
+</variablelist>
+</sect3>
+</sect2>
+<sect2><title>Two simple examples</title>
+<para>This first example prints the cosine of 2, not by using <application>yabasics</application> own <function>cos</function>-function but by calling out to the standard <application>C</application>-library:</para>
+<programlisting>
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
+print "cos(2): ",foreign_function_call(lib$,"double","cos","double",2)
+</programlisting>
+<para>The first lines determine the name of the library, which is different under Unix and Windows. The call to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> than just states the name of the library, the return type (<literal>"double"</literal>) of the function and then its name (<literal>"cos"</literal>), as well as type and value (<literal>2</literal>) of its argument. The final result <computeroutput>-0.416147</computeroutput> then is the same as from the the internal <function><link linkend="ref_cos">cos</link></function>-function.</para>
+<para>A second example</para>
+<programlisting>
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
+print foreign_function_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
+</programlisting>
+<para>This example calls the <function>strstr</function>-function from the standard <application>C</application>-library; this function accepts two string arguments and returns a string, which is the first (if any) appearance of the second string within the first one (remark: this function makes more sense in <application>C</application> than in <application>yabasic</application>). Please note the option <literal>"copy_string_result"</literal>, which advices <application>yabasic</application> to return a copy of the result of <function>strstr</function>; otherwise your program might crash, because <function>strstr</function> simply returns a pointer to a part of its first argument, a string that will later be freed by <application>yabasic</application>.</para>
+</sect2>
+
+<sect2 id="steps_during_foreign_call"><title>Internal steps during a call to a foreign function</title>
+<para></para> </sect2>
+
+<sect2 id="structures_and_buffers"><title>Structurs and buffers</title>
+<para></para> </sect2>
+
+<sect2>	  <title>A more complex example</title>
+<para></para> </sect2>
+
+</chapter>
+
+
+  
   <chapter id="chapter_ref_words">
     <title>All commands and functions of <application>yabasic</application> grouped alphabetically</title>
 
@@ -9432,283 +9724,6 @@ print 2**0.5
 	</refsect1>
       </refentry>
     </sect1>
-  </chapter>
-
-
-  <chapter id="chapter_ref_concepts">
-    <title>Some features and general concepts of <application>yabasic</application></title>
-    <para>This chapter presents some general concepts and terms, which deserve a description on their own, but are not associated with a single command or function in <application>yabasic</application>. Most of these topics do not lend themselves to be read alone, rather they might be read (or skimmed) as background material if an entry from the <link linkend="chapter_ref_words">alphabetical list of commands</link> refers to them.</para>
-    <sect1 renderas="sect2" id="ref_logical_shortcuts">
-      <title>Logical shortcuts</title>
-      <para><emphasis>Logical shortcuts</emphasis> are no special language construct and there is no keyword for them; they are just a way to evaluate <emphasis>logical expressions</emphasis>. Logical expressions (i.e. a series of conditions or comparisons joined by <link linkend="ref_arithmetic_and"><function>and</function></link> or <link linkend="ref_arithmetic_or"><function>or</function></link>) are only evaluated until the final result of the expression can be determined. An example:</para>
-      <informalexample>
-	<programlisting>
-if (a&lt;&gt;0 and b/a&gt;2) print "b is at least twice as big as a"
-</programlisting>
-      </informalexample>
-      <para>
-      The logical expression <literal>a&lt;&gt;0 and b/a&gt;2</literal> consists of two comparisons, both of which must be true, if the <function>print</function> statement should be executed. Now, if the first comparison (<literal>a&lt;&gt;0</literal>) is <constant>false</constant>, the whole logical expression can never be <constant>true</constant> and the second comparison (<literal>b/a&gt;2</literal>) need not be evaluated.
-      </para>
-      <para>This is exactly, how <application>yabasic</application> behaves: The evaluation of a composed logical expressions is terminated immediately, as soon as the final result can be deduced from the already evaluated parts.</para>
-      <para>In practice, this has the following consequences:</para>
-      <itemizedlist>
-	<listitem>
-	  <para>If two or more comparisons are joined with <function>and</function> and one comparison results in <constant>false</constant>, the logical expression is evaluated no further and the overall result is <constant>false</constant>.</para>
-	</listitem>
-	<listitem>
-	  <para>If two or more comparisons are joined with <function>or</function> and one comparison results in <constant>true</constant>, the logical expression is evaluated no further and the result is <constant>true</constant>.</para>
-	</listitem>
-      </itemizedlist>
-      <para><quote>Nice, but whats this good for ?</quote>, I hear you say. Well, just have another look at the example, especially the second comparison (<literal>b/a&gt;2</literal>); dividing <literal>b</literal> by <literal>a</literal> is potentially hazardous: If <literal>a</literal> equals zero, the expression will cause an error and your program will terminate. To avoid this, the first part of the comparison (<literal>a&lt;&gt;0</literal>) checks, if the second one can be evaluated without risk. This pre-checking is the most common usage and primary motivation for <emphasis>logical shortcuts</emphasis> (and the reason why most programming languages implement them).</para>
-    </sect1>
-
-    <sect1 renderas="sect2" id="ref_conditions_and_expressions">
-      <title>Conditions and expressions</title>
-      <para>Well, bottomline there is no difference or distinction between <emphasis>conditions</emphasis> and <emphasis>expressions</emphasis>, at least as <application>yabasic</application> is concerned. So you may assign the result of comparisons to variables or use an arithmetic expression or a simple variable within a condition (e.g. within an <function>if</function>-statement). So the constructs shown in the example below are all totally valid:</para>
-      <informalexample>
-	<programlisting>
-input "Please enter a number between 1 and 10: " a
-
-rem   Assigning the result of a comparison to a variable
-okay=a&gt;=1 and a&lt;=10
-
-rem   Use a variable within an if-statement
-if (not okay) error "Wrong, wrong !"
-</programlisting>
-      </informalexample>
-      <para>So conditions and expressions are really the same thing (at least as long as yabasic is concerned). Therefore the terms <wordasword>conditions</wordasword> and <wordasword>expression</wordasword> can really be used interchangeably, at least in theory. In reality the term <wordasword>condition</wordasword> is used in connection with <function>if</function> or <function>while</function> whereas the term <wordasword>expression</wordasword> tends to be used more often within arithmetic context.</para>
-    </sect1>
-
-    <sect1 renderas="sect2" id="ref_array_references">
-      <title>References on arrays</title>
-      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>. Whereas (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>.</para>
-      <para>If you pass an array reference to one of your own subroutines, you need to be aware, that the subroutine will be able to modify the array you have passed in. So passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis>Speed and space:</emphasis> Creating a copy of an
-array would be a time (and resource) consuming operation; passing just a reference is cheap and fast.</para>
-	</listitem>
-	<listitem>
-	  <para>Returning many values: A subroutine, that wants to give back more than one value, may require an array reference among its arguments and then store its many return values within this array. This is the only way to return more than one value from a subroutine.</para>
-	</listitem>
-      </itemizedlist>
-    </sect1>
-
-
-    <sect1 renderas="sect2" id="ref_windows_filenames">
-      <title>Specifying Filenames under Windows</title>
-      <para>As you probably know, windows uses the character '<literal>\</literal>' to separate the directories within a pathname; an example would be <literal>C:\yabasic\yabasic.exe</literal> (the usual location of the <application>yabasic</application> executable). However, the very same character '<literal>\</literal>' is used to construct <link linkend="ref_escape_sequences">escape sequences</link>, not only in <application>yabasic</application> but in most other programming languages.</para>
-      <para>Therefore the string <literal>"C:\t.dat"</literal> does <emphasis>not</emphasis> specify the file <literal>t.dat</literal> within the directory <literal>C:</literal>; this is because the sequence '<literal>\t</literal>' is translated into the tab-character. To specify this filename, you need to use the string <literal>"C:\\t.dat"</literal> (note the double slash '<literal>\\</literal>').</para>
-    </sect1>
-
-
-    <sect1 renderas="sect2" id="ref_escape_sequences">
-      <title>Escape-sequences</title>
-      <para><emphasis>Escape-sequences</emphasis> are the preferred way of specifying 'special' characters. They are introduced by the '\'-character and followed by one of a few regular letters, e.g. '\n' or '\r' (see the table below).</para>
-      <para>Escape-sequences may occur within any string at any position; they are replaced at <emphasis>parsetime</emphasis> (opposed to <emphasis>runtime</emphasis>), i.e. as soon as <application>yabasic</application> discovers the string, with their corresponding <emphasis>special</emphasis> character. As a consequence of this <function>len("\a")</function> returns 1, because <application>yabasic</application> replaces <function>"\a"</function> with the matching special character just before the program executes.</para>
-      <table frame="all">
-	<title>Escape sequences</title>
-	<tgroup cols="2">
-	  <thead>
-	    <row>
-	      <entry>Escape Sequence</entry>
-	      <entry>Matching special character</entry>
-	    </row>
-	  </thead>
-	  <tbody>
-	    <row>
-	      <entry><computeroutput>\n</computeroutput></entry>
-	      <entry><emphasis>newline</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\t</computeroutput></entry>
-	      <entry><emphasis>tabulator</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\v</computeroutput></entry>
-	      <entry><emphasis>vertical tabulator</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\b</computeroutput></entry>
-	      <entry><emphasis>backspace</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\r</computeroutput></entry>
-	      <entry><emphasis>carriage return</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\f</computeroutput></entry>
-	      <entry><emphasis>formfeed</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\a</computeroutput></entry>
-	      <entry><emphasis>alert</emphasis> (i.e. a beeping sound)</entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\\</computeroutput></entry>
-	      <entry><emphasis>backslash</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\'</computeroutput></entry>
-	      <entry><emphasis>single quote</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\"</computeroutput></entry>
-	      <entry><emphasis>double quote</emphasis></entry>
-	    </row>
-	    <row>
-	      <entry><computeroutput>\x</computeroutput><emphasis>HEX</emphasis></entry>
-	      <entry><function>chr$(</function><emphasis>HEX</emphasis><function>)</function> (see below)</entry>
-	    </row>
-	  </tbody>
-	</tgroup>
-      </table>
-      <para>Note, that an escape sequences of the form \xHEX allows one to encode arbitrary
-     characters as long as you know their position (as a hex-number) within the 
-     <acronym>ascii</acronym>-charset: 
-     For example \x012 is transformed into the character <function>chr$(18)</function> (or <function>chr$(dec("12",16))</function>. Note that \x requires a
-     hexa-decimal number (and the hexadecimal string "12" corresponds to the decimal number 18).</para> 
-    </sect1>
-
-
-    <sect1 renderas="sect2" id="ref_standalone">
-      <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
-      <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
-      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries it does <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three bits in yabasic, that you may use:</para>
-      <itemizedlist>
-	<listitem>
-	  <para>The <function><link linkend="ref_bind">bind</link></function>-command, which does the actual job of creating the standalone program from the <application>yabasic</application>-interpreter and your program.</para>
-	</listitem>
-	<listitem>
-	  <para>The command-line Option <literal>--bind</literal> (see <link linkend="chapter_options">options</link>), which does the same from the command-line.</para>
-	</listitem>
-	<listitem>
-	  <para>The special <function><link linkend="ref_peek">peek("isbound")</link></function>, which may be used to check, if the <application>yabasic</application>-program containing this <function>peek</function> is bound to the interpreter as part of a standalone program.</para>
-	</listitem>
-      </itemizedlist>
-      <para>With these bits you know enough to create a standalone-program. Actually there are two ways to do this: on the command line and from within your program.</para>
-      <sect2>
-	<title>Creating a standalone-program from the command line</title>
-	<para>Let's say you have the following <emphasis>very</emphasis> simple program within the file <filename>foo.yab</filename>:</para>
-	<informalexample>
-	  <programlisting>
-print "Hello World !"
-</programlisting>
-	</informalexample>
-	<para>Normally you would start this <application>yabasic</application>-program by typing <userinput>yabasic foo.yab</userinput> and as a result the string <computeroutput>Hello World !</computeroutput> would appear on your screen. However, to create a <emphasis>standalone</emphasis>-program from <filename>foo.yab</filename> you would type:</para>
-	<informalexample>
-	  <para><userinput>yabasic -bind foo.exe foo.yab</userinput></para>
-	</informalexample>
-	<para>This command does <emphasis>not</emphasis> execute your program <filename>foo.yab</filename> but rather create a <emphasis>standalone</emphasis>-program <filename>foo.exe</filename>. Note: under Unix you would probably name the standalone program <filename>foo</filename> or such, omitting the windows-specific ending <filename>.exe</filename>. </para>
-	<para><application>Yabasic</application> will confirm by printing something like: <computeroutput>---Info: Successfully bound 'yabasic' and 'foo.yab' into 'foo.exe'</computeroutput>.</para>
-	<para>After that you will find a program <filename>foo.exe</filename> (which must be made <emphasis>executable</emphasis> with the <command>chmod</command>-command under Unix first). Now, executing this program <filename>foo.exe</filename> (or <filename>foo</filename> under Unix) will produce the output <computeroutput>Hello World !</computeroutput>.</para>
-	<para>This newly created program <filename>foo.exe</filename> might be passed around to anyone, even if he does not have <application>yabasic</application> installed.</para>
-      </sect2>
-      <sect2>
-	<title>Creating a standalone-program from within your program</title>
-	<para>It is possible to write a <application>yabasic</application>-program, that binds itself to the <application>yabasic</application>-interpreter. Here is an example:</para>
-	<informalexample>
-	  <programlisting>
-if (!peek("isbound")) then
-  bind "foo"
-  print "Successfully created the standalone executable 'foo' !"
-  exit
-endif
-
-print "Hello World !"
-</programlisting>
-	</informalexample>
-	<para>If you run this program (which may be saved in the file <filename>foo.yab</filename>) via <userinput>yabasic foo.yab</userinput>, the <function><link linkend="ref_peek">peek("isbound")</link></function> in the first line will check, if the program is already part of a standalone-program. If <emphasis>not</emphasis> (i.e. if the <application>yabasic</application>-interpreter and the <application>yabasic</application>-program are separate files) the <function><link linkend="ref_bind">bind</link></function>-command will create a standalone program <filename>foo</filename> containing both. As a result you would see the output <computeroutput>Successfully created the standalone executable 'foo' !</computeroutput>. Note: Under Windows you would probably choose the filename <filename>foo.exe</filename>.</para>
-	<para>Now, if you run this standalone executable <filename>foo</filename> (or <filename>foo.exe</filename>), the very same <application>yabasic</application>-program that is shown above will be executed again. However, this time the <function><link linkend="ref_peek">peek("isbound")</link></function> will return <constant>TRUE</constant> and therefore the condition of the <function>if</function>-statement is <emphasis>false</emphasis> and the three lines after <function>then</function> are <emphasis>not</emphasis> executed. Rather the last <function>print</function>-statement will run, and you will see the output <computeroutput>Hello World !</computeroutput>.</para>
-	<para>That way a <application>yabasic</application>-program may turn itself into a standalone-program.</para>
-      </sect2>
-      <sect2>
-	<title>Downsides of creating a standalone program</title>
-	<para>Now, before you go out and turn all your <application>yabasic</application>-programs into standalone programs, please take a second to consider the downsides of doing so:</para>
-	<itemizedlist>
-	  <listitem>
-	    <para>The new standalone program will be at least as big as the interpreter itself, so you need to pass a few hundred kilobytes around, just to save people from having to install <application>yabasic</application> themselves.</para>
-	  </listitem>
-	  <listitem>
-	    <para>There is no easy way to extract your <application>yabasic</application>-program from within the standalone program: If you ever want to change it, you need to have it around separately.</para>
-	  </listitem>
-	  <listitem>
-	    <para>If a new version of <application>yabasic</application> becomes available, again you need to recreate all of your standalone programs to take advantage of bugfixes and improvements.</para>
-	  </listitem>
-	</itemizedlist>
-	<para>So, being able to create a standalone program is certainly a good thing, but certainly <emphasis>not</emphasis> a silver bullet.</para>
-      </sect2>
-      <sect2>
-	<title>See also</title>
-	<para>The <link linkend="ref_bind"><function>bind</function></link>-command, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
-      </sect2>
-    </sect1>
-
-
-    <sect1 renderas="sect2" id="ref_ffi">
-      <title>Interaction with functions from a non-<application>yabasic</application> library or dll</title>
-	  <note>
-	    <para>Under Unix, depending on the way <application>yabasic</application> has been built, this feature might have been disabled; the error message in this case will read like <computeroutput>this build of yabasic does not support calling foreign libraries</computeroutput>. To resolve this issue, you are invited to contact the maintainer.</para>
-	  </note>
-
-	  <note>
-	    <para>This is interesting, but somewhat advanced stuff.</para>
-	  </note>
-
-      <para><application>Yabasic</application> allows to employ functionality from 
-an external library; i.e. from a library, which is <emphasis>not</emphasis> written in <application>yabasic</application>, but rather in <application>C</application>; such a library is called a <emphasis>foreign</emphasis> library, as opposed to a library written in yabasic itself. Calling out to a foreign library can be useful, if such a library provides functionality, that can not be replicated in <application>yabasic</application> itself and for which a commandline-interface (which could be used via <function><link linkend="ref_system">system</link></function>) does not exist or is too cumbersome or slow. Examples would be libraries <application>libVLC</application> or <application>libcurl</application> which offer the functionality of <application>vlc</application> or <application>curl</application> to other programs, especially programs written in <application>yabasic</application>.</para>
-<para>The foreign function interface of <application>yabasic</application> relies on the great <ulink url="https://sourceware.org/libffi/">libffi</ulink>-library, a library making it easy to call other libraries dynamicaaly and the established standard for this task.</para>
-
-<sect2>
-<title>Some Background</title>
-<sect3>
-  <title>Libraries</title>
-  <para>
-  Libraries (e.g. <application>libcurl</application>) are meant to provide functionality to other programs (here: <application>yabasic</application> and your <application>yabasic</application>-program). Libraries and programs must be <emphasis>linked</emphasis> together; this can happen either <emphasis>statically</emphasis> at compile-time or <emphasis>dynamically</emphasis> during the excution of the program. For <application>yabasic</application> as the program, static linking happens at the time, <application>yabasic</application> itself is build, whereas dynamic linking happen during the execution <emphasis>and under control</emphasis> of your <application>yabasic</application>-program. So the foreign function interface deals with dynamic (or <emphasis>runtime</emphasis>) linking to external libraries. This linking is done by <application>yabasic</application> behind the scene, when you invoke <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>; this function, after loading the library, directly calls the specified function therein.</para>
-<para>Which functions are available differs from library to library and you should already have this information before you try the library with <application>yabasic</application>.
-</para>
-</sect3>
-
-<sect3>
-  <title>Types</title>
-  <para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns exactly one. These parameters have a wide variety of types which need to be mapped to the two types (numbers and strings) known by <application>yabasic</application>. Here are the types available for foreign functions, grouped by the way, they are handled in <application>yabasic</application>:</para>
-  <variablelist>
-    <title>Types</title>
-    <varlistentry>
-      <term><literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal></term>
-    <listitem><para>In <application>C</application> all these types are used to represent numbers (integer or floating point) with various degrees of precision. When invoking <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> you need to pass strings, which specify the right type as well as the actual <application>yabasic</application>-value, which will then be converted accordingly. Which types a foreign function expects can be looked up e.g. from its manpage.</para></listitem>
-  </varlistentry>
-  <varlistentry>
-    <term><literal>string</literal></term>
-    <listitem><para>Strings for foreign functions directly map to strings of <application>yabasic</application>. So if you specify this type for a parameter of a foreign function, the matching value is simply a <application>yabasic</application> string. If you specify <literal>string</literal> as the return value of a foreign function you should use the variant of calling it, which returns a string, i.e. <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>.</para></listitem>
-  </varlistentry>
-  <varlistentry>
-    <term><literal>buffer</literal></term>
-    <listitem><para>You should specify a <emphasis>buffer</emphasis> as the type of a parameter or the return type, if the foreign function expects a structure or a pointer to a memory area; see <link linkend="structures_and_buffers">structures and buffers</link> for details.</para></listitem>
-  </varlistentry>
-</variablelist>
-</sect3>
-</sect2>
-<sect2><title>A simple example</title>
-<para></para>
-<programlisting>
-if peek$("os")="windows" then
-  lib$ = "msvcrt.dll"
-else
-  lib$ = "libm.so.6"
-endif
-
-print "cos(2): ",foreign_function_call(lib$,"double","cos","double",2)
-</programlisting>
-<para></para>
-</sect2>
-
-<sect2 id="structures_and_buffers"><title>Structurs and buffers</title>
-<para></para> </sect2>
-
-<sect2>	  <title>A more complex example</title>
-<para></para> </sect2>
-
   </chapter>
 
   <chapter id="chapter_examples">

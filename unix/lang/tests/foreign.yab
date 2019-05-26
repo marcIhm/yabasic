@@ -19,6 +19,8 @@ endif
 res_strstr$ = frnfn_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
 print "Result of strstr:  ",res_strstr$
 if  res_strstr$ <> "obar" error "result of strstr does not match"
+res_strstr$ = frnfn_call$(lib$,"string","strstr","string","foobar","string","qux","options","copy_string_result")
+if  res_strstr$ <> "" error "result of strstr does not match"
 
 if frnfn_call(lib$,"int","strlen","string","foo","string","ob") <> 3 error "result of strstr does not match"
 
