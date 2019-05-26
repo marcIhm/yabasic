@@ -9669,19 +9669,44 @@ an external library; i.e. from a library, which is <emphasis>not</emphasis> writ
 </para>
 </sect3>
 
-	<sect3>
-	  <title>Types</title>
-<para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns at least one. These parameters have a wide variety of types which need to be mapped to the types known by <application>yabasic</application>.</para>
-	  <para><application>Yabasic</application> supports the following strings for specifying one of sixteen types: <literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal>,<literal>buffer</literal>,<literal>string</literal></para>
-	</sect3>
+<sect3>
+  <title>Types</title>
+  <para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns exactly one. These parameters have a wide variety of types which need to be mapped to the two types (numbers and strings) known by <application>yabasic</application>. Here are the types available for foreign functions, grouped by the way, they are handled in <application>yabasic</application>:</para>
+  <variablelist>
+    <title>Types</title>
+    <varlistentry>
+      <term><literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal></term>
+    <listitem><para>In <application>C</application> all these types are used to represent numbers (integer or floating point) with various degrees of precision. When invoking <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> you need to pass strings, which specify the right type as well as the actual <application>yabasic</application>-value, which will then be converted accordingly. Which types a foreign function expects can be looked up e.g. from its manpage.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>string</literal></term>
+    <listitem><para>Strings for foreign functions directly map to strings of <application>yabasic</application>. So if you specify this type for a parameter of a foreign function, the matching value is simply a <application>yabasic</application> string. If you specify <literal>string</literal> as the return value of a foreign function you should use the variant of calling it, which returns a string, i.e. <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>buffer</literal></term>
+    <listitem><para>You should specify a <emphasis>buffer</emphasis> as the type of a parameter or the return type, if the foreign function expects a structure or a pointer to a memory area; see <link linkend="structures_and_buffers">structures and buffers</link> for details.</para></listitem>
+  </varlistentry>
+</variablelist>
+</sect3>
 </sect2>
-<sect2>	  <title>A simple example</title>
+<sect2><title>A simple example</title>
+<para></para>
+<programlisting>
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
+print "cos(2): ",foreign_function_call(lib$,"double","cos","double",2)
+</programlisting>
+<para></para>
+</sect2>
+
+<sect2 id="structures_and_buffers"><title>Structurs and buffers</title>
 <para></para> </sect2>
 
-<sect2>	  <title>Structurs and buffers</title>
-<para></para> </sect2>
-
-<sect2>	  <title>A more complex examples</title>
+<sect2>	  <title>A more complex example</title>
 <para></para> </sect2>
 
   </chapter>
