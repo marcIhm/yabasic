@@ -1842,18 +1842,13 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 <para>Beeing essentially a memory area, a buffer is created with <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function> and destroyed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function> if needed no more.</para>
 
 <para>Besides representing a structure, a buffer can also provide room to store raw areas of memory for use by the foreign library; example might be image- or sound-content.</para>
+<sect3>
+  <title>Abbreviations</title>
+</sect3>
 </sect2>
 
 <sect2>
   <title>Two more complex examples</title>
-  <setc3>
-    <title>Using <application>libcurl</application></title>
-<para>This first more complex example just invokes <application>libcurl</application> to report its version:
-<programlisting>
-
-  curl_version_info()
-</programlisting>    
-  </setc3>
   <sect3>
     <title>Dealing with time</title>
 <para></para>
@@ -1907,6 +1902,16 @@ print "50 years back:           ", frnfn_call$(lib$,"string","asctime","buffer",
 </programlisting>
 
   </sect3>
+  <setc3>
+    <title>Getting the version of <application>libcurl</application></title>
+<para>This example just invokes <application>libcurl</application> to report its version:
+<programlisting>
+info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1,"options","no_unload_library")
+print frnbf_dump$(info$,32)
+sinfo$ = frnbf_get_buffer$(info$,8)
+print frnbf_get$(sinfo$,0,10)
+</programlisting>    
+  </setc3>
 </sect2>
 
 </chapter>
