@@ -1794,6 +1794,7 @@ an external library; i.e. from a library, which is <emphasis>not</emphasis> writ
 </sect3>
 </sect2>
 <sect2><title>Two simple examples</title>
+<sect3><title>Computing the cosine</title>
 <para>This first example prints the cosine of 2, not by using <application>yabasics</application> own <function>cos</function>-function but by calling out to the standard <application>C</application>-library:</para>
 <programlisting>
 if peek$("os")="windows" then
@@ -1804,8 +1805,10 @@ endif
 
 print "cos(2): ",foreign_function_call(lib$,"double","cos","double",2)
 </programlisting>
-<para>The first lines determine the name of the library, which is different under Unix and Windows. The call to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> than just states the name of the library, the return type (<literal>"double"</literal>) of the function and then its name (<literal>"cos"</literal>), as well as type and value (<literal>2</literal>) of its argument. The final result <computeroutput>-0.416147</computeroutput> then is the same as from the the internal <function><link linkend="ref_cos">cos</link></function>-function.</para>
-<para>A second example</para>
+<para>The first lines determine the name of the library, which is different under Unix and Windows. The call to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> than just states the name of the library, the return type (<literal>"double"</literal>) of the function and then its name (<literal>"cos"</literal>), as well as type and value (<literal>2</literal>) of its argument. The final result <computeroutput>-0.416147</computeroutput> then is the same as from the the internal <function><link linkend="ref_cos">cos</link></function>-function, which is no surprise, because <application>yabasic</application> is already statically linked to the standard <application>C</application>-library and uses its function to compute the cosine.</para>
+</sect3>
+<sect3>
+<para>A second example:</para>
 <programlisting>
 if peek$("os")="windows" then
   lib$ = "msvcrt.dll"
@@ -1816,6 +1819,7 @@ endif
 print foreign_function_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
 </programlisting>
 <para>This example calls the <function>strstr</function>-function from the standard <application>C</application>-library; this function accepts two string arguments and returns a string, which is the first (if any) appearance of the second string within the first one (remark: this function makes more sense in <application>C</application> than in <application>yabasic</application>). Please note the option <literal>"copy_string_result"</literal>, which advices <application>yabasic</application> to return a copy of the result of <function>strstr</function>; otherwise your program might crash, because <function>strstr</function> simply returns a pointer to a part of its first argument, a string that will later be freed by <application>yabasic</application>.</para>
+</sect3>
 </sect2>
 
 <sect2 id="steps_during_foreign_call"><title>Internal steps during a call to a foreign function</title>
@@ -1837,11 +1841,73 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 <para>The detailed knowledge about the simple types within a structure must be coded into your program, which uses the command (or function) <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function> and <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>. Both functions require type and offset (which needs to be looked up in documentation of the foreign library) of the simple type within the structure and a handle to the buffer, which contains the structure.</para>
 <para>Beeing essentially a memory area, a buffer is created with <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function> and destroyed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function> if needed no more.</para>
 
-<para>Besides representing a structure, a buffer can also provide room to store strings or raw areas of memory for use by the foreign library (which see).</para>
+<para>Besides representing a structure, a buffer can also provide room to store raw areas of memory for use by the foreign library; example might be image- or sound-content.</para>
 </sect2>
 
-<sect2>	  <title>A more complex example</title>
-<para></para> </sect2>
+<sect2>
+  <title>Two more complex examples</title>
+  <setc3>
+    <title>Using <application>libcurl</application></title>
+<para>This first more complex example just invokes <application>libcurl</application> to report its version:
+<programlisting>
+
+  curl_version_info()
+</programlisting>    
+  </setc3>
+  <sect3>
+    <title>Dealing with time</title>
+<para></para>
+<programlisting>
+struct tm {
+    int tm_sec;    /* Seconds (0-60) */
+    int tm_min;    /* Minutes (0-59) */
+    int tm_hour;   /* Hours (0-23) */
+    int tm_mday;   /* Day of the month (1-31) */
+    int tm_mon;    /* Month (0-11) */
+    int tm_year;   /* Year - 1900 */
+    int tm_wday;   /* Day of the week (0-6, Sunday = 0) */
+    int tm_yday;   /* Day in the year (0-365, 1 Jan = 0) */
+    int tm_isdst;  /* Daylight saving time */
+};
+</programlisting>
+<programlisting>
+if peek$("os")="windows" then
+  lib$ = "msvcrt.dll"
+else
+  lib$ = "libm.so.6"
+endif
+
+# time() has a pointer argument to store the result too; we pass NULL, so only the return value is relevant
+null$ = frnbf_alloc$(0)
+now = frnfn_call(lib$,"int","time","buffer",null$)
+print "Seconds since the epoch: ",now
+if peek$("os")<>"windows" then
+  if (abs(now-val(system$("date +%s")))>-2) error "Seconds of epoche diverge"
+endif
+
+# localtime() requires a pointer to the time-value, so we construct a buffer for one int and put in our value
+now$ = frnbf_alloc$(frnfn_size("int"))
+frnbf_set now$,0,"int",now
+print "Dump of buffer:          ",frnbf_dump$(now$)
+
+# localtime() returns a structure with the componentes (year, day, sec, etc.) as elements
+local$ = frnfn_call$(lib$,"buffer","localtime","buffer",now$)
+
+# assuming, that year is the sixth element of the structure
+offset = 5 * frnfn_size("int")
+year = frnbf_get(local$,offset,"int")
+print "Current year:            ", year + 1900
+
+# set year to something else
+frnbf_set local$,offset,"int",year-50
+
+# convert time-structure in localtime into ascii
+print "50 years back:           ", frnfn_call$(lib$,"string","asctime","buffer",local$)
+
+</programlisting>
+
+  </sect3>
+</sect2>
 
 </chapter>
 
@@ -1849,7 +1915,6 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
   
   <chapter id="chapter_ref_words">
     <title>All commands and functions of <application>yabasic</application> grouped alphabetically</title>
-
 
     <sect1 renderas="sect2" id="ref_a">
       <title>A</title>
