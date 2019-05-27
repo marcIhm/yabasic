@@ -39,63 +39,74 @@ int last_frnfn_call_okay = 1;                       /* true, if last foreign cal
 
 #if defined(UNIX) && !defined(HAVE_DL_FFI)
 void
-frnfn_call (int type, double *pvalue, char **ppointer)
+no_frn_error(void)
 {
     error(sERROR, "this build of yabasic does not support calling foreign libraries");
+}    
+void
+frnfn_call (int type, double *pvalue, char **ppointer)
+{
+    no_frn_error();
     return;
 }
 double
 frnfn_size ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return;
 }
 char *
 frnbf_alloc ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return;
 }
 void
 frnbf_free ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return;
 }
 int
 frnbf_size ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return 0;
 }
 char *
 frnbf_dump ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return my_strdup("");
 }
 void
 frnbf_set ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return;
 }
 void
 frnbf_set2 ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return my_strdup("");
 }
 double
 frnbf_get ()
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
     return 0.0;
 }
 char *
 frnbf_get2 ()  /* get a string from a foreign buffer */
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    no_frn_error();
+    return my_strdup("");
+}
+char *
+frnbf_get_buffer ()  /* get a second buffer from a foreign buffer */
+{
+    no_frn_error();
     return my_strdup("");
 }
 #else
@@ -149,8 +160,9 @@ void *lib = NULL;        /* handle to library */
 HINSTANCE lib = NULL;    /* handle to library */
 #endif
 char *funame = NULL;     /* name of function to call */
-int opt_error = TRUE;    /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
-int opt_copy_string_result = TRUE;   /* should the string result be copied or passed through */
+int opt_error;                /* should problems with library lead to yabasic-errors ? ffi-problems will in any case */
+int opt_copy_string_result;   /* should the string result be copied or passed through */
+int opt_unload_library;       /* should the library be unloaded after call */
 
 ffi_cif cif;    /* structure describing arguments for libffi */
 int argcnt;    /* number of arguments for function, i.e. length of both following lists */
@@ -176,7 +188,7 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 
     last_frnfn_call_error_text[0] = '\0';
     last_frnfn_call_okay = 0;
-    
+
     if (!frnfn_parse_stack ()) {
 	frnfn_cleanup ();
 	return;
@@ -193,7 +205,7 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 	frnfn_cleanup ();
 	return;
     }
-    
+
 #ifdef UNIX
     lib = dlopen(libname, RTLD_LAZY);
 #else
@@ -315,16 +327,18 @@ frnbf_size ()  /* get size of buffer */
 
 
 char *
-frnbf_dump ()  /* dump a foreign buffer into readable form */
+frnbf_dump (int type)  /* dump a foreign buffer into readable form */
 {
-    int size;
+    int size,ssize,psize;
     char *ptr;
     char *dump,*d;
     int i;
 
-    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, (void **)&ptr)) return my_strdup("");
+    if (type == fFRNBF_DUMP2) ssize = pop (stNUMBER)->value;
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &psize, (void **)&ptr)) return my_strdup("");
     d = dump = my_malloc(2*size);
     d[0] = '\0';
+    size = (type == fFRNBF_DUMP2) ? ssize : psize;
     for(i=0;i<size;i++) {
 	d += sprintf (d, "%02X", (unsigned char) ptr[i]);
     }
@@ -416,7 +430,6 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
     int size;
     void *ptr;
     int offset, len;
-    ffi_type *valtype; /* expected return type of function */
 
     len = (int) pop (stNUMBER)->value;
     offset = (int) pop (stNUMBER)->value;
@@ -428,6 +441,27 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
 	return my_strdup("");
     }
     return my_strndup ((void*)((char*)ptr+offset), len);
+}
+
+
+char *
+frnbf_get_buffer ()  /* get a second buffer from a foreign buffer */
+{
+    int size;
+    void *ptr;
+    int offset, len;
+
+    offset = (int) pop (stNUMBER)->value;
+    len = sizeof(void *);
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
+    if (offset<0 || (size >=0 && offset+len > size)) {
+	sprintf(estring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
+		offset, len, size);
+	error(sERROR, estring);
+	return my_strdup("");
+    }
+    sprintf(string,"frnbf:%d:%p", -1, *((char **)((char *)ptr+offset)));
+    return my_strdup(string);
 }
 
 
@@ -464,6 +498,11 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 	listlen++;
     } while (st->type != stFREE);
 
+    /* set options to default values */
+    opt_error = TRUE;
+    opt_copy_string_result = TRUE;
+    opt_unload_library = TRUE; 
+    
     /* pop arguments here, because the function is declared to have zero args */
     for(i=0;i<listlen;i++) {
 	pop (stSTRING_OR_NUMBER);
@@ -521,8 +560,10 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 		    opt_error = !opt_has_no;
 		else if (!strcmp(opt_str,"copy_string_result"))
 		    opt_copy_string_result = !opt_has_no;
+		else if (!strcmp(opt_str,"unload_library"))
+		    opt_unload_library = !opt_has_no;
                 else {
-		    sprintf(estring,"options can only be 'error' and 'copy_string_result', optionally preceeded by 'no_', not '%s'",opt_str);
+		    sprintf(estring,"options can only be 'error', 'copy_string_result' and 'unload_library', optionally preceeded by 'no_', not '%s'",opt_str);
 		    error (sERROR,estring);
 		}
 	    }
@@ -649,11 +690,13 @@ frn_cast_from_ffi_type (union FFI_VAL *value, ffi_type *type) /* cast and return
 static void frnfn_cleanup () /* free and cleanup structures after use */
 {
     if (lib) {
+	if (opt_unload_library) {
 #ifdef UNIX
-	dlclose(lib);
+	    dlclose(lib);
 #else
-		FreeLibrary(lib);
+	    FreeLibrary(lib);
 #endif
+	}
 	lib = NULL;
     }
     if (vtypes) {

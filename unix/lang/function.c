@@ -814,7 +814,8 @@ function (struct command *current)	/* performs a function */
 	result = stNUMBER;
         break;
     case fFRNBF_DUMP:
-	pointer = frnbf_dump ();
+    case fFRNBF_DUMP2:
+	pointer = frnbf_dump (type);
         result = stSTRING;
         break;
     case fFRNFN_SIZE:
@@ -827,6 +828,10 @@ function (struct command *current)	/* performs a function */
         break;
     case fFRNBF_GET_STRING:
 	pointer = frnbf_get2 ();
+        result = stSTRING;
+        break;
+    case fFRNBF_GET_BUFFER:
+	pointer = frnbf_get_buffer ();
         result = stSTRING;
         break;
     case fPEEK:

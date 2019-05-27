@@ -1303,9 +1303,11 @@ initialize (void)
     fexplanation[fFRNBF_SIZE] = "FRNBF_SIZE";
     fexplanation[fFRNBF_ALLOC] = "FRNBF_ALLOC";
     fexplanation[fFRNBF_DUMP] = "FRNBF_DUMP";
+    fexplanation[fFRNBF_DUMP2] = "FRNBF_DUMP2";
     fexplanation[fFRNFN_SIZE] = "FRNFN_SIZE";
     fexplanation[fFRNBF_GET_NUMBER] = "FRNBF_GET_NUMBER";
     fexplanation[fFRNBF_GET_STRING] = "FRNBF_GET_STRING";
+    fexplanation[fFRNBF_GET_BUFFER] = "FRNBF_GET_BUFFER";
     fexplanation[fTELL] = "TELL";
     fexplanation[fEXP] = "EXP";
     fexplanation[fLOG] = "LOG";

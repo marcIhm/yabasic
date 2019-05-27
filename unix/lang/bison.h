@@ -208,14 +208,15 @@ extern int yydebug;
     tFRNBF_SET = 418,
     tFRNBF_GET = 419,
     tFRNBF_GET2 = 420,
-    tDATE = 421,
-    tTIME = 422,
-    tTOKEN = 423,
-    tTOKENALT = 424,
-    tSPLIT = 425,
-    tSPLITALT = 426,
-    tGLOB = 427,
-    UMINUS = 428
+    tFRNBF_GET_BUFFER = 421,
+    tDATE = 422,
+    tTIME = 423,
+    tTOKEN = 424,
+    tTOKENALT = 425,
+    tSPLIT = 426,
+    tSPLITALT = 427,
+    tGLOB = 428,
+    UMINUS = 429
   };
 #endif
 

@@ -162,7 +162,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFRNFN_CALL tFRNFN_CALL2 tFRNFN_SIZE
-%token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
+%token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2 tFRNBF_GET_BUFFER
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -365,6 +365,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tFRNFN_CALL2 '(' call_list ')' {create_function(fFRNFN_CALL2);}
   | tFRNBF_ALLOC '(' expression ')' {create_function(fFRNBF_ALLOC);}
   | tFRNBF_DUMP '(' string_expression ')' {create_function(fFRNBF_DUMP);}
+  | tFRNBF_DUMP '(' string_expression ',' expression ')' {create_function(fFRNBF_DUMP2);}
   | tDATE {create_function(fDATE);}
   | tDATE '(' ')' {create_function(fDATE);}
   | tTIME {create_function(fTIME);}
@@ -381,6 +382,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tBIN '(' expression ')' {create_function(fBIN);}
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tFRNBF_GET2 '(' string_expression ',' expression ',' expression ')' {create_function(fFRNBF_GET_STRING);} 
+  | tFRNBF_GET_BUFFER '(' string_expression ',' expression ')' {create_function(fFRNBF_GET_BUFFER);} 
   ;
 
 assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 

@@ -273,8 +273,8 @@ enum functions {
     /* functions in yabasic (sorted by number of arguments) */
     fFIRST_FUNCTION,		/* no function, just marks start of list */
     fRAN2, fDATE, fTIME,
-    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_ALLOC, fFRNBF_DUMP,
-    fFRNBF_GET_NUMBER, fFRNBF_GET_STRING, fFRNFN_SIZE, fFRNBF_SIZE,
+    fFRNFN_CALL, fFRNFN_CALL2, fFRNBF_ALLOC, fFRNBF_DUMP, fFRNBF_DUMP2,
+    fFRNBF_GET_NUMBER, fFRNBF_GET_STRING, fFRNBF_GET_BUFFER, fFRNFN_SIZE, fFRNBF_SIZE,
     fZEROARGS,
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
@@ -578,12 +578,13 @@ void frnfn_call (int,double *,char **);
 double frnfn_size (void);
 char *frnbf_alloc (void);
 void frnbf_free (void);
-char *frnbf_dump (void);
+char *frnbf_dump (int);
 int frnbf_size ();
 void frnbf_set (void);
 void frnbf_set2 (void);
 double frnbf_get (void);
 char *frnbf_get2 (void);
+char *frnbf_get_buffer (void);
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */
