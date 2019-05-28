@@ -1824,7 +1824,7 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 
 <sect2 id="steps_during_foreign_call"><title>Internal steps during a call to a foreign function</title>
 <para>A remark on <ulink url="https://sourceware.org/libffi/">libffi</ulink>: this is the library which allows <application>yabasic</application> to call functions from other libraries <application>libffi</application> is used by many other programming-languages for the same purpose; in <application>yabasic</application> it is linked statically (rather than dynamically) so that its functionality is available right from the start. Summing up: <application>libffi</application> itself need not be loaded but helps to call functions from other loaded libraries.</para>
-<para>Here is the sequence of events during a foreign function call (e.g. <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>):
+<para>Here is the sequence of events during a foreign function call (e.g. <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>):</para>
       <itemizedlist>
 	<listitem><para><application>Yabasic</application> parses the type specifications and argument values provided and collects the necessary information for <application>libffi</application>.</para></listitem>
 	<listitem><para>The named library is loaded with the appropriate call (which is different under Windows and Unix). This step might easily fail, e.g. if you misspelled the name of the library or your system cannot find the library.</para></listitem>
@@ -1835,6 +1835,11 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 <para>Errors are reported during every step.</para>
 </sect2>
 
+<sect2>
+  <title>Abbreviations for long names</title>
+  <para><application>Yabasics</application> functions for dealing with foreign libraries start with <function>foreign_function</function> or <function>foreign_buffer</function> (e.g. <function><link linkend="ref_foreign_buffer_new">foreign_buffer_new</link></function>). To help in typing, these names can all be abbreviated by contracting <literal>foreign_function</literal> into <literal>frnfn</literal> and <literal>foreign_buffer</literal> into <literal>frnbf</literal>. In the examples below, both forms appear.</para>
+</sect2>
+
 <sect2 id="structures_and_buffers"><title>Structurs and buffers</title>
 <para>The <application>C</application>-language provides a wide variety of simple datatypes (like numbers an strings) and allows to aggregate simple datatypes to <emphasis>structures</emphasis> such a structure contains a set of simple types arranged without overlap (but sometimes with gaps). <application>Yabasic</application> on itself does not know the internals of a structure but rather treats it as a uniform <emphasis>buffer</emphasis>. Structure and buffer are just flipsides of the same memory area viewed either from <application>C</application> or <application>yabasic</application>. For your <application>yabasic</application>-program a buffer is represented by a <emphasis>handle</emphasis>, which is just a simple printable string (containing the size and the memory adress).</para>
 
@@ -1842,17 +1847,14 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 <para>Beeing essentially a memory area, a buffer is created with <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function> and destroyed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function> if needed no more.</para>
 
 <para>Besides representing a structure, a buffer can also provide room to store raw areas of memory for use by the foreign library; example might be image- or sound-content.</para>
-<sect3>
-  <title>Abbreviations</title>
-</sect3>
 </sect2>
 
 <sect2>
   <title>Two more complex examples</title>
   <sect3>
     <title>Dealing with time</title>
-<para></para>
-<programlisting>
+    <para>The example below deals with the time functions from the standard <application>C</application>-library; some of them deal with the <emphasis>tm</emphasis> structure for keeping the segmented time; to understand the example to follow it is helpful to have the tm-structure at hand; see below. In addition it might be helpful to consult the manpages of the various <application>C</application>-functions (e.g. <function>localtime</function>)involved.</para>
+    <programlisting>
 struct tm {
     int tm_sec;    /* Seconds (0-60) */
     int tm_min;    /* Minutes (0-59) */
@@ -1864,62 +1866,85 @@ struct tm {
     int tm_yday;   /* Day in the year (0-365, 1 Jan = 0) */
     int tm_isdst;  /* Daylight saving time */
 };
-</programlisting>
-<programlisting>
+    </programlisting>
+    <para>The example plays with the two forms of keeping the time, either as unix-time (number of seconds since epoch) or as a segmented time (sec, min, etc.). The six steps are each introduced by comments, please see below.</para>
+    <programlisting>
+# First: Determine the correct library depending on OS
+#
 if peek$("os")="windows" then
   lib$ = "msvcrt.dll"
 else
   lib$ = "libm.so.6"
 endif
 
-# time() has a pointer argument to store the result too; we pass NULL, so only the return value is relevant
-null$ = frnbf_alloc$(0)
-now = frnfn_call(lib$,"int","time","buffer",null$)
+# Second: Get the unix-time
+#
+# time() has a pointer argument to store the result (in addition to returning it)
+# we pass NULL, so only the return value is relevant
+#
+null$ = foreign_buffer_alloc$(0)
+now = foreign_function_call(lib$,"int","time","buffer",null$)
 print "Seconds since the epoch: ",now
-if peek$("os")<>"windows" then
-  if (abs(now-val(system$("date +%s")))>-2) error "Seconds of epoche diverge"
-endif
 
-# localtime() requires a pointer to the time-value, so we construct a buffer for one int and put in our value
-now$ = frnbf_alloc$(frnfn_size("int"))
-frnbf_set now$,0,"int",now
-print "Dump of buffer:          ",frnbf_dump$(now$)
-
+# Third: Convert the unix-time to a segmented time
+#
+# localtime() does not accept the time-value as an argument, but rather requires a pointer
+# to the time-value, so we construct a buffer for one int and put in our value
+now$ = foreign_buffer_alloc$(foreign_function_size("int"))
+foreign_buffer_set now$,0,"int",now
+# Dump the buffer for educational purpose
+print "Dump of buffer:          ",foreign_buffer_dump$(now$)
 # localtime() returns a structure with the componentes (year, day, sec, etc.) as elements
-local$ = frnfn_call$(lib$,"buffer","localtime","buffer",now$)
+local$ = foreign_function_call$(lib$,"buffer","localtime","buffer",now$)
 
+# Fourth: Get the current year from the resulting buffer
+#
 # assuming, that year is the sixth element of the structure
-offset = 5 * frnfn_size("int")
-year = frnbf_get(local$,offset,"int")
+# so offset is 5
+offset = 5 * foreign_function_size("int")
+year = foreign_buffer_get(local$,offset,"int")
 print "Current year:            ", year + 1900
 
+
+# Fifth: manipulate the segmented time
+#
 # set year to something else
-frnbf_set local$,offset,"int",year-50
+foreign_buffer_set local$,offset,"int",year-50
 
-# convert time-structure in localtime into ascii
-print "50 years back:           ", frnfn_call$(lib$,"string","asctime","buffer",local$)
 
+# Sixth: convert time-structure from localtime into ascii
+#
+print "50 years back:           ", foreign_function_call$(lib$,"string","asctime","buffer",local$)
 </programlisting>
-
+<para>On my computer this program produces the following output:</para>
+<screen>
+Seconds since the epoch: 1559014899
+Dump of buffer:          F3ADEC5C
+Current year:            2019
+50 years back:           Tue May 28 05:41:39 1969  
+</screen>
   </sect3>
-  <setc3>
+  <sect3>
     <title>Getting the version of <application>libcurl</application></title>
-<para>This example just invokes <application>libcurl</application> to report its version:
+<para>This final example just invokes <application>libcurl</application> to report its version. This is somewhat involved, because the matching function <function>curl_version_info</function> (see its man-page) returns a structure, which contains a pointer to a string. Please note, that the code uses abbreviations (e.g. <function>frnfn_call</function> instead of <function>foreign_function_call</function>.</para>
 <programlisting>
+# Get structure with version info
 info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1,"options","no_unload_library")
+# dump it for reference
 print frnbf_dump$(info$,32)
+# assume, that the pointer to version string is at offset 8
 sinfo$ = frnbf_get_buffer$(info$,8)
+# print readable version
 print frnbf_get$(sinfo$,0,10)
-</programlisting>    
-  </setc3>
+</programlisting>
+<para>On my system this program produces <computeroutput>7.61.1</computeroutput> for the version of curl.</para>
+</sect3>
 </sect2>
-
+</sect1>
 </chapter>
 
-
-  
-  <chapter id="chapter_ref_words">
-    <title>All commands and functions of <application>yabasic</application> grouped alphabetically</title>
+<chapter id="chapter_ref_words">
+  <title>All commands and functions of <application>yabasic</application> grouped alphabetically</title>
 
     <sect1 renderas="sect2" id="ref_a">
       <title>A</title>
