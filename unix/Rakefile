@@ -30,14 +30,13 @@ desc 'Put version into documentation'
 task :xml do
   version_short = vs['configure.ac'].gsub(/\.\d+$/,"")
 
-  # class DefinedHash < Hash # error if key is not defined
-  #   def [](key)
-  #     fail "Undefined key '#{key}'" unless self.key?(key)
-  #     super(key)
-  #   end
-  # end
-  # purpose = DefinedHash.new
-  purpose = Hash.new
+  class DefinedHash < Hash # error if key is not defined
+    def [](key)
+      fail "Undefined key '#{key}'" unless self.key?(key)
+      super(key)
+    end
+  end
+  purpose = DefinedHash.new
   
   doc = File.open("doc/yabasic.xml.erb") { |f| Nokogiri::XML(f) }
   doc.xpath('//refentry').each do |ele|

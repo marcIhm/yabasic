@@ -1280,20 +1280,6 @@ yabasic*font: 9x15
 	  </listitem>
 	</varlistentry>
 
-	<varlistentry>
-	  <term><link linkend="ref_foreign_function_call">external()</link></term>
-	  <listitem>
-	    <%= purpose['external()'] %>
-	  </listitem>
-	</varlistentry>
-	
-	<varlistentry>
-	  <term><link linkend="ref_foreign_function_call2">external$()</link></term>
-	  <listitem>
-	    <%= purpose['external$()'] %>
-	  </listitem>
-	</varlistentry>
-
       </variablelist>
     </sect1>
     <sect1 renderas="sect2" id="top_other">
@@ -4516,99 +4502,7 @@ label done
 	</refsect1>
       </refentry>
 
-      <refentry id="ref_foreign_function_call">
-	<refmeta>
-	  <refentrytitle>foreign_function_call()</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>foreign_function_call()</refname>
-	  <refpurpose>call a function from a non-<application>yabasic</application> library or dll</refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-print foreign_function_call("libtimestwo","int","timestwo","int",3)
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>Description</title>
-	  <para>The function <function>foreign_function_call</function> calls a function from an external library.</para>
-	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
-	  <para>Please see the <link linkend="ffi">section on foreign functions</link> for overview, background and more examples. For details on functionality and arguments see below.</para>
-	<para>The example uses the <function>foreign_function_call</function> to invoke the <function>cos</function>-function from the standard <application>C</application>-library (<filename>libm.so.6</filename> under Unix or <filename>msvcrt.dll</filename> under Windows).</para>	</refsect1>
-	  <refsect1>
-	  <title>Example</title>
-	  <informalexample>
-	    <programlisting>
-if peek$("os") = "unix" then
-  lib$ = "libm.so.6"
-else
-  lib$ = "msvcrt.dll"
-fi
-print foreign_function_call(lib$,"double","cos","double",2)	      
-          </programlisting>	  
-	  </informalexample>
-	  <para>The <function>foreign_function_call</function>-function accepts a variable number of arguments; 3 at minimum, 5 in the example above:</para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>A string, containing the name of the library, e.g. <literal>"libm.so.6"</literal>.</para>
-	    </listitem>
-	    <listitem>
-	      <para>A string describing the type, that the function (specified with the next argument) returns (in the example: <literal>"double"</literal>). See below for a list of all such types.</para>
-	    </listitem>
-	    <listitem>
-	      <para>The name of the function, that should be called (in the example above: <literal>"cos"</literal>)</para>
-	    </listitem>
-	  </itemizedlist>
-	  <para>If the external function does not require arguments itself, the three arguments above are everything needed for <function>foreign_function_call</function>. However (as for  <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, two more arguments are needed <function>foreign_function_call</function>:</para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>A string describing the <emphasis>type</emphasis> of the parameter to the external function (in the example: <literal>"double"</literal>). See the <link linkend="ffi">section on foreign functions</link> for a list of all such types.</para>
-	    </listitem>
-	    <listitem>
-	      <para>A value, that can be converted to the specified type (in the example: <literal>2</literal>).</para>
-	    </listitem>
-	  </itemizedlist>
-	  <para>With all these arguments specified, <application>yabasic</application> will call the foreign function (in the example: <literal>cos</literal>) and return its result; this process can be influenced by specifying <emphasis>options</emphasis> (see below).</para>
-	</refsect1>
-	<refsect1>
-	  <title>Options</title>
-	  <para>Options can be appended in any number after the string <literal>"options"</literal>, e.g. like:</para>
-	  <informalexample>
-	    <programlisting>
-	      foreign_function_call(lib$,"double","cos","double",2,"options","error")
-	    </programlisting>
-	  </informalexample>
-	  <para>Each option can be preceeded with the string <literal>no_</literal> to invert its meaning. As given below (i.e. with or without <literal>no_</literal>) the values represent the respective default.</para>
-	  <variablelist>
-	    <varlistentry>
-	      <term><literal>error</literal></term>
-	      <listitem>
-		<para>In case of errors (e.g. if a library cannot be found), should the function report them actively (which terminates your <application>yabasic</application>-program) ? Or should the error silently stored away for later retrieval by <function><link linkend="ref_peek2">peek$("last_foreign_function_call_okay")</link></function> and <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function> ?</para>
-	      </listitem>
-	    </varlistentry>
-	    <varlistentry>
-	      <term><literal>no_copy_string_result</literal></term>
-	      <listitem>
-		<para>If the foreign function returns a string-value (like <literal>strstr</literal>), it should be invoked using <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, which returns a string. Now, depending on the foreign function invoked, it might be necessary to make a copy of its result before returning it to <application>yabasic</application>. In the case of <literal>strstr</literal> this is needed, because it returns just a pointer to part of its input string which will <application>yabasic</application> happily free later on, probably leading to a segfault after.</para>
-	      </listitem>
-	    </varlistentry>
-	    <varlistentry>
-	      <term><literal>unload_library</literal></term>
-	      <listitem>
-		<para>Normally, after making a call to a foreign function, the named library is unloaded right away (see <link linkend="background_ffi">background</link>). However, sometimes (see the <link linkend="example_libcurl">example on libcurl</link>) the returned data is contained within the text of the library itself; in such cases, unloading the library would make the data inaccessible and lead to errors.</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
-	</refsect1>
-	<refsect1>
-	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call2</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get2</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_system">system</link></function></para>
-	</refsect1>
-      </refentry>
 
-      <!-- START INSERT HERE -->
-
- 
       <refentry id="ref_foreign_buffer_alloc">
 	<refmeta>
 	  <refentrytitle>foreign_buffer_alloc()</refentrytitle>
@@ -4800,31 +4694,98 @@ foreign_buffer_size() replace-me
 	</refsect1>
       </refentry>
 
- 
+
       <refentry id="ref_foreign_function_call">
 	<refmeta>
 	  <refentrytitle>foreign_function_call()</refentrytitle>
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_function_call()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>call a function from a non-<application>yabasic</application> library or dll</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_function_call() replace-me
+print foreign_function_call("libtimestwo","int","timestwo","int",3)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_function_call()</function> replace-me</para>
-        </refsect1>
+	  <para>The function <function>foreign_function_call</function> calls a function from an external library.</para>
+	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
+	  <para>Please see the <link linkend="ffi">section on foreign functions</link> for overview, background and more examples. For details on functionality and arguments see below.</para>
+	<para>The example uses the <function>foreign_function_call</function> to invoke the <function>cos</function>-function from the standard <application>C</application>-library (<filename>libm.so.6</filename> under Unix or <filename>msvcrt.dll</filename> under Windows).</para>	</refsect1>
+	  <refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+if peek$("os") = "unix" then
+  lib$ = "libm.so.6"
+else
+  lib$ = "msvcrt.dll"
+fi
+print foreign_function_call(lib$,"double","cos","double",2)	      
+          </programlisting>	  
+	  </informalexample>
+	  <para>The <function>foreign_function_call</function>-function accepts a variable number of arguments; 3 at minimum, 5 in the example above:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string, containing the name of the library, e.g. <literal>"libm.so.6"</literal>.</para>
+	    </listitem>
+	    <listitem>
+	      <para>A string describing the type, that the function (specified with the next argument) returns (in the example: <literal>"double"</literal>). See below for a list of all such types.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The name of the function, that should be called (in the example above: <literal>"cos"</literal>)</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>If the external function does not require arguments itself, the three arguments above are everything needed for <function>foreign_function_call</function>. However (as for  <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, two more arguments are needed <function>foreign_function_call</function>:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A string describing the <emphasis>type</emphasis> of the parameter to the external function (in the example: <literal>"double"</literal>). See the <link linkend="ffi">section on foreign functions</link> for a list of all such types.</para>
+	    </listitem>
+	    <listitem>
+	      <para>A value, that can be converted to the specified type (in the example: <literal>2</literal>).</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>With all these arguments specified, <application>yabasic</application> will call the foreign function (in the example: <literal>cos</literal>) and return its result; this process can be influenced by specifying <emphasis>options</emphasis> (see below).</para>
+	</refsect1>
+	<refsect1>
+	  <title>Options</title>
+	  <para>Options can be appended in any number after the string <literal>"options"</literal>, e.g. like:</para>
+	  <informalexample>
+	    <programlisting>
+	      foreign_function_call(lib$,"double","cos","double",2,"options","error")
+	    </programlisting>
+	  </informalexample>
+	  <para>Each option can be preceeded with the string <literal>no_</literal> to invert its meaning. As given below (i.e. with or without <literal>no_</literal>) the values represent the respective default.</para>
+	  <variablelist>
+	    <varlistentry>
+	      <term><literal>error</literal></term>
+	      <listitem>
+		<para>In case of errors (e.g. if a library cannot be found), should the function report them actively (which terminates your <application>yabasic</application>-program) ? Or should the error silently stored away for later retrieval by <function><link linkend="ref_peek2">peek$("last_foreign_function_call_okay")</link></function> and <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function> ?</para>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term><literal>no_copy_string_result</literal></term>
+	      <listitem>
+		<para>If the foreign function returns a string-value (like <literal>strstr</literal>), it should be invoked using <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, which returns a string. Now, depending on the foreign function invoked, it might be necessary to make a copy of its result before returning it to <application>yabasic</application>. In the case of <literal>strstr</literal> this is needed, because it returns just a pointer to part of its input string which will <application>yabasic</application> happily free later on, probably leading to a segfault after.</para>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term><literal>unload_library</literal></term>
+	      <listitem>
+		<para>Normally, after making a call to a foreign function, the named library is unloaded right away (see <link linkend="background_ffi">background</link>). However, sometimes (see the <link linkend="example_libcurl">example on libcurl</link>) the returned data is contained within the text of the library itself; in such cases, unloading the library would make the data inaccessible and lead to errors.</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call2</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get2</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_system">system</link></function></para>
 	</refsect1>
       </refentry>
 
- 
+      
       <refentry id="ref_foreign_function_call2">
 	<refmeta>
 	  <refentrytitle>foreign_function_call$()</refentrytitle>
@@ -4872,8 +4833,6 @@ foreign_function_size() replace-me
 	</refsect1>
       </refentry>
 
-      
-      <!-- END INSERT -->
       
       <refentry id="ref_frac">
 	<refmeta>
