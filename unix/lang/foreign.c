@@ -500,7 +500,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 
     /* set options to default values */
     opt_error = TRUE;
-    opt_copy_string_result = TRUE;
+    opt_copy_string_result = FALSE;
     opt_unload_library = TRUE; 
     
     /* pop arguments here, because the function is declared to have zero args */
