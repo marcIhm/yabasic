@@ -268,7 +268,7 @@ yabasic*font: 9x15
   <chapter id="chapter_topics_list">
     <title>All commands and functions of <application>yabasic</application> listed by topic</title>
 
-    <sect1 renderas="sect2" id="top_numbers">
+    <sect1 id="top_numbers">
       <title>Number processing and conversion</title>
       <variablelist>
 
@@ -478,91 +478,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_ffi">
-      <title>The foreign function interface</title>
-      <variablelist>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_alloc()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_dump()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_free">foreign_buffer_free()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_free()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_get">foreign_buffer_get()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_get()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_get$()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_get_buffer()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_set">foreign_buffer_set()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_set()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_size">foreign_buffer_size()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_buffer_size()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_function_call">foreign_function_call()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_function_call()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_function_call2">foreign_function_call$()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_function_call$()'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_foreign_function_size">foreign_function_size()</link></term>
-	  <listitem>
-	    <%= purpose['foreign_function_size()'] %>
-	  </listitem>
-	</varlistentry>
-		
-      </variablelist>
-    </sect1>
-
-    <sect1 renderas="sect2" id="top_conditions">
+    <sect1 id="top_conditions">
       <title>Conditions and control structures</title>
       <variablelist>
 
@@ -821,7 +737,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_data">
+    <sect1 id="top_data">
       <title>Data keeping and processing</title>
       <variablelist>
 
@@ -877,7 +793,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_strings">
+    <sect1 id="top_strings">
       <title>String processing</title>
       <variablelist>
 	
@@ -1010,7 +926,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_io">
+    <sect1 id="top_io">
       <title>File operations and printing</title>
       <variablelist>
 
@@ -1193,7 +1109,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_sub">
+    <sect1 id="top_sub">
       <title>Subroutines and libraries</title>
       <variablelist>
 
@@ -1263,7 +1179,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_outside">
+    <sect1 id="top_outside">
       <title>Invoking functionality outside of yabasic</title>
       <variablelist>
 	<varlistentry>
@@ -1282,7 +1198,7 @@ yabasic*font: 9x15
 
       </variablelist>
     </sect1>
-    <sect1 renderas="sect2" id="top_other">
+    <sect1 id="top_other">
       <title>Other commands</title>
       <variablelist>
 
@@ -1431,7 +1347,7 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
-    <sect1 renderas="sect2" id="top_graphics">
+    <sect1 id="top_graphics">
       <title>Graphics and printing</title>
       <variablelist>
 
@@ -1533,7 +1449,6 @@ yabasic*font: 9x15
 	  </listitem>
 	</varlistentry>
 
-
 	<varlistentry>
 	  <term><link linkend="ref_mousex">mousex</link></term>
 	  <listitem>
@@ -1541,14 +1456,12 @@ yabasic*font: 9x15
 	  </listitem>
 	</varlistentry>
 
-
 	<varlistentry>
 	  <term><link linkend="ref_mousey">mousey</link></term>
 	  <listitem>
 	    <%= purpose['mousey'] %>
 	  </listitem>
 	</varlistentry>
-
 
 	<varlistentry>
 	  <term><link linkend="ref_new_curve">new curve</link></term>
@@ -1602,12 +1515,97 @@ yabasic*font: 9x15
 
       </variablelist>
     </sect1>
+
+    <sect1 id="top_ffi">
+      <title>The foreign function interface</title>
+      <variablelist>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_alloc$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_dump$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_free">foreign_buffer_free()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_free()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_get">foreign_buffer_get()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_get()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_get$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_get_buffer$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_set">foreign_buffer_set()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_set()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_size">foreign_buffer_size()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_size()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_function_call">foreign_function_call()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_function_call()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_function_call2">foreign_function_call$()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_function_call$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_foreign_function_size">foreign_function_size()</link></term>
+	  <listitem>
+	    <%= purpose['foreign_function_size()'] %>
+	  </listitem>
+	</varlistentry>
+		
+      </variablelist>
+    </sect1>
+
   </chapter>
 
     <chapter id="chapter_ref_concepts">
     <title>Some features and general concepts of <application>yabasic</application></title>
     <para>This chapter presents some general concepts and terms, which deserve a description on their own, but are not associated with a single command or function in <application>yabasic</application>. Most of these topics do not lend themselves to be read alone, rather they might be read (or skimmed) as background material if an entry from the <link linkend="chapter_ref_words">alphabetical list of commands</link> refers to them.</para>
-    <sect1 renderas="sect2" id="ref_logical_shortcuts">
+    <sect1 id="ref_logical_shortcuts">
       <title>Logical shortcuts</title>
       <para><emphasis>Logical shortcuts</emphasis> are no special language construct and there is no keyword for them; they are just a way to evaluate <emphasis>logical expressions</emphasis>. Logical expressions (i.e. a series of conditions or comparisons joined by <link linkend="ref_arithmetic_and"><function>and</function></link> or <link linkend="ref_arithmetic_or"><function>or</function></link>) are only evaluated until the final result of the expression can be determined. An example:</para>
       <informalexample>
@@ -1631,7 +1629,7 @@ if (a&lt;&gt;0 and b/a&gt;2) print "b is at least twice as big as a"
       <para><quote>Nice, but whats this good for ?</quote>, I hear you say. Well, just have another look at the example, especially the second comparison (<literal>b/a&gt;2</literal>); dividing <literal>b</literal> by <literal>a</literal> is potentially hazardous: If <literal>a</literal> equals zero, the expression will cause an error and your program will terminate. To avoid this, the first part of the comparison (<literal>a&lt;&gt;0</literal>) checks, if the second one can be evaluated without risk. This pre-checking is the most common usage and primary motivation for <emphasis>logical shortcuts</emphasis> (and the reason why most programming languages implement them).</para>
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_conditions_and_expressions">
+    <sect1 id="ref_conditions_and_expressions">
       <title>Conditions and expressions</title>
       <para>Well, bottomline there is no difference or distinction between <emphasis>conditions</emphasis> and <emphasis>expressions</emphasis>, at least as <application>yabasic</application> is concerned. So you may assign the result of comparisons to variables or use an arithmetic expression or a simple variable within a condition (e.g. within an <function>if</function>-statement). So the constructs shown in the example below are all totally valid:</para>
       <informalexample>
@@ -1648,7 +1646,7 @@ if (not okay) error "Wrong, wrong !"
       <para>So conditions and expressions are really the same thing (at least as long as yabasic is concerned). Therefore the terms <wordasword>conditions</wordasword> and <wordasword>expression</wordasword> can really be used interchangeably, at least in theory. In reality the term <wordasword>condition</wordasword> is used in connection with <function>if</function> or <function>while</function> whereas the term <wordasword>expression</wordasword> tends to be used more often within arithmetic context.</para>
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_array_references">
+    <sect1 id="ref_array_references">
       <title>References on arrays</title>
       <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>. Whereas (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>.</para>
       <para>If you pass an array reference to one of your own subroutines, you need to be aware, that the subroutine will be able to modify the array you have passed in. So passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
@@ -1664,14 +1662,14 @@ array would be a time (and resource) consuming operation; passing just a referen
     </sect1>
 
 
-    <sect1 renderas="sect2" id="ref_windows_filenames">
+    <sect1 id="ref_windows_filenames">
       <title>Specifying Filenames under Windows</title>
       <para>As you probably know, windows uses the character '<literal>\</literal>' to separate the directories within a pathname; an example would be <literal>C:\yabasic\yabasic.exe</literal> (the usual location of the <application>yabasic</application> executable). However, the very same character '<literal>\</literal>' is used to construct <link linkend="ref_escape_sequences">escape sequences</link>, not only in <application>yabasic</application> but in most other programming languages.</para>
       <para>Therefore the string <literal>"C:\t.dat"</literal> does <emphasis>not</emphasis> specify the file <literal>t.dat</literal> within the directory <literal>C:</literal>; this is because the sequence '<literal>\t</literal>' is translated into the tab-character. To specify this filename, you need to use the string <literal>"C:\\t.dat"</literal> (note the double slash '<literal>\\</literal>').</para>
     </sect1>
 
 
-    <sect1 renderas="sect2" id="ref_escape_sequences">
+    <sect1 id="ref_escape_sequences">
       <title>Escape-sequences</title>
       <para><emphasis>Escape-sequences</emphasis> are the preferred way of specifying 'special' characters. They are introduced by the '\'-character and followed by one of a few regular letters, e.g. '\n' or '\r' (see the table below).</para>
       <para>Escape-sequences may occur within any string at any position; they are replaced at <emphasis>parsetime</emphasis> (opposed to <emphasis>runtime</emphasis>), i.e. as soon as <application>yabasic</application> discovers the string, with their corresponding <emphasis>special</emphasis> character. As a consequence of this <function>len("\a")</function> returns 1, because <application>yabasic</application> replaces <function>"\a"</function> with the matching special character just before the program executes.</para>
@@ -1740,7 +1738,7 @@ array would be a time (and resource) consuming operation; passing just a referen
     </sect1>
 
 
-    <sect1 renderas="sect2" id="ref_standalone">
+    <sect1 id="ref_standalone">
       <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
       <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
       <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries it does <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three bits in yabasic, that you may use:</para>
@@ -1812,7 +1810,7 @@ print "Hello World !"
     </sect1>
 
 
-    <sect1 renderas="sect2" id="ffi">
+    <sect1 id="ffi">
       <title>Interaction with functions from a non-<application>yabasic</application> library or dll</title>
 	  <note>
 	    <para>Under Unix, depending on the way <application>yabasic</application> has been built, this feature might have been disabled; the error message in this case will read like <computeroutput>this build of yabasic does not support calling foreign libraries</computeroutput>. To resolve this issue, you are invited to contact the maintainer.</para>
@@ -1840,7 +1838,6 @@ an external library; i.e. from a library, which is <emphasis>not</emphasis> writ
   <title>Types</title>
   <para>If you want to use a function from a foreign library, you will need to deal with the fact, that each function requires several parameters and returns exactly one. These parameters have a wide variety of types which need to be mapped to the two types (numbers and strings) known by <application>yabasic</application>. Here are the types available for foreign functions, grouped by the way, they are handled in <application>yabasic</application>:</para>
   <variablelist>
-    <title>Types</title>
     <varlistentry>
       <term><literal>uint8</literal>,<literal>int8</literal>,<literal>uint16</literal>,<literal>int16</literal>,<literal>uint32</literal>,<literal>int32</literal>,<literal>uint64</literal>,<literal>int64</literal>,<literal>float</literal>,<literal>double</literal>,<literal>char</literal>,<literal>short</literal>,<literal>int</literal>,<literal>long</literal></term>
     <listitem><para>In <application>C</application> all these types are used to represent numbers (integer or floating point) with various degrees of precision. When invoking <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> you need to pass strings, which specify the right type as well as the actual <application>yabasic</application>-value, which will then be converted accordingly. Which types a foreign function expects can be looked up e.g. from its manpage.</para></listitem>
@@ -2000,7 +1997,7 @@ sinfo$ = frnbf_get_buffer$(info$,8)
 # print readable version
 print frnbf_get$(sinfo$,0,10)
 </programlisting>
-<para>Please note the option <literal>no_unload_library</literal>, which is necessary, because the function <function>curl_version_info</function> returns a structure which is part of the library text and would be not available, if the library is unloaded after the call (as by default). The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine tht offset of 8 for the next call.</para>
+<para>Note the option <literal>no_unload_library</literal>, which is necessary, because the function <function>curl_version_info</function> returns a structure which is part of the library text and would be not available, if the library is unloaded after the call (as by default). The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine tht offset of 8 for the next call.</para>
 <para>On my system this program produces <computeroutput>7.61.1</computeroutput> for the version of curl.</para>
 </sect3>
 </sect2>
@@ -2014,7 +2011,7 @@ print frnbf_get$(sinfo$,0,10)
 <chapter id="chapter_ref_words">
   <title>All commands and functions of <application>yabasic</application> grouped alphabetically</title>
 
-    <sect1 renderas="sect2" id="ref_a">
+    <sect1 id="ref_a">
       <title>A</title>
 
       <refentry id="ref_abs">
@@ -2398,7 +2395,7 @@ print atan(1),atan(tan(pi)),atan(-0,-1),atan(-0,1)
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_b">
+    <sect1 id="ref_b">
       <title>B</title>
 
       <refentry id="ref_backcolor">
@@ -2659,7 +2656,7 @@ end switch
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_c">
+    <sect1 id="ref_c">
       <title>C</title>
 
       <refentry id="ref_case">
@@ -3294,7 +3291,7 @@ print cos(pi)
       </refentry>
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_d">
+    <sect1 id="ref_d">
       <title>D</title>
 
       <refentry id="ref_data">
@@ -3710,7 +3707,7 @@ loop
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_e">
+    <sect1 id="ref_e">
       <title>E</title>
 
       <refentry id="ref_else">
@@ -4310,7 +4307,7 @@ Calling subroutine baz (NOT okay) ...
       </refentry>
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_f">
+    <sect1 id="ref_f">
       <title>F</title>
 
       <refentry id="ref_false">
@@ -4505,48 +4502,48 @@ label done
 
       <refentry id="ref_foreign_buffer_alloc">
 	<refmeta>
-	  <refentrytitle>foreign_buffer_alloc()</refentrytitle>
+	  <refentrytitle>foreign_buffer_alloc$()</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>foreign_buffer_alloc()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refname>foreign_buffer_alloc$()</refname>
+	  <refpurpose>Create a new buffer for use in a foreign function call</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_alloc() replace-me
+handle$=foreign_buffer_alloc$(10)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_alloc()</function> replace-me</para>
+	  <para><function>foreign_buffer_alloc$()</function> creates a new buffer of specified size (using the <application>C</application>-function <function>malloc</function>). This buffer can then be populated by <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, passed to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> and finally freed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
  
       <refentry id="ref_foreign_buffer_dump">
 	<refmeta>
-	  <refentrytitle>foreign_buffer_dump()</refentrytitle>
+	  <refentrytitle>foreign_buffer_dump$()</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>foreign_buffer_dump()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refname>foreign_buffer_dump$()</refname>
+	  <refpurpose>return the content of a buffer as a hex-encoded string</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_dump() replace-me
+	    print foreign_buffer_dump(handle$)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_dump()</function> replace-me</para>
+	  <para><function>foreign_buffer_dump$()</function> is mostly used during development of your <application>yabasic</application> program and helps to investigate the content of a buffer; this can be helpful to find out, how a structure for a foreign function call is aggregated. To actually retrieve elements from the structure rather use <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4557,20 +4554,20 @@ foreign_buffer_dump() replace-me
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_free()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>free a foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_free() replace-me
+foreign_buffer_free(handle$)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_free()</function> replace-me</para>
+	  <para><function>foreign_buffer_free()</function> expects a handle for a buffer and frees this buffer (using the <application>C</application>-function <function>free</function>), i.e. gives this memory area back to the operating system. Any subsequent attempt to access part of this buffer (e.g. via <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>) will probably lead to an error (as will a second call to <function>foreign_buffer_free()</function>). The handle-argument must have been returned previously by <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function> or <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4594,7 +4591,7 @@ foreign_buffer_get() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4618,14 +4615,14 @@ foreign_buffer_get$() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
  
       <refentry id="ref_foreign_buffer_get_buffer">
 	<refmeta>
-	  <refentrytitle>foreign_buffer_get_buffer()</refentrytitle>
+	  <refentrytitle>foreign_buffer_get_buffer$()</refentrytitle>
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_get_buffer()</refname>
@@ -4642,7 +4639,7 @@ foreign_buffer_get_buffer() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4666,7 +4663,7 @@ foreign_buffer_set() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4690,7 +4687,7 @@ foreign_buffer_size() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4712,7 +4709,7 @@ print foreign_function_call("libtimestwo","int","timestwo","int",3)
 	  <title>Description</title>
 	  <para>The function <function>foreign_function_call</function> calls a function from an external library.</para>
 	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
-	  <para>Please see the <link linkend="ffi">section on foreign functions</link> for overview, background and more examples. For details on functionality and arguments see below.</para>
+	  <para>Please see the <link linkend="ffi">overview-section on foreign functions</link> for overview, background and more examples. For details on functionality and arguments see below.</para>
 	<para>The example uses the <function>foreign_function_call</function> to invoke the <function>cos</function>-function from the standard <application>C</application>-library (<filename>libm.so.6</filename> under Unix or <filename>msvcrt.dll</filename> under Windows).</para>	</refsect1>
 	  <refsect1>
 	  <title>Example</title>
@@ -4741,7 +4738,7 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	  <para>If the external function does not require arguments itself, the three arguments above are everything needed for <function>foreign_function_call</function>. However (as for  <function>cos</function>), if the external function itself requires arguments, than for each of its arguments, two more arguments are needed <function>foreign_function_call</function>:</para>
 	  <itemizedlist>
 	    <listitem>
-	      <para>A string describing the <emphasis>type</emphasis> of the parameter to the external function (in the example: <literal>"double"</literal>). See the <link linkend="ffi">section on foreign functions</link> for a list of all such types.</para>
+	      <para>A string describing the <emphasis>type</emphasis> of the parameter to the external function (in the example: <literal>"double"</literal>). See the <link linkend="ffi">overview-section on foreign functions</link> for a list of all such types.</para>
 	    </listitem>
 	    <listitem>
 	      <para>A value, that can be converted to the specified type (in the example: <literal>2</literal>).</para>
@@ -4781,7 +4778,7 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call2</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get2</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_system">system</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link>, <function><link linkend="ref_system">system</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4805,7 +4802,7 @@ foreign_function_call$() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4829,7 +4826,7 @@ foreign_function_size() replace-me
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">section on foreign functions</link>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get$</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call$</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function></para>
+	  <para>The <link linkend="ffi">oerview section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
@@ -4872,7 +4869,7 @@ next a
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_g">
+    <sect1 id="ref_g">
       <title>G</title>
 
       <refentry id="ref_getbit">
@@ -5111,7 +5108,7 @@ print "Hello World !"
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_h">
+    <sect1 id="ref_h">
       <title>H</title>
 
       <refentry id="ref_hex">
@@ -5154,7 +5151,7 @@ print
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_i">
+    <sect1 id="ref_i">
       <title>I</title>
 
       <refentry id="ref_if">
@@ -5542,7 +5539,7 @@ endif
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_l">
+    <sect1 id="ref_l">
       <title>L</title>
 
       <refentry id="ref_label">
@@ -5984,7 +5981,7 @@ endif
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_m">
+    <sect1 id="ref_m">
       <title>M</title>
 
       <refentry id="ref_max">
@@ -6354,7 +6351,7 @@ loop
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_n">
+    <sect1 id="ref_n">
       <title>N</title>
 
       <refentry id="ref_new_curve">
@@ -6521,7 +6518,7 @@ end sub
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_o">
+    <sect1 id="ref_o">
       <title>O</title>
 
       <refentry id="ref_on_gosub">
@@ -6939,7 +6936,7 @@ print or(14,3)
       </refentry>
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_p">
+    <sect1 id="ref_p">
       <title>P</title>
 
       <refentry id="ref_pause">
@@ -7806,7 +7803,7 @@ next x
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_r">
+    <sect1 id="ref_r">
       <title>R</title>
 
       <refentry id="ref_ran">
@@ -8366,7 +8363,7 @@ print "Read ",l," lines"
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_s">
+    <sect1 id="ref_s">
       <title>S</title>
 
       <refentry id="ref_screen">
@@ -9129,7 +9126,7 @@ print system$("dir "+d$)
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_t">
+    <sect1 id="ref_t">
       <title>T</title>
 
       <refentry id="ref_tan">
@@ -9600,7 +9597,7 @@ end sub
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_u">
+    <sect1 id="ref_u">
       <title>U</title>
 
       <refentry id="ref_until">
@@ -9723,7 +9720,7 @@ next a
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_v">
+    <sect1 id="ref_v">
       <title>V</title>
 
       <refentry id="ref_val">
@@ -9767,7 +9764,7 @@ print "You have entered ",l,"cm."
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_w">
+    <sect1 id="ref_w">
       <title>W</title>
 
       <refentry id="ref_wait">
@@ -9909,7 +9906,7 @@ circle 0,0,60
 
     </sect1>
 
-    <sect1 renderas="sect2"  id="ref_x">
+    <sect1  id="ref_x">
       <title>X</title>
 
       <refentry id="ref_xor">
@@ -9949,7 +9946,7 @@ print xor(7,4)
 
     </sect1>
 
-    <sect1 renderas="sect2" id="ref_special_characters">
+    <sect1 id="ref_special_characters">
       <title>Special characters</title>
 
       <refentry id="ref_hash">

@@ -6,8 +6,8 @@
 
   <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/xhtml/docbook.xsl"/>
   
-  <xsl:variable name="toc.section.depth">4</xsl:variable>
-  <xsl:variable name="toc.max.depth">5</xsl:variable>
+  <xsl:variable name="toc.section.depth">2</xsl:variable>
+  <xsl:variable name="toc.max.depth">2</xsl:variable>
   <xsl:variable name="toc.reference.toc">1</xsl:variable>
   <xsl:variable name="generate.section.toc.level">2</xsl:variable>
 
