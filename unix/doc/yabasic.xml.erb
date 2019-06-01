@@ -1535,14 +1535,14 @@ yabasic*font: 9x15
       <variablelist>
 
 	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc()</link></term>
+	  <term><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc$()</link></term>
 	  <listitem>
 	    <%= purpose['foreign_buffer_alloc$()'] %>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump()</link></term>
+	  <term><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump$()</link></term>
 	  <listitem>
 	    <%= purpose['foreign_buffer_dump$()'] %>
 	  </listitem>
@@ -1570,16 +1570,16 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer()</link></term>
+	  <term><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer$()</link></term>
 	  <listitem>
 	    <%= purpose['foreign_buffer_get_buffer$()'] %>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_foreign_buffer_set">foreign_buffer_set()</link></term>
+	  <term><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></term>
 	  <listitem>
-	    <%= purpose['foreign_buffer_set()'] %>
+	    <%= purpose['foreign_buffer_set'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1605,9 +1605,16 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_foreign_function_size">foreign_function_size()</link></term>
+	  <term><link linkend="ref_frn">foreign_function_size()</link></term>
 	  <listitem>
 	    <%= purpose['foreign_function_size()'] %>
+	  </listitem>
+	</varlistentry>
+		
+	<varlistentry>
+	  <term><link linkend="ref_foreign_function_size">frnbf_ and frnfn_</link></term>
+	  <listitem>
+	    <%= purpose['frnbf_ and frnfn_'] %>
 	  </listitem>
 	</varlistentry>
 		
@@ -4636,16 +4643,28 @@ print foreign_buffer_get(handle$,10,"int")
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_get$()</refname>
-	  <refpurpose>Extract a string from a foreign buffer</refpurpose>
+	  <refpurpose>extract a string from a foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_get$() replace-me
+print foreign_buffer_get$(handle$,0,12)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_get$()</function> replace-me</para>
+	  <para><function>foreign_buffer_get$()</function> retrieves a string from a foreign buffer; its areguments are</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A handle to a buffer, that has been previously filled, e.g. by a foreign function call.</para>
+	    </listitem>
+	    <listitem>
+	      <para>An offset within this buffer, where the string starts. In the common case, where the buffer can be assumed to contain a string <emphasis>only</emphasis>, this offset should be 0.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The maximum length of the expected string. This is a value not necessarily known but if the string is null-terminated (as usual) you may just specify a much larger number here.</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>Correct usage of this function requires an good understanding of the respective structure contained within the buffer.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4660,16 +4679,25 @@ foreign_buffer_get$() replace-me
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_get_buffer()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>take a buffer and construct a handle to a second buffer from its content</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_get_buffer() replace-me
+handle2$ = foreign_buffer_get_buffer(handle$,8)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_get_buffer()</function> replace-me</para>
+	  <para><function>foreign_buffer_get_buffer()</function> should be used, if a buffer (i.e. the contained structure) is known to contain a <emphasis>pointer</emphasis> to a string or another structure. <function>foreign_buffer_get_buffer()</function> then reads this pointer and transforms it into a handle, that can then be used by other functions from the <function>foreign_buffer_get</function>-family. The two arguments are:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A handle to a buffer, that has been previously filled, e.g. by a foreign function call.</para>
+	    </listitem>
+	    <listitem>
+	      <para>An offset within the buffer to the start of the buffer. A (third) length-argument is not required, because typically all pointers on a platform have the same length.</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>See the <application>libcurl</application>-example in the overview-section for an example.
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4680,20 +4708,35 @@ foreign_buffer_get_buffer() replace-me
  
       <refentry id="ref_foreign_buffer_set">
 	<refmeta>
-	  <refentrytitle>foreign_buffer_set()</refentrytitle>
+	  <refentrytitle>foreign_buffer_set</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>foreign_buffer_set()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refname>foreign_buffer_set</refname>
+	  <refpurpose>store a given value within a buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_set() replace-me
+foreign_buffer_set handle$,4,"Hello World"
+foreign_buffer_set handle$,6,"long",42
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_set()</function> replace-me</para>
+	  <para><function>foreign_buffer_set</function> can be used to populate a structure within a foreign buffer. It accepts strings (first line in synopsis) and numbers (second line in synopsis) and stores them at the given offset. The arguments are:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A handle to a buffer, that might have been just allocated or been returned from a foreign function call.</para>
+	    </listitem>
+	    <listitem>
+	      <para>An offset, specifying the first byte where the given data will be stored.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The third argument: If you want to store a string, specify it just here; if you want to store a number, specify its type (e.g. <literal>int</literal>).</para>
+	    </listitem>
+	    <listitem>
+	      <para>A fourth argument is only needed, when you want to store a number; this number needs then to be given here.</para>
+	    </listitem>
+	  </itemizedlist>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4708,16 +4751,16 @@ foreign_buffer_set() replace-me
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_size()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>return the size of the foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_size() replace-me
+size = foreign_buffer_size(handle$)
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_size()</function> replace-me</para>
+	  <para>Return the size of the given buffer; if your handle just encapsulates a null-pointer, this will return 0; if the size is not known (standard for buffers returned from a foreign function call), the size will be -1.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4741,7 +4784,7 @@ print foreign_function_call("libtimestwo","int","timestwo","int",3)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The function <function>foreign_function_call</function> calls a function from an external library.</para>
+	  <para><function>foreign_function_call</function> calls a function from an external library.</para>
 	  <para>In general, this feature is mostly useful, if you have such a library written or aquired. If you have an external command, that can be called interactively (i.e. from the commandline), you might try the <function><link linkend="ref_system">system</link></function>-function.</para>
 	  <para>Please see the <link linkend="ffi">overview-section on foreign functions</link> for overview, background and more examples. For details on functionality and arguments see below.</para>
 	<para>The example uses the <function>foreign_function_call</function> to invoke the <function>cos</function>-function from the standard <application>C</application>-library (<filename>libm.so.6</filename> under Unix or <filename>msvcrt.dll</filename> under Windows).</para>	</refsect1>
@@ -4827,12 +4870,14 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_function_call$() replace-me
+a$=foreign_function_call$("libupper","string","toupper","string","hello world")	    
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_function_call$()</function> replace-me</para>
+	  <para>This function calls a function from an external library, just like <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> (which see for most of the description). The only difference is that <function>foreign_function_call$</function> should be used when the foreign function returns a string or a structure (which itself is contained in a buffer, which is represented by a handle, which is a string).</para>
+	  <para>The arguments are just the same as in <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, only the second argument (<literal>"string"</literal> in the example above) can only be <literal>"string"</literal> or <literal>"buffer"</literal> in accord to the nature of <function>foreign_function_call$</function>, which itself must return a string.</para>
+	  <para>Among the options described at <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, the option <literal>"copy_string_result"</literal> can really only be applied here.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4847,20 +4892,44 @@ foreign_function_call$() replace-me
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_function_size()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>return the size of one of the types available for foreign function calls</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_function_size() replace-me
+offset=foreign_function_size("short")
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_function_size()</function> replace-me</para>
+	  <para>The function returns the size of any of the types available for calls to foreign functions (see the <link linkend="ffi">overview section</link> for a complete list). This is useful when calculating offsets needed for <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function> or <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">oerview section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
+	  <para>The <link linkend="ffi">overview section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
+	</refsect1>
+      </refentry>
+
+      
+      <refentry id="ref_frn">
+	<refmeta>
+	  <refentrytitle>frnbf_ and frnfn_</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>frnbf_ and frnfn_</refname>
+	  <refpurpose>Abbreviations for <literal>foreign_buffer_</literal> and <literal>foreign_function_</literal></refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print frnfn_size("short")
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The abbreviations <literal>frnbf_</literal> and <literal>frnfn_</literal> are just short for <literal>foreign_buffer_</literal> and <literal>foreign_function_</literal>; you might prefer one over the other; in any case a good editor should make it easy to replace the short form with the long one.</para>
+        </refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para>The <link linkend="ffi">overview section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
 	</refsect1>
       </refentry>
 
