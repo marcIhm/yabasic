@@ -106,6 +106,7 @@ task :copy => :templates do
     end
   end
   cp '../unix/lang/yabasic.htm', todir
+  cp '../unix/lang/docbook.css', todir
 end
 
 desc 'Remove generated html-files'

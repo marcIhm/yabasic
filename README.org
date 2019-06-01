@@ -1,12 +1,10 @@
 ***  Yabasic - A simple Basic interpreter for Unix and Windows.
 
-  Yabasic implements the most common and simple elements of the basic
-  language. It comes with goto/gosub, with various loops, with user
-  defined subroutines and Libraries. Yabasic can call out to libraries
-  written in C and allows to create standalone programs. It does 
-  simple graphics and printing. 
-  Yabasic runs under Unix and Windows, it is small, simple, 
-  open-source and free.
+  Yabasic is a traditional basic-interpreter. It comes with goto and various loops and
+  allows to define subroutines and libraries. It does simple graphics and printing.
+  Yabasic can call out to libraries written in C and allows to create standalone programs.
+  Yabasic runs under Unix and Windows and has a comprehensive documentation; it is small,
+  simple, open-source and free.
   
   If you want to write programs for yabasic, see http://www.yabasic.de for
   documentation.
