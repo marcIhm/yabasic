@@ -188,7 +188,7 @@ task :rpm => :products_dir do
       cp file, "pkg/#{yab_app_dir}"
     end
     mkdir_p "pkg/#{nano_dir}"
-    cp '../editors/yabasic.nanorc','pkg/#{nano_dir}'
+    cp 'editors/yabasic.nanorc','pkg/#{nano_dir}'
     %w( rpm deb ).each do |fmt|
       sh "fpm -f -s dir -t #{fmt} -n yabasic -v #{vs['yabasic']} -C pkg"
     end

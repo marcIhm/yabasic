@@ -2,9 +2,11 @@
 
   Yabasic implements the most common and simple elements of the basic
   language. It comes with goto/gosub, with various loops, with user
-  defined subroutines and Libraries. Yabasic does simple graphics and
-  printing. Yabasic runs under Unix and Windows, it is small, open
-  source and free.
+  defined subroutines and Libraries. Yabasic can call out to libraries
+  written in C and allows to create standalone programs. It does 
+  simple graphics and printing. 
+  Yabasic runs under Unix and Windows, it is small, simple, 
+  open-source and free.
   
   If you want to write programs for yabasic, see http://www.yabasic.de for
   documentation.
@@ -143,3 +145,4 @@
 
    See the previous chapters for a more detailed description of the
    build process.
+   
