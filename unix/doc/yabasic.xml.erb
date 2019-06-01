@@ -840,6 +840,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_rinstr">rinstr()</link></term>
+	  <listitem>
+	    <%= purpose['rinstr()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_left">left$()</link></term>
 	  <listitem>
 	    <%= purpose['left$()'] %>
@@ -906,6 +913,13 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_trim">trim$()</link></term>
 	  <listitem>
 	    <%= purpose['trim$()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_rtrim">rtrim$()</link></term>
+	  <listitem>
+	    <%= purpose['rtrim$()'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -2165,7 +2179,7 @@ print and(6,3)
 dim a(10,10),b(10)
 print arraydim(a()),arraydim(b())
           </programlisting>
-	    <para>This will print <computeroutput>2 1</computeroutput>, which are the dimension of the arrays <literal>a()</literal> and <literal>b()</literal>. You may check out the function <link linkend="ref_arraysize"><function>arraysize</function></link> for a full-fledged example.</para>
+	    <para>This will print <computeroutput>2 1</computeroutput>, which are the dimension of the arrays <literal>a()</literal> and <literal>b()</literal>. You may check out the function <link linkend="ref_arraysize"><function>arraysize</function></link> for a full example.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -2310,7 +2324,7 @@ print "The letter after ",a$," is ",chr$(asc(a$)+1)
 	    <programlisting>
 print asin(0.5),asin(sin(pi))
           </programlisting>
-	    <para>This will print <computeroutput>0.523599 -2.06823e-13</computeroutput> which is &pgr; and almost 0 respectively.</para>
+	    <para>This will print <computeroutput>0.523599 -2.06823e-13</computeroutput> which is &pgr;/6 and almost 0 respectively.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -3602,14 +3616,22 @@ rem
 doc   This program asks for a number and
 doc   prints this number multiplied with 2
 rem
-rem   Print out rhe above message
-for a=1 to arraysize(docu$()):print docu$(a):next a
+rem   Print out the above message
+rem
+for a=1 to arraysize(docu$(),1):print docu$(a):next a
 
 rem   Read and print the number
 input "Please input a number: " x
 print x*2
           </programlisting>
-	    <para>This program uses the comments within its code to print out a help message for the user.</para>
+	  <para>This program uses the comments within its code to print out a help message for the user; if you run this program, you get this output:</para>
+	  <screen>
+  This program asks for a number and
+  prints this number multiplied with 2
+Please input a number: 2
+4
+</screen>
+
 	    <para>The contents of the <function>doc</function>-lines are retrieved from the <function>docu$</function>-array; if you do not want a comment to be collected within this array, use the <function>rem</function>-statement instead.</para>
 	  </informalexample>
 	</refsect1>
@@ -4578,20 +4600,32 @@ foreign_buffer_free(handle$)
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_get()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>extract a number from a foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_get() replace-me
+print foreign_buffer_get(handle$,10,"int")
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_get()</function> replace-me</para>
-        </refsect1>
+	  <para><function>foreign_buffer_get()</function> retrieves a simple type from a buffer, that is assumed to contain a structure (see the <link linkend="ffi">overview-section</link> for the necessary background). For this it needs three arguments:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A handle to a buffer, that has been previously filled, e.g. by a foreign function call.</para>
+	    </listitem>
+	    <listitem>
+	      <para>An offset, counted in bytes from the start of the buffer, which specifies where the value can be found within the structure.</para>
+	    </listitem>
+	    <listitem>
+	      <para>A string, specifying the type of the value that should be retrieved, which for this function is always an integer type like <literal>"int"</literal>, <literal>"short"</literal> or <literal>"long"</literal>.</para>
+	    </listitem>
+	  </itemizedlist>
+	  <para>Correct usage of this function requires an good understanding of the respective structure contained within the buffer.
+	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link>, the neighbouring functions for retrieving other values from the buffer.</para>
 	</refsect1>
       </refentry>
 
@@ -4602,7 +4636,7 @@ foreign_buffer_get() replace-me
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_buffer_get$()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>Extract a string from a foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>

@@ -25,14 +25,15 @@ task :git do
   end
 end
 
-
 desc 'Put version into documentation'
 task :xml do
   version_short = vs['configure.ac'].gsub(/\.\d+$/,"")
 
+  $purpose_cnt = Hash.new(0)
   class DefinedHash < Hash # error if key is not defined
     def [](key)
       fail "Undefined key '#{key}'" unless self.key?(key)
+      $purpose_cnt[key]+=1
       super(key)
     end
   end
@@ -46,12 +47,14 @@ task :xml do
   File.open('doc/_yabasic.xml','w') do |file|
     file.write ERB.new(File.read('doc/yabasic.xml.erb')).result(binding)
   end
+  diff = purpose.keys - $purpose_cnt.keys - %w(backcolour color)
+  fail "These keys have not been used: #{diff}" if diff.length > 0
 end
 
 desc 'Create html doc from xml'
 task :html => :xml do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
-  sh 'xsltproc doc/mystyle.xsl doc/_yabasic.xml >lang/yabasic.htm'
+  sh 'xsltproc --stringparam  html.stylesheet "docbook.css" doc/mystyle.xsl doc/_yabasic.xml >lang/yabasic.htm'
 end
 
 desc 'Create man page'
