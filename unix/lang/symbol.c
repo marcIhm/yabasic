@@ -339,13 +339,12 @@ swap ()				/* swap topmost elements on stack */
 
 struct stackentry *
 push ()
-/* push element on stack and enlarge stack it */
+/* push element on stack and enlarge it */
 {
     struct stackentry *new;
 
     if (!stackhead->next) {
-        /* no next element */
-        /* create new element */
+        /* no next element, so create new element */
         new = (struct stackentry *) my_malloc (sizeof (struct stackentry));
         /* and initialize it */
         new->next = NULL;

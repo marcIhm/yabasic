@@ -4,5 +4,6 @@ info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1,"options
 print frnbf_dump$(info$,32)
 # assume, that the pointer to version string is at offset 8
 sinfo$ = frnbf_get_buffer$(info$,8)
+print sinfo$
 # print readable version
 print frnbf_get$(sinfo$,0,10)
