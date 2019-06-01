@@ -2,7 +2,6 @@ Version 2.82.1 (March 11, 2019)
   - Allowing comments after import statement
   - Fixes regarding error messages
 
-
 Version 2.82.0 (February 17, 2019)
   - Advanced version of autoconf and other tools
   - Fix in tests

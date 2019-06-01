@@ -767,6 +767,7 @@ enable_dependency_tracking
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_use_ffi
 with_x
 '
       ac_precious_vars='build_alias
@@ -1413,6 +1414,7 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --disable-use-ffi       disable use of ffi
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -13106,6 +13108,14 @@ fi
 done
 
 
+# Check whether --enable-use-ffi was given.
+if test "${enable_use_ffi+set}" = set; then :
+  enableval=$enable_use_ffi; use_ffi=${enableval}
+else
+  use_ffi=yes
+fi
+
+
 have_ffi=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing ffi_call" >&5
 $as_echo_n "checking for library containing ffi_call... " >&6; }
@@ -13258,11 +13268,13 @@ if test "x${have_dl}" = xno; then
 $as_echo "$as_me: WARNING: Did not find dlopen library and/or header, calling foreign libraries will not be possible" >&2;}
 fi
 
-if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes; then
+if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes -a "x${use_ffi}" = xyes; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: support for calling foreign libraries will be available" >&5
 $as_echo "$as_me: support for calling foreign libraries will be available" >&6;}
+    { $as_echo "$as_me:${as_lineno-$LINENO}: support for calling foreign libraries will be built into" >&5
+$as_echo "$as_me: support for calling foreign libraries will be built into" >&6;}
 
-$as_echo "#define HAVE_DL_FFI 1" >>confdefs.h
+$as_echo "#define USE_DL_FFI 1" >>confdefs.h
 
 fi
 

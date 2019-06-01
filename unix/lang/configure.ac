@@ -28,6 +28,9 @@ AC_FUNC_STRTOD
 dnl  crete define, if functions not available
 AC_CHECK_FUNCS([strerror mkstemp])
 
+dnl  allow users to disable use of ffi
+AC_ARG_ENABLE([use-ffi],[  --disable-use-ffi       disable use of ffi],[use_ffi=${enableval}],[use_ffi=yes])
+
 dnl  check for libffi, not required
 have_ffi=no
 AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
@@ -45,9 +48,10 @@ if test "x${have_dl}" = xno; then
 fi
 
 dnl  calling foreign libraries requires both dlopen and libffi
-if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes; then
+if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes -a "x${use_ffi}" = xyes; then
     AC_MSG_NOTICE([support for calling foreign libraries will be available])
-    AC_DEFINE([HAVE_DL_FFI],1,[libffi and dlopen available])
+    AC_MSG_NOTICE([support for calling foreign libraries will be built into])
+    AC_DEFINE([USE_DL_FFI],1,[libffi and dlopen available])
 fi
 
 dnl  check for curses

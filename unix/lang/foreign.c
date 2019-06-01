@@ -37,7 +37,7 @@ int last_frnfn_call_okay = 1;                       /* true, if last foreign cal
 
 /* ------------- define a stub only, if feature is not available ---------------- */
 
-#if defined(UNIX) && !defined(HAVE_DL_FFI)
+#if defined(UNIX) && !defined(USE_DL_FFI)
 void
 no_frn_error(void)
 {
@@ -53,13 +53,13 @@ double
 frnfn_size ()
 {
     no_frn_error();
-    return;
+    return 0.0;
 }
 char *
 frnbf_alloc ()
 {
     no_frn_error();
-    return;
+    return my_strdup("");
 }
 void
 frnbf_free ()
@@ -74,7 +74,7 @@ frnbf_size ()
     return 0;
 }
 char *
-frnbf_dump ()
+frnbf_dump (int type)
 {
     no_frn_error();
     return my_strdup("");
@@ -89,7 +89,7 @@ void
 frnbf_set2 ()
 {
     no_frn_error();
-    return my_strdup("");
+    return;
 }
 double
 frnbf_get ()
@@ -717,4 +717,4 @@ static void frnfn_cleanup () /* free and cleanup structures after use */
     }
 }
 
-#endif /* HAVE_DL_FFI */
+#endif /* USE_DL_FFI */

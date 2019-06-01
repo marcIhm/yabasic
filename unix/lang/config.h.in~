@@ -27,6 +27,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* libffi and dlopen available */
+#undef HAVE_DL_FFI
+
 /* Define to 1 if you have the <ffi.h> header file. */
 #undef HAVE_FFI_H
 
@@ -112,9 +115,6 @@
 
 /* architecture of build machine */
 #undef UNIX_ARCHITECTURE
-
-/* libffi and dlopen available */
-#undef USE_DL_FFI
 
 /* Version number of package */
 #undef VERSION
