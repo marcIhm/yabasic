@@ -1946,7 +1946,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 	}
         if (severity >= sERROR && !sub_dumped) {
             dump_sub (1);
-	    sub_dumped = true;
+	    sub_dumped = TRUE;
         }
     }
     if (severity > severity_so_far) severity_so_far = severity;
