@@ -5,13 +5,13 @@ Version 2.83.0 (April 29, 2019)
   - Better error messages on misaligned control structures
   - New functions external() and external$() to invoke functions
     from external c-libraries
-  - Revised the documentation
+  - Fixes for line-numbers in error messages
+  - Revised and updated the documentation
 
 
 Version 2.82.1 (March 11, 2019)
   - Allowing comments after import statement
   - Fixes regarding error messages
-
 
 Version 2.82.0 (February 17, 2019)
   - Advanced version of autoconf and other tools
