@@ -1,4 +1,5 @@
-#expect#---Error in import_error_line_number_after.yab, line 8: syntax error
+#expect#---Error in import_error_line_number_after.yab, line 9:
+#expect#---Error: syntax error
 #expect#   this does not compute :-/
 #expect#        ^~~~
 #expect#---Error: Couldn't parse program

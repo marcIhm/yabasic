@@ -1,4 +1,5 @@
-#expect#---Error in error_line_number_with_line_numbers.yab, line 7: syntax error
+#expect#---Error in error_line_number_with_line_numbers.yab, line 8:
+#expect#---Error: syntax error
 #expect#   1000 this does not compute :-/
 #expect#             ^~~~
 #expect#---Error: Couldn't parse program

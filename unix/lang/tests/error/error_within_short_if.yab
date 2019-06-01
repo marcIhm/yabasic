@@ -1,2 +1,7 @@
-#expect# Currently the wrong line is displayed
+#expect#---Error in error_within_short_if.yab, line 7:
+#expect#---Error: syntax error
+#expect#   if (2>1) this does not compute
+#expect#                 ^~~~
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
 if (2>1) this does not compute

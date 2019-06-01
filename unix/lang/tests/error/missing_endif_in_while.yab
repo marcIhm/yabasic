@@ -1,7 +1,10 @@
-#expect#---Error in missing_endif_in_while.yab, line 10: a closing endif is expected before wend
+#expect#---Error in missing_endif_in_while.yab, line 13:
+#expect#---Error: a closing endif is expected before wend
 #expect#   wend
 #expect#   ^~~~
-#expect#---Error: if-statement starting at line 9 has seen no 'endif' yet
+#expect#---Error: if-statement starting at line 12 has seen no 'endif' yet
+#expect#   wend
+#expect#   ^~~~
 #expect#---Error: Couldn't parse program
 #expect#---Error: Program not executed
 while 2<1

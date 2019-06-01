@@ -1,4 +1,5 @@
-#expect#---Error in extra_endif_on_short_if.yab, line 7: an if-statement without 'then' does not allow 'endif'
+#expect#---Error in extra_endif_on_short_if.yab, line 8:
+#expect#---Error: an if-statement without 'then' does not allow 'endif'
 #expect#   if 1<2 print "okay" endif
 #expect#                       ^~~~~
 #expect#---Error: Couldn't parse program

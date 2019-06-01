@@ -1,4 +1,10 @@
-#expect# Currently the wrong line is displayed
+#expect#1
+#expect#---Error in error_unknown_function.yab, line 9:
+#expect#---Error: can't find subroutine 'unknown'
+#expect#   unknown()
+#expect#            ^
+#expect#---Dump: sub unknown() called in error_unknown_function.yab,9
+#expect#---Error: Program stopped due to an error
 print 1
 unknown()
 print 2

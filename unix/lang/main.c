@@ -37,6 +37,7 @@ ARCHITECTURE " at " BUILD_TIME "\n\n   " COPYRIGHT "\n\n"
 
 extern int yylineno;            /* line number */
 extern int yycolumn;            /* column number */
+extern int yydoublenl;            /* column number */
 extern YYLTYPE yylloc;          /* line numbers and columns */
 extern int yyparse ();		/* call bison parser */
 extern int yydebug;             /* for bison debugging */
@@ -414,7 +415,7 @@ effective_lineno ()
     static int last_yy = -1;
     int this_yy;
     
-    this_yy = yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? 1:0);
+    this_yy = yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? (yydoublenl?2:1):0);
     if (this_yy < last_yy) {
 	return last_yy;
     } else {
@@ -1898,6 +1899,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
     char *severity_text;
     static int printed_lineno = -1;
     static char *printed_filename = NULL;
+    static int sub_dumped = false;
 
     if (severity >= severity_threshold) {
 #ifdef UNIX
@@ -1942,8 +1944,9 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 	if (filename && severity == sERROR) {
 	    show_and_mark_line (filename, lineno, first_column, last_column);
 	}
-        if (program_state == spRUNNING && severity <= sERROR && severity != sDUMP) {
+        if (severity >= sERROR && !sub_dumped) {
             dump_sub (1);
+	    sub_dumped = true;
         }
     }
     if (severity > severity_so_far) severity_so_far = severity;

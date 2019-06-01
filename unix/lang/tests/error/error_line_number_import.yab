@@ -1,4 +1,5 @@
-#expect#---Error in library4e.yab, line 1: syntax error
+#expect#---Error in library4e.yab, line 1:
+#expect#---Error: syntax error
 #expect#   a = b$
 #expect#         ^
 #expect#---Error: Couldn't parse program

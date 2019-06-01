@@ -1,2 +1,6 @@
-#expect# Currently the wrong line is displayed
+#expect#---Error in explicit_error.yab, line 6:
+#expect#---Error: explicit error
+#expect#   error "explicit error"
+#expect#                         ^
+#expect#---Error: Program stopped due to an error
 error "explicit error"

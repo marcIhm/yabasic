@@ -1686,7 +1686,8 @@ int len_of_lineno=0; /* length of last line number */
 */
 
 int yycolumn=1;
-#define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
+int yydoublenl;
+#define YY_USER_ACTION yydoublenl=false;yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 
 #define INITIAL 0
 #define PRELNO 1
@@ -2063,7 +2064,7 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-{yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+{yycolumn=1;yydoublenl=true; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
@@ -2115,12 +2116,12 @@ YY_RULE_SETUP
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;return tSEP;} /* '#' as first character may introduce comments too */
+{yycolumn=1;return tSEP;} /* hash (#) as first character may introduce comments too */
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;return tSEP;} /* ' as first character may introduce comments too */
+{yycolumn=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
 	YY_BREAK
 case 19:
 YY_RULE_SETUP

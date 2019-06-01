@@ -1,8 +1,9 @@
-#expect#---Error in error_in_subr.yab, line 15: can't find label '10' (not in this sub)
+#expect#---Error in error_in_subr.yab, line 16:
+#expect#---Error: can't find label '10' (not in this sub)
 #expect#     goto 10
 #expect#          ^~
 #expect#---Dump: sub bar() called in error_in_subr.yab,12
-#expect#---Dump: sub foo() called in error_in_subr.yab,10
+#expect#---Dump: sub foo() called in error_in_subr.yab,9
 #expect#---Error: Program stopped due to an error
 
 foo(-1)

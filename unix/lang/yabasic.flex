@@ -58,7 +58,8 @@ int len_of_lineno=0; /* length of last line number */
 */
 
 int yycolumn=1;
-#define YY_USER_ACTION yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
+int yydoublenl;
+#define YY_USER_ACTION yydoublenl=false;yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 
 %}
 
@@ -102,7 +103,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 <PASTLNO>.* {yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
 <PASTLNO>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
 
-\n\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+\n\n {yycolumn=1;yydoublenl=true; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 \n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 : {if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 
@@ -121,8 +122,8 @@ IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMP
   return tDOCU;
 }
 
-^#.*\n {yycolumn=1;return tSEP;} /* '#' as first character may introduce comments too */
-^'.*\n {yycolumn=1;return tSEP;} /* ' as first character may introduce comments too */
+^#.*\n {yycolumn=1;return tSEP;} /* hash (#) as first character may introduce comments too */
+^'.*\n {yycolumn=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
 
 EXECUTE return tEXECUTE;
 "EXECUTE$" return tEXECUTE2;

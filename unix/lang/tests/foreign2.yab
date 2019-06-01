@@ -12,7 +12,7 @@ null$ = frnbf_alloc$(0)
 now = frnfn_call(lib$,"int","time","buffer",null$)
 print "Seconds since the epoch: ",now
 if peek$("os")<>"windows" then
-  if (abs(now-val(system$("date +%s")))>-2) error "Seconds of epoche diverge"
+  if (abs(now-val(system$("date +%s")))>2) error "Seconds of epoche diverge"
 endif
 
 # localtime() requires a pointer to the time-value, so we construct a buffer for one int and put in our value
