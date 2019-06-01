@@ -334,7 +334,7 @@ frnbf_dump (int type)  /* dump a foreign buffer into readable form */
     char *dump,*d;
     int i;
 
-    if (type == fFRNBF_DUMP2) ssize = pop (stNUMBER)->value;
+    if (type == fFRNBF_DUMP2) ssize = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &psize, (void **)&ptr)) return my_strdup("");
     size = (type == fFRNBF_DUMP2) ? ssize : psize;
     d = dump = my_malloc(2*size+1);

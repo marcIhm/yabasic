@@ -1004,7 +1004,7 @@ set_program_state (int state)
 	    txt = "FINISHED";
 	    break;
 	default:
-	    sprintf (estring,"unknown program state: %d");
+	    sprintf (estring,"unknown program state: %d",state);
 	    error (sERROR,estring);
 	    return;
 	}
