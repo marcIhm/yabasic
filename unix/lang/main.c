@@ -1899,7 +1899,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
     char *severity_text;
     static int printed_lineno = -1;
     static char *printed_filename = NULL;
-    static int sub_dumped = false;
+    static int sub_dumped = FALSE;
 
     if (severity >= severity_threshold) {
 #ifdef UNIX
