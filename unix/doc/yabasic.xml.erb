@@ -2007,7 +2007,25 @@ Current year:            2019
   </sect3>
   <sect3 id="example_libcurl">
     <title>Getting the version of <application>libcurl</application></title>
-<para>This final example just invokes <application>libcurl</application> to report its version. This is somewhat involved, because the matching function <function>curl_version_info</function> (see its man-page) returns a structure, which contains a pointer to a string. Please note, that the code uses abbreviations (e.g. <function>frnfn_call</function> instead of <function>foreign_function_call</function>.</para>
+    <para>This final example just invokes <application>libcurl</application> to report its version. This is somewhat involved, because the matching function <function>curl_version_info</function> (see its man-page) returns a structure, which contains a pointer to a string, as can be seen from the structures definition:</para>
+    <programlisting>
+typedef struct {
+  CURLversion age;          /* see description below */
+  const char *version;      /* human readable string */
+  unsigned int version_num; /* numeric representation */
+  const char *host;         /* human readable string */
+  int features;             /* bitmask, see below */
+  char *ssl_version;        /* human readable string */
+  long ssl_version_num;     /* not used, always zero */
+  const char *libz_version; /* human readable string */
+  const char * const *protocols; /* protocols */
+
+  ...                       /* more lines omitted */
+  
+} curl_version_info_data;
+    </programlisting>
+<para>
+    Please note, that the <application>yabasic</application>-code below uses abbreviations (e.g. <function>frnfn_call</function> instead of <function>foreign_function_call</function>.</para>
 <programlisting>
 # Get structure with version info
 info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1,"options","no_unload_library")
@@ -2018,7 +2036,7 @@ sinfo$ = frnbf_get_buffer$(info$,8)
 # print readable version
 print frnbf_get$(sinfo$,0,10)
 </programlisting>
-<para>Note the option <literal>no_unload_library</literal>, which is necessary, because the function <function>curl_version_info</function> returns a structure which is part of the library text and would be not available, if the library is unloaded after the call (as by default). The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine tht offset of 8 for the next call.</para>
+<para>Note the option <literal>no_unload_library</literal>, which is necessary, because the function <function>curl_version_info</function> returns a structure which is part of the library text and would be not available, if the library is unloaded after the call (as by default). The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine that offset of 8 for the next call.</para>
 <para>On my system this program produces <computeroutput>7.61.1</computeroutput> for the version of curl.</para>
 </sect3>
 </sect2>
@@ -4836,7 +4854,7 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	    <varlistentry>
 	      <term><literal>error</literal></term>
 	      <listitem>
-		<para>In case of errors (e.g. if a library cannot be found), should the function report them actively (which terminates your <application>yabasic</application>-program) ? Or should the error silently stored away for later retrieval by <function><link linkend="ref_peek2">peek$("last_foreign_function_call_okay")</link></function> and <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function> ?</para>
+		<para>In case of errors (e.g. if a library cannot be found), should the function report them actively (which terminates your <application>yabasic</application>-program) ? Or should the error silently stored away for later retrieval by <function><link linkend="ref_peek">peek("last_foreign_function_call_okay")</link></function> and <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function> ?</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -7276,6 +7294,14 @@ a=peek(#1)
 	      </listitem>
 	    </varlistentry>
 
+	    <varlistentry>
+	      <term><function>peek("last_foreign_function_call_okay")</function></term>
+	      <listitem>
+		<para>Check for error: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function>peek("last_foreign_function_call_okay")</function> to find out, if something went wrong and retrieve a description with <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function>.</para>
+		<para>This peek can be abbreviated as <function>peek("last_frnfn_call_okay")</function></para>
+	      </listitem>
+	    </varlistentry>
+
 	  </variablelist>
 	</refsect1>
 	<refsect1>
@@ -7413,6 +7439,14 @@ print peek$("foo")
 		<para>Note, that <function>peek$("argument")</function> can be written as <function>peek$("arguments")</function>.</para>
 		<para>Finally you will want to check out the corresponding function <function><link linkend="ref_peek">peek("argument")</link></function>.</para>
 
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("last_foreign_function_call_error_text")</function></term>
+	      <listitem>
+		<para>Retrieve error text: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function><link linkend="ref_peek">peek("last_foreign_function_call_okay")</link></function> to find out, if something went wrong and retrieve a description with <function>peek$("last_foreign_function_call_error_text")</function>.</para>
+		<para>This peek can be abbreviated as <function>peek$("last_frnfn_call_error_text")</function></para>
 	      </listitem>
 	    </varlistentry>
 
