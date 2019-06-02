@@ -143,7 +143,8 @@ task :upload => :tag do
   Dir.chdir('/work/yabasic/products/web') do
     puts "\nUploading html-files:"
     ftp.chdir('yabasic')
-    Dir['*.html'].each do |f|
+    files = Dir['*.html'] + %w{yabasic.htm docbook.css}
+    files.each do |f|
       ftp.puttextfile(f)
       print f," "
     end
