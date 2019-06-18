@@ -70,6 +70,9 @@ if test "x${have_curses}" = xno && "x${have_ncurses}" = xno ; then
 fi
 AC_CHECK_FUNCS(getnstr)
 
+dnl  check for dladdr() function
+AC_SEARCH_LIBS([dladdr], [dl dld])
+
 dnl  check for X-Window system
 AC_PATH_XTRA
 if test "x${no_x}" = xyes ; then
