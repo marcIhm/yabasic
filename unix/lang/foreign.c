@@ -199,7 +199,7 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
 	if (ffi_ret == FFI_BAD_TYPEDEF) {
 	    sprintf(string, "invalid type specification for function '%s' from library '%s'; check arguments", funame, libname);
 	} else {
-	    sprintf(string, "unkown error when preparing function '%s' from library '%s'", funame, libname);
+	    sprintf(string, "unknown error when preparing function '%s' from library '%s'", funame, libname);
 	}
 	error(sERROR,string);
 	frnfn_cleanup ();
@@ -563,7 +563,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 		else if (!strcmp(opt_str,"unload_library"))
 		    opt_unload_library = !opt_has_no;
                 else {
-		    sprintf(estring,"options can only be 'error', 'copy_string_result' and 'unload_library', optionally preceeded by 'no_', not '%s'",opt_str);
+		    sprintf(estring,"options can only be 'error', 'copy_string_result' and 'unload_library', optionally preceded by 'no_', not '%s'",opt_str);
 		    error (sERROR,estring);
 		}
 	    }
