@@ -1,10 +1,4 @@
-Version 2.83.0 (April 29, 2019)
-  - Unix: Added a syntax-file for the nano-editor;
-    contributed by Stephan Muesse
-  - Made parentheses around condition in while and until optional
-  - Better error messages on misaligned control structures
-  - New functions external() and external$() to invoke functions
-    from external c-libraries
-  - Fixes for line-numbers in error messages
-  - Revised and updated the documentation
+Version 2.83.1 (June 26, 2019)
+  - Fix for line-numbers in errors after import
+  - Updating the manual
 

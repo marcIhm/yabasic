@@ -117,7 +117,7 @@
    term "build" (= git + rake) is described further below.
 
    - Implement some features, fix some bugs, write tests, improve the docu
-   - Under Unix build in directory unix/lang do manually:
+   - Under Unix in directory unix/lang do manually:
      - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
    - Under Unix build in directory unix, this does:
