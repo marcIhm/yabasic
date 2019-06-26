@@ -413,8 +413,13 @@ effective_lineno ()
 /* compute effective lineno for error messages; see the remark in yabasic.flex for some background */
 {
     static int last_yy = -1;
+    static struct library *lastlib = NULL;
     int this_yy;
-    
+
+    if (lastlib != currlib) {
+	last_yy = -1;
+	lastlib=currlib;
+    }
     this_yy = yylineno - currlib->yylineno_at_start + 1 - (yycolumn==1 ? (yydoublenl?2:1):0);
     if (this_yy < last_yy) {
 	return last_yy;

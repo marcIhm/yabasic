@@ -1,0 +1,8 @@
+
+# Import this library
+import library5e
+
+# Have syntax error afterwards
+x = a$
+
+
