@@ -1,5 +1,9 @@
-
-# Import this library
+#expect#---Error in error_after_import.yab, line 10:
+#expect#---Error: syntax error
+#expect#   x = a$
+#expect#         ^~
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
 import library5e
 
 # Have syntax error afterwards
