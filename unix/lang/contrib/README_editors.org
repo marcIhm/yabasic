@@ -1,0 +1,7 @@
+This dir contains two syntax files for editors, they can be copied to the
+specific directories to give you helpful highlighting while editing yabasic
+programs.
+
+- yabasic.nanorc :: syntax file for the nano editor, copy to /usr/share/nano
+- yabasic.syntax :: for mc (midnight commander), copy to /usr/share/mc/syntax
+
