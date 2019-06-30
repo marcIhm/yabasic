@@ -5,6 +5,7 @@ require 'fileutils'
 include FileUtils
 require 'erb'
 require_relative '../unix/utils.rb'
+import '../help_build.rake'
 
 start_time = Time.now
 binaries = {:lang => 'lang/Release/yabasic.exe', :setup => 'setup/Release/setup.exe', :wrapper => 'wrapper/Release/wrapper.exe' }

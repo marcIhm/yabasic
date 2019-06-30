@@ -8,6 +8,7 @@ require 'rake/testtask'
 require 'matrix'
 require_relative 'utils'
 require 'nokogiri'
+import '../help_build.rake'
 
 yab_app_dir = '/usr/local/share/applications/yabasic'
 vs=Hash.new

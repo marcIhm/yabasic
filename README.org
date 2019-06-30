@@ -114,18 +114,18 @@
 
    To build yabasic, go through the steps below. The process is mostly
    automated, only asking for confirmation at certain key-points; the
-   term "build" (= git + rake) is described further below.
+   term "g+r" (= git + rake) is described further below.
 
    - Implement some features, fix some bugs, write tests, improve the docu
    - Under Unix in directory unix/lang do manually:
      - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
-   - Under Unix build in directory unix, this does:
+   - Under Unix g+r in directory unix, this does:
      - Run tests
      - Create tar, rpm and deb
-   - Under Windows as administrator build in directory windows, this does:
+   - Under Windows as administrator g+r in directory windows, this does:
      - Create setup
-   - Under Windows build in directory web, this does:
+   - Under Windows g+r in directory web, this does:
      - Create new git tag
      - Upload to www.yabasic.de
    - Under Windows in directory web:
@@ -136,7 +136,7 @@
    Depending on your changes and desired products, you do not need to
    build on all stages however.
    
-   The tern "build" in the above list refers to these subtasks:
+   The tern "g+r" in the above list refers to these subtasks:
    - "git pull/add/commit/push" as all changes between the platforms
      unix and windows are only propagated by git
    - "rake" as all tasks are automated within the Rakefile.

@@ -7,6 +7,7 @@ require 'erb'
 require_relative '../unix/utils.rb'
 require 'net/ftp'
 require 'io/console'
+import '../help_build.rake'
 
 desc 'Check git'
 task :git do 
