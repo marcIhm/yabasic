@@ -1,4 +1,3 @@
-Version 2.83.1 (June 26, 2019)
-  - Fix for line-numbers in errors after import
-  - Updating the manual
+Version 2.83.2 (June 30, 2019)
+  - Allow specifying null-pointer for foreign functions
 
