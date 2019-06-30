@@ -2,7 +2,7 @@
 desc 'Describe building process'
 task :h do
   within = false
-  doc = File.open('../README.org').each do |line|
+  doc = File.open(%x{git rev-parse --show-toplevel}.chomp + '/README.org').each do |line|
     within = true if line.include?('building sequence') && line.start_with?('*')
     print line if within
   end

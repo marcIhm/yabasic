@@ -8,7 +8,7 @@ else
 endif
 
 # time() has a pointer argument to store the result too; we pass NULL, so only the return value is relevant
-null$ = frnbf_alloc$(0)
+null$ = frnbf_alloc$(-1)
 now = frnfn_call(lib$,"int","time","buffer",null$)
 print "Seconds since the epoch: ",now
 if peek$("os")<>"windows" then

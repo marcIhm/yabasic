@@ -1963,7 +1963,7 @@ endif
 # time() has a pointer argument to store the result (in addition to returning it)
 # we pass NULL, so only the return value is relevant
 #
-null$ = foreign_buffer_alloc$(0)
+null$ = foreign_buffer_alloc$(-1)
 now = foreign_function_call(lib$,"int","time","buffer",null$)
 print "Seconds since the epoch: ",now
 
@@ -4563,6 +4563,7 @@ handle$=foreign_buffer_alloc$(10)
 	<refsect1>
 	  <title>Description</title>
 	  <para><function>foreign_buffer_alloc$()</function> creates a new buffer of specified size (using the <application>C</application>-function <function>malloc</function>). This buffer can then be populated by <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, passed to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> and finally freed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>.</para>
+	  <para>The special value of <literal>-1</literal> can be passed to create the equivalent of a null-pointer; a value of <literal>0</literal> simply creates a buffer with 0 bytes.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
