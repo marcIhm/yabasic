@@ -174,6 +174,8 @@ end
 desc 'Create tar with sources'
 task :sources => :products_dir do
   cd 'lang' do
+    rm 'tests/bind_import'
+    rm 'tests/nested_bind_import'
     sh 'make dist-gzip'
     mv "yabasic-#{vs['yabasic']}.tar.gz", '../../products'
   end
