@@ -162,7 +162,8 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFRNFN_CALL tFRNFN_CALL2 tFRNFN_SIZE
-%token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2 tFRNBF_GET_BUFFER
+%token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
+%token tFRNBF_GET_BUFFER tFRNBF_SET_BUFFER
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
 
 %left tOR
@@ -298,6 +299,7 @@ statement:  /* empty */
   | tFRNBF_FREE string_expression {add_command(cFRNBF_FREE,NULL,NULL);}
   | tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER, NULL, NULL);} 
   | tFRNBF_SET string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
+  | tFRNBF_SET_BUFFER string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_BUFFER, NULL, NULL);} 
   ;
 
 

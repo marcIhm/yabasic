@@ -98,17 +98,24 @@ frnbf_get ()
     return 0.0;
 }
 char *
-frnbf_get2 ()  /* get a string from a foreign buffer */
+frnbf_get2 ()
 {
     no_frn_error();
     return my_strdup("");
 }
 char *
-frnbf_get_buffer ()  /* get a second buffer from a foreign buffer */
+frnbf_get_buffer () 
 {
     no_frn_error();
     return my_strdup("");
 }
+void
+frnbf_set_buffer ()
+{
+    no_frn_error();
+    return my_strdup("");
+}
+
 #else
 
 #define NUM_FFI_TYPES 16
@@ -143,7 +150,7 @@ union FFI_VAL {
 };
 
 /* ------------- local functions ---------------- */
-static int frn_check_ffi_type (char *, ffi_type **, char **, int);
+static int frn_decode_ffi_type (char *, ffi_type **, char **, int);
 static int frnfn_parse_stack ();
 static void frn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double);
 static double frn_cast_from_ffi_type (union FFI_VAL *, ffi_type *);
@@ -279,7 +286,7 @@ frnfn_size () /* return size of structure */
 {
     ffi_type *valtype;
 
-    if (!frn_check_ffi_type(pop (stSTRING)->pointer, &valtype, NULL, ktSIMPLE)) return 0.0;
+    if (!frn_decode_ffi_type(pop (stSTRING)->pointer, &valtype, NULL, ktSIMPLE)) return 0.0;
     return valtype->size;
 }
 
@@ -364,7 +371,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
     type = pop (stSTRING)->pointer;
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (!frn_check_ffi_type(type, &valtype, NULL, ktSIMPLE)) return;
+    if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return;
     if (size == -1) {
 	sprintf(estring, "size of -1 designates a null-pointer");
 	error(sERROR,estring);
@@ -390,13 +397,11 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
     char *str;
     int slen;
     int offset;
-    ffi_type *valtype; /* expected return type of function */
 
     str = pop (stSTRING)->pointer;
     slen = strlen(str);
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (!frn_check_ffi_type("string", &valtype, NULL, ktCOMPLEX)) return;
     if (size == -1) {
 	sprintf(estring, "size of -1 designates a null-pointer");
 	error(sERROR,estring);
@@ -404,11 +409,41 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
     }
     if (offset<0 || (size >= 0 && offset+slen > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
-		offset, valtype->size, size);
+		offset, slen, size);
 	error(sERROR, estring);
 	return;
     }
     strcpy((char *) ptr+offset, str);
+    
+    return;
+}
+
+
+void
+frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
+{
+    int size1,size2;
+    void *ptr1,ptr2;
+    int offset;
+    ffi_type *bufftype;
+
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size2, &ptr2)) return;
+    offset = (int) pop (stNUMBER)->value;
+    if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size1, &ptr1)) return;
+    frn_decode_ffi_type("buffer", &bufftype, NULL, ktCOMPLEX);
+    if (size1 == -1) {
+	sprintf(estring, "size of -1 designates a null-pointer");
+	error(sERROR,estring);
+	return;
+    }
+    if (offset<0 || (size >= 0 && offset+bufftype->size > size)) {
+	sprintf(estring, "overrun: offset of %d plus size of pointer = %d exceeds size of buffer %d",
+		offset, bufftype->size, size);
+	error(sERROR, estring);
+	return;
+    }
+
+    *((char **)((char *)ptr1+offset)) = (size2 == -1) ? NULL:((char *)ptr2);
     
     return;
 }
@@ -426,7 +461,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
     type = pop (stSTRING)->pointer;
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
-    if (!frn_check_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
+    if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
     if (size == -1) {
 	sprintf(estring, "size of -1 designates a null-pointer");
 	error(sERROR,estring);
@@ -558,7 +593,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 	    return FALSE;
 	}
 	if (i==0) libname=st->pointer;
-	if (i==1 && !frn_check_ffi_type (st->pointer, &rtype, &rtypetxt, ktANY)) return FALSE;
+	if (i==1 && !frn_decode_ffi_type (st->pointer, &rtype, &rtypetxt, ktANY)) return FALSE;
 	if (i==2) funame=st->pointer;
 	st = st->next;
     }
@@ -613,7 +648,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
     st = stfirstarg;
     for(i=3,j=0;i<3+2*argcnt;i+=2,st=st->next->next,j++) {
 	if (st->next->type == stSTRING) {
-	    if (!frn_check_ffi_type (st->pointer, vtypes+j, vtypestxt+j, ktCOMPLEX)) return FALSE;
+	    if (!frn_decode_ffi_type (st->pointer, vtypes+j, vtypestxt+j, ktCOMPLEX)) return FALSE;
 	    if (!strcmp(vtypestxt[j],"string")) {
 		values[j].ffipointer = (char *)st->next->pointer;
 	    } else {
@@ -625,7 +660,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 		}
 	    }
 	} else {
-	    if (!frn_check_ffi_type (st->pointer, vtypes+j, vtypestxt+j, ktSIMPLE)) return FALSE;
+	    if (!frn_decode_ffi_type (st->pointer, vtypes+j, vtypestxt+j, ktSIMPLE)) return FALSE;
             frn_cast_to_ffi_type (values+j,vtypes[j],st->next->value);
         }
 	pvalues[j] = values + j;
@@ -636,7 +671,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 
 
 static int
-frn_check_ffi_type (char *type_string, ffi_type **type_ptr, char **typetxt, int kind_of_type) /* check ffi type for correctness and maybe produce error message */
+frn_decode_ffi_type (char *type_string, ffi_type **type_ptr, char **typetxt, int kind_of_type) /* decode ffi type given by first argument (string) into second argument (pointer to a ffi_type) and maybe produce error message */
 {
     int i;
     int from, to;

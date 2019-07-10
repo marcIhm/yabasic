@@ -1232,6 +1232,7 @@ initialize (void)
     cexplanation[cPUTCHAR] = "PUTCHAR";
     cexplanation[cFRNBF_SET_NUMBER] = "FRNBF_SET_NUMBER";
     cexplanation[cFRNBF_SET_STRING] = "FRNBF_SET_STRING";
+    cexplanation[cFRNBF_SET_BUFFER] = "FRNBF_SET_BUFFER";
     cexplanation[cFRNBF_FREE] = "FRNBF_FREE";
     cexplanation[cLINE] = "LINE";
     cexplanation[cGCOLOUR] = "GCOLOUR";
@@ -1844,6 +1845,9 @@ run_it ()
 		DONE;
 	    case cFRNBF_SET_STRING:
 		frnbf_set2 ();
+		DONE;
+	    case cFRNBF_SET_BUFFER:
+		frnbf_set_buffer ();
 		DONE;
 	    case cFRNBF_FREE:
 		frnbf_free ();

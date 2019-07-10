@@ -349,6 +349,7 @@ enum cmd_type {
     cGBACKCOLOUR, cGBACKCOLOUR2, cPUTBIT, cPUTCHAR,
 
     cFRNBF_SET_NUMBER, cFRNBF_SET_STRING, cFRNBF_FREE,    /* foreign libraries */
+    cFRNBF_SET_BUFFER,
     
     cLAST_COMMAND			/* no command, just marks end of list */
 };
@@ -585,6 +586,7 @@ void frnbf_set2 (void);
 double frnbf_get (void);
 char *frnbf_get2 (void);
 char *frnbf_get_buffer (void);
+char *frnbf_set_buffer (void);
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */
