@@ -1584,6 +1584,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_foreign_buffer_set_buffer">foreign_buffer_set_buffer</link></term>
+	  <listitem>
+	    <%= purpose['foreign_buffer_set_buffer'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_foreign_buffer_size">foreign_buffer_size()</link></term>
 	  <listitem>
 	    <%= purpose['foreign_buffer_size()'] %>
@@ -2042,7 +2049,7 @@ print frnbf_get$(sinfo$,0,10)
 </sect2>
 <sect2>
   <title>See also</title>
-  	  <para><function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call2</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get2</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_system">system</link></function></para>
+  	  <para><function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, <function><link linkend="ref_foreign_function_call2">foreign_function_call2</link></function>, <function><link linkend="ref_foreign_function_size">foreign_function_size</link></function>, <function><link linkend="ref_foreign_buffer_alloc">foreign_buffer_alloc</link></function>, <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>, <function><link linkend="ref_foreign_buffer_size">foreign_buffer_size</link></function>, <function><link linkend="ref_foreign_buffer_dump">foreign_buffer_dump</link></function>, <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, <function><link linkend="ref_foreign_buffer_set_buffer">foreign_buffer_set_buffer</link></function>, <function><link linkend="ref_foreign_buffer_get">foreign_buffer_get</link></function>, <function><link linkend="ref_foreign_buffer_get2">foreign_buffer_get2</link></function>, <function><link linkend="ref_foreign_buffer_get_buffer">foreign_buffer_get_buffer</link></function>, <function><link linkend="ref_system">system</link></function></para>
 </sect2>
 </sect1>
 </chapter>
@@ -4562,8 +4569,8 @@ handle$=foreign_buffer_alloc$(10)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>foreign_buffer_alloc$()</function> creates a new buffer of specified size (using the <application>C</application>-function <function>malloc</function>). This buffer can then be populated by <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function>, passed to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> and finally freed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>.</para>
-	  <para>The special value of <literal>-1</literal> can be passed to create the equivalent of a null-pointer; a value of <literal>0</literal> simply creates a buffer with 0 bytes.</para>
+	  <para><function>foreign_buffer_alloc$()</function> creates a new buffer of specified size (using the <application>C</application>-function <function>malloc</function>). This buffer can then be populated by <function><link linkend="ref_foreign_buffer_set">foreign_buffer_set</link></function> or <function><link linkend="ref_foreign_buffer_set_buffer">foreign_buffer_set_buffer</link></function>, passed to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> and finally freed with <function><link linkend="ref_foreign_buffer_free">foreign_buffer_free</link></function>.</para>
+	  <para>The special value of <literal>-1</literal> can be passed to create the equivalent of a <emphasis>null-pointer</emphasis> in C: when your <application>yabasic</application>-program passes such a buffer to an external function, it is replaced by a null-pointer.</para>
         </refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -4754,6 +4761,41 @@ foreign_buffer_set handle$,6,"long",42
 	    </listitem>
 	    <listitem>
 	      <para>A fourth argument is only needed, when you want to store a number; this number needs then to be given here.</para>
+	    </listitem>
+	  </itemizedlist>
+        </refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para>The <link linkend="ffi">overview-section on foreign functions</link>, <link linkend="top_ffi">list of related functions and commands</link></para>
+	</refsect1>
+      </refentry>
+
+ 
+      <refentry id="ref_foreign_buffer_set_buffer">
+	<refmeta>
+	  <refentrytitle>foreign_buffer_set_buffer</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>foreign_buffer_set_buffer</refname>
+	  <refpurpose>store a pointer to one buffer within another buffer</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+foreign_buffer_set handle1$,16,handle2$
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para><function>foreign_buffer_set_buffer</function> stores a pointer (as in <application>C</application>) to a buffer within another buffer. It accepts a handle to a buffer (<literal>handle2$</literal> in the synopsis) and stores it as a pointer at the given offset within the buffer given first (<literal>handle1$</literal>). The arguments are:</para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>A handle to a buffer, that might have been just allocated or been returned from a foreign function call.</para>
+	    </listitem>
+	    <listitem>
+	      <para>An offset, specifying the first byte where the pointer to the given buffer will be stored.</para>
+	    </listitem>
+	    <listitem>
+	      <para>A handle to a buffer whose address (pointer) will be stored within the first buffer.</para>
 	    </listitem>
 	  </itemizedlist>
         </refsect1>
@@ -8966,7 +9008,7 @@ b$=str$(x,"###,###.##","_.")
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>str$</function>-function accepts a numeric argument and returns it as a string. This conversion between number and string can be controlled with the optional third argument (the <emphasis>format</emphasis> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <emphasis>C-style</emphasis> and <emphasis>basic-style</emphasis>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the C programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<literal>#</literal>'; groups of (usually three) digits may be separated with colons ('<literal>,</literal>'), the decimal dot must be marked by a literal dot ('<literal>.</literal>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</para>
+	  <para>The <function>str$</function>-function accepts a numeric argument and returns it as a string. This conversion between number and string can be controlled with the optional third argument (the <emphasis>format</emphasis> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <emphasis>C-style</emphasis> and <emphasis>basic-style</emphasis>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the <application>C</application> programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<literal>#</literal>'; groups of (usually three) digits may be separated with colons ('<literal>,</literal>'), the decimal dot must be marked by a literal dot ('<literal>.</literal>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</para>
 	  <para>Note, that for clarity, each space in the result has been replaced by the letter 'x', because it would be hard to figure out, how many spaces are produced <emphasis>exactly</emphasis> otherwise.</para>
 	  <table frame="all">
 	    <title>Examples for the format argument</title>
