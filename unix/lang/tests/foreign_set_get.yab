@@ -1,0 +1,25 @@
+#!./yabasic
+
+# put number into a buffer and read it back
+num = 127556
+buf1$ = frnbf_alloc$(32)
+frnbf_set buf1$,0,"int",num
+back = frnbf_get(buf1$,0,"int")
+print back, num
+if back<>num error "They do not match"
+
+# put number into buffer and buffer into other buffer
+buf2$ = frnbf_alloc$(32)
+frnbf_set buf2$,16,"int",num
+frnbf_set_buffer buf1$,16,buf2$
+
+# read back bunber
+buf3$ = frnbf_get_buffer$(buf1$,16)
+print buf1$,buf2$,buf3$
+back = frnbf_get(buf3$,16,"int")
+print back, num
+if back<>num error "They do not match"
+
+# clean up
+frnbf_free buf1$
+frnbf_free buf2$

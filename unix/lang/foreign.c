@@ -423,7 +423,7 @@ void
 frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 {
     int size1,size2;
-    void *ptr1,ptr2;
+    void *ptr1,*ptr2;
     int offset;
     ffi_type *bufftype;
 
@@ -436,9 +436,9 @@ frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 	error(sERROR,estring);
 	return;
     }
-    if (offset<0 || (size >= 0 && offset+bufftype->size > size)) {
+    if (offset<0 || (size1 >= 0 && offset+bufftype->size > size1)) {
 	sprintf(estring, "overrun: offset of %d plus size of pointer = %d exceeds size of buffer %d",
-		offset, bufftype->size, size);
+		offset, bufftype->size, size1);
 	error(sERROR, estring);
 	return;
     }

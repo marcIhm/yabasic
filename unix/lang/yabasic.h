@@ -586,7 +586,7 @@ void frnbf_set2 (void);
 double frnbf_get (void);
 char *frnbf_get2 (void);
 char *frnbf_get_buffer (void);
-char *frnbf_set_buffer (void);
+void frnbf_set_buffer (void);
 
 /* function.c */
 void create_exception (int);	/* create command 'exception' */
