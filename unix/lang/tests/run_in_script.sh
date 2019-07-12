@@ -6,36 +6,42 @@
 #
 
 # Prepare variables
-RAND=$RANDOM   ## $RANDOM returns a numeric random number
-EXPECTED="Echo of $RAND"
+MARKER=45367
+EXPECTED="Echo of $MARKER"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SCRIPT=$DIR/resources/in_script.sh
 
+echo "showing any existing sessions:"
+tmux list-sessions
+
 # start tmux
-tmux -u new-session -d -x 80 -y 20 -s in_script
+tmux -u new-session -d -x 80 -y 20 -s yabasic_in_script
 
 # Start script within tmux-session and supply input
-tmux send -l -t in_script $SCRIPT
-tmux send -t in_script ENTER
-tmux send -l -t in_script $RAND
-tmux send -t in_script ENTER
+tmux send-keys -l -t yabasic_in_script $SCRIPT
+tmux send-keys -t yabasic_in_script ENTER
+sleep 2
+tmux send-keys -l -t yabasic_in_script $MARKER
+tmux send-keys -t yabasic_in_script ENTER
 sleep 2
 
 # Get and compare output of script from tmux
-FOUND=`tmux capture-pane -t in_script -p`
+FOUND=`tmux capture-pane -t yabasic_in_script -p`
 grep -q "$EXPECTED" <<EOF
 $FOUND
 EOF
 RET=$?
 
 # End tmux session
-tmux kill-session -t in_script
+tmux kill-session -t yabasic_in_script
 
 # Evaluate result
 if [ $RET -ne 0 ] ; then
     echo "Did not find expected string >>$EXPECTED<<"
     echo "Found this instead:"
+    echo "-- start of found output --"
     echo $FOUND
+    echo "-- end of found output --"
     exit 1
 fi
 
