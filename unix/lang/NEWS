@@ -1,2 +1,2 @@
-Version 2.83.3 (June 30, 2019)
-  - Documentation
+Version 2.84.0 (July 12, 2019)
+  - New command foreign_buffer_set_buffer
