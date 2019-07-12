@@ -163,8 +163,11 @@ end
 
 desc 'Invoke site'
 task :default => :upload do
-  puts "Finally browsing to www.yabasic.de"
+  puts "\nBrowsing to www.yabasic.de; if satisfied you should return here to accept pushing the new tag"
   puts "Press RETURN to continue: "
   gets
   sh 'cygstart cmd /c "start microsoft-edge:http://www.yabasic.de"'
+  puts "Press RETURN to push tag: "
+  gets
+  sh '/usr/bin/git push --tags'
 end

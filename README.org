@@ -126,7 +126,7 @@
                file NEWS) will be added when creating a new tag (during do rake) below.
    - do rake :: rake (without arguments)  as all tasks are automated within the Rakefile.
 
-   Here the detailed steps:
+   Here the detailed steps (type "rake h" to read them again from any directory):
 
    - Implement some features, fix some bugs, write tests, improve the docu
    - Under Unix in directory unix/lang:
@@ -146,7 +146,6 @@
      - do rake; this does:
        - Create new git tag and use the content of NEWS as the message
        - Upload everything to www.yabasic.de
-     - git push --tags
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
           
