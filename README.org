@@ -121,9 +121,9 @@
    The list below contains two shorthands: "do git" and "do rake"; their meaning:
    
    - do git :: git pull/add/commit/push appropriately, as all changes between the platforms unix
-               and windows are only propagated by git; frequent commit messages are "new version"
-               or "build windows". A more meaningful message (taken from the file NEWS) will be
-               added when creating a new tag (during do rake) below.
+               and windows are only propagated by git; frequent commit messages are "new
+               version" or "built on windows/linux". A more meaningful message (taken from the
+               file NEWS) will be added when creating a new tag (during do rake) below.
    - do rake :: rake (without arguments)  as all tasks are automated within the Rakefile.
 
    Here the detailed steps:
