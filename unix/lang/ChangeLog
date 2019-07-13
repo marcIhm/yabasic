@@ -20,7 +20,7 @@ Version 2.83.0 (April 29, 2019)
     contributed by Stephan Muesse
   - Made parentheses around condition in while and until optional
   - Better error messages on misaligned control structures
-  - New functions external() and external$() to invoke functions
+  - New family of functions and commands foreign_* to invoke functions
     from external c-libraries
   - Fixes for line-numbers in error messages
   - Revised and updated the documentation

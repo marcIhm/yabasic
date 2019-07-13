@@ -1,2 +1,13 @@
 Version 2.84.0 (July 12, 2019)
   - New command foreign_buffer_set_buffer
+
+
+Version 2.83.0 (April 29, 2019)
+  - Unix: Added a syntax-file for the nano-editor;
+    contributed by Stephan Muesse
+  - Made parentheses around condition in while and until optional
+  - Better error messages on misaligned control structures
+  - New family of functions and commands foreign_* to invoke functions
+    from external c-libraries
+  - Fixes for line-numbers in error messages
+  - Revised and updated the documentation
