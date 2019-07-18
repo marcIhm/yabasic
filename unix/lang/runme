@@ -14,13 +14,13 @@ rm -f ./yabasic config.cache config.log config.status
 echo "===Version from configure" >>runme.log
 grep "VERSION=" configure >>runme.log 2>&1
 
-# get username
-echo "===Output of who" >>runme.log
-who -m >>runme.log 2>&1
-
-# get host information
+# get os information
 echo "===Output of uname" >>runme.log
 uname >>runme.log 2>&1
+
+# get distro information for linux
+echo "===Content of /etc/*-release" >>runme.log
+cat /etc/*-release >>runme.log 2>&1
 
 # list current file
 echo "===Files in current directory" >>runme.log
@@ -34,7 +34,7 @@ echo "===Running configure ..." | tee -a runme.log | tr -d =
 # success ?
 if [ $? -eq 0 ]
 then 
-  echo "===Trying to make yabasic ..." | tee -a runme.log | tr -d =
+  echo "===Building yabasic ..." | tee -a runme.log | tr -d =
   make >>runme.log 2>&1
   # success ?
   if [ $? -eq 0 ] 
@@ -46,18 +46,17 @@ then
     then    
       echo
       echo "===SUCCESS, you may now start yabasic from this directory" | tee -a runme.log | tr -d =
-      echo "===or install it in system by typing 'make install' (need to be root)" | tee -a runme.log | tr -d =
+      echo "===or install it by typing 'make install' (need to be root)" | tee -a runme.log | tr -d =
       echo
     else
       echo
       echo "===FAILURE, the tests have failed" | tee -a runme.log | tr -d =
-      echo "===yabasic has not been built properly !" | tee -a runme.log | tr -d =
       echo
       RC=1
     fi
   else
     echo
-    echo "===FAILURE, could not make yabasic !" | tee -a runme.log | tr -d =
+    echo "===FAILURE, could not build yabasic" | tee -a runme.log | tr -d =
     echo
     RC=2
   fi
