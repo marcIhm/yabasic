@@ -50,23 +50,19 @@ fi
 dnl  calling foreign libraries requires both dlopen and libffi
 if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes -a "x${use_ffi}" = xyes; then
     AC_MSG_NOTICE([support for calling foreign libraries will be available])
-    AC_MSG_NOTICE([support for calling foreign libraries will be built into])
     AC_DEFINE([USE_DL_FFI],1,[libffi and dlopen available])
 fi
 
 dnl  check for curses
-have_curses=no
-have_ncurses=no
-AC_SEARCH_LIBS([initscr],[curses],[have_curses=yes])
-AC_SEARCH_LIBS([initscr],[ncurses],[have_ncurses=yes])
-if test "x${have_curses}" = xyes; then
-    AC_CHECK_HEADERS([curses.h],[],[have_curses=no])
+have_curses_lib=no
+AC_SEARCH_LIBS([initscr],[curses ncurses],[have_curses_lib=yes])
+if test "x${have_curses_lib}" = xno ; then
+    AC_MSG_ERROR([Did not find curses/ncurses library])
 fi
-if test "x${have_ncurses}" = xyes; then
-    AC_CHECK_HEADERS([ncurses.h],[],[have_ncurses=no])
-fi
-if test "x${have_curses}" = xno && "x${have_ncurses}" = xno ; then
-    AC_MSG_ERROR([Did not find curses/ncurses library and header])
+have_curses_head=no
+AC_CHECK_HEADERS([curses.h ncurses.h],[have_curses_head=yes])
+if test "x${have_curses_head}" = xno ; then
+    AC_MSG_ERROR([Did not find curses/ncurses header])
 fi
 AC_CHECK_FUNCS(getnstr)
 
