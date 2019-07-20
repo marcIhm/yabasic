@@ -1917,7 +1917,7 @@ print foreign_function_call$(lib$,"string","strstr","string","foobar","string","
 	<listitem><para><application>Yabasic</application> parses the type specifications and argument values provided and collects the necessary information for <application>libffi</application>.</para></listitem>
 	<listitem><para>The named library is loaded with the appropriate call (which is different under Windows and Unix). This step might easily fail, e.g. if you misspelled the name of the library or your system cannot find the library.</para></listitem>
 	<listitem><para>With the help of <application>libffi</application> the named function is invoked.</para></listitem>
-	<listitem><para>The library that has been loaded is unloaded again.</para></listitem>
+	<listitem><para>If you specified the option <literal>unload_library</literal>, the library that has been loaded is unloaded again.</para></listitem>
 	<listitem><para>The return value of the function is converted to a form suitable for <application>yabasic</application> and your program continues.</para></listitem>
       </itemizedlist>
 <para>Errors are reported during every step.</para>
@@ -2035,7 +2035,7 @@ typedef struct {
     Please note, that the <application>yabasic</application>-code below uses abbreviations (e.g. <function>frnfn_call</function> instead of <function>foreign_function_call</function>.</para>
 <programlisting>
 # Get structure with version info
-info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1,"options","no_unload_library")
+info$ = frnfn_call$("libcurl.so.4","buffer","curl_version_info","int",1)
 # dump it for reference
 print frnbf_dump$(info$,32)
 # assume, that the pointer to version string is at offset 8
@@ -2043,7 +2043,7 @@ sinfo$ = frnbf_get_buffer$(info$,8)
 # print readable version
 print frnbf_get$(sinfo$,0,10)
 </programlisting>
-<para>Note the option <literal>no_unload_library</literal>, which is necessary, because the function <function>curl_version_info</function> returns a structure which is part of the library text and would be not available, if the library is unloaded after the call (as by default). The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine that offset of 8 for the next call.</para>
+<para>The printing of <function><link linkend="ref_foreign_buffer_dump">frnbf_dump</link></function> gives a hint on the internal offsets within the structure and helps to determine that offset of 8 for the next call.</para>
 <para>On my system this program produces <computeroutput>7.61.1</computeroutput> for the version of curl.</para>
 </sect3>
 </sect2>
@@ -4836,7 +4836,7 @@ size = foreign_buffer_size(handle$)
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_function_call()</refname>
-	  <refpurpose>call a function from a non-<application>yabasic</application> library or dll</refpurpose>
+	  <refpurpose>call a function (returning a number) from a non-<application>yabasic</application> library or dll</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -4907,9 +4907,9 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
-	      <term><literal>unload_library</literal></term>
+	      <term><literal>no_unload_library</literal></term>
 	      <listitem>
-		<para>Normally, after making a call to a foreign function, the named library is unloaded right away (see <link linkend="background_ffi">background</link>). However, sometimes (see the <link linkend="example_libcurl">example on libcurl</link>) the returned data is contained within the text of the library itself; in such cases, unloading the library would make the data inaccessible and lead to errors.</para>
+		<para>Normally, after making a call to a foreign function, the named library is kept in memory for further use (see <link linkend="background_ffi">background</link>). However, sometimes you might want to dismiss the library right after the call; then you may specify this option.</para>
 	      </listitem>
 	    </varlistentry>
 	  </variablelist>
@@ -4927,7 +4927,7 @@ print foreign_function_call(lib$,"double","cos","double",2)
 	</refmeta>
 	<refnamediv>
 	  <refname>foreign_function_call$()</refname>
-	  <refpurpose>replace-me</refpurpose>
+	  <refpurpose>call a function (returning a string or a buffer) from a non-<application>yabasic</application> library or dll</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>

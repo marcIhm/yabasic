@@ -13,7 +13,7 @@ if res_cos <> cos(2) error "foreign result of cos-function does not match"
 # for float values the results only match approximately,
 # but the string representations (with reduced precision) are equal
 if peek$("os")<>"windows" then
-  if str$(frnfn_call(lib$,"float","cosf","float",2)) <> str$(cos(2)) error "foreign result of cosf-function does not match"
+  if str$(frnfn_call(lib$,"float","cosf","float",2,"options","unload_library","copy_string_result")) <> str$(cos(2)) error "foreign result of cosf-function does not match"
 endif
 
 res_strstr$ = frnfn_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
