@@ -13,10 +13,10 @@ import '../help_build.rake'
 yab_app_dir = '/usr/local/share/applications/yabasic'
 vs=Hash.new
 vs['configure.ac']=File.new('lang/configure.ac').read.match(/AC_INIT\(\[yabasic\],\s+\[(\d\.\d+\.\d+)\]\)/)[1]
+news = News.new('lang/NEWS')
 
 desc 'Check git'
 task :git do
-  news = News.new('lang/NEWS')
   sh "git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
@@ -142,7 +142,7 @@ desc 'Collect Versions'
 task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure'] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
   vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
-  vs['NEWS']=File.new('lang/NEWS').read.match(/Version\s+(\d\.\d+.\d+)/)[1]
+  vs['NEWS']=news.version;
   pp vs
   fail "Mismatch between versions of 'yabasic' and 'yabasic.htm'" if (vs['yabasic'].to_f-vs['yabasic.htm'].to_f).abs >= 0.01
   fail "Mismatch between versions of 'yabasic' and 'configure.ac'" if vs['yabasic'] != vs['configure.ac']
@@ -151,13 +151,12 @@ end
 
 desc 'Propagate News'
 task :news => :versions do
-  news = News.new('lang/NEWS')
   cl_content = File.read('lang/ChangeLog')
   if cl_content.include?("Version #{news.version}")
     puts "ChangeLog already up to date"
   else
     File.open('lang/ChangeLog','w') do |f|
-      f.write news.as_text + "\n\n"
+      f.write news.as_text + "\n"
       f.write cl_content
       puts "Updated ChangeLog"
     end

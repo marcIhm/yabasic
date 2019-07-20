@@ -104,8 +104,8 @@ class News_para
   attr_reader :version
   
   def initialize paras
-    lines = paras.lines
-    fail "Cannot parse first line of '#{fname}': #{lines[0]}" unless lines[0]=~/^Version (\d\.\d+\.\d+) \(([^,]+), (20\d+\d)\)\s*$/;
+    lines = paras.lines.select {|l| l!~/^ +#/}
+    fail "Cannot parse line of '#{fname}': #{lines[0]}" unless lines[0]=~/^Version (\d\.\d+\.\d+) \(([^,]+), (20\d+\d)\)\s*$/;
     @version = $1
     @month_day = $2
     @year = $3
