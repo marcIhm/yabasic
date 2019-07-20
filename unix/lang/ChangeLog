@@ -1,19 +1,15 @@
 Version 2.84.0 (July 12, 2019)
   - New command foreign_buffer_set_buffer
 
-
 Version 2.83.3 (June 30, 2019)
   - Documentation
-
 
 Version 2.83.2 (June 30, 2019)
   - Allow specifying null-pointer for foreign functions
 
-
 Version 2.83.1 (June 26, 2019)
   - Fix for line-numbers in errors after import
   - Updating the manual
-
 
 Version 2.83.0 (April 29, 2019)
   - Unix: Added a syntax-file for the nano-editor;
@@ -24,7 +20,6 @@ Version 2.83.0 (April 29, 2019)
     from external c-libraries
   - Fixes for line-numbers in error messages
   - Revised and updated the documentation
-
 
 Version 2.82.1 (March 11, 2019)
   - Allowing comments after import statement
