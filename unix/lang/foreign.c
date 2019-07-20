@@ -113,7 +113,7 @@ void
 frnbf_set_buffer ()
 {
     no_frn_error();
-    return my_strdup("");
+    return;
 }
 
 #else

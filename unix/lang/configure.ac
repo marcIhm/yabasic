@@ -31,26 +31,31 @@ AC_CHECK_FUNCS([strerror mkstemp])
 dnl  allow users to disable use of ffi
 AC_ARG_ENABLE([use-ffi],[  --disable-use-ffi       disable use of ffi],[use_ffi=${enableval}],[use_ffi=yes])
 
-dnl  check for libffi, not required
-have_ffi=no
-AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
-AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
-if test "x${have_ffi}" = xno; then
-    AC_MSG_WARN([Did not find libffi library and/or header, calling foreign libraries will not be possible])
+dnl  check for libffi
+if test "x${use_ffi}" = xyes; then
+    have_ffi=no
+    AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
+    AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
+    if test "x${have_ffi}" = xno; then
+        AC_MSG_ERROR([Did not find libffi library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)])
+    fi
 fi
 
-dnl  check for dlopen, not required
-have_dlopen=no
-AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
-AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
-if test "x${have_dl}" = xno; then
-    AC_MSG_WARN([Did not find dlopen library and/or header, calling foreign libraries will not be possible])
+dnl  check for dlopen
+if test "x${use_ffi}" = xyes; then
+    have_dlopen=no
+    AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
+    AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
+    if test "x${have_dl}" = xno; then
+        AC_MSG_ERROR([Did not find dlopen library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)])
+    fi
 fi
 
 dnl  calling foreign libraries requires both dlopen and libffi
-if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes -a "x${use_ffi}" = xyes; then
-    AC_MSG_NOTICE([support for calling foreign libraries will be available])
+if test "x${use_ffi}" = xyes; then
     AC_DEFINE([USE_DL_FFI],1,[libffi and dlopen available])
+else
+    AC_MSG_NOTICE([support for calling foreign libraries will not be available])
 fi
 
 dnl  check for curses

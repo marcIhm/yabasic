@@ -13116,8 +13116,9 @@ else
 fi
 
 
-have_ffi=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing ffi_call" >&5
+if test "x${use_ffi}" = xyes; then
+    have_ffi=no
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing ffi_call" >&5
 $as_echo_n "checking for library containing ffi_call... " >&6; }
 if ${ac_cv_search_ffi_call+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -13173,7 +13174,7 @@ if test "$ac_res" != no; then :
   have_ffi=yes
 fi
 
-for ac_header in ffi.h
+    for ac_header in ffi.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "ffi.h" "ac_cv_header_ffi_h" "$ac_includes_default"
 if test "x$ac_cv_header_ffi_h" = xyes; then :
@@ -13187,13 +13188,14 @@ fi
 
 done
 
-if test "x${have_ffi}" = xno; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Did not find libffi library and/or header, calling foreign libraries will not be possible" >&5
-$as_echo "$as_me: WARNING: Did not find libffi library and/or header, calling foreign libraries will not be possible" >&2;}
+    if test "x${have_ffi}" = xno; then
+        as_fn_error $? "Did not find libffi library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)" "$LINENO" 5
+    fi
 fi
 
-have_dlopen=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
+if test "x${use_ffi}" = xyes; then
+    have_dlopen=no
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
 $as_echo_n "checking for library containing dlopen... " >&6; }
 if ${ac_cv_search_dlopen+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -13249,7 +13251,7 @@ if test "$ac_res" != no; then :
   have_dl=yes
 fi
 
-for ac_header in dlfcn.h
+    for ac_header in dlfcn.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "dlfcn.h" "ac_cv_header_dlfcn_h" "$ac_includes_default"
 if test "x$ac_cv_header_dlfcn_h" = xyes; then :
@@ -13263,17 +13265,18 @@ fi
 
 done
 
-if test "x${have_dl}" = xno; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Did not find dlopen library and/or header, calling foreign libraries will not be possible" >&5
-$as_echo "$as_me: WARNING: Did not find dlopen library and/or header, calling foreign libraries will not be possible" >&2;}
+    if test "x${have_dl}" = xno; then
+        as_fn_error $? "Did not find dlopen library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)" "$LINENO" 5
+    fi
 fi
 
-if test "x${have_dl}" = xyes -a "x${have_ffi}" = xyes -a "x${use_ffi}" = xyes; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: support for calling foreign libraries will be available" >&5
-$as_echo "$as_me: support for calling foreign libraries will be available" >&6;}
+if test "x${use_ffi}" = xyes; then
 
 $as_echo "#define USE_DL_FFI 1" >>confdefs.h
 
+else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: support for calling foreign libraries will not be available" >&5
+$as_echo "$as_me: support for calling foreign libraries will not be available" >&6;}
 fi
 
 have_curses_lib=no
