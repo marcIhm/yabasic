@@ -1551,7 +1551,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><link linkend="ref_foreign_buffer_free">foreign_buffer_free()</link></term>
 	  <listitem>
-	    <%= purpose['foreign_buffer_free()'] %>
+	    <%= purpose['foreign_buffer_free'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1881,7 +1881,7 @@ an external library; i.e. from a library, which is <emphasis>not</emphasis> writ
 </variablelist>
 </sect3>
 </sect2>
-<sect2><title>Two simple examples</title>
+<sect2><title>Three simple examples</title>
 <sect3><title>Computing the cosine</title>
 <para>This first example prints the cosine of 2, not by using <application>yabasics</application> own <function>cos</function>-function but by calling out to the standard <application>C</application>-library:</para>
 <programlisting>
@@ -1895,7 +1895,7 @@ print "cos(2): ",foreign_function_call(lib$,"double","cos","double",2)
 </programlisting>
 <para>The first lines determine the name of the library, which is different under Unix and Windows. The call to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function> than just states the name of the library, the return type (<literal>"double"</literal>) of the function and then its name (<literal>"cos"</literal>), as well as type and value (<literal>2</literal>) of its argument. The final result <computeroutput>-0.416147</computeroutput> then is the same as from the the internal <function><link linkend="ref_cos">cos</link></function>-function, which is no surprise, because <application>yabasic</application> is already statically linked to the standard <application>C</application>-library and uses its function to compute the cosine.</para>
 </sect3>
-<sect3>
+<sect3><title>Searching a string within another string</title>
 <para>A second example:</para>
 <programlisting>
 if peek$("os")="windows" then
@@ -1907,6 +1907,26 @@ endif
 print foreign_function_call$(lib$,"string","strstr","string","foobar","string","ob","options","copy_string_result")
 </programlisting>
 <para>This example calls the <function>strstr</function>-function from the standard <application>C</application>-library; this function accepts two string arguments and returns a string, which is the first (if any) appearance of the second string within the first one (remark: this function makes more sense in <application>C</application> than in <application>yabasic</application>). Please note the option <literal>"copy_string_result"</literal>, which advices <application>yabasic</application> to return a copy of the result of <function>strstr</function>; otherwise your program might crash, because <function>strstr</function> simply returns a pointer to a part of its first argument, a string that will later be freed by <application>yabasic</application>.</para>
+</sect3>
+
+<sect3><title>Showing a message box under Windows</title>
+<para>This example is windows only; it shows a standard Windows message box with the given title and message:</para>
+<programlisting>
+message_box("Hello World !","Message from yabasic")
+
+sub message_box(message$, title$)
+  msgptr$ = foreign_buffer_alloc$(len(message$)+1)
+  foreign_buffer_set msgptr$, 0, message$
+  titleptr$ = foreign_buffer_alloc$(len(title$)+1)
+  foreign_buffer_set titleptr$, 0, title$
+  hwnd$ = foreign_function_call$("user32.dll", "buffer", "GetActiveWindow")
+  ret = foreign_function_call("user32.dll", "int32", "MessageBoxA", "buffer", hwnd$, "buffer", msgptr$, "buffer", titleptr$, "uint32", 0)
+  foreign_buffer_free msgptr$
+  foreign_buffer_free titleptr$
+  return ret
+end sub
+</programlisting>
+<para>The relevant Windows-function <function>MessageBoxA</function> is found within the library <filename>user32.dll</filename>; most of the example deals with properly allocating, handling and freeing buffers to hold the supplied text-snippets. Thanx to Jean-Marc Duro for this example.</para>
 </sect3>
 </sect2>
 
@@ -4605,15 +4625,15 @@ handle$=foreign_buffer_alloc$(10)
  
       <refentry id="ref_foreign_buffer_free">
 	<refmeta>
-	  <refentrytitle>foreign_buffer_free()</refentrytitle>
+	  <refentrytitle>foreign_buffer_free</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>foreign_buffer_free()</refname>
+	  <refname>foreign_buffer_free</refname>
 	  <refpurpose>free a foreign buffer</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
-foreign_buffer_free(handle$)
+foreign_buffer_free handle$
 </synopsis>
 	</refsynopsisdiv>
 	<refsect1>
