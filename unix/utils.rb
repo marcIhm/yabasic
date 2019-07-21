@@ -78,16 +78,19 @@ end
 class News
 
   attr_reader :version
+  attr_accessor :paras
 
   def initialize fname
     @paras = []
-    paras = File.read(fname).split(/\n\s*\n/)
+    paras = File.read(fname).gsub(/^#.*$/,'').gsub(/\A(\s*\n)+/,'').split(/(?:^\s*\n)+/)
+    puts "length",paras.length
+    paras.each {|p| puts "->",p}
     paras.each { |para| @paras<<News_para.new(para) }
     @version = @paras[0].version
   end
 
   def as_text
-    @paras[0].as_text
+    @paras.map {|p| p.as_text}.join("\n\n")
   end
   
   def as_html indent
@@ -103,14 +106,15 @@ class News_para
   
   attr_reader :version
   
-  def initialize paras
-    lines = paras.lines.select {|l| l!~/^ +#/}
-    fail "Cannot parse line of '#{fname}': #{lines[0]}" unless lines[0]=~/^Version (\d\.\d+\.\d+) \(([^,]+), (20\d+\d)\)\s*$/;
+  def initialize para
+    lines = para.lines
+    fail "Cannot parse version from line: '#{lines[0]}'" unless lines[0]=~/^Version (\d\.(?:\d+|\d+\.\d+))(?: \(([^,]+), (20\d+\d)\))?\s*$/;
     @version = $1
+    puts @version
     @month_day = $2
     @year = $3
     @lines = []
-    @text = paras
+    @text = para
     lines.drop(1).each do |l|
       case l
       ## To require a fixed number of spaces makes it easier to parse correctly
@@ -119,7 +123,7 @@ class News_para
       when /^    (\S.*?)\s*$/
         @lines[-1] += "\n" + l.rstrip
       else
-        fail "Cannot parse line of '#{fname}': '#{l}'"
+        fail "Cannot parse non-version line: '#{l}'"
       end
     end
   end

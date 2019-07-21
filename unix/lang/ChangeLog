@@ -1,3 +1,8 @@
+Version 2.84.1 (July 20, 2019)
+  - Make unload_library after call the default for foreign_functions
+  - Fixes to the docu
+  - Requiring libffi for build (unless specified other by configure-option)
+
 Version 2.84.0 (July 12, 2019)
   - New command foreign_buffer_set_buffer
 
@@ -144,7 +149,7 @@ Version 2.762 (September 16, 2005)
   - Special thanks to Derek and Mike Huffmann !
 
 Version 2.76 (April 25, 2005)
-  Some major improvements for grafics
+  - Some major improvements for grafics
   - Full color support !
   - Different fonts for the text-command
   - The new command triangle
@@ -197,52 +202,57 @@ Version 2.713
   - Fixed a memory leak associated with arrays-refs
   - return from within a switch statement is now possible
 
-Version 2.712:
+Version 2.712
   - The new Option '-check' can be used to check for
     compatibility with previous versions of yabasic
   - The instr(a$,b$)-function now returns 0, if
     b$ is the empty string
 
-Version 2.710:
+Version 2.710
   - Improved the short if-statement to be more intuitive
   - Added switch-case statement
   - Better loop-control: break and continue
 
-Version 2.70:
+Version 2.70
   - Allowd hex-escapes in string constants (e.g. "\xa").
   - Better warnings for forgotten endif, endsub or next.
   - Allowed for dumping of stack of subroutine calls.
   - Various bugfixes related with: print using,token$()
     and with printing to mixed streams
 
-Version 2.690:
+Version 2.690
   - implemented logical shortcuts, i.e. conditions within
     if or while statements are only evaluated as far as needed.
   - New form of the open statement: open "foo" for reading as #1
   - New form of the open function: open(a,"foo") intended for use
     in if-statements:
-      if (not open(a,"foo")) print "Shit !"
+    if (not open(a,"foo")) print "Shit !"
   - The same time an old variant of open within if has gone:
-      if (not open a,"foo") print "Shit !"
+    if (not open a,"foo") print "Shit !"
     is no longer valid.
   - You may now write: print #a "Hello"
   - Finally: there is no distinction between expressions and conditions
     any more, i.e. wihin the condition of an if-statement you may
     now use arbitrary expressions; even something like this:
-      if (cos(x)) print "Strange"
+    if (cos(x)) print "Strange"
   - Fixed a bug with printing under Windows: The screen now scrolls up
     if the cursor has reached the bottom
 
-Version 2.681: Finished the work started with 2.680; yabasic can now
-  parse its own demo again correctly.
+Version 2.681
+  - Finished the work started with 2.680; yabasic can now
+    parse its own demo again correctly.
 
-Version 2.680: Essentially removed the distinction between expressions
-  and conditions, i.e. you may write things like this:
+Version 2.680
+  - Essentially removed the distinction between expressions
+    and conditions, i.e. you may write things like this:
     okay=(1<10) : if (okay) print "Hallo"
-  Included the man page with the distribution. Thanx to Dejan Lekic !
+    Included the man page with the distribution. Thanx to Dejan Lekic !
 
-Version 2.671: Bugfix, yabasic will now build under hpux.
+Version 2.671
+  - Bugfix, yabasic will now build under hpux.
 
-Version 2.670: Changed the scheme of version numbers: 2.67 Release 0 is now 2.670
-  Unix only: Used automake to generate Makefile.in. Therefore you now
-  have all the standard GNU make targets: make check, make install, make uninstall.
+Version 2.670
+  - Changed the scheme of version numbers: 2.67 Release 0 is now 2.670
+  - Unix only: Used automake to generate Makefile.in. Therefore you now
+    have all the standard GNU make targets: make check, make install, make uninstall.
+

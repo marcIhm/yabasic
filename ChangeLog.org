@@ -1,53 +1,43 @@
-Version 2.84.0 (July 12, 2019)
+Version 2.84.1 (July 20, 2019)
+  - Make unload_library after call the default for foreign_functions
+  - Fixes to the docu
+  - Requiring libffi for build (unless specified other by configure-option)
+\n\nVersion 2.84.0 (July 12, 2019)
   - New command foreign_buffer_set_buffer
-
-
-Version 2.83.3 (June 30, 2019)
+\n\nVersion 2.83.3 (June 30, 2019)
   - Documentation
-
-
-Version 2.83.2 (June 30, 2019)
+\n\nVersion 2.83.2 (June 30, 2019)
   - Allow specifying null-pointer for foreign functions
-
-
-Version 2.83.1 (June 26, 2019)
+\n\nVersion 2.83.1 (June 26, 2019)
   - Fix for line-numbers in errors after import
   - Updating the manual
-
-
-Version 2.83.0 (April 29, 2019)
+\n\nVersion 2.83.0 (April 29, 2019)
   - Unix: Added a syntax-file for the nano-editor;
     contributed by Stephan Muesse
   - Made parentheses around condition in while and until optional
   - Better error messages on misaligned control structures
-  - New functions external() and external$() to invoke functions
+  - New family of functions and commands foreign_* to invoke functions
     from external c-libraries
   - Fixes for line-numbers in error messages
   - Revised and updated the documentation
-
-
-Version 2.82.1 (March 11, 2019)
+\n\nVersion 2.82.1 (March 11, 2019)
   - Allowing comments after import statement
   - Fixes regarding error messages
-
-Version 2.82.0 (February 17, 2019)
+\n\nVersion 2.82.0 (February 17, 2019)
   - Advanced version of autoconf and other tools
   - Fix in tests
   - Fixed nested import of libraries
   - Libraries can now be found in the directory of the main file too
   - Error messages try to show and mark the offending part of the code
   - Hexadecimal numerical literals are supported, e.g. print 0xff
-
-Version 2.81.4 (January 27, 2019)
+\n\nVersion 2.81.4 (January 27, 2019)
   - Fixed error with inkey$ and clear screen
   - Fixed fatal error with inkey$ and upper case letters
-
-Version 2.81.3 (January 13, 2019)
+\n\nVersion 2.81.3 (January 13, 2019)
   - Fixed a compile-problem on macos
   - Corrected a rendering problem on www.yabasic.de, which had cut off the
     bottom-lines of many pages
-
-Version 2.81.2 (January 2, 2019)
+\n\nVersion 2.81.2 (January 2, 2019)
   - Fixed a problem under netbsd, which prevented yabasic from finding
     its own executable
   - Fix on macos for curses-initialization e.g. during "clear screen"
@@ -56,84 +46,66 @@ Version 2.81.2 (January 2, 2019)
   - Made the prior "Guide into the guts" available again as "Some
     remarks on changing Yabasic"; see www.yabasic.de
   - Document options for unix and windows in the same chapter
-
-Version 2.81.1 (November 1, 2018)
+\n\nVersion 2.81.1 (November 1, 2018)
   - Fix: Allow yabasic to run from within a script
-
-Version 2.81.0 (October 27, 2018)
+\n\nVersion 2.81.0 (October 27, 2018)
   - New function chomp$
   - Added new peek "interpreter_path"
   - Fixed a sporadic issue with bound programs
-
-Version 2.80.0 (September 8, 2018)
+\n\nVersion 2.80.0 (September 8, 2018)
   - Added functions floor() and ceil()
   - Checking for function clock_gettime during configure
-
-Version 2.79.2 (May 13, 2018)
+\n\nVersion 2.79.2 (May 13, 2018)
   - No changes over 2.79.1
   - Advanced patchlevel to get in line with tagging again
-
-Version 2.79.1 (May 1, 2018)
+\n\nVersion 2.79.1 (May 1, 2018)
   - Fixed error related with yydebug
-
-Version 2.79.0 (April 21, 2018)
+\n\nVersion 2.79.0 (April 21, 2018)
   - Introduced new peeks "secondsrunning" and "millisrunning"
   - Bugfixes regarding the switch statement
-
-Version 2.78.5 (April 3, 2018)
+\n\nVersion 2.78.5 (April 3, 2018)
   - Within a bound yabasic-programs the name is correctly set (as returned by peeking "program_name")
   - Introduced new string-peeks "program_name" and "program_file_name"
   - Bugfixes regarding bound programs and libraries
-
-Version 2.78.4 (March 21, 2018)
+\n\nVersion 2.78.4 (March 21, 2018)
   - Fixed a problem with bound yabasic-programs, that include more than three libraries
   - Introduced new peek "secondsrunning"
-
-Version 2.78.3 (January 21, 2018)
+\n\nVersion 2.78.3 (January 21, 2018)
   - Fixed an up to 4-times performance penalty, that has been introduced
     in a previous version
   - Brought back "Edit" to the windows context menu
-
-Version 2.78.2 (August 27, 2017)
+\n\nVersion 2.78.2 (August 27, 2017)
   - The ran()-function is now guaranteed to return 2**30
     different values
-
-Version 2.78.1 (August 13, 2017)
+\n\nVersion 2.78.1 (August 13, 2017)
   - No more dump when using color without window open
   - Processing of yabasic.xml finds hellip-entity
-
-Version 2.78.0 (January 21, 2017)
+\n\nVersion 2.78.0 (January 21, 2017)
   - Allowed for numeric argument after break
   - Fixed format of manpage
   - Reworked the switch-statement, added tests
-
-Version 2.77.3 (December 29, 2016)
+\n\nVersion 2.77.3 (December 29, 2016)
   - Fixed insecure usage of strcpy
   - Better logging for windows installer
   - Spelling corrections
-
-Version 2.77.2 (December 17, 2016)
+\n\nVersion 2.77.2 (December 17, 2016)
   - Fixes for coloured text under windows
   - msvcr140.dll is no longer required under Windows
   - Several spelling corrections
   - Updated and fixed man-page under linux
-
-Version 2.77.1 (September 7, 2016)
+\n\nVersion 2.77.1 (September 7, 2016)
   - New poke "random_seed" to initialize random number generator
   - Bugfixes and additions to documentation
   - Yabasic is now covered by the MIT License
   - Switched to semantic Versioning (e.g. 2.77.1 instead of 2.771)
   - Adopted a development workflow based on git and github
-
-Version 2.764 (January 22, 2014)
+\n\nVersion 2.764 (January 22, 2014)
   - Added support for later versions of ncurses and 64 bit Systems
   - Avoided forks for inkey$
-
-Version 2.763 (September 19, 2005)
+\n\nVersion 2.763 (September 19, 2005)
   - Tiny fix in the documentation: Sections now have
     their own toc again.
-
-Version 2.762 (September 16, 2005)
+\n\nVersion 2.762 (September 16, 2005)
   - Swapped the precedence of unary minus and exponentiation to
     follow the mainstream of programming languages. Suggested
     by Mike Hoffman.
@@ -147,14 +119,12 @@ Version 2.762 (September 16, 2005)
   - Some fixes related with the console window under Windows
   - Added a list of reserved words to the documentation.
   - Special thanks to Derek and Mike Huffmann !
-
-Version 2.76 (April 25, 2005)
-  Some major improvements for grafics
+\n\nVersion 2.76 (April 25, 2005)
+  - Some major improvements for grafics
   - Full color support !
   - Different fonts for the text-command
   - The new command triangle
-
-Version 2.75 (May 19, 2004)
+\n\nVersion 2.75 (May 19, 2004)
   - Yabasic finally has an Icon under Windows
   - The str$()-function, may now format numbers
     like 123,456.56 (or 123.456,56 for german conventions)
@@ -167,87 +137,76 @@ Version 2.75 (May 19, 2004)
     under Unix
   - Programs, that import libraries can now be
     bound, including all the imported libraries
-
-Version 2.740 (January 18, 2003)
+\n\nVersion 2.740 (January 18, 2003)
   - Implemented the bind-feature
   - More verbose messages on failing open-calls
-
-Version 2.730 (August 19, 2003)
+\n\nVersion 2.730 (August 19, 2003)
   - Complete rewrite of the documentation
   - Updated my system, which introduced new
     versions of the toolchain (gcc, autoconf, ...)
   - No changes in yabasic itself
-
-Version 2.720
+\n\nVersion 2.720
   - Added two argument version of log
   - Changed copyright notice
-
-Version 2.717
+\n\nVersion 2.717
   - Bugfix by Tom Ellestad: Better Error-
     checking for import-statement
-
-Version 2.716
+\n\nVersion 2.716
   - Bugfix: fixed 'open "foo" for reading as 1'
-
-Version 2.715
+\n\nVersion 2.715
   - Bugfix: continue is no longer disturbed by switch
     statements
   - The special option '--' stops option processing
-
-Version 2.714
+\n\nVersion 2.714
   - Bigfix: >> if (not open("bad","r")) error "!" <<
     now works as designed
-
-Version 2.713
+\n\nVersion 2.713
   - Fixed a memory leak associated with arrays-refs
   - return from within a switch statement is now possible
-
-Version 2.712:
+\n\nVersion 2.712
   - The new Option '-check' can be used to check for
     compatibility with previous versions of yabasic
   - The instr(a$,b$)-function now returns 0, if
     b$ is the empty string
-
-Version 2.710:
+\n\nVersion 2.710
   - Improved the short if-statement to be more intuitive
   - Added switch-case statement
   - Better loop-control: break and continue
-
-Version 2.70:
+\n\nVersion 2.70
   - Allowd hex-escapes in string constants (e.g. "\xa").
   - Better warnings for forgotten endif, endsub or next.
   - Allowed for dumping of stack of subroutine calls.
   - Various bugfixes related with: print using,token$()
     and with printing to mixed streams
-
-Version 2.690:
+\n\nVersion 2.690
   - implemented logical shortcuts, i.e. conditions within
     if or while statements are only evaluated as far as needed.
   - New form of the open statement: open "foo" for reading as #1
   - New form of the open function: open(a,"foo") intended for use
     in if-statements:
-      if (not open(a,"foo")) print "Shit !"
+    if (not open(a,"foo")) print "Shit !"
   - The same time an old variant of open within if has gone:
-      if (not open a,"foo") print "Shit !"
+    if (not open a,"foo") print "Shit !"
     is no longer valid.
   - You may now write: print #a "Hello"
   - Finally: there is no distinction between expressions and conditions
     any more, i.e. wihin the condition of an if-statement you may
     now use arbitrary expressions; even something like this:
-      if (cos(x)) print "Strange"
+    if (cos(x)) print "Strange"
   - Fixed a bug with printing under Windows: The screen now scrolls up
     if the cursor has reached the bottom
-
-Version 2.681: Finished the work started with 2.680; yabasic can now
-  parse its own demo again correctly.
-
-Version 2.680: Essentially removed the distinction between expressions
-  and conditions, i.e. you may write things like this:
+\n\nVersion 2.681
+  - Finished the work started with 2.680; yabasic can now
+    parse its own demo again correctly.
+\n\nVersion 2.680
+  - Essentially removed the distinction between expressions
+    and conditions, i.e. you may write things like this:
     okay=(1<10) : if (okay) print "Hallo"
-  Included the man page with the distribution. Thanx to Dejan Lekic !
+    Included the man page with the distribution. Thanx to Dejan Lekic !
+\n\nVersion 2.671
+  - Bugfix, yabasic will now build under hpux.
+\n\nVersion 2.670
+  - Changed the scheme of version numbers: 2.67 Release 0 is now 2.670
+  - Unix only: Used automake to generate Makefile.in. Therefore you now
+    have all the standard GNU make targets: make check, make install, make uninstall.
 
-Version 2.671: Bugfix, yabasic will now build under hpux.
-
-Version 2.670: Changed the scheme of version numbers: 2.67 Release 0 is now 2.670
-  Unix only: Used automake to generate Makefile.in. Therefore you now
-  have all the standard GNU make targets: make check, make install, make uninstall.
