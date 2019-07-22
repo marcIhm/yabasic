@@ -1,0 +1,10 @@
+#expect#---Error in error_null_pointer.yab, line 8:
+#expect#---Error: size of -1 designates a null-pointer, which cannot be used as a source to get or a destination to set a value
+#expect#   frnbf_set null$,0,"int",12
+#expect#                             ^~
+#expect#---Error: Program stopped due to an error
+
+null$ = frnbf_alloc$(-1)
+frnbf_set null$,0,"int",12
+
+
