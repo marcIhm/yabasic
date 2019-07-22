@@ -524,9 +524,9 @@ static int frnbf_verify_not_null(int size) /* check if destination buffer size s
     if (size == -1) {
 	sprintf(estring, "size of -1 designates a null-pointer, which cannot be used as a source to get or a destination to set a value");
 	error(sERROR,estring);
-	return false;
+	return FALSE;
     }
-    return true;
+    return TRUE;
 }
 
 static int
