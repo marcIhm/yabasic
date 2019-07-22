@@ -509,7 +509,6 @@ char *my_strndup (char *, int);	/*  own version of strndup */
 struct library *new_library (char *, char *);	/* create a new structure for library */
 char *dotify (char *, int);	/* add library name, if not already present */
 char *strip (char *);		/* strip off to minimal name */
-void do_error (struct command *);	/* issue user defined error */
 void create_docu (char *);	/* create command 'docu' */
 extern void add_variables (char *);	/* add pi and e to symbol table */
 void compile (void);		/* create a subroutine at runtime */

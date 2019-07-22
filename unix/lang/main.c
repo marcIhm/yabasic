@@ -1564,7 +1564,7 @@ run_it ()
             case cEND_SWITCH_MARK:
                 DONE;
             case cERROR:
-                do_error (current);
+		error (sERROR, pop (stSTRING)->pointer);
                 DONE;
             case cCOMPILE:
                 compile ();
@@ -2163,26 +2163,6 @@ strip (char *name)		/* strip down to minimal name */
     }
 
     return buff;
-}
-
-
-void
-do_error (struct command *cmd)	/* issue user defined error */
-{
-    struct stackentry *s;
-    struct command *r;
-
-    s = stackhead;
-    while (s != stackroot) {
-        if (s->type == stRET_ADDR_CALL) {
-            r = s->pointer;
-            cmd->line = r->line;
-            cmd->lib = r->lib;
-            break;
-        }
-        s = s->prev;
-    }
-    error (sERROR, pop (stSTRING)->pointer);
 }
 
 
