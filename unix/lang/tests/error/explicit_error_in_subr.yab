@@ -1,9 +1,9 @@
-#expect# ---Error in tests/error/explicit_error_in_subr.yab, line 11:
-#expect# ---Error: foo
-#expect#      error "foo"
-#expect#                 ^
-#expect# ---Dump: sub foo() called in tests/error/explicit_error_in_subr.yab,8
-#expect# ---Error: Program stopped due to an error
+#expect#---Error in explicit_error_in_subr.yab, line 11:
+#expect#---Error: foo
+#expect#     error "foo"
+#expect#                ^
+#expect#---Dump: sub foo() called in explicit_error_in_subr.yab,8
+#expect#---Error: Program stopped due to an error
 
 foo()
 

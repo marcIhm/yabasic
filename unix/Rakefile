@@ -28,7 +28,7 @@ desc 'Propagate News'
 news = News.new('lang/NEWS')
 clog = News.new('lang/ChangeLog')
 task :news do
-  clog.unshift if clog.version == news.version
+  clog.paras.unshift if clog.version == news.version
   clog.paras.unshift news.paras[0]
   File.open('lang/ChangeLog','w') do |f|
     f.write clog.as_text + "\n"
@@ -163,7 +163,7 @@ task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configur
 end
 
 desc 'Create directory to collect products'
-task :products_dir => :news do
+task :products_dir => [:news,:versions] do
   mkdir '../products' unless Dir.exists?('../products')
 end
 
