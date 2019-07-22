@@ -156,7 +156,8 @@ static void frn_cast_to_ffi_type (union FFI_VAL *, ffi_type *, double);
 static double frn_cast_from_ffi_type (union FFI_VAL *, ffi_type *);
 static void frnfn_cleanup ();
 static int frn_check_type_and_action(char, int, char *);
-int frnbf_parse_handle (char *, int *, void **);
+static int frnbf_parse_handle (char *, int *, void **);
+static int frnbf_verify_not_null(int);
 
 /* ------------- global variables ---------------- */
 
@@ -372,11 +373,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
     if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return;
-    if (size == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return;
-    }
+    if (!frnbf_verify_not_null(size)) return;
     if (offset<0 || ( size >= 0 && offset+valtype->size > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
@@ -402,11 +399,7 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
     slen = strlen(str);
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return;
-    if (size == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return;
-    }
+    if (!frnbf_verify_not_null(size)) return;
     if (offset<0 || (size >= 0 && offset+slen > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of string = %d exceeds size of buffer %d",
 		offset, slen, size);
@@ -431,11 +424,7 @@ frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size1, &ptr1)) return;
     frn_decode_ffi_type("buffer", &bufftype, NULL, ktCOMPLEX);
-    if (size1 == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return;
-    }
+    if (!frnbf_verify_not_null(size1)) return;
     if (offset<0 || (size1 >= 0 && offset+bufftype->size > size1)) {
 	sprintf(estring, "overrun: offset of %d plus size of pointer = %d exceeds size of buffer %d",
 		offset, bufftype->size, size1);
@@ -462,11 +451,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return 0.0;
     if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
-    if (size == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return 0.0;
-    }
+    if (!frnbf_verify_not_null(size)) return 0.0;
     if (offset<0 || (size >= 0 && offset+valtype->size > size)) {
 	sprintf(estring, "overrun: offset of %d plus size of type %s = %d exceeds size of buffer %d",
 		offset, type, valtype->size, size);
@@ -488,11 +473,7 @@ frnbf_get2 ()  /* get a string from a foreign buffer */
     len = (int) pop (stNUMBER)->value;
     offset = (int) pop (stNUMBER)->value;
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
-    if (size == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return my_strdup("");
-    }
+    if (!frnbf_verify_not_null(size)) return my_strdup("");
     if (offset<0 || (size >=0 && offset+len > size)) {
 	sprintf(estring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
 		offset, len, size);
@@ -514,11 +495,7 @@ frnbf_get_buffer ()  /* get a second buffer from a foreign buffer */
     offset = (int) pop (stNUMBER)->value;
     len = sizeof(void *);
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size, &ptr)) return my_strdup("");
-    if (size == -1) {
-	sprintf(estring, "size of -1 designates a null-pointer");
-	error(sERROR,estring);
-	return my_strdup("");
-    }
+    if (!frnbf_verify_not_null(size)) return my_strdup("");
     if (offset<0 || (size >=0 && offset+len > size)) {
 	sprintf(estring, "overrun: offset of %d plus length of string %d exceeds size of buffer %d",
 		offset, len, size);
@@ -531,7 +508,7 @@ frnbf_get_buffer ()  /* get a second buffer from a foreign buffer */
 }
 
 
-int
+static int
 frnbf_parse_handle (char *handle, int *size, void **ptr)  /* parse handle */
 {
     if (sscanf(handle, "frnbf:%d:%p", size, ptr) != 2) {
@@ -542,6 +519,15 @@ frnbf_parse_handle (char *handle, int *size, void **ptr)  /* parse handle */
     return TRUE;
 }
 
+static int frnbf_verify_not_null(int size) /* check if destination buffer size stands for a null-pointer and issue error message if appropriate */
+{
+    if (size == -1) {
+	sprintf(estring, "size of -1 designates a null-pointer, which cannot be used as a source to get or a destination to set a value");
+	error(sERROR,estring);
+	return false;
+    }
+    return true;
+}
 
 static int
 frnfn_parse_stack () /* verify and process arguments from yabasic stack into libffi structures */
@@ -651,7 +637,7 @@ frnfn_parse_stack () /* verify and process arguments from yabasic stack into lib
 	    if (!frn_decode_ffi_type (st->pointer, vtypes+j, vtypestxt+j, ktCOMPLEX)) return FALSE;
 	    if (!strcmp(vtypestxt[j],"string")) {
 		values[j].ffipointer = (char *)st->next->pointer;
-	    } else {
+	    } else {  /* buffer */
 		if (!frnbf_parse_handle ((char *)st->next->pointer, &bufsize, &bufptr)) return FALSE;
 		if (bufsize == -1) {
 		    values[j].ffipointer = NULL;
