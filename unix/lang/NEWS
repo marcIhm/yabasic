@@ -3,7 +3,7 @@
 
 Version 2.84.1 (July 20, 2019)
   - Make unload_library after call the default for foreign_functions
-  - Fixes to the docu
+  - Fixes to docu
   - Requiring libffi for build (unless specified other by configure-option)
   - explicit error no longer unwinds call-stack
 

@@ -36,8 +36,6 @@ task :news do
   end
   cp 'lang/ChangeLog', '../ChangeLog.org'
   File.open('../tag-message','w') { |f| f.write news.paras[0].as_text + "\n" }
-  puts 'Exit at will'
-  exit
 end
 
 desc 'Put version into documentation'
