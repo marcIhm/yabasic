@@ -37,7 +37,7 @@ if test "x${use_ffi}" = xyes; then
     AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
     AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
     if test "x${have_ffi}" = xno; then
-        AC_MSG_ERROR([Did not find libffi library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)])
+        AC_MSG_ERROR([Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi])
     fi
 fi
 
@@ -47,7 +47,7 @@ if test "x${use_ffi}" = xyes; then
     AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
     AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
     if test "x${have_dl}" = xno; then
-        AC_MSG_ERROR([Did not find dlopen library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)])
+        AC_MSG_ERROR([Did not find dl library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi])
     fi
 fi
 
