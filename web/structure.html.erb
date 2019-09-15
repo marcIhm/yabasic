@@ -32,7 +32,7 @@
 	  
 	</td>
 	<td>
-	  <iframe style="width: 80vw" src="<%= frame_html %>" name="content" frameborder="0" scrolling="no" onload="style.height = ( contentWindow.document.body.scrollHeight + 60 ) + 'px'; window.scrollTo(0,0);"></iframe>
+	  <iframe style="width:80vw; overflow:hidden" src="<%= frame_html %>" name="content" frameborder="0" scrolling="no" onload="style.height = ( 2 * contentWindow.document.body.scrollHeight + 100 ) + 'px'; window.scrollTo(0,0);"></iframe>
 	</td>
       </tr>
     </table>
