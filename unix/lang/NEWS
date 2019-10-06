@@ -1,6 +1,11 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.84.2 (October 6, 2019)
+  - Fixed some potential stackoverflows
+  - Removed empty dir related with nano
+  - Tests with tmux only within the Rakefile
+  
 Version 2.84.1 (July 20, 2019)
   - Make unload_library after call the default for foreign_functions
   - Fixes to docu
@@ -10,12 +15,3 @@ Version 2.84.1 (July 20, 2019)
 Version 2.84.0 (July 12, 2019)
   - New command foreign_buffer_set_buffer
 
-Version 2.83.0 (April 29, 2019)
-  - Unix: Added a syntax-file for the nano-editor;
-    contributed by Stephan Muesse
-  - Made parentheses around condition in while and until optional
-  - Better error messages on misaligned control structures
-  - New family of functions and commands foreign_* to invoke functions
-    from external c-libraries
-  - Fixes for line-numbers in error messages
-  - Revised and updated the documentation

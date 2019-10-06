@@ -136,16 +136,17 @@
      - do rake; this does:
        - Run tests
        - Create tar, rpm and deb
+     - do git
    - Under Windows as administrator (!) in directory windows:
      - do git
      - do rake; this does:
        - Build windows executable
        - Create setup.exe and zip-files
    - Under Windows in directory web: 
-     - do git
      - do rake; this does:
        - Create new git tag and use the content of NEWS as the message
        - Upload everything to www.yabasic.de
+     - do git
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
           

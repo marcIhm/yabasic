@@ -472,7 +472,7 @@ struct array {
 
 struct buff_chain {
     /* buffer chain for system-input */
-    char buff[SYSBUFFLEN + 1];	/* content of buffer */
+    char buff[PIPEBUFFLEN + 1];	/* content of buffer */
     int len;			/* used length of buff */
     struct buff_chain *next;	/* next buffer in chain */
 };

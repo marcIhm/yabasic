@@ -1,2 +1,7 @@
-#expect# To be seen
+#expect#---Error in malloc_overflow.yab, line 7:
+#expect#---Error: array too large
+#expect#   dim x(1073741824)
+#expect#                   ^
+#expect#---Error: Program stopped due to an error
+
 dim x(1073741824)

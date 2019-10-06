@@ -4140,16 +4140,16 @@ int import_lib(char *name) /* import library */
 
 FILE *open_library(char *name,char **fullreturn) /* search and open a library */
 {
-  static char full_wdir[200];
-  static char full_main[200];
-  static char full_global[200];
-  char unquoted[200];
+  static char full_wdir[NAMEBUFFLEN];
+  static char full_main[NAMEBUFFLEN];
+  static char full_global[NAMEBUFFLEN];
+  char unquoted[NAMEBUFFLEN];
   char *p;
   FILE *lib;
   int i;
 
   for(p=name;strchr(" \"'`",*p);p++) if (!*p) break;
-  strncpy(unquoted,p,200);
+  strncpy(unquoted,p,NAMEBUFFLEN);
   for(;!strchr(" \"'`",*p);p++) if (!*p) break;
   if (*p) unquoted[p-name-2]='\0';
   name=unquoted;
@@ -4166,7 +4166,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
 
   /* search in current working dir */
   if (fullreturn) *fullreturn=full_wdir;
-  strncpy(full_wdir,name,200);
+  strncpy(full_wdir,name,NAMEBUFFLEN);
   strcat(full_wdir,".yab");
   lib=fopen(full_wdir,"r");
   if (lib) return lib;
@@ -4174,7 +4174,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   /* search in dir of main file */
   if (fullreturn) *fullreturn=full_main;
   if (strchr(main_file_name,'/') || strchr(main_file_name,'\\')) {
-    strncpy(full_main,main_file_name,200);
+    strncpy(full_main,main_file_name,NAMEBUFFLEN);
   } else {
     full_main[0]='\0';
   }
@@ -4196,7 +4196,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   
   /* search in global directory */
   if (fullreturn) *fullreturn=full_global;
-  strncpy(full_global,library_path,200);
+  strncpy(full_global,library_path,NAMEBUFFLEN);
   if (full_global[0] && !strchr("\\/",full_global[strlen(full_global)-1])) {
 #ifdef UNIX
     strcat(full_global,"/");

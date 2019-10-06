@@ -1,6 +1,5 @@
-Version 2.84.1 (July 20, 2019)
-  - Make unload_library after call the default for foreign_functions
-  - Fixes to docu
-  - Requiring libffi for build (unless specified other by configure-option)
-  - explicit error no longer unwinds call-stack
+Version 2.84.2 (October 6, 2019)
+  - Fixed some potential stackoverflows
+  - Removed empty dir related with nano
+  - Tests with tmux only within the Rakefile
 
