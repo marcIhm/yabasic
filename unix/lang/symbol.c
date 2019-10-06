@@ -1042,9 +1042,18 @@ dim (struct command *cmd)	/* get room for array */
     ntotal = 1;
     for (i = 0; i < nar->dimension; i++) {
         (nar->bounds)[i] = nbounds[i];
+	if (ntotal > INT_MAX/nbounds[i]) {
+	    sprintf (string, "array index %d would cause the total size to overflow",i);
+            error (sERROR, string);
+            return;
+	}
         ntotal *= nbounds[i];
     }
     esize = (nar->type == 's') ? sizeof (char *) : sizeof (double);	/* size of one array element */
+    if (ntotal > INT_MAX/esize) {
+	error (sERROR, "array too large");
+	return;
+    }
     nar->pointer = my_malloc (ntotal * esize);
 
     if (oar) {

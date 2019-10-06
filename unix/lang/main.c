@@ -2052,6 +2052,11 @@ my_malloc (unsigned num)	/* Alloc memory and issue warning on failure */
 {
     void *room;
 
+    if (num > INT_MAX - sizeof (int)) {
+	error (sERROR, "memory allocation too large");
+	return;
+    }
+
     room = malloc (num + sizeof (int));
     if (room == NULL) {
         sprintf (string, "Can't malloc %d bytes of memory", num);
