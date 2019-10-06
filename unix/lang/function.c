@@ -981,7 +981,7 @@ static void
 store_buff (char *buff, int len)	/* store system-input buffer */
 {
     *buffcurr = my_malloc (sizeof (struct buff_chain));
-    memcpy ((*buffcurr)->buff, buff, SYSBUFFLEN + 1);
+    memcpy ((*buffcurr)->buff, buff, PIPEBUFFLEN + 1);
     (*buffcurr)->len = len;
     (*buffcurr)->next = NULL;
     buffcurr = &((*buffcurr)->next);
@@ -996,11 +996,11 @@ recall_buff ()			/* recall store buffer */
     char *result;
     int done, len;
 
-    result = (char *) my_malloc (buffcount * (SYSBUFFLEN + 1));
+    result = (char *) my_malloc (buffcount * (PIPEBUFFLEN + 1));
     curr = buffroot;
     len = 0;
     for (done = 0; done < buffcount && curr; done++) {
-        memcpy (result + len, curr->buff, SYSBUFFLEN);
+        memcpy (result + len, curr->buff, PIPEBUFFLEN);
         len += curr->len;
         old = curr;
         curr = curr->next;
@@ -1013,7 +1013,7 @@ recall_buff ()			/* recall store buffer */
 static char *
 do_system2 (char *cmd)		/* hand over execution of command to system, return output as string */
 {
-    static char buff[SYSBUFFLEN + 1];	/* buffer to store command */
+    static char buff[PIPEBUFFLEN + 1];	/* buffer to store command */
     int len;			/* number of bytes read */
 #ifdef UNIX
     FILE *p;			/* points to pipe */
@@ -1039,7 +1039,7 @@ do_system2 (char *cmd)		/* hand over execution of command to system, return outp
     }
     do {
         len = 0;
-        while (len < SYSBUFFLEN) {
+        while (len < PIPEBUFFLEN) {
             c = fgetc (p);
             if (c == EOF) {
                 buff[len] = '\0';
@@ -1084,7 +1084,7 @@ do_system2 (char *cmd)		/* hand over execution of command to system, return outp
 
     do {
         /* wait for output to arrive */
-        if (!ReadFile (piperead, buff, SYSBUFFLEN, (LPDWORD) & len, NULL)) {
+        if (!ReadFile (piperead, buff, PIPEBUFFLEN, (LPDWORD) & len, NULL)) {
             ret = GetLastError ();
         } else {
             ret = 0;

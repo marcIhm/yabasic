@@ -201,15 +201,20 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
 void
 create_subr_link (char *label)	/* create link to subroutine */
 {
-    char global[200];
+    char global[NAMEBUFFLEN];
     char *dot;
     struct command *cmd;
 
     if (!inlib) {
-	error(sDEBUG, "not in library, will not create link to subroutine");
+	if (severity_threshold <= sDEBUG)
+	    error (sDEBUG, "not in library, will not create link to subroutine");
         return;
     }
     dot = strchr (label, '.');
+    if (strlen (library_stack[include_depth-1]->short_name) + strlen (dot) >= NAMEBUFFLEN) {
+	error (sERROR, "Name of function too long");
+	return;
+    }
     strcpy (global, library_stack[include_depth-1]->short_name);
     strcat (global, dot);
 

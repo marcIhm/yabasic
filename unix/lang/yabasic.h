@@ -248,8 +248,9 @@ void collect_missing_clauses(char *, char);
 #endif
 
 /* length of buffers for system() and input */
-#define SYSBUFFLEN 100
-#define INBUFFLEN 10000
+#define PIPEBUFFLEN 1000   /* writing into pipes, e.g. for system$ */
+#define INBUFFLEN 10000 /* user input */
+#define NAMEBUFFLEN 200 /* names chosen by user */
 
 
 /* ---------------------- enum types ------------------------------- */

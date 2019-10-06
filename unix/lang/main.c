@@ -97,8 +97,8 @@ static int exitcode = 0;
 static int signal_arrived = 0;
 /* timing */
 long long int compilation_start, compilation_end, execution_end;
-char library_path[200];		/* full path to search libraries */
-char library_default[200];	/* default full path to search libraries */
+char library_path[NAMEBUFFLEN];		/* full path to search libraries */
+char library_default[NAMEBUFFLEN];	/* default full path to search libraries */
 static struct command *docuhead = NULL;	/* first docu in main */
 static int docucount = 0;	/* number of docu-lines in array */
 int check_compat = 0;		/* true, if compatibility should be checked */
@@ -2131,17 +2131,17 @@ new_library (char *long_name, char *short_name)  	/* create a new structure for 
 char *
 dotify (char *name, int addfun)	/* add library name, if not already present */
 {
-    static char buff[200];
+    static char buff[NAMEBUFFLEN];
     if (!strchr (name, '.')) {
-	strncpy (buff, currlib->short_name, 200);
-        strncat (buff, ".", 200-1-strlen(buff));
-        strncat (buff, name, 200-1-strlen(buff));
+	strncpy (buff, currlib->short_name, NAMEBUFFLEN);
+        strncat (buff, ".", NAMEBUFFLEN-1-strlen(buff));
+        strncat (buff, name, NAMEBUFFLEN-1-strlen(buff));
     } else {
-        strncpy (buff, name, 200);
+        strncpy (buff, name, NAMEBUFFLEN);
     }
     if (addfun && !strchr (name, '@')) {
-        strncat (buff, "@", 200-1-strlen(buff));
-        strncat (buff, current_function, 200-1-strlen(buff));
+        strncat (buff, "@", NAMEBUFFLEN-1-strlen(buff));
+        strncat (buff, current_function, NAMEBUFFLEN-1-strlen(buff));
     }
     return buff;
 }
@@ -2150,7 +2150,7 @@ dotify (char *name, int addfun)	/* add library name, if not already present */
 char *
 strip (char *name)		/* strip down to minimal name */
 {
-    static char buff[300];
+    static char buff[NAMEBUFFLEN];
     char *at, *dot;
 
     if (severity_threshold <= sDEBUG) {
@@ -2158,9 +2158,9 @@ strip (char *name)		/* strip down to minimal name */
     }
     dot = strchr (name, '.');
     if (dot) {
-        strncpy (buff, dot + 1, 300);
+        strncpy (buff, dot + 1, NAMEBUFFLEN);
     } else {
-        strncpy (buff, name, 300);
+        strncpy (buff, name, NAMEBUFFLEN);
     }
     at = strchr (buff, '@');
     if (at) {

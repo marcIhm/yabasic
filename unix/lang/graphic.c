@@ -1208,7 +1208,7 @@ change_colour (struct command *cmd)
 #ifdef UNIX
     int pixel;
     int ret;
-    char xerr[200];
+    char xerr[NAMEBUFFLEN];
 #else
 #endif
 
@@ -2230,8 +2230,8 @@ openprinter (struct command *cmd)
 {
     /* opens a printer */
 #ifdef WINDOWS
-    char PrinterName[200];	/* Name of default Printer */
-    char *p;			/* points into PrinterName */
+    char PrinterName[NAMEBUFFLEN]; /* Name of default Printer */
+    char *p;			  /* points into PrinterName */
     static int first = TRUE;
     DOCINFO di;
     float width, height, prnscalex, prnscaley;
@@ -2303,7 +2303,7 @@ openprinter (struct command *cmd)
     if (first) {
 
         /* query win.ini for default printer */
-        GetProfileString ("windows", "device", ",,,", PrinterName, 200);
+        GetProfileString ("windows", "device", ",,,", PrinterName, NAMEBUFFLEN);
 
         /* truncate printer name */
         p = PrinterName;

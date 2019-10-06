@@ -689,7 +689,7 @@ void
 myopen(struct command *cmd)	/* open specified file for given name */
 {
 #ifdef WINDOWS
-    char PrinterName[200];	/* Name of default Printer */
+    char PrinterName[NAMEBUFFLEN];	/* Name of default Printer */
     char *n;			/* points into PrinterName */
     DOC_INFO_1 di;
 #endif
@@ -783,7 +783,7 @@ myopen(struct command *cmd)	/* open specified file for given name */
         }
 #else
         /* query win.ini for default printer */
-        GetProfileString ("windows", "device", ",,,", PrinterName, 200);
+        GetProfileString ("windows", "device", ",,,", PrinterName, NAMEBUFFLEN);
 
         /* truncate printer name */
         n = PrinterName;
