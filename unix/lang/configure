@@ -13189,7 +13189,7 @@ fi
 done
 
     if test "x${have_ffi}" = xno; then
-        as_fn_error $? "Did not find libffi library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)" "$LINENO" 5
+        as_fn_error $? "Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi" "$LINENO" 5
     fi
 fi
 
@@ -13266,7 +13266,7 @@ fi
 done
 
     if test "x${have_dl}" = xno; then
-        as_fn_error $? "Did not find dlopen library and/or header (supply '--disable-use-ffi' to built anyway and without ffi)" "$LINENO" 5
+        as_fn_error $? "Did not find dl library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi" "$LINENO" 5
     fi
 fi
 

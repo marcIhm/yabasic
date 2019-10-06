@@ -85,7 +85,13 @@ class News
     paras = File.read(fname).gsub(/^#.*$/,'').gsub(/\A(\s*\n)+/,'').split(/(?:^\s*\n)+/)
     puts "length",paras.length
     paras.each {|p| puts "->",p}
-    paras.each { |para| @paras<<News_para.new(para) }
+    all_versions = []
+    paras.each { |para|
+      fail "Version #{p.version} has already been seen" if all_versions.include?(p.version)
+      all_versions << p.version
+      p = New_para.new(para)
+      @paras << p
+    }
     @version = @paras[0].version
   end
 
