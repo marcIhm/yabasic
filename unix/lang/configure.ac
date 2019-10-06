@@ -37,7 +37,7 @@ if test "x${use_ffi}" = xyes; then
     AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
     AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
     if test "x${have_ffi}" = xno; then
-        AC_MSG_ERROR([Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi])
+        AC_MSG_ERROR([Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi. If you are sure to have both installed and still get this error, you may search for the location of ffi.h (e.g. /usr/local/lib64/libffi-3.2.1/include/ffi.h) and make it visible in /usr/include])
     fi
 fi
 

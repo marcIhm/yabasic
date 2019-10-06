@@ -13189,7 +13189,7 @@ fi
 done
 
     if test "x${have_ffi}" = xno; then
-        as_fn_error $? "Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi" "$LINENO" 5
+        as_fn_error $? "Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi. If you are sure to have both installed and still get this error, you may search for the location of ffi.h (e.g. /usr/local/lib64/libffi-3.2.1/include/ffi.h) and make it visible in /usr/include" "$LINENO" 5
     fi
 fi
 
