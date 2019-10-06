@@ -87,9 +87,9 @@ class News
     paras.each {|p| puts "->",p}
     all_versions = []
     paras.each { |para|
+      p = News_para.new(para)
       fail "Version #{p.version} has already been seen" if all_versions.include?(p.version)
       all_versions << p.version
-      p = New_para.new(para)
       @paras << p
     }
     @version = @paras[0].version

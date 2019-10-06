@@ -28,7 +28,7 @@ desc 'Propagate News'
 news = News.new('lang/NEWS')
 clog = News.new('lang/ChangeLog')
 task :news do
-  clog.paras.unshift if clog.version == news.version
+  clog.paras.shift if clog.version == news.version
   clog.paras.unshift news.paras[0]
   File.open('lang/ChangeLog','w') do |f|
     f.write clog.as_text + "\n"
