@@ -28,7 +28,7 @@ task :build => :git do
     sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe',
        "c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj",
        '/p:Configuration=Release'
-    fail "File '#{bin}' has not been build" if File.mtime(bin) < start_time
+    fail "File '#{bin}' has not been build" if !File.exist?(bin) || File.mtime(bin) < start_time
   end
 end
 

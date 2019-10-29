@@ -1,12 +1,10 @@
 /*
 
-  Install-Program for yabasic
-  Copyright by Marc Ihm 1996 - 2016.
+  Installer for yabasic
+  Copyright by Marc Ihm 1996-2019
   
   This file is part of yabasic and may be copied under the terms of
   MIT License which can be found in the file LICENSE.
-  
-  See www.yabasic.de for details.
   
 */
 
@@ -125,9 +123,10 @@ BOOL CALLBACK progressdialog(HWND, UINT, WPARAM, LPARAM);/* show progress */
 int CALLBACK BrowseCallbackProc(HWND, UINT, LPARAM, LPARAM); /* set initial path for browse */
 
 /* registry manipulation */
-int delreg(HKEY, char *, char *); /* delete keys from Registry */
-char *getreg(char *); /* get keys from Registry */
-int putreg(HKEY, char *, char *, char *); /* put keys into Registry */
+int delreg(HKEY, char *, char *);
+char *getreg_yab(char *);
+char *getreg_full(char *,char *,HKEY);
+int putreg(HKEY, char *, char *, char *);
 
 int create_shell_link(LINKINFO *, char *); /* create a shell link */
 int delete_shell_link(LINKINFO *); /* delete a shell link */
@@ -155,7 +154,7 @@ char *last_error(void); /* get last error as string */
 void center_dialog(HWND); /* center dialog on screen */
 BOOL is_elevated(); /* Check, if program is running with elevated privs */
 void log_os_info(); /* Write Windows Version to logfile */
-
+int makedir(char *); /* Create Directory */
 
 /*------------ main program --------------*/
 
@@ -278,7 +277,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		if (verfile) fclose(verfile);
 
 		/* get old version */
-		ver = getreg("version");
+		ver = getreg_yab("version");
 		oldversion.major = 0;
 		oldversion.minor = 0;
 		oldversion.patch = 0;
@@ -306,7 +305,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		}
 
 		/* get path */
-		oldpath = brushup(getreg("path"));
+		oldpath = brushup(getreg_yab("path"));
 		installpath = malloc(SSLEN + 1);
 		SHGetSpecialFolderPath(0, installpath, CSIDL_PROGRAM_FILES, FALSE);
 		strcat(installpath, "\\yabasic");
@@ -373,10 +372,18 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		/* create directories */
 		sprintf(string, "Creating directory for Installation %s", installpath);
 		progress(string);
-		CreateDirectory(installpath, NULL);
+		if (!makedir(installpath)) {
+		  MyMessage(NULL, "Couldn't create directory for installation !",
+			    INSTALL_HEADING, MB_STYLE);
+		  end(INSTALL_FAILURE);
+		};
 		sprintf(string, "Creating directory for Libraries %s", librarypath);
 		progress(string);
-		CreateDirectory(librarypath, NULL);
+		if (!makedir(librarypath)) {
+		  MyMessage(NULL, "Couldn't create directory for libraries !",
+			    INSTALL_HEADING, MB_STYLE);
+		  end(INSTALL_FAILURE);
+		};
 
 		/* copy files */
 		progress("Copying files.");
@@ -403,7 +410,7 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 				end(REMOVE_CANCELLED);
 
 		/* get installpath */
-		installpath = getreg("path");
+		installpath = getreg_yab("path");
 		installpath = brushup(installpath);
 		librarypath = malloc(strlen(installpath) + 10);
 		strcpy(librarypath, installpath);
@@ -688,22 +695,57 @@ subkey  : subkey to delete
 	return TRUE;
 }
 
-
-char *getreg(char *name) /* get keys from Registry */
+int makedir(char *path) /* Create Directory */
 {
-	char *keyname = "SOFTWARE\\Yabasic";
+  DWORD dwAttrib;
+  int res;
+  char buf[SSLEN];
+
+  dwAttrib = GetFileAttributes(path);
+  
+  /* check, if directory exists already */
+  if (dwAttrib != INVALID_FILE_ATTRIBUTES &&  (dwAttrib & FILE_ATTRIBUTE_DIRECTORY)) {
+    sprintf(buf, "Directory to be created already exists '%s'", path);
+    logit(buf);
+    return TRUE;
+  }
+  res = CreateDirectory(path, NULL);
+  sprintf(buf, "Creating directory '%s': result = %d\n%s", path, res, last_error());
+  logit(buf);
+
+  return res;
+}
+
+char *getreg_yab(char * name) /* specialized version */
+{
+  return getreg_full(name, "SOFTWARE\\Yabasic", HKEY_LOCAL_MACHINE);
+}
+
+char *getreg_full(char *name,char *keyname,HKEY start) /* get keys from Registry */
+{
 	HKEY key;
 	char value[SSLEN];
 	DWORD n;
+	char buf[SSLEN];
 
-	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, keyname, 0,
-		KEY_ALL_ACCESS, &key) != ERROR_SUCCESS) return NULL;
+
+	if (RegOpenKeyEx(start, keyname, 0,
+			 KEY_ALL_ACCESS, &key) != ERROR_SUCCESS) {
+	  sprintf(buf, "Could not open registry key %s: %s", keyname, last_error());
+	  logit(buf);
+	  return NULL;
+	}
 	n = SSLEN;
 	value[0] = '\0';
 	if (RegQueryValueEx(key, name, NULL,
-		NULL, value, &n) != ERROR_SUCCESS) return NULL;
+			    NULL, value, &n) != ERROR_SUCCESS) {
+	  logit("\n");
+	  sprintf(buf, "Could not set value %s in registry key %s (open was fine): %s", name, keyname, last_error());
+	  logit(buf);
+	  return NULL;
+	}
 	value[n] = '\0';
-
+	
 	return strdup(value);
 }
 
@@ -714,24 +756,39 @@ int putreg(HKEY start, char *keyname, char *name, char *content) /* put keys int
 	DWORD status;
 	char buf2[SSLEN];
 	DWORD ret;
+	char *actual;
+	char *hname;
 
-	sprintf(buf2, "Going to set registry: keyname='%s', name='%s', content='%s'\n", keyname, name, content);
+	if (start == LOCAL)
+	  hname = "HKEY_LOCAL_MACHINE";
+	else if (start == ROOT)
+	  hname = "HKEY_CLASSES_ROOT";
+	else
+	  hname = "unknown handle in registry";
+	sprintf(buf2, "Going to set registry: handle='%s', keyname='%s', name='%s', content='%s'\n", hname, keyname, name, content);
 	logit(buf2);
+	/* create key in any case but ignore return value */
 	ret = RegCreateKeyEx(start, keyname, 0, "", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, NULL, &key, &status);
 	ret = RegOpenKeyEx(start, keyname, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &key);
 	if (ret == ERROR_SUCCESS) {
 		ret = RegSetValueEx(key, name, 0, REG_SZ, content, strlen(content) + 1);
 		if (ret == ERROR_SUCCESS) {
-			return TRUE;
+		  actual = getreg_full(name,keyname,start);
+		  if (strcmp(content,actual)) {
+		    sprintf(buf2, "Rereading set value for %s gives different result: %s\n", keyname,actual);
+			logit(buf2);
+			return FALSE;
+		  }
+		  return TRUE;
 		}
 		else {
-			sprintf(buf2, "Could not set value: %d, %s", ret, last_error());
+			sprintf(buf2, "Could not set value: %d, %s\n", ret, last_error());
 			logit(buf2);
 			return FALSE;
 		}
 	}
 	else {
-		sprintf(buf2, "Could not open Registry key for writing: %d, %s", ret, last_error());
+		sprintf(buf2, "Could not open Registry key for writing: %d, %s\n", ret, last_error());
 		logit(buf2);
 		return FALSE;
 	}
@@ -1013,9 +1070,7 @@ int MyLinks(int mode) /* add or remove shell links */
 		SHGetPathFromIDList(pidl, PathLink);
 		strcat(PathLink, "\\Yabasic");
 		progress("Creating folder in start menu");
-		res = CreateDirectory(PathLink, NULL);
-		sprintf(string, "Creating directory '%s': result = %d\n%s", PathLink, res, last_error());
-		logit(string);
+		success = makedir(PathLink) && success;
 	}
 	while (li = enumlinks(NEXT)) {
 		if (mode == INSTALL) {
@@ -1349,9 +1404,9 @@ void logit(char *text)
 		}
 		if (text) {
 			if (strncmp(text, "--", 2)) fprintf(log, "  ");
-			while (*text != '\0') {
+			while (*text) {
 				fputc(*text, log);
-				if (*text == '\n' && *(text + 1) != '\0') fprintf(log, "  ");
+				if (*text == '\n' && *(text + 1)) fprintf(log, "  ");
 				text++;
 			}
 		}

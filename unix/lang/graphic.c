@@ -660,7 +660,7 @@ getreg (char *name)
     char reg[80];
     DWORD n;
 
-    RegOpenKeyEx (HKEY_LOCAL_MACHINE, keyname, 0, KEY_ALL_ACCESS, &key);
+    RegOpenKeyEx (HKEY_LOCAL_MACHINE, keyname, 0, KEY_READ, &key);
     n = 80;
     reg[0] = '\0';
     RegQueryValueEx (key, name, NULL, NULL, reg, &n);

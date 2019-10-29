@@ -176,17 +176,30 @@ main (int argc, char **argv)
     library_default[0] = '\0';
 #ifdef UNIX
     strcpy (library_default, LIBRARY_PATH);
+    if (severity_threshold <= sDEBUG) {
+      sprintf (string, "Using builtin default for library_path: %s", library_default);
+      error (sNOTE, string);
+    }
 #else
     fromlibpath = TRUE;
     if (lp = getreg ("librarypath")) {
         strcpy (library_default, lp);
         fromlibpath = TRUE;
+	if (severity_threshold <= sDEBUG) {
+	  sprintf (string, "Using default for library_path from registry key 'librarypath': %s", library_default);
+	  error (sNOTE, string);
+	}
     } else if (lp = getreg ("path")) {
         strcpy (library_default, lp);
         fromlibpath = FALSE;
+	if (severity_threshold <= sDEBUG) {
+	  sprintf (string, "Using default for library_path from registry key 'path': %s", library_default);
+	  error (sNOTE, string);
+	}
     } else {
         library_default[0] = '\0';
         fromlibpath = FALSE;
+	if (severity_threshold <= sDEBUG) error (sNOTE, "No default for library_path ");
     }
 #endif
 
@@ -200,7 +213,12 @@ main (int argc, char **argv)
     /* brush up library path */
     if (!library_path[0]) {
         strcpy (library_path, library_default);
+	if (severity_threshold <= sDEBUG) error (sNOTE, "No library_path specified on commandline");
+    } else if  (severity_threshold <= sDEBUG) {
+      sprintf (string, "library_path from commandline is: %s", library_path);
+      error (sNOTE, string);
     }
+
     len = strlen (library_path);
 #ifdef UNIX
     if (library_path[len - 1] == '/' || library_path[len - 1] == '\\') {
@@ -214,6 +232,10 @@ main (int argc, char **argv)
         if (!fromlibpath) {
             strcat (library_path, "lib\\");
         }
+	if (severity_threshold <= sDEBUG) {
+	  sprintf (string, "Final value for library_path is: %s", library_path);
+	  error (sNOTE, string);
+	}
     }
 #endif
 
