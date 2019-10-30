@@ -25,9 +25,24 @@ task :build => :git do
   binaries.each do |key,bin|
     vcxproj = {:lang => 'yabasic', :setup => 'setup', :wrapper => 'wrapper' }
     rm bin if File.exist?(bin)
-    sh '/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe',
-       "c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj",
-       '/p:Configuration=Release'
+    warnings = errors = -1
+    cmd = "\"/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin/MSBuild.exe\" c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj /p:Configuration=Release"
+    puts cmd
+    IO.popen(cmd) do |f|
+      f.each_line do |l|
+        l.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+        puts l
+        mdata = l.match(/^\s+(\d+) Warnung\(en\)\s+$/)
+        warnings = mdata[1].to_i if mdata
+        mdata = l.match(/^\s+(\d+) Fehler\s+$/)
+        errors = mdata[1].to_i if mdata
+      end
+      puts "Found #{warnings} Warnings and #{errors} Errors."
+      fail "Did not find number of warnings" if warnings == -1
+      fail "Found #{warnings} warnings" if warnings > 0
+      fail "Did not find number of errors" if errors == -1
+      fail "Found #{errors} errors" if errors > 0
+    end
     fail "File '#{bin}' has not been build" if !File.exist?(bin) || File.mtime(bin) < start_time
   end
 end
