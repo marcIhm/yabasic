@@ -22,6 +22,7 @@ end
 
 desc 'Build yabasic'
 task :build => :git do
+  system('find . -name \\*.obj -exec rm {} \\;')
   binaries.each do |key,bin|
     vcxproj = {:lang => 'yabasic', :setup => 'setup', :wrapper => 'wrapper' }
     rm bin if File.exist?(bin)
@@ -37,7 +38,7 @@ task :build => :git do
         mdata = l.match(/^\s+(\d+) Fehler\s+$/)
         errors = mdata[1].to_i if mdata
       end
-      puts "Found #{warnings} Warnings and #{errors} Errors."
+      puts "\n\nFound #{warnings} Warnings and #{errors} Errors.\n"
       fail "Did not find number of warnings" if warnings == -1
       fail "Found #{warnings} warnings" if warnings > 0
       fail "Did not find number of errors" if errors == -1

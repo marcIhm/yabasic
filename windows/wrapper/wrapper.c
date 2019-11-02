@@ -56,7 +56,8 @@ int WINAPI WinMain(HINSTANCE _this_instance,
 		char string[512];
 		char string2[512];
 
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+		ret = GetLastError();
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, ret,
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), string, 512, NULL);
 		sprintf(string2, "Could not start setup.exe for yabasic: %d, %s", ret, string);
 		MessageBoxEx(NULL, string2, "Install yabasic !",

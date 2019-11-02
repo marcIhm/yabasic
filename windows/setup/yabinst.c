@@ -10,6 +10,8 @@
 
 /*----------- includes -------------*/
 
+#pragma warning( disable : 4091 )
+
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1023,9 +1025,9 @@ int create_shell_link(LINKINFO *li, char *inst_path) /* Create a shell-link */
 }
 
 
-HRESULT delete_shell_link(LINKINFO *li) /* Delete a shell-link */
+int delete_shell_link(LINKINFO *li) /* Delete a shell-link */
 {
-	HRESULT result;              /* return value */
+	int result;              /* return value */
 	LPITEMIDLIST pidl;           /* path id */
 	char path[MAX_PATH];         /* path name */
 
@@ -1553,10 +1555,11 @@ void log_os_info()
 /* Write Windows Version to logfile */
 {
     OSVERSIONINFOEX info;
+
     ZeroMemory(&info, sizeof(OSVERSIONINFOEX));
     info.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
-    GetVersionEx(&info);
+    GetVersionEx((LPOSVERSIONINFOA)&info);
 
     sprintf(logs,"--Windows Version: %u.%u\n", info.dwMajorVersion, info.dwMinorVersion);
     logit(logs);
