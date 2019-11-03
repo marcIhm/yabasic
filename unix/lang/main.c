@@ -179,7 +179,7 @@ main (int argc, char **argv)
     library_default[0] = '\0';
 #ifdef UNIX
     strcpy (library_default, LIBRARY_PATH);
-    lpath_def_from = 'b'
+    lpath_def_from = 'b';
 #else
     fromlibpath = TRUE;
     if (lp = getreg ("librarypath")) {

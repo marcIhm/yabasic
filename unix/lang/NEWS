@@ -1,6 +1,10 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.84.3 (November 3, 2019)
+  - Better debugging for library path
+  - Clean builds for Windows setup-program
+  
 Version 2.84.2 (October 6, 2019)
   - Fixed some potential stackoverflows
   - Removed empty dir related with nano
