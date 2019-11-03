@@ -117,6 +117,7 @@ main (int argc, char **argv)
     DWORD consoleflags;
 #endif
     int len;
+    char lpath_def_from;
 
     string = (char *) my_malloc (sizeof (char) * INBUFFLEN);
     estring = (char *) my_malloc (sizeof (char) * INBUFFLEN);
@@ -171,35 +172,29 @@ main (int argc, char **argv)
     }
 
 #endif
-    /* get library path */
+
+    /* compute default for library path before parsing arguments, because we want to report it within the usage message */
+    /* remark: no debuglevel known yet, so we defer debug-messages until after parsing of command line args */
     library_path[0] = '\0';
     library_default[0] = '\0';
 #ifdef UNIX
     strcpy (library_default, LIBRARY_PATH);
-    if (severity_threshold <= sDEBUG) {
-      sprintf (string, "Using builtin default for library_path: %s", library_default);
-      error (sNOTE, string);
-    }
+    lpath_def_from = 'b'
 #else
     fromlibpath = TRUE;
     if (lp = getreg ("librarypath")) {
         strcpy (library_default, lp);
         fromlibpath = TRUE;
-	if (severity_threshold <= sDEBUG) {
-	  sprintf (string, "Using default for library_path from registry key 'librarypath': %s", library_default);
-	  error (sNOTE, string);
-	}
+	lpath_def_from = 'l';
     } else if (lp = getreg ("path")) {
         strcpy (library_default, lp);
         fromlibpath = FALSE;
-	if (severity_threshold <= sDEBUG) {
-	  sprintf (string, "Using default for library_path from registry key 'path': %s", library_default);
-	  error (sNOTE, string);
-	}
+	lpath_def_from = 'p';
     } else {
         library_default[0] = '\0';
         fromlibpath = FALSE;
-	if (severity_threshold <= sDEBUG) error (sNOTE, "No default for library_path ");
+	lpath_def_from = 'n';
+	if (severity_threshold <= sDEBUG) error (sDEBUG, "No default for library_path ");
     }
 #endif
 
@@ -210,13 +205,32 @@ main (int argc, char **argv)
     /* parse arguments */
     parse_arguments (argc, argv);
 
+    /* now, that we have the debuglevel, we may report, where we got the library path from */
+    if (severity_threshold <= sDEBUG) {
+      switch(lpath_def_from) {
+      case 'b':
+	sprintf (string, "Using builtin default for library_path: %s", library_default);
+	break;
+      case 'l':
+	sprintf (string, "Using default for library_path from registry key 'librarypath': %s", library_default);
+	break;
+      case 'p':
+	sprintf (string, "Using default for library_path from registry key 'path': %s", library_default);
+	break;
+      case 'n':
+	sprintf (string, "No default for library_path ");
+	break;
+      }
+      error (sDEBUG, string);
+    }
+    
     /* brush up library path */
     if (!library_path[0]) {
         strcpy (library_path, library_default);
-	if (severity_threshold <= sDEBUG) error (sNOTE, "No library_path specified on commandline");
+	if (severity_threshold <= sDEBUG) error (sDEBUG, "No library_path specified on commandline");
     } else if  (severity_threshold <= sDEBUG) {
       sprintf (string, "library_path from commandline is: %s", library_path);
-      error (sNOTE, string);
+      error (sDEBUG, string);
     }
 
     len = strlen (library_path);
@@ -232,12 +246,12 @@ main (int argc, char **argv)
         if (!fromlibpath) {
             strcat (library_path, "lib\\");
         }
-	if (severity_threshold <= sDEBUG) {
-	  sprintf (string, "Final value for library_path is: %s", library_path);
-	  error (sNOTE, string);
-	}
     }
 #endif
+    if (severity_threshold <= sDEBUG) {
+      sprintf (string, "Final value for library_path is: %s", library_path);
+      error (sDEBUG, string);
+    }
 
     compilation_start = compilation_end  = current_millis();
 
