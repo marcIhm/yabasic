@@ -707,12 +707,12 @@ int makedir(char *path) /* Create Directory */
   
   /* check, if directory exists already */
   if (dwAttrib != INVALID_FILE_ATTRIBUTES &&  (dwAttrib & FILE_ATTRIBUTE_DIRECTORY)) {
-    sprintf(buf, "Directory to be created already exists '%s'", path);
+    sprintf(buf, "Directory to be created already exists '%s'\n", path);
     logit(buf);
     return TRUE;
   }
   res = CreateDirectory(path, NULL);
-  sprintf(buf, "Creating directory '%s': result = %d\n%s", path, res, last_error());
+  sprintf(buf, "Creating directory '%s': result = %d\n%s\n", path, res, last_error());
   logit(buf);
 
   return res;
