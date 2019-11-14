@@ -1,0 +1,26 @@
+#!./yabasic
+
+for i=1 to 11
+  read f$,e$
+  if i > 9 then
+    read p$
+    r$ = str$(1000*pi,f$,p$)
+  else
+    r$ = str$(1000*pi,f$)
+  fi
+  if  r$ <> e$ error "Format " + str$(i) + ": " + f$ + " Expected " + e$ + ", but got: " + r$
+next i 
+
+
+data "%g", "3141.59"
+data "%2.5f", "3141.59265"
+data "%12.5f", "  3141.59265"
+data "%012.5g", "0000003141.6"
+data "%-12.5f", "3141.59265  "
+data "#####.##", " 3141.59"
+data "##,###.##", " 3,141.59"
+data "#####", " 3142"
+data "##.###", "##.###"
+
+data "##,###.##", " 3.141,59", ".,"
+data "##,###.##", " 3_141,59", "_,"

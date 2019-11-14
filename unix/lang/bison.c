@@ -4879,7 +4879,7 @@ yyreduce:
 
   case 288:
 
-    {(yyval.fnum)=(double)strtol((yyvsp[0].digits),NULL,0);}
+    {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,0);printf("=====%s %ul\n",(yyvsp[0].digits),strtoul((yyvsp[0].digits),NULL,0));}
 
     break;
 

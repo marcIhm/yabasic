@@ -509,7 +509,7 @@ const: number {$$=$1;}
 
 number: tFNUM {$$=$1;}
   | tDIGITS {$$=strtod($1,NULL);}
-  | tHEXDIGITS {$$=(double)strtol($1,NULL,0);}
+  | tHEXDIGITS {$$=(double)strtoul($1,NULL,0);}
   ;
 
 symbol_or_lineno: tDIGITS {$$=my_strdup(dotify($1,FALSE));}

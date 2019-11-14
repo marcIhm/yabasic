@@ -1211,11 +1211,10 @@ other2dec (char *hex, int base)	/* convert hex or binary to double number */
 int
 myformat (char *dest, double num, char *format, char *sep)	/* format number according to string */
 {
-    int i1, i2;			/* dummy */
-    char c1;			/* dummy */
-    static char ctrl[6];
+    static char *ctrl = "+- #0";	/* allowed control chars for c-format */
+    char formchar;
     char *found, *form;
-    int pre, post, len, i, digit, colons, dots;
+    int pre, post, len, nread, digit, colons, dots, i;
     int neg = FALSE;
     double ip, fp, round;
     static char *digits = "0123456789";
@@ -1223,19 +1222,16 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
     form = format;
     if (*form == '%') {
         /* c-style format */
-        strcpy (ctrl, "+- #0");	/* allowed control chars for c-format */
         form++;
-        while ((found = strchr (ctrl, *form)) != NULL) {
-            *found = '?';
-            form++;
-        }
-        if (sscanf (form, "%u.%u%c%n", &i1, &i2, &c1, &i) != 3 &&
-                sscanf (form, "%u.%c%n", &i2, &c1, &i) != 2 &&
-                sscanf (form, ".%u%c%n", &i2, &c1, &i) != 2 &&
-                sscanf (form, "%u%c%n", &i2, &c1, &i) != 2) {
+        while ((found = strchr (ctrl, *form)) != NULL) form++;
+        if (sscanf (form, "%*u.%*u%c%n", &formchar, &nread) != 1 &&
+	    sscanf (form, "%*u.%c%n", &formchar, &nread) != 1 &&
+	    sscanf (form, ".%*u%c%n", &formchar, &nread) != 1 &&
+	    sscanf (form, "%*u%c%n", &formchar, &nread) != 1 &&
+	    sscanf (form, "%c%n", &formchar, &nread) != 1) {
             return FALSE;
         }
-        if (!strchr ("feEgG", c1) || form[i]) {
+        if (!strchr ("feEgG", formchar) || form[nread]) {
             return FALSE;
         }
         /* seems okay, let's print */
