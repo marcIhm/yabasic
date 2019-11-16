@@ -1359,6 +1359,7 @@ initialize (void)
     fexplanation[fSQRT] = "SQRT";
     fexplanation[fSQR] = "SQR";
     fexplanation[fFRAC] = "FRAC";
+    fexplanation[fROUND] = "ROUND";
     fexplanation[fABS] = "ABS";
     fexplanation[fSIG] = "SIG";
     fexplanation[fRAN] = "RAN";
@@ -1384,6 +1385,8 @@ initialize (void)
     fexplanation[fAND] = "AND";
     fexplanation[fOR] = "OR";
     fexplanation[fEOR] = "EOR";
+    fexplanation[fSHL] = "SHL";
+    fexplanation[fSHR] = "SHR";
     fexplanation[fLOG2] = "LOG2";
     fexplanation[fRIGHT] = "RIGHT";
     fexplanation[fINSTR] = "INSTR";
@@ -1600,7 +1603,7 @@ run_it ()
             case cEND_SWITCH_MARK:
                 DONE;
             case cERROR:
-		error (sERROR, pop (stSTRING)->pointer);
+		error_without_position (sERROR, pop (stSTRING)->pointer);
                 DONE;
             case cCOMPILE:
                 compile ();

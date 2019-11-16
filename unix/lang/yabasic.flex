@@ -200,6 +200,8 @@ OR return tOR;
 NOT return tNOT;
 EOR return tEOR;
 XOR return tEOR;
+SHL return tSHL;
+SHR return tSHR;
 WINDOW return tWINDOW;
 ORIGIN return tORIGIN;
 PRINTER return tPRINTER;
@@ -249,6 +251,7 @@ SQR return tSQR;
 INT return tINT;
 CEIL return tCEIL;
 FLOOR return tFLOOR;
+ROUND return tROUND;
 FRAC return tFRAC;
 ABS return tABS;
 SIG return tSIG;
@@ -337,8 +340,13 @@ GLOB return tGLOB;
 [-+*/:(),.;] {return yytext[0];}
 
 0x[0-9a-zA-Z]+ {
-  yylval.digits=(char *)my_strdup(yytext);
+  yylval.digits=(char *)my_strdup(yytext+2);
   return tHEXDIGITS;
+}
+
+0b[0-1]+ {
+  yylval.digits=(char *)my_strdup(yytext+2);
+  return tBINDIGITS;
 }
 
 [0-9]+ {

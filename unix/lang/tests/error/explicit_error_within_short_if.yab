@@ -1,6 +1,3 @@
-#expect#---Error in explicit_error_within_short_if.yab, line 6:
 #expect#---Error: error
-#expect#   if (2>1) error "error"
-#expect#                         ^
 #expect#---Error: Program stopped due to an error
 if (2>1) error "error"

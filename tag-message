@@ -1,4 +1,5 @@
-Version 2.84.3 (November 3, 2019)
-  - Better debugging for library path
-  - Clean builds for Windows setup-program
+Version 2.85.0 (November 16, 2019)
+  - Added new functions shl, shr and round
+  - Binary literals are now treated as 32 bit unsigned
+  - The error-command no longer adds a line number
 

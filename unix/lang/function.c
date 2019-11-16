@@ -502,6 +502,10 @@ function (struct command *current)	/* performs a function */
 	value = floor(a1->value);
         result = stNUMBER;
         break;
+    case fROUND:
+	value = round(a1->value);
+        result = stNUMBER;
+        break;
     case fFRAC:
         if (a1->value < 0) {
             value = a1->value + floor (-a1->value);
@@ -604,6 +608,14 @@ function (struct command *current)	/* performs a function */
         break;
     case fEOR:
         value = (int) a1->value ^ (int) a2->value;
+        result = stNUMBER;
+        break;
+    case fSHL:
+        value = (int) a1->value << (int) a2->value;
+        result = stNUMBER;
+        break;
+    case fSHR:
+        value = (int) a1->value >> (int) a2->value;
         result = stNUMBER;
         break;
     case fMOUSEX:

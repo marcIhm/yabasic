@@ -139,6 +139,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token <symbol> tDOCU
 %token <digits> tDIGITS
 %token <digits> tHEXDIGITS
+%token <digits> tBINDIGITS
 %token <string> tSTRING
 
 %token tFOR tTO tSTEP tNEXT tWHILE tWEND tREPEAT tUNTIL tIMPORT
@@ -148,7 +149,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tIF tTHEN tELSE tELSIF tENDIF tIMPLICITENDIF tUSING
 %token tPRINT tINPUT tRETURN tDIM tEND tEXIT tAT tSCREEN 
 %token tREVERSE tCOLOUR tBACKCOLOUR
-%token tAND tOR tNOT tEOR
+%token tAND tOR tNOT tEOR tSHL tSHR
 %token tNEQ tLEQ tGEQ tLTN tGTN tEQU tPOW
 %token tREAD tDATA tRESTORE
 %token tOPEN tCLOSE tSEEK tTELL tAS tREADING tWRITING tORIGIN
@@ -158,7 +159,7 @@ void collect_missing_clauses(char *string, char exclude) {
 
 %token tSIN tASIN tCOS tACOS tTAN tATAN tEXP tLOG
 %token tSQRT tSQR tMYEOF tABS tSIG
-%token tINT tCEIL tFLOOR tFRAC tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
+%token tINT tCEIL tFLOOR tFRAC tROUND tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
 %token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFRNFN_CALL tFRNFN_CALL2 tFRNFN_SIZE
@@ -447,6 +448,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tSQRT '(' expression ')' {create_function(fSQRT);}
   | tSQR '(' expression ')' {create_function(fSQR);}
   | tINT '(' expression ')' {create_function(fINT);}
+  | tROUND '(' expression ')' {create_function(fROUND);}
   | tCEIL '(' expression ')' {create_function(fCEIL);}
   | tFLOOR '(' expression ')' {create_function(fFLOOR);}
   | tFRAC '(' expression ')' {create_function(fFRAC);}
@@ -488,6 +490,8 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tAND '(' expression ',' expression ')' {create_function(fAND);}
   | tOR '(' expression ',' expression ')' {create_function(fOR);}
   | tEOR '(' expression ',' expression ')' {create_function(fEOR);}
+  | tSHL '(' expression ',' expression ')' {create_function(fSHL);}
+  | tSHR '(' expression ',' expression ')' {create_function(fSHR);}
   | tTELL '(' hashed_number ')' {create_function(fTELL);}
   | tTOKEN '(' string_expression ',' string_arrayref ',' string_expression ')' {add_command(cTOKEN2,NULL,NULL);}
   | tTOKEN '(' string_expression ',' string_arrayref ')' {add_command(cTOKEN,NULL,NULL);}
@@ -509,7 +513,8 @@ const: number {$$=$1;}
 
 number: tFNUM {$$=$1;}
   | tDIGITS {$$=strtod($1,NULL);}
-  | tHEXDIGITS {$$=(double)strtoul($1,NULL,0);}
+  | tHEXDIGITS {$$=(double)strtoul($1,NULL,16);}
+  | tBINDIGITS {$$=(double)strtoul($1,NULL,2);}
   ;
 
 symbol_or_lineno: tDIGITS {$$=my_strdup(dotify($1,FALSE));}

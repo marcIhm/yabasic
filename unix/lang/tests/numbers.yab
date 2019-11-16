@@ -1,6 +1,6 @@
 #!./yabasic
 
-for i=1 to 4
+for i=1 to 5
   read fun$
   name$ = "test_" + fun$
   body$ = "sub " + name$ + "(arg,expected)\n  found = " + fun$ + "(arg)\n  if found <> expected : print \"" + fun$ + "(\", arg, \") returned \", found, \" but expected \", expected: return 1\n  return 0\nend sub"
@@ -60,4 +60,14 @@ data  0.5 ,  1
 data  1   ,  1
 data  1.5 ,  2
 data  2   ,  2
+data  755
+
+data "round"
+data -2.5 , -3
+data -2.4 , -2
+data -2.6 , -3
+data    0 , 0
+data  2.5 ,  3
+data  2.4 ,  2
+data  2.6 ,  3
 data  755

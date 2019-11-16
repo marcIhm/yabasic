@@ -1,6 +1,12 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.85.0 (November 16, 2019)
+  - Added new functions shl, shr and round
+  - Introduced binary literals preceeded by 0b
+  - Fixes for hex literals
+  - The error-command no longer adds a line number
+  
 Version 2.84.3 (November 3, 2019)
   - Better debugging for library path
   - Clean builds for Windows setup-program

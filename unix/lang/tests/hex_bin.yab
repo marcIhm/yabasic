@@ -2,5 +2,9 @@
 
 if (0xff<>255) exit 1
 if (0xafde24<>dec("afde24")) exit 1
+
+if (0b11<>3) exit 1
+if (0b101011<>dec("101011",2)) exit 1
+
 exit 0
 
