@@ -1,6 +1,7 @@
 Version 2.85.0 (November 16, 2019)
   - Added new functions shl, shr and round
-  - Binary literals are now treated as 32 bit unsigned
+  - Introduced binary literals preceeded by 0b
+  - Fixes for hex literals
   - The error-command no longer adds a line number
 
 

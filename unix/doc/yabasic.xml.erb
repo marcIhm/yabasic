@@ -268,6 +268,12 @@ yabasic*font: 9x15
   <chapter id="chapter_topics_list">
     <title>All commands and functions of <application>yabasic</application> listed by topic</title>
 
+    <sect1 id="top_numbers_with_base_2_or_16">
+      <title>Numbers with base 2 or 16</title>
+      <para>In addition to the usual decimal notation (e.g. <literal>1234</literal>), <application>yabasic</application> also supports numeric literals with base 2 or 16; examples are <literal>0b10011</literal> (the number 19, written with base 2) or <literal>0x34AF</literal> (the number 13487, written with base 16) respectively. Please note that these numbers (apart from the way you write them into your program) are no different from <quote>ordinary</quote> numbers and can be used in any place, where a normal number with base 10 would fit. E.g. you may compute the sine <literal>sin(0b110)</literal>; so the base 2 (or 16) is just a different way of <emphasis>representation</emphasis>.</para>
+      <para>See <function><link linkend="ref_bin">bin$</link></function>, <function><link linkend="ref_hex">hex$</link></function> or <function><link linkend="ref_dec">dec</link></function> for related functions.</para>
+    </sect1>
+
     <sect1 id="top_numbers">
       <title>Number processing and conversion</title>
       <variablelist>
@@ -378,6 +384,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_round">round()</link></term>
+	  <listitem>
+	    <%= purpose['round()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_log">log()</link></term>
 	  <listitem>
 	    <%= purpose['log()'] %>
@@ -423,6 +436,20 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_ran">ran()</link></term>
 	  <listitem>
 	    <%= purpose['ran()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_shl">sig()</link></term>
+	  <listitem>
+	    <%= purpose['shl()'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_sig">shr()</link></term>
+	  <listitem>
+	    <%= purpose['shr()'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -2610,7 +2637,7 @@ next a
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_hex">hex$</link></function>, <function><link linkend="ref_dec">dec</link></function></para>
+	  <para><function><link linkend="ref_hex">hex$</link></function>, <function><link linkend="ref_dec">dec</link></function>, <link linkend="top_numbers_with_base_2_or_16">numbers with base 2 or 16</link>.</para>
 	</refsect1>
       </refentry>
 
@@ -2620,7 +2647,7 @@ next a
 	</refmeta>
 	<refnamediv>
 	  <refname>bind()</refname>
-	  <refpurpose>Binds a <application>yabasic</application>-program and the <application>yabasic</application>-interpreter together into a <emphasis>standalone</emphasis> program.</refpurpose>
+	  <refpurpose>binds a <application>yabasic</application>-program and the <application>yabasic</application>-interpreter together into a <emphasis>standalone</emphasis> program</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>bind("foo.exe")</synopsis>
@@ -2780,7 +2807,7 @@ end switch
 	</refmeta>
 	<refnamediv>
 	  <refname>ceil()</refname>
-	  <refpurpose>compute the ceiling for its (float) argument.</refpurpose>
+	  <refpurpose>compute the ceiling for its (float) argument</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -2803,7 +2830,7 @@ print ceil(2),floor(2)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	  <para><function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_round">round</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -2813,7 +2840,7 @@ print ceil(2),floor(2)
 	</refmeta>
 	<refnamediv>
 	  <refname>chomp$()</refname>
-	  <refpurpose>Remove a single trailing newline from its string-argument; if the string does not end in a newline, the string is returned unchanged.</refpurpose>
+	  <refpurpose>remove a single trailing newline from its string-argument; if the string does not end in a newline, the string is returned unchanged</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>print chomp$("Hallo !\n")</synopsis>
@@ -2944,7 +2971,7 @@ next n
 	</refmeta>
 	<refnamediv>
 	  <refname>clear</refname>
-	  <refpurpose>Erase <function>circle</function>s, <function>rectangle</function>s or <function>triangle</function>s</refpurpose>
+	  <refpurpose>erase <function>circle</function>s, <function>rectangle</function>s or <function>triangle</function>s</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -3478,7 +3505,7 @@ a=dec(number$,base)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>dec</function>-function takes the string-representation of a base-2 or base-16 (which is the default) number and converts it into a decimal number. The optional second argument (<varname>base</varname>) might be used to specify a base other than 16. However, currently only base 2 or base 16 are supported. Please note, that for base 16 you may write literals in the usual way, by preceding them with <literal>0x</literal>, e.g. like <programlisting>print 0xff</programlisting>; this may save you from applying the <function>dec</function> altogether.</para>
+	  <para>The <function>dec</function>-function takes the string-representation of a base-2 or base-16 (which is the default) number and converts it into a decimal number. The optional second argument (<varname>base</varname>) might be used to specify a base other than 16. However, currently only base 2 or base 16 are supported. Please note, that for base 16 and 2 you may write literals in the usual way, by preceding them with <literal>0x</literal> or <literal>0b</literal> respectively, e.g. like <programlisting>print 0xff + 0b11</programlisting>; this may save you from applying the <function>dec</function> altogether.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -3491,7 +3518,7 @@ print a$," is ",dec(a$)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_bin"><function>bin$</function></link>, <link linkend="ref_hex"><function>hex$</function></link></para>
+	  <para><link linkend="ref_bin"><function>bin$</function></link>, <link linkend="ref_hex"><function>hex$</function></link>, <link linkend="top_numbers_with_base_2_or_16">numbers with base 2 or 16</link></para>
 	</refsect1>
       </refentry>
 
@@ -4065,7 +4092,7 @@ end while
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>eor</function>-function takes two arguments and computes their bitwise <emphasis>exclusive or</emphasis>. See your favorite introductory text on informatics for an explanation of this function.</para>
+	  <para>The <function>eor</function>-function takes two arguments and computes their bitwise <emphasis>exclusive or</emphasis>. I.e. treat each arguments as a sequence of bits and compare theses two sequences bit by bit to produce the result. If the bits from the arguments are equal, the resulting bit will be <literal>0</literal>, otherwise <literal>1</literal>.</para>
 	  <para>The <function>xor</function>-function is the same as the <function>eor</function> function; both are synonymous; however they have each their own description, so you may check out the entry of <function><link linkend="ref_xor">xor</link></function> for a slightly different view.</para>
 	</refsect1>
 	<refsect1>
@@ -4502,7 +4529,7 @@ clear fill rectangle 10,10,90,90
 	</refmeta>
 	<refnamediv>
 	  <refname>floor()</refname>
-	  <refpurpose>compute the floor for its (float) argument.</refpurpose>
+	  <refpurpose>compute the floor for its (float) argument</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>
@@ -4526,7 +4553,7 @@ print int(1.5),floor(1.5)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	  <para><function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_round">round</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -5047,7 +5074,7 @@ next a
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function></para>
+	  <para><function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_round">round</link></function></para>
 	</refsect1>
       </refentry>
     </sect1>
@@ -5328,7 +5355,7 @@ print
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_dec">dec</link></function><function><link linkend="ref_bin">bin</link></function></para>
+	  <para><function><link linkend="ref_dec">dec</link></function><function><link linkend="ref_bin">bin</link></function>, <link linkend="top_numbers_with_base_2_or_16">numbers with base 2 or 16</link></para>
 	</refsect1>
       </refentry>
 
@@ -5716,7 +5743,7 @@ endif
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function></para>
+	  <para><function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_round">round</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -6330,7 +6357,7 @@ next a
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	  <para><function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function>, <function><link linkend="ref_round">round</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -8514,6 +8541,40 @@ print instr("foofoofoobar","foo")
 	</refsect1>
       </refentry>
 
+      <refentry id="ref_round">
+	<refmeta>
+	  <refentrytitle>round()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>round()</refname>
+	  <refpurpose>round its argument to the nearest integer</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print round(x)
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>found</function>-function returns the nearest integer (e.g. <computeroutput>3.0</computeroutput> for an argument of <computeroutput>2.6</computeroutput>). An argument with a fractional part of <computeroutput>0.5</computeroutput> (e.g. <computeroutput>2.5</computeroutput>) represents an edge case, as such an argument has the same distance to two numbers, <computeroutput>3.0</computeroutput> and <computeroutput>2.0</computeroutput> in the example; this ambiguity is resolved by rounding away from zero and returning <computeroutput>3.0</computeroutput>. By the same rule <function>round(-2.5)</function> returns <computeroutput>-3.0</computeroutput>; so you see, that <literal>round(x)</literal> always equals <literal>round(-x)</literal>.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print round(2.3), round(2.5), round(2.7)
+print round(2), round(-2)
+print int(-2.3),round(-2.5), round(-2.7)
+          </programlisting>
+	    <para>These examples return in order <computeroutput>2 3 3</computeroutput>, then <computeroutput>2 -2</computeroutput> and finally <computeroutput>2 -3 -3</computeroutput>.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
+	</refsect1>
+      </refentry>
+
       <refentry id="ref_rtrim">
 	<refmeta>
 	  <refentrytitle>rtrim$()</refentrytitle>
@@ -8734,6 +8795,78 @@ close curve
 	</refsect1>
       </refentry>
 
+      <refentry id="ref_shl">
+	<refmeta>
+	  <refentrytitle>shl()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>shl()</refname>
+	  <refpurpose>shift its argument bitwise to the left</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print shl(0b11001,8)	    
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>shl</function>-function (<literal>shl</literal> stands for <emphasis>shift left</emphasis>) treats its first argument as a binary number and shifts it to the left as specified by its second argument, filling up the gaps with zeroes. So <literal>bin$(shl(0b11011,4))</literal> returns <literal>110110000</literal> (the example uses <function><link linkend="ref_bin">bin$</link></function> and a <link linkend="top_numbers_with_base_2_or_16">number with base 2</link>).</para>
+	  <para>Please note: as the argument of the function is converted to a 32-bit integer, all results are also confined to this range.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print "Some powers of two:"
+for i=0 to 5
+  print shl(1,i)
+next i
+          </programlisting>
+	    <para>This will print the powers of two from 1 to 32, because the left-shift operation is equivalent to a multiplication with two.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_arithmetic_and">and</link></function>, <link linkend="ref_arithmetic_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_not"><function>not</function></link>, <link linkend="ref_shr"><function>shr</function></link></para>
+	</refsect1>
+      </refentry>
+      
+      <refentry id="ref_shr">
+	<refmeta>
+	  <refentrytitle>shr()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>shr()</refname>
+	  <refpurpose>shift its argument bitwise to the right</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+print shr(0b110010000,4)	    
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>The <function>shr</function>-function (<literal>shr</literal> stands for <emphasis>shift right</emphasis>) treats its first argument as a binary number and shifts it to the right as specified by its second argument; the rightmost binary digits are discarded during this operation. So <literal>bin$(shr(0b1101100,2))</literal> returns <literal>11011</literal> (the example uses <function><link linkend="ref_bin">bin$</link></function> and a <link linkend="top_numbers_with_base_2_or_16">number with base 2</link>).</para>
+	  <para>Please note: as the argument of the function is converted to a 32-bit integer, all results are also confined to this range.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print "Some powers of two:"
+for i=0 to 5
+  print shr(32,i)
+next i
+          </programlisting>
+	    <para>This will print the powers of two from 32 downto 1, because the right-shift operation is equivalent to a division by two (discarding any fractional part).</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_arithmetic_and">and</link></function>, <link linkend="ref_arithmetic_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_not"><function>not</function></link>, <link linkend="ref_shl"><function>shl</function></link></para>
+	</refsect1>
+      </refentry>
+      
       <refentry id="ref_sleep">
 	<refmeta>
 	  <refentrytitle>sleep</refentrytitle>
@@ -10129,7 +10262,7 @@ x=xor(a,b)
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>xor</function> computes the bitwise <emphasis>exclusive or</emphasis> of its two numeric arguments. To understand the result, both arguments should be viewed as binary numbers (i.e. a series of 0 and 1); a bit of the result will then be 1, if exactly one argument has a 1 and the other has a 0 at this position in their binary representation.</para>
+	  <para>The <function>xor</function>-function computes the bitwise <emphasis>exclusive or</emphasis> of its two numeric arguments. To understand the result, both arguments should be viewed as binary numbers (i.e. a series of 0 and 1); a bit of the result will then be 1, if exactly one argument has a 1 and the other has a 0 at this position in their binary representation.</para>
 	  <para>Note, that both arguments are silently converted to integer values and that negative numbers have their own binary representation and may lead to unexpected results when passed to <function>and</function>.</para>
 	</refsect1>
 	<refsect1>
@@ -10139,7 +10272,7 @@ x=xor(a,b)
 print xor(7,4)
           </programlisting>
 	    <para>This will print <computeroutput>3</computeroutput>. This result is obvious, if you note, that the binary representation of 7 and 4 are 111 and 100 respectively; this will yield 011 in binary representation or 2 as decimal.</para>
-	    <para>The <function>eor</function>-function is the same as the <function>xor</function> function; both are synonymous; however they have each their own description, so you may check out the entry of <function><link linkend="ref_eor">eor</link></function> for a slightly different view.</para>
+	    <para>The <function>eor</function>-function is the same as the <function>xor</function>-function; both are synonymous; however they have each their own description, so you may check out the entry of <function><link linkend="ref_eor">eor</link></function> for a slightly different view.</para>
 
 	  </informalexample>
 	</refsect1>

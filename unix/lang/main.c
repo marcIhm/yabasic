@@ -1992,7 +1992,7 @@ error_with_position (int severity, char *message, char *filename, int lineno, in
 	if (filename && severity == sERROR) {
 	    show_and_mark_line (filename, lineno, first_column, last_column);
 	}
-        if (severity >= sERROR && !sub_dumped) {
+        if (severity >= sERROR && !sub_dumped && program_state > spINITIALIZED) {
             dump_sub (1);
 	    sub_dumped = TRUE;
         }

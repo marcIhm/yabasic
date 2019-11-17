@@ -37,11 +37,11 @@ static void off_to_ind (int, int *, int *);	/* convert a single offset to an arr
 
 static struct symstack *symroot = NULL;	/* first element in symbol list */
 static struct symstack *symhead = NULL;	/* last element ind symbol list */
-struct stackentry *stackroot;	/* lowest element in stack */
-struct stackentry *stackhead;	/* topmost element in stack */
-extern char *current_function;	/* name of currently defined function */
-struct command *lastref;	/* last command in UDS referencing a symbol */
-struct command *firstref;	/* first command in UDS referencing a symbol */
+struct stackentry *stackroot = NULL;	/* lowest element in stack */
+struct stackentry *stackhead = NULL;	/* topmost element in stack */
+extern char *current_function;	        /* name of currently defined function */
+struct command *lastref = NULL;	        /* last command in UDS referencing a symbol */
+struct command *firstref = NULL;	/* first command in UDS referencing a symbol */
 int labelcount = 0;		/* count self-generated labels */
 
 
