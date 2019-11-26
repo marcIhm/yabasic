@@ -198,6 +198,7 @@ RESTORE return tRESTORE;
 AND return tAND;
 OR return tOR;
 NOT return tNOT;
+BITNOT return tBITNOT;
 EOR return tEOR;
 XOR return tEOR;
 SHL return tSHL;

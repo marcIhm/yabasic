@@ -599,23 +599,27 @@ function (struct command *current)	/* performs a function */
         result = stSTRING;
         break;
     case fAND:
-        value = (int) a1->value & (int) a2->value;
+        value = (unsigned int) a1->value & (unsigned int) a2->value;
         result = stNUMBER;
         break;
     case fOR:
-        value = (int) a1->value | (int) a2->value;
+        value = (unsigned int) a1->value | (unsigned int) a2->value;
         result = stNUMBER;
         break;
     case fEOR:
-        value = (int) a1->value ^ (int) a2->value;
+        value = (unsigned int) a1->value ^ (unsigned int) a2->value;
+        result = stNUMBER;
+        break;
+    case fBITNOT:
+        value = ~ (unsigned int) a1->value;
         result = stNUMBER;
         break;
     case fSHL:
-        value = (int) a1->value << (int) a2->value;
+        value = (unsigned int) a1->value << (int) a2->value;
         result = stNUMBER;
         break;
     case fSHR:
-        value = (int) a1->value >> (int) a2->value;
+        value = (unsigned int) a1->value >> (int) a2->value;
         result = stNUMBER;
         break;
     case fMOUSEX:

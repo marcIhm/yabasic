@@ -1378,6 +1378,7 @@ initialize (void)
     fexplanation[fRTRIM] = "RTRIM";
     fexplanation[fTRIM] = "TRIM";
     fexplanation[fCHR] = "CHR";
+    fexplanation[fBITNOT] = "BITNOT";
     fexplanation[fONEARGS] = "ONEARGS";
     fexplanation[fDEC2] = "DEC2";
     fexplanation[fATAN2] = "ATAN2";

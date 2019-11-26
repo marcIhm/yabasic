@@ -149,7 +149,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tIF tTHEN tELSE tELSIF tENDIF tIMPLICITENDIF tUSING
 %token tPRINT tINPUT tRETURN tDIM tEND tEXIT tAT tSCREEN 
 %token tREVERSE tCOLOUR tBACKCOLOUR
-%token tAND tOR tNOT tEOR tSHL tSHR
+%token tAND tOR tNOT tBITNOT tEOR tSHL tSHR
 %token tNEQ tLEQ tGEQ tLTN tGTN tEQU tPOW
 %token tREAD tDATA tRESTORE
 %token tOPEN tCLOSE tSEEK tTELL tAS tREADING tWRITING tORIGIN
@@ -489,6 +489,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tMOUSEMOD '(' ')' {create_pushstr("");create_function(fMOUSEMOD);}
   | tAND '(' expression ',' expression ')' {create_function(fAND);}
   | tOR '(' expression ',' expression ')' {create_function(fOR);}
+  | tBITNOT '(' expression ')' {create_function(fBITNOT);}
   | tEOR '(' expression ',' expression ')' {create_function(fEOR);}
   | tSHL '(' expression ',' expression ')' {create_function(fSHL);}
   | tSHR '(' expression ',' expression ')' {create_function(fSHR);}
