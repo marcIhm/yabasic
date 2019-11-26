@@ -54,7 +54,7 @@ task :xml do
   
   doc = File.open("doc/yabasic.xml.erb") { |f| Nokogiri::XML(f) }
   doc.xpath('//refentry').each do |ele|
-    purpose[ele.xpath('refmeta/refentrytitle').text] = ele.xpath('refnamediv/refpurpose').text
+    purpose[ele.xpath('@id').first.value] = ele.xpath('refnamediv/refpurpose').text
   end
   
   File.open('doc/_yabasic.xml','w') do |file|
