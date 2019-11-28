@@ -419,9 +419,9 @@ yabasic*font: 9x15
 	</varlistentry>
 	
 	<varlistentry>
-	  <term><link linkend="ref_bitwise_not">or()</link></term>
+	  <term><link linkend="ref_bitnot">bitnot()</link></term>
 	  <listitem>
-	    <%= purpose['ref_bitwise_not'] %>
+	    <%= purpose['ref_bitnot'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -447,16 +447,16 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_shl">sig()</link></term>
+	  <term><link linkend="ref_shl">shl()</link></term>
 	  <listitem>
 	    <%= purpose['ref_shl'] %>
 	  </listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_sig">shr()</link></term>
+	  <term><link linkend="ref_shr">shr()</link></term>
 	  <listitem>
-	    <%= purpose['ref_sig'] %>
+	    <%= purpose['ref_shr'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -650,16 +650,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_not">not</link></term>
+	  <term><link linkend="ref_logical_not">not</link></term>
 	  <listitem>
-	    <%= purpose['ref_not'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_bitnot">not</link></term>
-	  <listitem>
-	    <%= purpose['ref_bitnot'] %>
+	    <%= purpose['ref_logical_not'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -685,9 +678,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_or">logical or</link></term>
+	  <term><link linkend="ref_logical_or">logical or</link></term>
 	  <listitem>
-	    <%= purpose['ref_or'] %>
+	    <%= purpose['ref_logical_or'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1155,9 +1148,16 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_at">@</link></term>
+	  <term><link linkend="ref_at">at</link></term>
 	  <listitem>
 	    <%= purpose['ref_at'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_at_sign">@</link></term>
+	  <listitem>
+	    <%= purpose['ref_at_sign'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1307,9 +1307,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_execute">execute$()</link></term>
+	  <term><link linkend="ref_execute2">execute$()</link></term>
 	  <listitem>
-	    <%= purpose['ref_execute'] %>
+	    <%= purpose['ref_execute2'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1463,9 +1463,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_colour">colour</link></term>
+	  <term><link linkend="ref_backcolor">color</link></term>
 	  <listitem>
-	    <%= purpose['ref_colour'] %>
+	    <%= purpose['ref_color'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -2219,7 +2219,7 @@ if (a&gt;=1 and a&lt;=9) print "your input is between 1 and 9"
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_logical_or"><function>or</function></link>,<link linkend="ref_not"><function>not</function></link></para>
+	  <para><link linkend="ref_logical_or"><function>or</function></link>,<link linkend="ref_logical_not"><function>not</function></link></para>
 	</refsect1>
       </refentry>
 
@@ -2252,7 +2252,7 @@ print and(6,3)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_not"><function>not</function></link></para>
+	  <para><link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_bitnot"><function>bitnot</function></link></para>
 	</refsect1>
       </refentry>
 
@@ -2530,6 +2530,7 @@ backcolour "red,green,blue"
 	  <title>Description</title>
 	  <para>Change the color, that becomes visible, if any portion of the window is erased, e.g. after <function><link linkend="ref_clear_window">clear window</link></function> or <function><link linkend="ref_clear">clear line</link></function>. Note however, that parts of the window, that show the old background color will not change.</para>
 	  <para>As with the <function><link linkend="ref_color">color</link></function>-command, the new background color can either be specified as a triple of three numbers or as a single string, that contains those three numbers separated by commas.</para>
+	  <para>Note, that the command <function>backcolor</function> can be written as <function>backcolour</function> too and vice versa.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -2548,26 +2549,6 @@ next y:next x
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_open_window">open window</link></function>, <function><link linkend="ref_color">color</link></function>, <function><link linkend="ref_line">line</link></function>, <function><link linkend="ref_rectangle">rectangle</link></function>, <function><link linkend="ref_triangle">triangle</link></function>, <function><link linkend="ref_circle">circle</link></function></para>
-	</refsect1>
-      </refentry>
-
-      <refentry id="ref_backcolour">
-	<refmeta>
-	  <refentrytitle>backcolour</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>backcolour</refname>
-	  <refpurpose>see <function>backcolor</function></refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-backcolour red,green,blue
-backcolour "red,green,blue"
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>See also</title>
-	  <para><function><link linkend="ref_print_color">color</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -2696,6 +2677,40 @@ print "Hello World !"
 	<refsect1>
 	  <title>See also</title>
 	  <para>The section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link>, the <link linkend="ref_peek"><function>peek</function></link>-function and the command line <link linkend="chapter_options">options</link>.</para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_bitnot">
+	<refmeta>
+	  <refentrytitle>bitnot()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>bitnot()</refname>
+	  <refpurpose>the bitwise arithmetic <function>not</function></refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>
+x=bitnot(a)
+</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para>This function is used to compute the <emphasis>bitwise not</emphasis> of its single argument. The argument is treated as binary number (i.e. a sequence of digits 0 and 1); a bit of the resulting value will be 1, if the argument has a 0 at this position in its binary representation; if the bit in the argument is 1, the bit in the result will be 0.</para>
+	  <para>Note, that its argument is silently converted to a positive integer value and that negative numbers have their own binary representation and may lead to unexpected results when passed to <function>bitnot</function>.</para>
+	  <para>A note on naming: This one-argument-function is named <function>bitnot</function> to distinguish it from the one-argument-function <link linkend="ref_logical_not"><function>not</function></link>, which operates on <emphasis>logical</emphasis> expressions. For the similar functions <function>and</function> and <function>or</function> this distinction between <emphasis>logical</emphasis> and <emphasis>bitwise</emphasis> function is done implicitly through the number of arguments (1 and 2, respectively).</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print bin$(not(17))
+          </programlisting>
+	    <para>This will print <computeroutput>11111111111111111111111111101110</computeroutput>. This result is clear, if you note, that the binary representation of 17 is 10001, which inverted will give the long binary number given before.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_bitwise_and"><function>and</function></link></para>
 	</refsect1>
       </refentry>
 
@@ -3279,30 +3294,11 @@ next y:next x
             </programlisting>
 	    <para>This fills the window with colored rectangles. However, none of the used colours contains any shade of blue, because the <function>color</function>-command has always 0 as a third argument.</para>
 	  </informalexample>
+	  <para>Note, that the command <function>color</function> can be written as <function>colour</function> too and vice versa.</para>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_open_window">open window</link></function>, <function><link linkend="ref_backcolor">backcolor</link></function>, <function><link linkend="ref_line">line</link></function>, <function><link linkend="ref_rectangle">rectangle</link></function>, <function><link linkend="ref_triangle">triangle</link></function>, <function><link linkend="ref_circle">circle</link></function></para>
-	</refsect1>
-      </refentry>
-
-      <refentry id="ref_colour">
-	<refmeta>
-	  <refentrytitle>colour</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>colour</refname>
-	  <refpurpose>see <function>color</function></refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-colour red,green,blue
-colour "red,green,blue"
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>See also</title>
-	  <para><function><link linkend="ref_print_color">color</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -6701,40 +6697,6 @@ if (not (a&lt;b and b&lt;c)) error " the numbers you have entered are not ascend
 	</refsect1>
       </refentry>
 
-      <refentry id="ref_bitwise_not">
-	<refmeta>
-	  <refentrytitle>bitnot()</refentrytitle>
-	</refmeta>
-	<refnamediv>
-	  <refname>bitnot()</refname>
-	  <refpurpose>the bitwise arithmetic <function>not</function></refpurpose>
-	</refnamediv>
-	<refsynopsisdiv>
-	  <synopsis>
-x=bitnot(a)
-</synopsis>
-	</refsynopsisdiv>
-	<refsect1>
-	  <title>Description</title>
-	  <para>This function is used to compute the <emphasis>bitwise not</emphasis> of its single argument. The argument is treated as binary number (i.e. a sequence of digits 0 and 1); a bit of the resulting value will be 1, if the argument has a 0 at this position in its binary representation; if the bit in the argument is 1, the bit in the result will be 0.</para>
-	  <para>Note, that its argument is silently converted to a positive integer value and that negative numbers have their own binary representation and may lead to unexpected results when passed to <function>bitnot</function>.</para>
-	  <para>A note on naming: This one-argument-function is named <function>bitnot</function> to distinguish it from the one-argument-function <link linkend="ref_not"><function>not</function></link>, which operates on <emphasis>logical</emphasis> expressions. For the similar functions <function>and</function> and <function>or</function> this distinction between <emphasis>logical</emphasis> and <emphasis>bitwise</emphasis> function is done implicitly through the number of arguments (1 and 2, respectively).</para>
-	</refsect1>
-	<refsect1>
-	  <title>Example</title>
-	  <informalexample>
-	    <programlisting>
-print bin$(not(17))
-          </programlisting>
-	    <para>This will print <computeroutput>2</computeroutput>. This result is clear, if you note, that the binary representation of 6 and 3 are 110 and 011 respectively; this will yield 010 in binary representation or 2 as decimal.</para>
-	  </informalexample>
-	</refsect1>
-	<refsect1>
-	  <title>See also</title>
-	  <para><link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_not"><function>not</function></link></para>
-	</refsect1>
-      </refentry>
-
       <refentry id="ref_numparams">
 	<refmeta>
 	  <refentrytitle>numparams</refentrytitle>
@@ -7163,7 +7125,7 @@ if (a&gt;9 or a&lt;1) print "a is not between 1 and 9"
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_logical_and"><function>and</function></link>,<link linkend="ref_not"><function>not</function></link></para>
+	  <para><link linkend="ref_logical_and"><function>and</function></link>,<link linkend="ref_logical_not"><function>bitnot</function></link></para>
 	</refsect1>
       </refentry>
 
@@ -7196,7 +7158,7 @@ print or(14,3)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_bitwise_and"><function>oand</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_not"><function>not</function></link></para>
+	  <para><link linkend="ref_bitwise_and"><function>and</function></link>, <link linkend="ref_eor"><function>eor</function></link> and <link linkend="ref_bitnot"><function>bitnot</function></link></para>
 	</refsect1>
       </refentry>
     </sect1>
@@ -8882,7 +8844,7 @@ next i
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_not"><function>not</function></link>, <link linkend="ref_shr"><function>shr</function></link></para>
+	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_bitnot"><function>bitnot</function></link>, <link linkend="ref_shr"><function>shr</function></link></para>
 	</refsect1>
       </refentry>
       
@@ -8918,7 +8880,7 @@ next i
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_not"><function>not</function></link>, <link linkend="ref_shl"><function>shl</function></link></para>
+	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_bitnot"><function>bitnot</function></link>, <link linkend="ref_shl"><function>shl</function></link></para>
 	</refsect1>
       </refentry>
       
@@ -10333,7 +10295,7 @@ print xor(7,4)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_not"><function>not</function></link></para>
+	  <para><function><link linkend="ref_bitwise_and">and</link></function>, <link linkend="ref_bitwise_or"><function>or</function></link>, <link linkend="ref_eor"><function>eor</function></link>, <link linkend="ref_bitnot"><function>bitnot</function></link></para>
 	</refsect1>
       </refentry>
 
