@@ -1,3 +1,8 @@
+Version 2.86.0 (November 28, 2019)
+  - Added new functions bitnot
+  - Fixes for bit-arithmetic (signes/unsigned)
+
+
 Version 2.85.0 (November 16, 2019)
   - Added new functions shl, shr and round
   - Introduced binary literals preceeded by 0b

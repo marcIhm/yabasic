@@ -1,27 +1,13 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.0 (November 28, 2019)
+  - Added new functions bitnot
+  - Fixes for bit-arithmetic (signes/unsigned)
+  
 Version 2.85.0 (November 16, 2019)
   - Added new functions shl, shr and round
   - Introduced binary literals preceeded by 0b
   - Fixes for hex literals
   - The error-command no longer adds a line number
   
-Version 2.84.3 (November 3, 2019)
-  - Better debugging for library path
-  - Clean builds for Windows setup-program
-  
-Version 2.84.2 (October 6, 2019)
-  - Fixed some potential stackoverflows
-  - Removed empty dir related with nano
-  - Tests with tmux only within the Rakefile
-  
-Version 2.84.1 (July 20, 2019)
-  - Make unload_library after call the default for foreign_functions
-  - Fixes to docu
-  - Requiring libffi for build (unless specified other by configure-option)
-  - explicit error no longer unwinds call-stack
-
-Version 2.84.0 (July 12, 2019)
-  - New command foreign_buffer_set_buffer
-
