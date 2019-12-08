@@ -13,7 +13,7 @@ dnl  find out, which c-compiler is available
 AC_PROG_CC
 
 dnl  set compiler options
-AC_CHECK_PROG(CCOPTIONS,gcc,-Wall -fsanitize=address,)
+AC_CHECK_PROG(CCOPTIONS,gcc,-Wall,)
 
 dnl  check for required headers
 AC_CHECK_HEADERS([malloc.h alloc.h prctl.h])

@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.1 (December 8, 2019)
+  - Fix for heap-buffer-offerflow
+  
 Version 2.86.0 (November 28, 2019)
   - Added new functions bitnot
   - Fixes for bit-arithmetic (signes/unsigned)
