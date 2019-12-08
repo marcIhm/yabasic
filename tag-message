@@ -1,4 +1,3 @@
-Version 2.86.0 (November 28, 2019)
-  - Added new functions bitnot
-  - Fixes for bit-arithmetic (signes/unsigned)
+Version 2.86.1 (December 8, 2019)
+  - Fix for heap-buffer-offerflow
 
