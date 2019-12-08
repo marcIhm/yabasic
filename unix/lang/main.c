@@ -2451,7 +2451,7 @@ seekback (FILE *file, int offset, int cookie_found)           /* seek back bytes
     error (cookie_found ? sWARNING:sDEBUG, "Could not read from end of embedded program");
     return FALSE;
   }
-  string[strlen(string) - strlen("\n")] = '\0';
+  string[(strlen(string) || 1) - 1] = '\0';
   if (cookie_found && severity_threshold <= sDEBUG) { 
     sprintf(estring, "Next line from end of embbeded program to be processed is: '%s'", string);
     error (sDEBUG, estring);
