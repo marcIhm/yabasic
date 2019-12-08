@@ -1,7 +1,7 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
 
-AC_INIT([yabasic], [2.86.0])
+AC_INIT([yabasic], [2.86.1])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
 LT_INIT
@@ -13,7 +13,7 @@ dnl  find out, which c-compiler is available
 AC_PROG_CC
 
 dnl  set compiler options
-AC_CHECK_PROG(CCOPTIONS,gcc,-Wall,)
+AC_CHECK_PROG(CCOPTIONS,gcc,-Wall -fsanitize=address,)
 
 dnl  check for required headers
 AC_CHECK_HEADERS([malloc.h alloc.h prctl.h])
