@@ -538,7 +538,7 @@ void pop_stream (void);		/* pop stream from stack and switch to it */
 void mymove ();			/* move to specific position on screen */
 void clearscreen ();		/* clear entire screen */
 char *inkey (double);		/* gets char from keyboard, blocks and doesn´t print */
-char *replace (char *);		/* replace \n,\a, etc. */
+char *replace_escapes (char *);		/* replace \n,\a, etc. */
 
 /* graphic.c */
 void create_openwin (int);	/* create Command 'openwin' */

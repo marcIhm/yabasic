@@ -278,7 +278,7 @@ main (int argc, char **argv)
 	    printf
 		("Your program will execute immediately and cannot be saved;\n");
 	    printf
-		("create your program with an external editor, if you want to keep it.\n");
+		("create your program with an external editor, to avoid this.\n");
 #ifdef UNIX
 	    printf
 		("Type 'man yabasic' or see the file yabasic.htm for more information,\n");
@@ -2556,7 +2556,7 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
     proglen += 5;
     fprintf (fbound, "rem %08d\n", proglen);
     fprintf (fbound, "rem %s\n", progname);
-    fprintf (fbound, "rem %08d\n", strlen(progname));
+    fprintf (fbound, "rem %08lu\n", strlen(progname));
     fprintf (fbound, "rem %02d\n", severity_threshold + yydebug);
     fprintf (fbound, "rem %s\n", YABMAGIC);
     fclose (fyab);

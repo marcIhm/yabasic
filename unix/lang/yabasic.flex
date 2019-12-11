@@ -378,22 +378,18 @@ FALSE {yylval.fnum=0; return tFNUM;}
   return tSTRSYM;
 }
 
-\"[^\"]*(\"|\n) {
-  int cnt;
-  if (yytext[yyleng-1]=='\n') yycolumn=1;
-  if (yytext[yyleng-1]=='\n' && in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;}
-  if (yytext[yyleng-1]=='\n') {
+\"[^"]*(\"|\n) {
+  if (yyleng<2 || yytext[yyleng-1]=='\n') { /* unterminated string has reached end of line, report qualified error in bison */
+        yycolumn=1;		      
   	yylval.string=NULL;
   	return tSTRING;
-  }
-  for(cnt=0;yytext[yyleng-cnt-2]=='\\';cnt++) ;
-  if (cnt%2) {
+  } else if (yytext[yyleng-2]=='\\') { /* final quote was escaped, so put all text back and read more */
   	yyless(yyleng-1);
 	yymore();
-  } else {
+  } else { /* properly quoted string; remove quotes and return it */
 	yylval.string=(char *)my_strdup(yytext+1);
-	*(yylval.string+yyleng-2)='\0';
-	replace(yylval.string);
+	*(yylval.string+strlen(yylval.string)-1)='\0';
+	replace_escapes(yylval.string);
 	return tSTRING;
   }
 }
@@ -491,7 +487,7 @@ int import_lib(char *name) /* import library */
   } 
 
   if (severity_threshold <= sNOTE) {
-    if (isbound) {      
+    if (is_bound) {      
       sprintf(string,"importing library '%s'",name);
     } else {
       sprintf(string,"importing from file '%s'",full);

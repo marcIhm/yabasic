@@ -599,7 +599,7 @@ static void decode_key(int key, char *to) /* decode keycode into string */
 
 
 char *
-replace(char *string)		/* replace \n,\a, etc. */
+replace_escapes(char *string)		/* replace \n,\a, etc. */
 {
     char *from, *to;
     char *p;

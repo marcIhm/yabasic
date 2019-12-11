@@ -1298,7 +1298,7 @@ rgb_to_pixel (int r, int g, int b)
 }
 
 
-static int
+static void
 pixel_to_rgb (int *r, int *g, int *b, int pixel)
 {
     /* create an rgb value from pixel */
@@ -2208,7 +2208,7 @@ readrgb (char *bits, int off, unsigned short *red, unsigned short *green,
 	if (scanned == EOF)
 		sprintf(estring, "Invalid bitmap: unexpected end of supplied string");
 	else
-		sprintf(estring,"Invalid bitmap: could only extract %d hex-values from supplied string at position %d: '%.6s'",scanned, bitpt-bitstart,bitpt);
+		sprintf(estring,"Invalid bitmap: could only extract %d hex-values from supplied string at position %ld: '%.6s'",scanned, bitpt-bitstart,bitpt);
     error (sERROR, estring);
     return 0;
 }

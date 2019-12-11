@@ -1,0 +1,6 @@
+#expect#---Error in error_string_not_terminated.yab, line 6:
+#expect#---Error: String not terminated
+#expect#   print "this string has no end
+#expect#         ^~~~~~~~~~~~~~~~~~~~~~~~
+#expect#---Error: Program not executed
+print "this string has no end
