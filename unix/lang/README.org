@@ -9,3 +9,7 @@ Some hints:
   - Or run gcov: gcov main.c
   - WARNING: adding "--coverage" to CFLAGS slows down yabasic by a factor of 3 or more
   
+- To compile with address sanitizer:
+  - make sure that clang and llvm are installed
+  - ./configure CC=clang CFLAGS="-fsanitize=address -fno-omit-frame-pointer -g -O0"
+  - make
