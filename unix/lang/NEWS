@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.2 (December 12, 2019)
+  - Another fix for heap-buffer-offerflow found with address sanitizer
+  
 Version 2.86.1 (December 8, 2019)
   - Fix for heap-buffer-offerflow
   
