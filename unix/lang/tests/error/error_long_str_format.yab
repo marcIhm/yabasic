@@ -1,0 +1,7 @@
+#expect#---Error in error_long_str_format.yab, line 7:
+#expect#---Error: length of formatted string exceeds maximum of 10000 bytes
+#expect#   print str$(pi, "%999999g")
+#expect#                            ^
+#expect#---Error: Program stopped due to an error
+
+print str$(pi, "%999999g")

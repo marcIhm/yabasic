@@ -462,12 +462,8 @@ function (struct command *current)	/* performs a function */
     case fSTR2:
     case fSTR3:
         result = stSTRING;
-        if (!myformat
-                (string, a1->value, a2->pointer, a3 ? a3->pointer : NULL)) {
-            pointer = my_strdup ("");
-            sprintf (string, "'%s' is not a valid format",
-                     (char *) a2->pointer);
-            error (sERROR, string);
+        if (!myformat (string, INBUFFLEN, a1->value, a2->pointer, a3 ? a3->pointer : NULL)) {
+            pointer = my_strdup (""); 
             break;
         }
         pointer = my_strdup (string);
@@ -1225,7 +1221,18 @@ other2dec (char *hex, int base)	/* convert hex or binary to double number */
 
 
 int
-myformat (char *dest, double num, char *format, char *sep)	/* format number according to string */
+myformat (char *dest, int max, double num, char *format, char *sep)	/* format number according to string */
+{
+    int ret = myformat2 (dest, max, num, format, sep);
+    if (ret == 0) return TRUE;
+    if (ret == 1) sprintf (estring, "'%s' is not a valid format", format);
+    if (ret == 2) sprintf (estring, "length of formatted string exceeds maximum of %d bytes", INBUFFLEN);
+    error (sERROR, estring);
+}
+
+
+int
+myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the work for myformat */
 {
     static char *ctrl = "+- #0";	/* allowed control chars for c-format */
     char formchar;
@@ -1245,13 +1252,16 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
 	    sscanf (form, ".%*u%c%n", &formchar, &nread) != 1 &&
 	    sscanf (form, "%*u%c%n", &formchar, &nread) != 1 &&
 	    sscanf (form, "%c%n", &formchar, &nread) != 1) {
-            return FALSE;
+            return 1;
         }
         if (!strchr ("feEgG", formchar) || form[nread]) {
-            return FALSE;
+            return 1;
         }
-        /* seems okay, let's print */
-        sprintf (dest, format, num);
+        /* seems okay, let's try to print */
+        len = snprintf (dest, max, format, num);
+	if (len >= max) {
+	    return 2;
+	}
     } else {
         /* basic-style format */
         if (num < 0) {
@@ -1265,7 +1275,7 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
         for (form = format; *form; form++) {
             if (*form == ',') {
                 if (dots) {
-                    return FALSE;
+                    return 1;
                 }
                 colons++;
             } else if (*form == '.') {
@@ -1277,11 +1287,11 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
                     pre++;
                 }
             } else {
-                return FALSE;
+                return 1;
             }
         }
         if (dots > 1) {
-            return FALSE;
+            return 1;
         }
         len = strlen (format);
         dest[len] = '\0';
@@ -1328,7 +1338,7 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
         }
         if ((neg && i < 0) || ((int) ip)) {
             strcpy (dest, format);
-            return TRUE;
+            return 0;
         }
         if (neg) {
             dest[i--] = '-';
@@ -1353,7 +1363,7 @@ myformat (char *dest, double num, char *format, char *sep)	/* format number acco
             }
         }
     }
-    return TRUE;
+    return 0;
 }
 
 

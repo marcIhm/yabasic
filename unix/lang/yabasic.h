@@ -493,85 +493,85 @@ struct library {
 /* ------------- function prototypes defined in ... ---------------- */
 
 /* main.c */
-void error (int, char *);	/* reports an error and possibly exits */
-void error_with_position (int, char *, char *, int, int, int); /* reports an basic error to the user and possibly exits */
-void error_without_position(int, char *); /* like error_with_position but without position */
-void show_and_mark_line (char *, int, int, int); /* try to find and show offending line */
-void std_diag (char *, int, char *, char *);	/* produce standard diagnostic */
-void *my_malloc (unsigned);	/* my own version of malloc */
-void my_free (void *);		/* free memory */
-char *my_strerror (int);	/* return description of error messages */
-struct command *add_command (int, char *, char *);	/* create new command and add some data */
-struct command *add_command_with_switch_state(int);     /* same as add_command, but add switch_state too */
-void dump_commands (char *);         /* dump commands into given file */
-void signal_handler (int);	/* handle various signals */
-char *my_strdup (char *);	/* my own version of strdup */
-char *my_strndup (char *, int);	/*  own version of strndup */
-struct library *new_library (char *, char *);	/* create a new structure for library */
-char *dotify (char *, int);	/* add library name, if not already present */
-char *strip (char *);		/* strip off to minimal name */
-void create_docu (char *);	/* create command 'docu' */
-extern void add_variables (char *);	/* add pi and e to symbol table */
-void compile (void);		/* create a subroutine at runtime */
-void create_execute (int);	/* create command 'cEXECUTE' */
-void execute (struct command *);	/* execute a subroutine */
-int isbound (void);		/* check if this interpreter is bound to a program */
+void error (int, char *);
+void error_with_position (int, char *, char *, int, int, int);
+void error_without_position(int, char *);
+void show_and_mark_line (char *, int, int, int);
+void std_diag (char *, int, char *, char *);
+void *my_malloc (unsigned);
+void my_free (void *);
+char *my_strerror (int);
+struct command *add_command (int, char *, char *);
+struct command *add_command_with_switch_state(int);
+void dump_commands (char *);
+void signal_handler (int);
+char *my_strdup (char *);
+char *my_strndup (char *, int);
+struct library *new_library (char *, char *);
+char *dotify (char *, int);
+char *strip (char *);
+void create_docu (char *);
+extern void add_variables (char *);
+void compile (void);
+void create_execute (int);
+void execute (struct command *);
+int isbound (void);
 
 /* io.c */
-void checkopen (void);		/* check, if open has been sucessfull */
-void create_colour (int);       /* create command 'colour' */
-void colour (struct command *cmd);	/* change colour of printed output */
-void create_print (char);	/* create command 'print' */
-void print (struct command *);	/* print on screen */
-void create_myread (char, int);	/* create command 'read' */
-void myread (struct command *);	/* read from file or stdin */
-void create_onestring (char *);	/* write string to file */
-void onestring (char *);	/* write string to file */
-void chkprompt (void);		/* print an intermediate prompt if necessary */
-void create_myopen (int);	/* create command 'myopen' */
-void myopen (struct command *);	/* open specified file for given name */
-void testeof (struct command *);	/* close the specified stream */
-void myclose ();		/* close the specified stream */
-void create_pps (int, int);	/* create command push_stream or pop_stream */
-void push_stream (struct command *);	/* push current stream on stack and switch to new one */
-void pop_stream (void);		/* pop stream from stack and switch to it */
-void mymove ();			/* move to specific position on screen */
-void clearscreen ();		/* clear entire screen */
-char *inkey (double);		/* gets char from keyboard, blocks and doesn´t print */
-char *replace_escapes (char *);		/* replace \n,\a, etc. */
+void checkopen (void);
+void create_colour (int);
+void colour (struct command *cmd);
+void create_print (char);
+void print (struct command *);
+void create_myread (char, int);
+void myread (struct command *);
+void create_onestring (char *);
+void onestring (char *);
+void chkprompt (void);
+void create_myopen (int);
+void myopen (struct command *);
+void testeof (struct command *);
+void myclose ();
+void create_pps (int, int);
+void push_stream (struct command *);
+void pop_stream (void);
+void mymove ();
+void clearscreen ();
+char *inkey (double);
+char *replace_escapes (char *);
 
 /* graphic.c */
-void create_openwin (int);	/* create Command 'openwin' */
-void openwin (struct command *);	/* open a Window */
-void create_openprinter (int);	/* create command 'openprinter' */
-void openprinter (struct command *);	/* opens a printer for WIN95 */
-void closeprinter (void);	/* closes printer for WIN95 */
-void putindrawmode (int);	/* store drawmode in previous command */
-void dot (struct command *);	/* draw a dot */
-void create_line (int);		/* create Command 'line' */
-void line (struct command *);	/* draw a line */
-void moveorigin ();		/* move origin of window */
-int check_alignement (char *);	/* checks, if text-alignement is valid */
-void circle (struct command *);	/* draw a circle */
-void triangle (struct command *);	/* draw a triangle */
-void create_text (int);		/* create Command 'text' */
-void text (struct command *);	/* write a text */
-void closewin (void);		/* close the window */
-void clearwin (void);		/* clear the window */
-void rect (struct command *);	/* draw a (filled) rect */
-void putbit (void);		/* put rect onto window */
-void putchars (void);		/* put rect onto screen */
-void create_marker (int);	/* create command 'cMARKER' */
-void marker (struct command *);	/* draw a marker */
-void getwinkey (char *);	/* read a key from grafics window */
-void gettermkey (char *);	/* read a key from terminal */
-char *getbit (int, int, int, int);	/* get rect from window */
-char *getchars (int, int, int, int);	/* get rect from screen */
-void change_colour (struct command *);	/* change colour */
+void create_openwin (int);
+void openwin (struct command *);
+void create_openprinter (int);
+void openprinter (struct command *);
+void closeprinter (void);
+void putindrawmode (int);
+void dot (struct command *);
+void create_line (int);
+void line (struct command *);
+void moveorigin ();
+int check_alignement (char *);
+void circle (struct command *);
+void triangle (struct command *);
+void create_text (int);
+void text (struct command *);
+void closewin (void);
+void clearwin (void);
+void rect (struct command *);
+void putbit (void);
+void putchars (void);
+void create_marker (int);
+void marker (struct command *);
+void getwinkey (char *);
+void gettermkey (char *);
+char *getbit (int, int, int, int);
+char *getchars (int, int, int, int);
+void change_colour (struct command *);
 #ifdef WINDOWS
 LRESULT CALLBACK mywindowproc (HWND, unsigned, UINT, DWORD);
 #else
-void calc_psscale (void);	/* calculate scale-factor for postscript */
+void calc_psscale (void);
 #endif
 
 /* foreign.c */
@@ -589,131 +589,132 @@ char *frnbf_get_buffer (void);
 void frnbf_set_buffer (void);
 
 /* function.c */
-void create_exception (int);	/* create command 'exception' */
-void exception (struct command *);	/* change handling of exceptions */
-void create_poke (char);	/* create Command 'POKE' */
-void poke ();			/* poke in internals */
-void pokefile (struct command *);	/* poke into file */
-void create_dblrelop (char);	/* create command dblrelop */
-void dblrelop (struct command *);	/* compare topmost double-values */
-void concat (void);		/* concetenates two strings from stack */
-void create_strrelop (char);	/* create command strrelop */
-void strrelop (struct command *);	/* compare topmost string-values */
-void create_changestring (int);	/* create command 'changestring' */
-void changestring (struct command *);	/* changes a string */
-void glob (void);		/* check, if pattern globs string */
-void create_boole (char);	/* create command boole */
-void boole (struct command *);	/* perform and/or/not */
-void create_function (int);	/* create command 'function' */
-void function (struct command *);	/* performs a function */
-int myformat (char *, double, char *, char *);	/* format number */
-void create_restore (char *);	/* create command 'restore' */
-void restore (struct command *);	/* reset data pointer to given label */
-void create_dbldata (double);	/* create command dbldata */
-void create_strdata (char *);	/* create command strdata */
-void create_readdata (char);	/* create command readdata */
-void readdata (struct command *);	/* read data items */
-void mywait ();			/* wait given number of seconds */
-void mybell ();			/* ring ascii bell */
-void getmousexybm (char *, int *, int *, int *, int *);	/* get mouse coordinates */
-void token (struct command *);	/* extract token from variable */
-void tokenalt (struct command *);	/* extract token from variable with alternate semantics */
-long long current_millis(void); /* return current number of milliseconds */
+void create_exception (int);
+void exception (struct command *);
+void create_poke (char);
+void poke ();
+void pokefile (struct command *);
+void create_dblrelop (char);
+void dblrelop (struct command *);
+void concat (void);
+void create_strrelop (char);
+void strrelop (struct command *);
+void create_changestring (int);
+void changestring (struct command *);
+void glob (void);
+void create_boole (char);
+void boole (struct command *);
+void create_function (int);
+void function (struct command *);
+int myformat (char *, int, double, char *, char *);
+int myformat2 (char *, int, double, char *, char *);
+void create_restore (char *);
+void restore (struct command *);
+void create_dbldata (double);
+void create_strdata (char *);
+void create_readdata (char);
+void readdata (struct command *);
+void mywait ();
+void mybell ();
+void getmousexybm (char *, int *, int *, int *, int *);
+void token (struct command *);
+void tokenalt (struct command *);
+long long current_millis(void);
 
 
 /* symbol.c */
-struct array *create_array (int, int);	/* create an array */
-void clearrefs (struct command *);	/* clear references for commands within function */
-void duplicate (void);		/* duplicate topmost element of stack */
-void negate (void);		/* negates top of stack */
-void create_require (int);	/* create command 'cREQUIRE' */
-void require (struct command *);	/* check item on stack has right type */
-void create_makelocal (char *, int);	/* create command 'cMAKELOCAL' */
-void create_makestatic (char *, int);	/* create command 'cMAKESTATIC' */
-void create_arraylink (char *, int);	/* create command 'cARRAYLINK' */
-void create_pusharrayref (char *, int);	/* create command 'cPUSHARRAYREF' */
-void pusharrayref (struct command *);	/* push an array reference onto stack */
-void arraylink (struct command *);	/* link a local symbol to a global array */
-void makestatic (struct command *);	/* makes symbol static */
-void makelocal (struct command *);	/* makes symbol local */
-void pushdblsym (struct command *);	/* push double symbol onto stack */
-void popdblsym (struct command *);	/* pop double from stack */
-void create_pushdbl (double);	/* create command 'pushdbl' */
-void pushdbl (struct command *);	/* push double onto stack */
-void create_dblbin (char);	/* create binary expression calculation */
-void dblbin (struct command *);	/* compute with two numbers from stack */
-void pushstrsym (struct command *);	/* push string symbol onto stack */
-void popstrsym (struct command *);	/* pop string from stack */
-void create_pushstr (char *);	/* creates command pushstr */
-void pushstr (struct command *);	/* push string onto stack */
-void pushname (char *);		/* push a name on stack */
-void pushstrptr (struct command *);	/* push string-pointer onto stack */
-void logical_shortcut (struct command *type);	/* shortcut and/or if possible */
-void create_doarray (char *, int);	/* creates array-commands */
-void doarray (struct command *);	/* call an array */
-void create_dim (char *, char);	/* create command 'dim' */
-void dim (struct command *);	/* get room for array */
-void swap (void);		/*swap topmost elements on stack */
-struct stackentry *push (void);	/* push element on stack and enlarge it */
-struct stackentry *pop (int);	/* pops element to memory */
-void pop_multi (struct command *); /* pop and discard multiple values from stack */
-struct symbol *get_sym (char *, int, int);	/* find and/or add a symbol */
-void link_symbols (struct symbol *, struct symbol *);	/* link one symbol to the other */
-void pushsymlist (void);	/* push a new list on symbol stack */
-void popsymlist (void);		/* pop list of symbols and free symbol contents */
-void dump_sym ();		/* dump the stack of lists of symbols */
-void dump_sub (int);		/* dump the stack of subroutine calls */
-void function_or_array (struct command *);	/* decide whether to do perform function or array */
-int count_args (int);	/* count number of arguments on stack */
-void stackdesc (int, char *);	/* give back string describing stackentry */
+struct array *create_array (int, int);
+void clearrefs (struct command *);
+void duplicate (void);
+void negate (void);
+void create_require (int);
+void require (struct command *);
+void create_makelocal (char *, int);
+void create_makestatic (char *, int);
+void create_arraylink (char *, int);
+void create_pusharrayref (char *, int);
+void pusharrayref (struct command *);
+void arraylink (struct command *);
+void makestatic (struct command *);
+void makelocal (struct command *);
+void pushdblsym (struct command *);
+void popdblsym (struct command *);
+void create_pushdbl (double);
+void pushdbl (struct command *);
+void create_dblbin (char);
+void dblbin (struct command *);
+void pushstrsym (struct command *);
+void popstrsym (struct command *);
+void create_pushstr (char *);
+void pushstr (struct command *);
+void pushname (char *);
+void pushstrptr (struct command *);
+void logical_shortcut (struct command *type);
+void create_doarray (char *, int);
+void doarray (struct command *);
+void create_dim (char *, char);
+void dim (struct command *);
+void swap (void);
+struct stackentry *push (void);
+struct stackentry *pop (int);
+void pop_multi (struct command *);
+struct symbol *get_sym (char *, int, int);
+void link_symbols (struct symbol *, struct symbol *);
+void pushsymlist (void);
+void popsymlist (void);
+void dump_sym ();
+void dump_sub (int);
+void function_or_array (struct command *);
+int count_args (int);
+void stackdesc (int, char *);
 
 
 /* flow.c */
-void link_label (struct command *);	/* link label into list of labels */
-void create_count_params (void);	/* create command 'cCOUNT_PARAMS' */
-void count_params (struct command *);	/* count number of function parameters */
-void forcheck (void);		/* check, if for-loop is done */
-void forincrement (void);	/* increment value on stack */
-void startfor (void);		/* compute initial value of for-variable */
-void create_goto (char *);	/* creates command goto */
-void create_gosub (char *);	/* creates command gosub */
-void create_call (char *);	/* creates command function call */
-void create_label (char *, int);	/* creates command label */
-void create_subr_link (char *);	/* create link to subroutine */
-struct command *add_switch_state(struct command *); /* add switch state to a newly created command */
-void pushgoto (void);		/* generate label and push goto on stack */
-void popgoto (void);		/* pops a goto and generates the matching command */
-void jump (struct command *);	/* jump to specific Label */
-void myreturn (struct command *);	/* return from gosub */
-void findnop ();		/* used for on_gosub, find trailing nop command */
-void skipper (void);		/* used for on_goto/gosub, skip commands */
-void skiponce (struct command *);	/* skip next command once */
-void resetskiponce (struct command *);	/* find and reset next skip */
-void decide (void);		/*  skips next command, if not 0 on stack */
-void pushlabel (void);		/* generate goto and push label on stack */
-void poplabel (void);		/* pops a label and generates the matching command */
-void storelabel ();		/* push label on stack */
-void matchgoto ();		/* generate goto matching label on stack */
-void create_check_return_value (int, int);	/* create command 'cCHECK_RETURN_VALUE' */
-void check_return_value (struct command *);	/* check return value of function */
-void create_endfunction (void);	/* create command cEND_FUNCTION */
-struct command *search_label (char *, int);	/* search label */
-void reorder_stack_before_call (struct stackentry *);	/* reorganize stack for function call */
-void reorder_stack_after_call (int);	/* reorganize stack after function call: keep return value and remove switch value (if any) */
-void create_mybreak(int); /* create command mybreak */
-void mybreak (struct command *);	/* find break_here statement */
-void mycontinue (struct command *cmd);	/* find continue_here statement */
-void next_case (struct command *);		/* go to next case in switch statement */
-int check_leave_switch (struct command *, struct command *);    /* check, if goto or continue enters or leaves a switch_statement */
-void pop_switch_value (struct command *); /* remove switch state from stack, keeping return value */
-void initialize_switch_id_stack(void); /* initialize stack of switch_ids */
-void push_switch_id (void);		  /* generate a new switch id on top of stack */
-void pop_switch_id (void);  		  /* pop last switch_id */
+void link_label (struct command *);
+void create_count_params (void);
+void count_params (struct command *);
+void forcheck (void);
+void forincrement (void);
+void startfor (void);
+void create_goto (char *);
+void create_gosub (char *);
+void create_call (char *);
+void create_label (char *, int);
+void create_subr_link (char *);
+struct command *add_switch_state(struct command *);
+void pushgoto (void);
+void popgoto (void);
+void jump (struct command *);
+void myreturn (struct command *);
+void findnop ();
+void skipper (void);
+void skiponce (struct command *);
+void resetskiponce (struct command *);
+void decide (void);
+void pushlabel (void);
+void poplabel (void);
+void storelabel ();
+void matchgoto ();
+void create_check_return_value (int, int);
+void check_return_value (struct command *);
+void create_endfunction (void);
+struct command *search_label (char *, int);
+void reorder_stack_before_call (struct stackentry *);
+void reorder_stack_after_call (int);
+void create_mybreak(int);
+void mybreak (struct command *);
+void mycontinue (struct command *cmd);
+void next_case (struct command *);
+int check_leave_switch (struct command *, struct command *);
+void pop_switch_value (struct command *);
+void initialize_switch_id_stack(void);
+void push_switch_id (void);
+void pop_switch_id (void);
 
 
 /* flex.c */
-void yyerror (char *);		/* yyerror message */
-void open_main (FILE *, char *, char *);	/* switch to file */
-void open_string (char *);	/* open string with commands */
-FILE *open_library (char *, char **);	/* search and open a library */
-void leave_lib (void);	      /* processing, when end of library is found; called by bison */
+void yyerror (char *);
+void open_main (FILE *, char *, char *);
+void open_string (char *);
+FILE *open_library (char *, char **);
+void leave_lib (void);

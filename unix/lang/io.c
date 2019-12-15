@@ -185,12 +185,9 @@ print(struct command *cmd)	/* print on screen */
             *s = ' ';
             s++;
         }
-        if (!myformat(s, q->value, p->pointer, r ? r->pointer : NULL)) {
-            sprintf(string, "'%s' is not a valid format",
-                    (char *)p->pointer);
-            error (sERROR, string);
-            break;
-        }
+        if (!myformat(s, INBUFFLEN, q->value, p->pointer, r ? r->pointer : NULL)) {
+	    break;
+	}
         onestring(string);
         break;
     case 's':
