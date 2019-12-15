@@ -1228,6 +1228,7 @@ myformat (char *dest, int max, double num, char *format, char *sep)	/* format nu
     if (ret == 1) sprintf (estring, "'%s' is not a valid format", format);
     if (ret == 2) sprintf (estring, "length of formatted string exceeds maximum of %d bytes", INBUFFLEN);
     error (sERROR, estring);
+    return FALSE;
 }
 
 
