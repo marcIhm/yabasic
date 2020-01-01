@@ -394,6 +394,7 @@ add_switch_state(struct command *cmd) /* add switch state to a newly created com
     cmd->switch_state = my_malloc (sizeof (struct switch_state));
     cmd->switch_state->id = switch_id_stack[switch_nesting];
     cmd->switch_state->nesting = switch_nesting;
+    cmd->switch_state->pop_on_qgoto = 0;
     return cmd;
 }
 

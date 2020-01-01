@@ -371,7 +371,7 @@ std_diag (char *head, int type, char *symname, char *diag)	/* produce standard d
 	}
     }
     dest += n;
-    if (stackhead->prev != stackroot) {
+    if (stackhead->prev != stackroot && stackhead != stackroot) {
 	sprintf (dest, "t[");
 	dest += 2;
 	sp = stackhead;
