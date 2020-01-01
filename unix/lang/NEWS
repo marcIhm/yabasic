@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.4 (January 1, 2020)
+  - Fix for do-loop / continue
+  
 Version 2.86.3 (December 15, 2019)
   - Fix for heap overflow found with honggfuzz
   
@@ -13,10 +16,4 @@ Version 2.86.1 (December 8, 2019)
 Version 2.86.0 (November 28, 2019)
   - Added new functions bitnot
   - Fixes for bit-arithmetic (signes/unsigned)
-  
-Version 2.85.0 (November 16, 2019)
-  - Added new functions shl, shr and round
-  - Introduced binary literals preceeded by 0b
-  - Fixes for hex literals
-  - The error-command no longer adds a line number
   
