@@ -2,7 +2,7 @@
 # the first one will be added if necessary to the ChangeLog by rake
 
 Version 2.86.4 (January 1, 2020)
-  - Fix for goto
+  - Fix for do-loop / continue
   
 Version 2.86.3 (December 15, 2019)
   - Fix for heap overflow found with honggfuzz
