@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 Version 2.86.5 (March 8, 2020)
   - Fix double backslash in string before quote
 
 
-=======
->>>>>>> 090ea3f4bea5a6f2fa014c9698afb8f4be098539
 Version 2.86.4 (January 1, 2020)
   - Fix for do-loop / continue
 
