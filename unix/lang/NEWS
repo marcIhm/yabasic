@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.5 (March 8, 2020)
+  - Fix double backslash in string before quote
+  
 Version 2.86.4 (January 1, 2020)
   - Fix for do-loop / continue
   
