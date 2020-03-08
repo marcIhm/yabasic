@@ -3085,10 +3085,10 @@ case 240:
 YY_RULE_SETUP
 {
   if (yyleng<2 || yytext[yyleng-1]=='\n') { /* unterminated string has reached end of line, report qualified error in bison */
-        yycolumn=1;		      
+        yyless(1);
   	yylval.string=NULL;
   	return tSTRING;
-  } else if (yytext[yyleng-2]=='\\') { /* final quote was escaped, so put all text back and read more */
+  } else if (yytext[yyleng-1]=='\"' && count_backslashes(yytext+yyleng-2)%2==1) { /* final quote was escaped, so put all text back and read more */
   	yyless(yyleng-1);
 	yymore();
   } else { /* properly quoted string; remove quotes and return it */

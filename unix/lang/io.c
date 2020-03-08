@@ -672,6 +672,18 @@ replace_escapes(char *string)		/* replace \n,\a, etc. */
 }
 
 
+int
+count_backslashes(char *text) /* count number of backslashes up to position in string */
+{
+  int cnt = 0;
+  while(*text == '\\') {
+    text--;
+    cnt++;
+  }
+  return cnt;
+}
+
+
 void
 create_myopen(int num)		/* create command 'myopen' */
 {

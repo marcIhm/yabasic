@@ -539,6 +539,7 @@ void mymove ();
 void clearscreen ();
 char *inkey (double);
 char *replace_escapes (char *);
+int count_backslashes(char *);
 
 /* graphic.c */
 void create_openwin (int);

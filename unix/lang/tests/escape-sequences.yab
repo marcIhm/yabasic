@@ -1,0 +1,17 @@
+
+for i=1 to 11
+  read c$,c
+  if asc(c$)<>c error "Error in data line "+str$(i)
+next i
+
+data "\n",10
+data "\t",9
+data "\v",11
+data "\b",8
+data "\r",13
+data "\f",12
+data "\a",7
+data "\\",92
+data "\'",39
+data "\"",34
+data "\x12",18

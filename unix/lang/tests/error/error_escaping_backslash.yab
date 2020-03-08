@@ -1,0 +1,10 @@
+#expect#---Error in error_escaping_backslash.yab, line 10:
+#expect#---Error: String not terminated
+#expect#   a$="\\\\\"
+#expect#             ^~~~~~~~
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
+
+a$="\\"
+a$="\\\\"
+a$="\\\\\"
