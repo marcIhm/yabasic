@@ -35,7 +35,7 @@ task :version => :git do
   fragname = "fragment_log.html"
   frag = File.new(fragname).read
   unless frag.include?("Version #{version}")
-    frag = news.as_html(6) + "\n" + frag
+    frag = news.as_html(3) + "\n" + frag
     File.new(fragname,"w").write(frag)
     puts "Wrote #{fragname}"
   end
