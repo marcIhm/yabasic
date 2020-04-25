@@ -1,9 +1,10 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
 
-AC_INIT([yabasic], [2.86.6])
+AC_INIT([yabasic], [2.86.7])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
+AC_CONFIG_MACRO_DIRS([/usr/share/aclocal])
 LT_INIT
 
 dnl  get canonical system name
@@ -25,37 +26,47 @@ AC_TYPE_SIZE_T
 
 dnl  if strtod is not present, create replacement
 AC_FUNC_STRTOD
-dnl  crete define, if functions not available
+dnl  create define, if functions not available
 AC_CHECK_FUNCS([strerror mkstemp])
 
-dnl  allow users to disable use of ffi
-AC_ARG_ENABLE([use-ffi],[  --disable-use-ffi       disable use of ffi],[use_ffi=${enableval}],[use_ffi=yes])
+dnl  option to control building with ffi
+AC_ARG_WITH([ffi],
+  [AS_HELP_STRING([--with-ffi], [Build with ffi-support for calling foreign libraries @<:@default=yes@:>@])],
+  [],
+  [with_ffi=yes])
 
 dnl  check for libffi
-if test "x${use_ffi}" = xyes; then
+if test "x${with_ffi}" = xyes; then
+
+   dnl  pkg-config may help to locate ffi
+   PKG_PROG_PKG_CONFIG
+   if test -n "$PKG_CONFIG"; then
+      PKG_CHECK_MODULES([FFI], [libffi], [CFLAGS="$CFLAGS $FFI_CFLAGS";LIBS="$LIBS $FFI_LIBS"]) 
+   fi
+
     have_ffi=no
     AC_SEARCH_LIBS([ffi_call],[ffi],[have_ffi=yes])
     AC_CHECK_HEADERS([ffi.h],[],[have_ffi=no])
-    if test "x${have_ffi}" = xno; then
-        AC_MSG_ERROR([Did not find libffi library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi. If you are sure to have both installed and still get this error, you may search for the location of ffi.h (e.g. /usr/local/lib64/libffi-3.2.1/include/ffi.h) and make it visible in /usr/include])
+    if test "x${have_ffi}" = xno ; then
+        AC_MSG_ERROR([Did not find libffi library and/or header; please install them or supply '--without-ffi' to built without ffi. If you have both installed and still get this error, you may manually locate the directories with header files and libraries and add them to the environment variables CFLAGS (as -Idir) and LDFLAGS (as -Ldir); see also 'configure --help' for details about supported environment variables.])
     fi
 fi
 
 dnl  check for dlopen
-if test "x${use_ffi}" = xyes; then
+if test "x${with_ffi}" = xyes; then
     have_dlopen=no
-    AC_SEARCH_LIBS([dlopen],[dl dld],[have_dl=yes])
-    AC_CHECK_HEADERS([dlfcn.h],[],[have_dl=no])
-    if test "x${have_dl}" = xno; then
-        AC_MSG_ERROR([Did not find dl library and/or header; install them or supply '--disable-use-ffi' to built anyway and without ffi])
+    AC_SEARCH_LIBS([dlopen],[dl dld],[have_dlopen=yes])
+    AC_CHECK_HEADERS([dlfcn.h],[],[have_dlopen=no])
+    if test "x${have_dlopen}" = xno ; then
+        AC_MSG_ERROR([Did not find dl library and/or header; please install them or supply '--without-ffi' to built without ffi and dlopen])
     fi
 fi
 
 dnl  calling foreign libraries requires both dlopen and libffi
-if test "x${use_ffi}" = xyes; then
+if test "x${have_ffi}" = xyes && test "x${have_dlopen}" = xyes; then
     AC_DEFINE([USE_DL_FFI],1,[libffi and dlopen available])
 else
-    AC_MSG_NOTICE([support for calling foreign libraries will not be available])
+    AC_MSG_NOTICE([support for calling foreign libraries will NOT be available])
 fi
 
 dnl  check for curses
