@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.7 (April 4, 2020)
+  - Using pkg-config (if available) to locate libffi
+
 Version 2.86.6 (March 8, 2020)
   - Advancing version for technical reasons
 

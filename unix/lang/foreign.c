@@ -41,7 +41,7 @@ int last_frnfn_call_okay = 1;                       /* true, if last foreign cal
 void
 no_frn_error(void)
 {
-    error(sERROR, "this build of yabasic does not support calling foreign libraries");
+    error(sERROR, "This build of yabasic does not support calling foreign libraries");
 }    
 void
 frnfn_call (int type, double *pvalue, char **ppointer)
