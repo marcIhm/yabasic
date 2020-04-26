@@ -13,3 +13,7 @@ Some hints:
   - make sure that clang and llvm are installed
   - ./configure CC=clang CFLAGS="-fsanitize=address -fno-omit-frame-pointer -g -O0"
   - make
+
+- To apply changes in confiure.ac
+  - autoconf
+  - If this doesn't help, try autoreconf -i
