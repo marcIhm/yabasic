@@ -1,3 +1,3 @@
-Version 2.86.7 (April 4, 2020)
-  - Using pkg-config (if available) to locate libffi
+Version 2.86.8 (May 9, 2020)
+  - Bringing pkg.m4 with us to ease build process
 
