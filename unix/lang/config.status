@@ -679,7 +679,7 @@ finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
 sys_lib_search_path_spec='/usr/lib/gcc/x86_64-redhat-linux/8 /usr/lib64 /lib64 /usr/lib /lib '
-configure_time_dlsearch_path='/lib64 /usr/lib64 /lib /usr/lib /usr/lib64//bind9-export/ /usr/lib64/iscsi '
+configure_time_dlsearch_path='/lib /usr/lib /usr/lib64//bind9-export/ /usr/lib64/iscsi '
 configure_time_lt_sys_library_path=''
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -1018,7 +1018,7 @@ D["HAVE_CURSES_H"]=" 1"
 D["HAVE_NCURSES_H"]=" 1"
 D["HAVE_GETNSTR"]=" 1"
 D["UNIX_ARCHITECTURE"]=" \"x86_64-unknown-linux-gnu\""
-D["BUILD_TIME"]=" \"Sun Apr 26 15:21:37 UTC 2020\""
+D["BUILD_TIME"]=" \"Sat May  9 07:33:39 UTC 2020\""
   for (key in D) D_is_set[key] = 1
   FS = ""
 }

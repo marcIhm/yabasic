@@ -1,10 +1,12 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
+dnl  Maybe run before (which constitutes a basic version if autogen.sh):
+dnl    autoreconf --install
+dnl    automake --add-missing --copy
 
 AC_INIT([yabasic], [2.86.7])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
-AC_CONFIG_MACRO_DIRS([/usr/share/aclocal])
 LT_INIT
 
 dnl  get canonical system name
@@ -29,6 +31,9 @@ AC_FUNC_STRTOD
 dnl  create define, if functions not available
 AC_CHECK_FUNCS([strerror mkstemp])
 
+dnl  use our own pkg.m4 from m4 dir
+AC_CONFIG_MACRO_DIRS([m4])
+
 dnl  option to control building with ffi
 AC_ARG_WITH([ffi],
   [AS_HELP_STRING([--with-ffi], [Build with ffi-support for calling foreign libraries @<:@default=yes@:>@])],
@@ -39,6 +44,8 @@ dnl  check for libffi
 if test "x${with_ffi}" = xyes; then
 
    dnl  pkg-config may help to locate ffi
+   dnl  if this cannot be found, I probably need to fix ACLOCAL_PATH to locate pkg.m4
+   dnl  see also:   aclocal --print-ac-dir
    PKG_PROG_PKG_CONFIG
    if test -n "$PKG_CONFIG"; then
       PKG_CHECK_MODULES([FFI], [libffi], [CFLAGS="$CFLAGS $FFI_CFLAGS";LIBS="$LIBS $FFI_LIBS"]) 
