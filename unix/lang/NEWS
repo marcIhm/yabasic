@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.8 (May 9, 2020)
+  - Bringing pkg.m4 with us to ease build process
+
 Version 2.86.7 (April 4, 2020)
   - Using pkg-config (if available) to locate libffi
 
