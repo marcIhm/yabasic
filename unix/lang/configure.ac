@@ -4,7 +4,7 @@ dnl  Maybe run before (which constitutes a basic version if autogen.sh):
 dnl    autoreconf --install
 dnl    automake --add-missing --copy
 
-AC_INIT([yabasic], [2.86.8])
+AC_INIT([yabasic], [2.86.9])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
 LT_INIT

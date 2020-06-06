@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.86.9 (June 6, 2020)
+  - Fix formatting of larger numbers with '####' et.al.
+
 Version 2.86.8 (May 9, 2020)
   - Bringing pkg.m4 with us to ease build process
 
