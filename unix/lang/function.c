@@ -1331,7 +1331,7 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
 
 	/* disassemble in integer and fractional part; both ip and fp will be consumed stepwise in the process */
 	fp = modf(num, &ipdbl);
-	ip = (ulong) ipdbl;
+	ip = (unsigned long) ipdbl;
 	
 	/* variable cr serves as our cursor running from right to left and marks the position to be written next */
 	
@@ -1375,7 +1375,7 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
 	    /* construct fractional part digit by digit */
 	    while (cr < len) {
 		fp *= 10;
-		digit = ((ulong) fp) % 10;
+		digit = ((unsigned long) fp) % 10;
 		dest[cr++] = digits[digit];
 	    }
 	} else {
