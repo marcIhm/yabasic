@@ -1238,9 +1238,10 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
     static char *ctrl = "+- #0";	/* allowed control chars for c-format */
     char formchar;
     char *found, *form;
-    int pre, post, len, nread, digit, colons, dots, i;
+    int pre, post, len, nread, digit, commas, dots, i, cr;
     int neg = FALSE;
-    double ip, fp, round;
+    double ipdbl, fp, round;
+    unsigned long ip;
     static char *digits = "0123456789";
 
     form = format;
@@ -1265,21 +1266,31 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
 	}
     } else {
         /* basic-style format */
+
+	/* make num positive and remember if it has been negative initially */
         if (num < 0) {
             neg = TRUE;
-            num = -num;
+            num = fabs (num);
         }
-        colons = 0;
+
+	/* verify form of ##.###.###,## (e.g.) up front to be able to rely on this; 
+	   also count various parts */
+        commas = 0;
         dots = 0;
         pre = 0;
         post = 0;
         for (form = format; *form; form++) {
             if (*form == ',') {
                 if (dots) {
-                    return 1;
+		    /* commas in fractional part are not supported */
+                    return 1; 
                 }
-                colons++;
+                commas++;
             } else if (*form == '.') {
+		if (dots) {
+		    /* format has more than one decimal dot */
+		    return 1;
+		}
                 dots++;
             } else if (*form == '#') {
                 if (dots) {
@@ -1288,80 +1299,105 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
                     pre++;
                 }
             } else {
+		/* neither '#' nor '.' nor ',' */
                 return 1;
             }
         }
-        if (dots > 1) {
-            return 1;
-        }
+
+	/* prepare destination */
         len = strlen (format);
         dest[len] = '\0';
+
+	/* round to given precision; round away from zero */
         round = 0.5;
         for (i = 0; i < post; i++) {
             round /= 10.;
         }
-        if (fabs (num) < round) {
+	/* if number is below round offset, treat it as zero */
+        if (num < round) {
             neg = FALSE;
-        }
-        num += round;
-        ip = floor (num);
-        fp = num - ip;
-        if (fp > 1 || fp < 0) {
-            fp = 0;
-        }
-        dest[pre + colons] = format[pre + colons];
-        if ((int) ip) {
-            for (i = pre + colons - 1; i >= 0; i--) {
-                if (neg && !(int) ip) {
-                    neg = 0;
-                    dest[i] = '-';
-                } else {
-                    if (format[i] == '#') {
-                        digit = ((int) ip) % 10;
-                        ip /= 10;
-                        if (((int) ip) || digit > 0) {
-                            dest[i] = digits[digit];
-                        } else {
-                            dest[i] = ' ';
-                        }
-                    } else {
-                        if ((int) ip) {
-                            dest[i] = format[i];
-                        } else {
-                            dest[i] = ' ';
-                        }
-                    }
-                }
-            }
-        } else {
-            i = pre + colons - 1;
-            dest[i--] = '0';
-        }
-        if ((neg && i < 0) || ((int) ip)) {
+	    num = 0.0;
+	} else {
+	    /* do the rounding away from zero */
+	    num += round;
+	}
+
+	/* because we cast to long we cannot cope with numbers larger than its max */
+	/* not casting to long on the other hand leads to frequent arithmetic errors */
+        if (num > LONG_MAX) {
             strcpy (dest, format);
             return 0;
         }
+
+	/* disassemble in integer and fractional part; both ip and fp will be consumed stepwise in the process */
+	fp = modf(num, &ipdbl);
+	ip = (ulong) ipdbl;
+	
+	/* variable cr serves as our cursor running from right to left and marks the position to be written next */
+	
+	/* write integer part */
+	cr = pre + commas - 1;
+	do {
+	    if (format[cr] == '#') {
+		/* get digit and reduce integer part */
+		digit = ip % 10;
+		ip = ip/10;
+		dest[cr--] = digits[digit];
+	    } else {
+		/* format[cr] == ','; i.e. we do not need a new digit */
+		dest[cr--] = ip ? ',' : ' ';
+	    }
+	} while (ip && cr >= 0);
+
+	/* given format does not have enough room, this is an error; just copy format into dest and return */
+        if ((neg && cr < 0) || ip) {
+            strcpy (dest, format);
+            return 0;
+        }
+
+	/* minus if appropriate */
         if (neg) {
-            dest[i--] = '-';
+            dest[cr--] = '-';
         }
-        for (; i >= 0; i--) {
-            dest[i] = ' ';
+	
+	/* fill from cursor position back to start */
+        while (cr >= 0) {
+            dest[cr--] = ' ';
         }
-        for (i = pre + colons + 1; i < len; i++) {
-            fp *= 10;
-            digit = (int) fp;
-            fp -= digit;
-            dest[i] = digits[digit];
-        }
-        if (sep && sep[0] && sep[1]) {
-            for (i = 0; i < len; i++) {
-                if (dest[i] == ',') {
-                    dest[i++] = sep[0];
-                }
-                if (dest[i] == '.') {
-                    dest[i++] = sep[1];
-                }
-            }
+
+	/* cursor cr now runs from left to right */
+	
+	/* do we need to write a fractional part ? */
+	cr = pre + commas;
+	if (dots) {
+	    /* write decimal dot */
+	    dest[cr++] = '.';
+	    /* construct fractional part digit by digit */
+	    while (cr < len) {
+		fp *= 10;
+		digit = ((ulong) fp) % 10;
+		dest[cr++] = digits[digit];
+	    }
+	} else {
+	    /* no fractional part needed */
+	    dest[cr++] = '\0';
+	}
+
+	/* until now we used fixed separators ',' for thousands and '.' for decimal; but if
+	   user has given his own separators (e.g. german or swiss style) we need to correct this */
+        if (sep) {
+	    if (sep[0] && sep[1]) {
+		for (i = 0; i < len; i++) {
+		    if (dest[i] == ',') {
+			dest[i++] = sep[0];
+		    }
+		    if (dest[i] == '.') {
+			dest[i++] = sep[1];
+		    }
+		}
+	    } else {
+		return 1;
+	    }
         }
     }
     return 0;
@@ -1415,8 +1451,8 @@ mywait ()			/* wait given number of seconds */
         delay = 0.;
     }
 #ifdef UNIX
-    tv.tv_sec = (int) delay;
-    tv.tv_usec = (delay - (int) delay) * 1000000;
+    tv.tv_sec = (long) delay;
+    tv.tv_usec = (delay - (long) delay) * 1000000;
     select (0, NULL, NULL, NULL, &tv);
 #else /* WINDOWS */
     timerid = SetTimer (NULL, 0, (int) (delay * 1000), (TIMERPROC) NULL);

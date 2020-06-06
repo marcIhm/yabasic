@@ -1,14 +1,17 @@
 #!./yabasic
 
-for i=1 to 11
+for i=1 to 15
   read f$,e$
-  if i > 9 then
+  if i > 11 then
+    read x
+    r$ = str$(x,f$)
+  elsif i > 9
     read p$
     r$ = str$(1000*pi,f$,p$)
   else
     r$ = str$(1000*pi,f$)
   fi
-  if  r$ <> e$ error "Format " + str$(i) + ": " + f$ + " Expected " + e$ + ", but got: " + r$
+  if  r$ <> e$ error "Format " + str$(i) + ": " + f$ + " Expected " + e$ + ", but got: " + r$ + "."
 next i 
 
 
@@ -24,3 +27,8 @@ data "##.###", "##.###"
 
 data "##,###.##", " 3.141,59", ".,"
 data "##,###.##", " 3_141,59", "_,"
+
+data "##########", "4294967295", 4294967295
+data "#################", " -123123123123123", -123123123123123
+data "#################", "  123123123123123", 123123123123123
+data "###########", "###########", 123123123123123
