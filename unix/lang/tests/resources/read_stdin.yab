@@ -1,0 +1,5 @@
+
+while(!eof(0))
+   line input a$
+   print a$
+wend

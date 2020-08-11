@@ -4076,6 +4076,7 @@ end if
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>eof</function>-function checks, if there is still data left within an open file. As an argument it expects the file-number as returned by (or used within) the <function>open</function>-function (or statement).</para>
+	  <para>As a special case, if the argument is zero: test if input from stdin is available.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -7234,7 +7235,8 @@ a=peek(#1)
 	    <varlistentry>
 	      <term><function>peek(a)</function></term>
 	      <listitem>
-		<para>Read a single character from the file <literal>a</literal> (which must be open of course).</para>
+		<para>Read a single byte (a number between 0 and 255) from the file <literal>a</literal> (which must be open of course). You may use the <function><link linkend="ref_chr">chr$</link></function>-function to convert this byte to a string of one character.</para>
+		<para>As a special case, if the argument is zero: read a single byte from stdin.</para>		
 	      </listitem>
 	    </varlistentry>
 

@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2019
+    written by Marc Ihm 1995-2020
     more info at www.yabasic.de
 
     graphic.c --- code for windowed graphics, printing and plotting

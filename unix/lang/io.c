@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2019
+    written by Marc Ihm 1995-2020
     more info at www.yabasic.de
 
     io.c --- code for screen and file i/o
@@ -857,7 +857,7 @@ myclose(void)			/* close the specified stream */
 #endif
 
     s = (int)pop(stNUMBER)->value;
-    if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
+    if (badstream(s, 0)) {
         return;
     }
     if (stream_modes[s] == mCLOSED) {
@@ -918,7 +918,7 @@ myseek(struct command *cmd)	/* reposition file pointer */
         return;
     }
     my_free(mode);
-    if (abs(s) == STDIO_STREAM || badstream(s, 0)) {
+    if (badstream(s, 0)) {
         return;
     }
     if (!(stream_modes[s] & (mREAD | mWRITE))) {
@@ -1044,13 +1044,14 @@ checkstream(void)		/* test if currst is still valid */
 
 
 void
-testeof(struct command *cmd)	/* close the specified stream */
+testeof(struct command *cmd)	/* check if specified stream is at eof */
 {
     int s, c;
     struct stackentry *result;
+    FILE *str;
 
     s = (int)pop(stNUMBER)->value;
-    if (s != STDIO_STREAM && badstream(s, 0)) {
+    if (badstream(s, 0)) {
         return;
     }
     result = push();
@@ -1059,18 +1060,15 @@ testeof(struct command *cmd)	/* close the specified stream */
         result->value = 1.;
         return;
     }
-    if (!s) {
-        result->value = 0.;
-        return;
-    }
-    c = getc(streams[s]);
+    str = s ? STDIN_FILENO : streams[s]
+    c = getc(str);
     if (c == EOF) {
         result->value = 1.;
         return;
     }
 
     result->value = 0.;
-    ungetc(c, streams[s]);
+    ungetc(c, str);
     return;
 }
 

@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2019
+    written by Marc Ihm 1995-2020
     more info at www.yabasic.de
 
     function.c --- code for functions
@@ -1663,7 +1663,7 @@ peek (char *dest)		/* peek into internals */
 static int
 peekfile (int stream)		/* read a byte from stream */
 {
-    if (stream && badstream (stream, 0)) {
+    if (badstream (stream, 0)) {
         return 0;
     }
     if (stream && !(stream_modes[stream] & mREAD)) {

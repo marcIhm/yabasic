@@ -1,0 +1,4 @@
+
+while(!eof(0))
+   print chr$(peek(0))
+wend
