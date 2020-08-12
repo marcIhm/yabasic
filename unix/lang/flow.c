@@ -678,13 +678,17 @@ skiponce (struct command *cmd)	/* skip next command exectly once */
 
 
 void
-resetskiponce (struct command *cmd)	/* find and reset next skip */
+resetskiponce (struct command *cmd, int n)	/* find and reset nth skip */
 {
     struct command *c;
+    int i;
 
     c = cmd;
-    while (c->type != cSKIPONCE) {
-        c = c->next;
+
+    for(i=0;i<n;i++) {
+	while (c->type != cSKIPONCE) {
+	    c = c->next;
+	}
     }
     c->tag = 1;
 }
@@ -897,9 +901,7 @@ startfor (void)			/* compute initial value of for-variable */
     struct stackentry *p;
 
     p = push ();
-    p->value =
-        stackhead->prev->prev->prev->prev->value -
-        stackhead->prev->prev->value;
+    p->value = stackhead->prev->prev->prev->prev->value
     p->type = stNUMBER;
 
     return;

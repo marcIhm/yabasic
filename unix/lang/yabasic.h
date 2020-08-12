@@ -312,7 +312,7 @@ enum cmd_type {
     cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
-    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cCOMPILE, cEXECUTE, cEXECUTE2,
+    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2,
 
     cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARREFS,	/* everything with "()" */
     cARDIM, cARSIZE, cTOKEN, cTOKEN2, cTOKENALT, cTOKENALT2,
@@ -690,7 +690,7 @@ void myreturn (struct command *);
 void findnop ();
 void skipper (void);
 void skiponce (struct command *);
-void resetskiponce (struct command *);
+void resetskiponce (struct command *, int);
 void decide (void);
 void pushlabel (void);
 void poplabel (void);

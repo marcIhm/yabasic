@@ -1184,6 +1184,7 @@ initialize (void)
     cexplanation[cSKIPPER] = "SKIPPER";
     cexplanation[cSKIPONCE] = "SKIPONCE";
     cexplanation[cRESETSKIPONCE] = "RESETSKIPONCE";
+    cexplanation[cRESETSKIPONCE2] = "RESETSKIPONCE2";
     cexplanation[cNOP] = "NOP";
     cexplanation[cEND_FUNCTION] = "END_FUNCTION";
     cexplanation[cDIM] = "DIM";
@@ -1567,7 +1568,10 @@ run_it ()
                 skiponce (current);
                 DONE;
             case cRESETSKIPONCE:
-                resetskiponce (current);
+                resetskiponce (current,1);
+                DONE;
+            case cRESETSKIPONCE2:
+                resetskiponce (current,2);
                 DONE;
             case cBREAK_MULTI:
                 mybreak (current);

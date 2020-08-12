@@ -1,0 +1,9 @@
+for i = 0.2 to 5
+  print i
+next i
+if i <> 4.2 exit 1
+
+for i = -5 to 5
+  print i
+next i
+if i <> 5 exit 1

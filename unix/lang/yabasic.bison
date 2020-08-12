@@ -603,6 +603,7 @@ paramitem: tSYMBOL {create_require(stNUMBER);create_makelocal(dotify($1,FALSE),s
 for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=yylineno;} tSYMBOL tEQU 
             {pushname(dotify($3,FALSE)); /* will be used by next_symbol to check equality,NULL */
 	     add_command(cRESETSKIPONCE,NULL,NULL);
+	     add_command(cRESETSKIPONCE2,NULL,NULL);
 	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
 	  expression tTO expression 
 	  step_part { /* pushes another expression */
@@ -613,6 +614,7 @@ for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_n
 	     poplabel();
 
 	     add_command(cPUSHDBLSYM,dotify($3,FALSE),NULL);
+	     add_command(cSKIPONCE,NULL,NULL);
 	     add_command(cFORINCREMENT,NULL,NULL);
 	     add_command(cPOPDBLSYM,dotify($3,FALSE),NULL);
 	     add_command(cPUSHDBLSYM,dotify($3,FALSE),NULL);
