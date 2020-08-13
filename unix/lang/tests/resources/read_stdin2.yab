@@ -1,4 +1,10 @@
 
+n = 0
 while(!eof(0))
-   print chr$(peek(0))
+   cc$ = c$
+   c$ = chr$(peek(0))
+   print c$;
+   n = n + 1
+   if n > 100 error "infinite loop"
 wend
+if cc$ <> "0" error "unexpected: " + cc$

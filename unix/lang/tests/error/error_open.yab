@@ -1,7 +1,7 @@
-#expect#---Error in error_within_short_if.yab, line 7:
-#expect#---Error: syntax error
-#expect#   if (2>1) this does not compute
-#expect#                 ^~~~
-#expect#---Error: Couldn't parse program
-#expect#---Error: Program not executed
+#expect#---Error in error_open.yab, line 7:
+#expect#---Error: invalid stream number 0
+#expect#   open #0,"foo.yab"
+#expect#                    ^
+#expect#---Error: Program stopped due to an error
+
 open #0,"foo.yab"

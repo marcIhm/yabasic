@@ -1,5 +1,9 @@
 
+n = 0
 while(!eof(0))
-   line input a$
-   print a$
+   line input "" l$
+   print l$
+   n = n + 1
+   if n > 100 error "infinite loop"
 wend
+if l$ <> "1234567890" error "unexpected: " + l$

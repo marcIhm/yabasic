@@ -1051,7 +1051,7 @@ testeof(struct command *cmd)	/* check if specified stream is at eof */
     FILE *str;
 
     s = (int)pop(stNUMBER)->value;
-    if (badstream(s, 0)) {
+    if (s && badstream(s, 0)) {
         return;
     }
     result = push();
@@ -1060,7 +1060,7 @@ testeof(struct command *cmd)	/* check if specified stream is at eof */
         result->value = 1.;
         return;
     }
-    str = s ? STDIN_FILENO : streams[s]
+    str = s ? streams[s] : stdin ;
     c = getc(str);
     if (c == EOF) {
         result->value = 1.;

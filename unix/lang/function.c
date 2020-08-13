@@ -1661,17 +1661,17 @@ peek (char *dest)		/* peek into internals */
 
 
 static int
-peekfile (int stream)		/* read a byte from stream */
+peekfile (int s)		/* read a byte from stream */
 {
-    if (badstream (stream, 0)) {
+    if (s && badstream (s, 0)) {
         return 0;
     }
-    if (stream && !(stream_modes[stream] & mREAD)) {
-        sprintf (string, "stream %d not open for reading", stream);
+    if (s && !(stream_modes[s] & mREAD)) {
+        sprintf (string, "stream %d not open for reading", s);
         error (sERROR, string);
         return 0;
     }
-    return fgetc (stream ? streams[stream] : stdin);
+    return fgetc (s ? streams[s] : stdin);
 }
 
 

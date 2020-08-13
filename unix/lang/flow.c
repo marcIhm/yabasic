@@ -78,12 +78,13 @@ check_return_value (struct command *cmd)	/* check return value of function */
         s = stackhead->prev;
         if (s->type == stNUMBER) {
             sprintf (string, "subroutine returns number %g", s->value);
-        } else if (s->type == stSTRING)
+        } else if (s->type == stSTRING) {
             sprintf (string, "subroutine returns string '%s'",
                      (char *) s->pointer);
-        else
+        } else {
             sprintf (string, "subroutine returns something strange (%d)",
                      s->type);
+	}
         error (sDEBUG, string);
     }
 }
@@ -673,6 +674,13 @@ skiponce (struct command *cmd)	/* skip next command exectly once */
     if (cmd->tag) {
         current = current->next;
     }
+    if (severity_threshold <= sDEBUG) {
+	if (cmd->tag) {
+	    error (sDEBUG, "skipping next command");
+	} else {
+	    error (sDEBUG, "not Skipping next command");
+	}
+    }
     cmd->tag = 0;
 }
 
@@ -687,6 +695,9 @@ resetskiponce (struct command *cmd, int n)	/* find and reset nth skip */
 
     for(i=0;i<n;i++) {
 	while (c->type != cSKIPONCE) {
+	    c = c->next;
+	}
+	if (i == 0 && n == 2) {
 	    c = c->next;
 	}
     }
@@ -901,7 +912,7 @@ startfor (void)			/* compute initial value of for-variable */
     struct stackentry *p;
 
     p = push ();
-    p->value = stackhead->prev->prev->prev->prev->value
+    p->value = stackhead->prev->prev->prev->prev->value;
     p->type = stNUMBER;
 
     return;
