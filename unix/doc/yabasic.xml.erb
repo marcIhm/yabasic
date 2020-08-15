@@ -2301,7 +2301,7 @@ print arraydim(a()),arraydim(b())
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>arraysize</function>-function computes the size of the specified dimension of a given array. Here, <emphasis>size</emphasis> stands for the maximum number, that may be used as an index for this array. The first argument to this function must be an <link linkend="ref_array_references">reference to an array</link>, the second one specifies, which of the multiple dimensions of the array should be taken to calculate the size.</para>
+	  <para>The <function>arraysize</function>-function computes the size of the specified dimension of a given array. Here, <emphasis>size</emphasis> stands for the maximum number, that may be used as an index for this array. The first argument to this function must be an <link linkend="ref_array_references">reference to an array</link>, the second one specifies, which of the multiple dimensions of the array should be taken to calculate the size. Please note, that <function>arraysize</function> returns the value that has been used in the actual <function>dim</function>-statement, the real (internal) size of the array is allocated <emphasis>one larger</emphasis> in each dimension to have a first element at index 0; however this is <emphasis>not</emphasis> reflected by the output of <function>arraysize</function>.</para>
 	  <para>An Example involving subroutines: Let's say, an array has been declared as <literal>dim a(10,20)</literal> (that is a two-dimensional array or a matrix). If this array is passed as an <link linkend="ref_array_references">array reference</link> to a subroutine, this sub will not know, what sort of array has been passed. With the <function>arraydim</function>-function the sub will be able to find the dimension of the array, with the <function>arraysize</function>-function it will be able to find out the size of this array in its two dimensions, which will be 10 and 20 respectively.</para>
 	  <para>Our sample array is two dimensional; if you envision it as a matrix this matrix has 10 lines and 20 columns (see the <function>dim</function>-statement above. To state it more formally: The first dimension (lines) has a size of 10, the second dimension (columns) has a size of 20; these numbers are those returned by <literal>arraysize(a(),1)</literal> and <literal>arraysize(a(),2)</literal> respectively. Refer to the example below for a typical usage.</para>
 	</refsect1>
@@ -3608,9 +3608,8 @@ dim array$(x,y)
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>dim</function>-command prepares one or more arrays (of either strings or numbers) for later use. This command can also be used to enlarges an existing array.</para>
-	  <para>When an array is created with the <function>dim</function>-statement, memory is allocated and all elements are initialized with either 0 (for numerical arrays) or "" (for string arrays).</para>
-	  <para>If the array already existed, and the <function>dim</function>-statement specifies a larger size than the current size, the array is enlarged and any old content is preserved.</para>
-	  <para>Note, that <function>dim</function> cannot be used to shrink an array: If you specify a size, that is smaller than the current size, the <function>dim</function>-command does nothing.</para>
+	  <para>When an array is created with the <function>dim</function>-statement, memory is allocated and all elements are initialized with either 0 (for numerical arrays) or "" (for string arrays). Please be aware, that the <function>dim</function> reserves room for one element <emphasis>more</emphasis> than actually specified, e.g. <programlisting>dim(10)</programlisting> reserves memory for <emphasis>11</emphasis> elements. This makes it possible to access element 0 as well as element 10, which serves the conventions of <application>C</application> as well as <acronym>basic</acronym></para>
+	  <para>If the array already existed, and the <function>dim</function>-statement specifies a larger size than the current size, the array is enlarged and any old content is preserved. But note, that <function>dim</function> cannot be used to shrink an array: If you specify a size, that is smaller than the current size, the <function>dim</function>-command does nothing.</para>
 	  <para>Finally: To create an array, that is only known within a single subroutine, you should use the command <function><link linkend="ref_local">local</link></function>, which creates local variables as well as local arrays.</para>
 	</refsect1>
 	<refsect1>
@@ -3618,11 +3617,15 @@ dim array$(x,y)
 	  <informalexample>
 	    <programlisting>
 dim a(5,5)
+
 for x=1 to 5:for y=1 to 5
   a(x,y)=int(ran(100))
 next y:next x
+
 printmatrix(a())
+
 dim a(7,7)
+
 printmatrix(a())
 
 sub printmatrix(ar())

@@ -1,6 +1,6 @@
-Version 2.86.10 (August 12, 2020)
-  - Fixed an edge-case in for-loops
+Version 2.87.0 (August 15, 2020)
   - Allow eof(0) and peek(0) to refer to standard input
+  - Fixed an edge-case in for-loops that start with a fractional number
 
 
 Version 2.86.9 (June 6, 2020)

@@ -1,0 +1,12 @@
+dim a(5,5)
+for x=0 to 5:for y=0 to 5
+  a(x,y)=1
+next y:next x
+
+dim a(7,7)
+sum = 0
+for x=0 to 7:for y=0 to 7
+  sum = sum + a(x,y)
+next y:next x
+
+if sum <> 36 error "sum " + str$(sum) + " is not expected"
