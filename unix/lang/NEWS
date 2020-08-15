@@ -1,38 +1,10 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
-Version 2.86.10 (August 12, 2020)
+Version 2.87.0 (August 12, 2020)
   - Fixed an edge-case in for-loops
   - Allow eof(0) and peek(0) to refer to standard input
 
 Version 2.86.9 (June 6, 2020)
   - Fix formatting of larger numbers with '####' et.al.
 
-Version 2.86.8 (May 9, 2020)
-  - Bringing pkg.m4 with us to ease build process
-
-Version 2.86.7 (April 4, 2020)
-  - Using pkg-config (if available) to locate libffi
-
-Version 2.86.6 (March 8, 2020)
-  - Advancing version for technical reasons
-
-Version 2.86.5 (March 8, 2020)
-  - Fix double backslash in string before quote
-
-Version 2.86.4 (January 1, 2020)
-  - Fix for do-loop / continue
-  
-Version 2.86.3 (December 15, 2019)
-  - Fix for heap overflow found with honggfuzz
-  
-Version 2.86.2 (December 12, 2019)
-  - Fix for heap-buffer-overflow found with address sanitizer
-  
-Version 2.86.1 (December 8, 2019)
-  - Fix for heap-buffer-offerflow
-  
-Version 2.86.0 (November 28, 2019)
-  - Added new functions bitnot
-  - Fixes for bit-arithmetic (signes/unsigned)
-  
