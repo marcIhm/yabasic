@@ -139,8 +139,8 @@ union FFI_VAL {
     int32_t ffisint32;
     uint64_t ffiuint64;
     int64_t ffisint64;
-    float_t ffifloat;
-    double_t ffidouble;
+    float ffifloat;
+    double ffidouble;
     char ffischar;
     short ffisshort;
     int ffisint;
@@ -711,8 +711,8 @@ frn_cast_to_ffi_type (union FFI_VAL *value, ffi_type *type, double num) /* cast 
     if (type == &ffi_type_sint32) (*value).ffisint32 = (int32_t) num;
     if (type == &ffi_type_uint64) (*value).ffiuint64 = (uint64_t) num;
     if (type == &ffi_type_sint64) (*value).ffisint64 = (int64_t) num;
-    if (type == &ffi_type_float) (*value).ffifloat = (float_t) num;
-    if (type == &ffi_type_double) (*value).ffidouble = (double_t) num;
+    if (type == &ffi_type_float) (*value).ffifloat = (float) num;
+    if (type == &ffi_type_double) (*value).ffidouble = (double) num;
     if (type == &ffi_type_schar) (*value).ffischar = (char) num;
     if (type == &ffi_type_sshort) (*value).ffisshort = (short) num;
     if (type == &ffi_type_sint) (*value).ffisint = (int) num;
