@@ -177,7 +177,7 @@ task :sources => :products_dir do
   end
 end
   
-desc 'Create rpm'
+desc 'Create rpm and debian'
 task :rpm => :products_dir do
   cd "lang" do
     sh "make install DESTDIR=#{Dir.pwd}/pkg"
