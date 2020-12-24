@@ -915,15 +915,17 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
     int ret;
     if (curinized) {
         reset_shell_mode ();
+	putp (exit_ca_mode);
     }
     ret = system (cmd);
     if (curinized) {
-        if (tcsetpgrp(STDIN_FILENO, getpid())) {
+        if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
 	    sprintf(string,"could not get control of terminal: %s",
 		    my_strerror(errno));
 	    error (sERROR,string);
 	    return ret;
 	}
+	putp (enter_ca_mode);
 	reset_prog_mode ();
     }
 

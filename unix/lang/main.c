@@ -982,21 +982,21 @@ end_it (void)			/* perform shutdown-operations */
 #endif
         mystream (STDIO_STREAM);
         onestring ("---Program done, press RETURN---\n");
-#ifdef WINDOWS
+#ifdef UNIX
+	if (curinized) {
+	    getnstr (l, INBUFFLEN);
+	} else{
+	    fgets (l, INBUFFLEN, stdin);
+	}
+#else
         SetConsoleMode (ConsoleInput, InitialConsole & (~ENABLE_ECHO_INPUT));
         FlushConsoleInputBuffer (ConsoleInput);
-#endif
         fgets (l, INBUFFLEN, stdin);
-#ifdef WINDOWS
         if (wthandle != INVALID_HANDLE_VALUE) {
             TerminateThread (wthandle, 0);
         }
 #endif
-#ifdef UNIX
     }
-#else
-    }
-#endif
 
 #ifdef UNIX
     if (curinized)
@@ -1004,16 +1004,13 @@ end_it (void)			/* perform shutdown-operations */
         endwin ();
     }
 #else
-    if (printerfont)
-    {
+    if (printerfont) {
         DeleteObject (printerfont);
     }
-    if (myfont)
-    {
+    if (myfont) {
         DeleteObject (myfont);
     }
-    if (printer)
-    {
+    if (printer) {
         DeleteDC (printer);
     }
 #endif
@@ -2215,7 +2212,7 @@ strip (char *name)		/* strip down to minimal name */
 
 
 void
-compile ()			/* create s subroutine at runtime */
+compile ()			/* create subroutine at runtime */
 {
     open_string (pop (stSTRING)->pointer);
     yyparse ();

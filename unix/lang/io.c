@@ -271,7 +271,7 @@ curinit(void)			/* initialize curses */
 #endif
 
 #ifdef UNIX
-    if (tcsetpgrp(STDIN_FILENO, getpid())) {
+    if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
 	sprintf(string,"could not get control of terminal: %s",
                 my_strerror(errno));
         error (sERROR,string);
