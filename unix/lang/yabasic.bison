@@ -166,6 +166,10 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
 %token tFRNBF_GET_BUFFER tFRNBF_SET_BUFFER
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
+%token tSTART_PROGRAM tSTART_EXPRESSION tSTART_STRING_EXPRESSION tSTART_FUNCTION_DEFINITION
+%token tEVAL tEVAL2
+
+%start program_or_expression
 
 %left tOR
 %left tAND
@@ -182,6 +186,12 @@ void collect_missing_clauses(char *string, char exclude) {
 %left tPOW
 
 %%
+
+program_or_expression: tSTART_PROGRAM program
+  | tSTART_EXPRESSION expression
+  | tSTART_STRING_EXPRESSION string_expression
+  | tSTART_FUNCTION_DEFINITION function_definition
+  ;
 
 program: statement_list tEOPROG {YYACCEPT;}
   ;
@@ -228,6 +238,7 @@ statement:  /* empty */
   | tCOMPILE string_expression {add_command(cCOMPILE,NULL,NULL);}
   | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tEVAL string_expression {create_function(fEVAL);add_command(cPOP,NULL,NULL);}
   | tPRINT printintro printlist {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);} 
   | tPRINT printintro printlist ';' {create_colour(0);create_pps(cPOPSTREAM,0);}
   | tPRINT printintro printlist ',' {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
@@ -386,6 +397,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tFRNBF_GET2 '(' string_expression ',' expression ',' expression ')' {create_function(fFRNBF_GET_STRING);} 
   | tFRNBF_GET_BUFFER '(' string_expression ',' expression ')' {create_function(fFRNBF_GET_BUFFER);} 
+  | tEVAL2 '(' string_expression ')' {create_function(fEVAL2);}
   ;
 
 assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
@@ -505,6 +517,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tOPEN '(' hashed_number ',' tPRINTER ')' {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+  | tEVAL '(' string_expression ')' {create_function(fEVAL);}
   ;
 
 const: number {$$=$1;}

@@ -369,7 +369,7 @@ push ()
 
 struct stackentry *
 pop (int etype)
-/* pops element from stack and its type */
+/* pops element from stack and check its type */
 {
     static char expected[50];
     static char found[50];
@@ -1349,5 +1349,3 @@ count_args (int skipfirst)	/* count number of numeric arguments on stack */
     }
     return -1;
 }
-
-

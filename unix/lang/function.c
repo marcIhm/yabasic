@@ -442,6 +442,13 @@ function (struct command *current)	/* performs a function */
         value = exp (a1->value);
         result = stNUMBER;
         break;
+    case fEVAL:
+	/* we do not need to process a value, because we use the one already on stack */
+	eval (type);
+	break;
+    case fEVAL2:
+	eval (type);
+	break;
     case fLOG:
         value = log (a1->value);
         result = stNUMBER;
@@ -897,13 +904,17 @@ function (struct command *current)	/* performs a function */
         return;
     }
 
-    stack = push ();
-    /* copy result */
-    stack->type = result;
-    if (result == stSTRING) {
-        stack->pointer = pointer;
-    } else {
-        stack->value = value;
+    if (type != fEVAL && type != fEVAL2) {
+	/* push new element on stack; otherwise (for eval and eval$), */
+	/* we use the value already on top of stack */
+	stack = push ();
+	/* copy result */
+	stack->type = result;
+	if (result == stSTRING) {
+	    stack->pointer = pointer;
+	} else {
+	    stack->value = value;
+	}
     }
 }
 

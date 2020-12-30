@@ -63,6 +63,7 @@
 #include <X11/keysymdef.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <term.h>
 #ifdef HAVE_NCURSES_H
 #include <ncurses.h>
 #else
@@ -200,7 +201,7 @@ void switch_compare (void);	/* compare topmost values for switch statement */
 
 /* symbol.c */
 extern struct stackentry *stackroot;	/* first element of stack */
-extern struct stackentry *stackhead;	/* last element of stack */
+extern struct stackentry *stackhead;	/* last element of stack; actually stackhead->prev is the last element, that has contents */
 extern void query_array (struct command *cmd);	/* query array */
 extern struct command *lastref;	/* last command in UDS referencing a symbol */
 extern struct command *firstref;	/* first command in UDS referencing a symbol */
@@ -214,6 +215,7 @@ extern int in_short_if;		/* true, if within a short if */
 extern int library_chain_length;	/* length of library_chain */
 extern struct library *library_chain[];	/* list of all library file names */
 extern int include_depth; /* current position in libfile_stack */
+extern int start_token; /* pseudo token used to switch start state */
 
 /* bison.c */
 extern char *current_function;	/* name of currently parsed function */
@@ -284,6 +286,7 @@ enum functions {
     fSQRT, fSQR, fFRAC, fROUND, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
+    fEVAL, fEVAL2,
     fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fSHL, fSHR, fLOG2,
     fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2,
@@ -444,9 +447,9 @@ struct command {
     struct command *jump;		/* pointer to jump destination */
     char *symname;			/* name of symbol associated with command */
     struct command *nextref;	/* next cmd within function referencing a symbol */
-    struct command *nextassoc;	/* next cmd within within chain of associated commands */
-    int args;			/* number of arguments for function/array call */
-    /* or stream number for open/close             */
+    struct command *nextassoc;	/* next cmd within chain of associated commands */
+    int args;			/* number of arguments for function/array call 
+				   or stream number for open/close */
     int tag;			/* char/int to pass some information */
     int line;			/* line this command has been created for */
     int first_column;           /* column, at which this command started */
@@ -515,6 +518,7 @@ extern void add_variables (char *);
 void compile (void);
 void create_execute (int);
 void execute (struct command *);
+void eval (int);
 int isbound (void);
 
 /* io.c */

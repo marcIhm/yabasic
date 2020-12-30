@@ -1,0 +1,23 @@
+#!./yabasic
+
+for a=1 to 2
+  read expr$,result
+  found = eval(expr$)
+  if eval(expr$) <> result then
+     print "Expression " + expr$ + " should eval to " + result + " but gave " + found
+     exit 1
+  end
+next a
+
+for a=1 to 2
+  read expr$,result$
+  found$ = eval(expr$)
+  if eval$(expr$) <> result$ then
+     print "Expression " + expr$ + " should eval to " + result$ + " but gave " + found$
+     exit 1
+  end
+next a
+
+
+data "1+2",3,"2+3",5
+data "\"foo\" + \"bar\"","foobar","left$(\"foo\",1)","f"

@@ -290,6 +290,7 @@ main (int argc, char **argv)
 	}
 
 	set_program_state (spCOMPILING);
+	start_token = tSTART_PROGRAM;
 	if (yyparse () && severity_so_far >= sERROR) {
 	    error_without_position (sERROR, "Couldn't parse program");
 	}
@@ -1404,6 +1405,8 @@ initialize (void)
     fexplanation[fTHREEARGS] = "THREEARGS";
     fexplanation[fGETBIT] = "GETBIT";
     fexplanation[fGETCHAR] = "GETCHAR";
+    fexplanation[fEVAL] = "EVAL";
+    fexplanation[fEVAL2] = "EVAL2";
     fexplanation[fLAST_FUNCTION] = "LAST_FUNCTION";
     for (i = fFIRST_FUNCTION; i <= fLAST_FUNCTION; i++) {
 	if (!fexplanation[i]) {
@@ -2215,6 +2218,7 @@ void
 compile ()			/* create subroutine at runtime */
 {
     open_string (pop (stSTRING)->pointer);
+    start_token = tSTART_FUNCTION_DEFINITION;
     yyparse ();
     add_command (cEND, NULL, NULL);
 }
@@ -2277,6 +2281,12 @@ execute (struct command *cmd)	/* execute a subroutine */
     reorder_stack_before_call (ret);
     current = newcurr;
     free (fullname);
+}
+
+
+void
+eval (int type)			/* do the work for functions and command eval */
+{
 }
 
 

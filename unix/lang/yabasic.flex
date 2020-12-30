@@ -61,6 +61,7 @@ int yycolumn=1;
 int yydoublenl;
 #define YY_USER_ACTION yydoublenl=FALSE;yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
 
+int start_token;
 %}
 
 WS [ \t\f\r\v]
@@ -73,6 +74,15 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 %x PASTIMPORT
 
 %%
+%{
+  if (start_token)
+      {
+        int t = start_token;
+        start_token = 0;
+        return t;
+      }
+%}
+
 <<EOF>> {
   if (severity_threshold <= sDEBUG) {
     sprintf(string,"Closing file '%s'",currlib->short_name);
@@ -128,6 +138,8 @@ IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMP
 EXECUTE return tEXECUTE;
 "EXECUTE$" return tEXECUTE2;
 COMPILE return tCOMPILE;
+EVAL return tEVAL;
+"EVAL$" return tEVAL2;
 RUNTIME_CREATED_SUB return tRUNTIME_CREATED_SUB;
 END{WS}+SUB return tENDSUB;
 END{WS}+IF return tENDIF;

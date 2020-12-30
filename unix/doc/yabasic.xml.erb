@@ -4217,7 +4217,7 @@ print euler
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name may be specified as a string expression.</para>
+	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name is specified as a string expression.</para>
 	  <para>This feature is the only way to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) during the course of execution of your program.</para>
 	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example below).</para>
 	</refsect1>
@@ -4233,7 +4233,8 @@ end sub
 	    <para>The example simply prints <computeroutput>Hello world !</computeroutput>, which is the return value of the user defined subroutine <function>foo$</function>. The same could be achieved by executing:</para>
 	    <programlisting>
 print foo$(a$,b$)
-</programlisting>
+	    </programlisting>
+	    <para>So this example does not really <emphasis>need</emphasis> the <function>execute$</function>-function.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
