@@ -2217,9 +2217,17 @@ strip (char *name)		/* strip down to minimal name */
 void
 compile ()			/* create subroutine at runtime */
 {
-    open_string (pop (stSTRING)->pointer);
+    char *compile_text = pop (stSTRING)->pointer;
+    open_string (compile_text);
+    if (severity_threshold <= sDEBUG) {
+	sprintf (string, "Compiling string as subroutine definition: '%s'", compile_text);
+	error (sDEBUG, string);
+    }
     start_token = tSTART_FUNCTION_DEFINITION;
-    yyparse ();
+    if (yyparse () && severity_so_far >= sERROR) {
+	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
+	error_without_position (sERROR, string);
+    }
     add_command (cEND, NULL, NULL);
 }
 
@@ -2285,8 +2293,49 @@ execute (struct command *cmd)	/* execute a subroutine */
 
 
 void
-eval (int type)			/* do the work for functions and command eval */
+eval (struct command *current, int type)			/* do the work for functions and command eval */
 {
+    struct command **eval_seek = &(current->nextassoc);
+    struct command *eval_exec;
+    char *eval_text = my_strdup (pop (stSTRING)->pointer);
+    struct stackentry *ret_if_error;
+    const char start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_STATEMENT_LIST};
+    const char *description[] = {"numeric expression", "string expression", "statement list"};
+
+    /* try to find text of current eval in associated list of previous evals */
+    while(*eval_seek && !strcmp(eval_text,(char *) (*eval_seek)->pointer)) {
+	*eval_seek = &(*eval_seek->nextassoc);
+    }
+    if (*eval_seek) {
+	/* eval text has been found and need not be compiled */
+	eval_exec = *eval_seek;
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "String for %s has already been compiled before", description[type - fEVAL]);
+	    error (sDEBUG, string);
+	}
+    } else {
+	/* eval text has not been found and needs to be compiled before execution */
+	eval_exec = add_command(cEVAL, NULL, eval_text);
+	start_token = start_tokens[type - fEVAL];
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "Compiling string as %s", description[type - fEVAL]);
+	    error (sDEBUG, string);
+	}
+	if (yyparse () && severity_so_far >= sERROR) {
+	    sprintf (string, "Couldn't parse string as %s: '%s'", description[type - fEVAL], eval_text);
+	    error_without_position (sERROR, string);
+	    ret_if_error = push ();
+	    if (type == fEVAL2) {
+		ret_if_error->type = stSTRING;
+		ret_if_error->pointer = my_strdup("");
+	    } else {
+		ret_if_error->type = stNUMBER;
+		ret_if_error->value = 0.0;
+	    }
+	    return;
+	}
+
+    }
 }
 
 

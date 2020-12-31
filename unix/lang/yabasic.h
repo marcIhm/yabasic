@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2019
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -286,7 +286,7 @@ enum functions {
     fSQRT, fSQR, fFRAC, fROUND, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
-    fEVAL, fEVAL2,
+    fEVAL, fEVAL2, fEVAL3,
     fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fSHL, fSHR, fLOG2,
     fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2,
@@ -315,7 +315,7 @@ enum cmd_type {
     cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
-    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2,
+    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL,
 
     cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARREFS,	/* everything with "()" */
     cARDIM, cARSIZE, cTOKEN, cTOKEN2, cTOKENALT, cTOKENALT2,
@@ -403,14 +403,16 @@ enum search_modes {
 
 struct stackentry {
     /* one element on stack */
-    int type;			/* contents of entry */
+    int type;			/* type of entry */
     struct stackentry *next;
     struct stackentry *prev;
-    void *pointer;		/* multiuse ptr */
-    double value;			/* double value, only one of pointer or value is used */
+    void *pointer;		/* multi-use pointer, e.g. for strings */
+    double value;		/* double value, only one of pointer or value is used */
 };
 
 /*
+  A remark on Symbols:
+
   symbols are organized as a stack of lists: for every procedure call
   a new list is pushed onto the stack; all local variables of this
   function are chained into this list. After return from this procedure,
@@ -447,7 +449,8 @@ struct command {
     struct command *jump;		/* pointer to jump destination */
     char *symname;			/* name of symbol associated with command */
     struct command *nextref;	/* next cmd within function referencing a symbol */
-    struct command *nextassoc;	/* next cmd within chain of associated commands */
+    struct command *nextassoc;	/* next cmd within chain of associated commands; used for commands: data, docu
+				   eval, label */
     int args;			/* number of arguments for function/array call 
 				   or stream number for open/close */
     int tag;			/* char/int to pass some information */
@@ -518,7 +521,7 @@ extern void add_variables (char *);
 void compile (void);
 void create_execute (int);
 void execute (struct command *);
-void eval (int);
+void eval (struct command *, int);
 int isbound (void);
 
 /* io.c */

@@ -444,10 +444,10 @@ function (struct command *current)	/* performs a function */
         break;
     case fEVAL:
 	/* we do not need to process a value, because we use the one already on stack */
-	eval (type);
+	eval (current, type);
 	break;
     case fEVAL2:
-	eval (type);
+	eval (current, type);
 	break;
     case fLOG:
         value = log (a1->value);

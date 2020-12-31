@@ -166,7 +166,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
 %token tFRNBF_GET_BUFFER tFRNBF_SET_BUFFER
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
-%token tSTART_PROGRAM tSTART_EXPRESSION tSTART_STRING_EXPRESSION tSTART_FUNCTION_DEFINITION
+%token tSTART_PROGRAM tSTART_EXPRESSION tSTART_STRING_EXPRESSION tSTART_STATEMENT_LIST tSTART_FUNCTION_DEFINITION
 %token tEVAL tEVAL2
 
 %start program_or_expression
@@ -190,6 +190,7 @@ void collect_missing_clauses(char *string, char exclude) {
 program_or_expression: tSTART_PROGRAM program
   | tSTART_EXPRESSION expression
   | tSTART_STRING_EXPRESSION string_expression
+  | tSTART_STATEMENT_LIST statement_list
   | tSTART_FUNCTION_DEFINITION function_definition
   ;
 
@@ -238,7 +239,7 @@ statement:  /* empty */
   | tCOMPILE string_expression {add_command(cCOMPILE,NULL,NULL);}
   | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
-  | tEVAL string_expression {create_function(fEVAL);add_command(cPOP,NULL,NULL);}
+  | tEVAL string_expression {create_function(fEVAL3);add_command(cPOP,NULL,NULL);}
   | tPRINT printintro printlist {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);} 
   | tPRINT printintro printlist ';' {create_colour(0);create_pps(cPOPSTREAM,0);}
   | tPRINT printintro printlist ',' {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
