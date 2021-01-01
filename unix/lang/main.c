@@ -488,7 +488,7 @@ add_command (int type, char *symname, char *diag)
         cmdhead->symname = my_strdup (symname);
     }
     commandcount++;
-    cmdhead->pointer = NULL;	/* no data yet */
+    cmdhead->pointer = NULL;
     cmdhead->tag = 0;
     cmdhead->jump = NULL;
     cmdhead->nextassoc = NULL;
@@ -499,10 +499,10 @@ add_command (int type, char *symname, char *diag)
 
     /* link into chain of commands referencing a symbol */
     if (symname) {
-        if (lastref) {
-            lastref->nextref = cmdhead;
+        if (lastsymref) {
+            lastsymref->nextsymref = cmdhead;
         }
-        lastref = cmdhead;
+        lastsymref = cmdhead;
     }
 
     /* create new command */
@@ -512,7 +512,7 @@ add_command (int type, char *symname, char *diag)
     new->prev = cmdhead;
     new->pointer = NULL;
     new->symbol = NULL;
-    new->nextref = NULL;
+    new->nextsymref = NULL;
     new->nextassoc = NULL;
     new->symname = NULL;
     new->switch_state = NULL;
@@ -1196,7 +1196,7 @@ initialize (void)
     cexplanation[cNEGATE] = "NEGATE";
     cexplanation[cPUSHDBLSYM] = "PUSHDBLSYM";
     cexplanation[cREQUIRE] = "REQUIRE";
-    cexplanation[cCLEARREFS] = "CLEARREFS";
+    cexplanation[cCLEARSYMREFS] = "CLEARSYMREFS";
     cexplanation[cPUSHSYMLIST] = "PUSHSYMLIST";
     cexplanation[cPOPSYMLIST] = "POPSYMLIST";
     cexplanation[cMAKELOCAL] = "MAKELOCAL";
@@ -1648,8 +1648,8 @@ run_it ()
             case cPUSHSTR:
                 pushstr (current);
                 DONE;
-            case cCLEARREFS:
-                clearrefs (current);
+            case cCLEARSYMREFS:
+                clearsymrefs (current);
                 DONE;
             case cPUSHSYMLIST:
                 pushsymlist ();
@@ -2293,49 +2293,75 @@ execute (struct command *cmd)	/* execute a subroutine */
 
 
 void
-eval (struct command *current, int type)			/* do the work for functions and command eval */
+create_eval (char *type)	/* create command 'eval' */
+/* type can be 0 (number), 1 (string) or 2 (assignment) */
 {
-    struct command **eval_seek = &(current->nextassoc);
+    struct command *cmd;
+
+    cmd = add_command (cEVAL, NULL, NULL);
+    cmd->args = type;
+}
+
+
+void
+eval (struct command *current)			/* do the work for functions and command eval */
+{
+    struct command *eval_seek = current->jump;
+    struct command *eval_seek_before = current;
     struct command *eval_exec;
     char *eval_text = my_strdup (pop (stSTRING)->pointer);
-    struct stackentry *ret_if_error;
-    const char start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_STATEMENT_LIST};
-    const char *description[] = {"numeric expression", "string expression", "statement list"};
+    struct stackentry *ret_val;
+    struct stackentry *ret_addr;
+    const char start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
+    const char *description[] = {"numeric expression", "string expression", "assignment"};
+
+    /* remember return address */
+    ret_addr = push ();
+    ret_addr->pointer = current;
+    ret_addr->type = stRET_ADDR;
 
     /* try to find text of current eval in associated list of previous evals */
-    while(*eval_seek && !strcmp(eval_text,(char *) (*eval_seek)->pointer)) {
-	*eval_seek = &(*eval_seek->nextassoc);
+    while(eval_seek && !strcmp(eval_text,(char *) eval_seek->pointer)) {
+	eval_seek_before = eval_seek;
+	eval_seek = eval_seek->jump;
     }
-    if (*eval_seek) {
-	/* eval text has been found and need not be compiled */
-	eval_exec = *eval_seek;
+    if (eval_seek) {
+	/* eval text has been found and need not be compiled again */
+	eval_exec = eval_seek;
 	if (severity_threshold <= sDEBUG) {
-	    sprintf (string, "String for %s has already been compiled before", description[type - fEVAL]);
+	    sprintf (string, "String for %s has already been compiled before", description[current->type]);
 	    error (sDEBUG, string);
 	}
     } else {
 	/* eval text has not been found and needs to be compiled before execution */
-	eval_exec = add_command(cEVAL, NULL, eval_text);
-	start_token = start_tokens[type - fEVAL];
+	eval_exec = add_command(cEVAL_CODE, NULL, eval_text);
+	eval_seek_before->jump = eval_exec;
+	start_token = start_tokens[current->type];
 	if (severity_threshold <= sDEBUG) {
-	    sprintf (string, "Compiling string as %s", description[type - fEVAL]);
+	    sprintf (string, "Compiling string as %s", description[current->type]);
 	    error (sDEBUG, string);
 	}
 	if (yyparse () && severity_so_far >= sERROR) {
-	    sprintf (string, "Couldn't parse string as %s: '%s'", description[type - fEVAL], eval_text);
+	    sprintf (string, "Couldn't parse string as %s: '%s'", description[current->type], eval_text);
 	    error_without_position (sERROR, string);
-	    ret_if_error = push ();
-	    if (type == fEVAL2) {
-		ret_if_error->type = stSTRING;
-		ret_if_error->pointer = my_strdup("");
+	    ret_val = push ();
+	    if (current->type == 1) {
+		ret_val->type = stSTRING;
+		ret_val->pointer = my_strdup("");
 	    } else {
-		ret_if_error->type = stNUMBER;
-		ret_if_error->value = 0.0;
+		ret_val->type = stNUMBER;
+		ret_val->value = 0.0;
 	    }
 	    return;
 	}
-
+	if (type != 2) {
+	    /* if we evaled an assignment, there will be no value left on stack */
+	    add_command(cSWAP,NULL,NULL);
+	}
+	add_command(cRETURN_FROM_GOSUB,NULL,NULL);
     }
+    /* jump to eval */
+    current = eval_exec;
 }
 
 

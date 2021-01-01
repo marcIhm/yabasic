@@ -190,7 +190,7 @@ void collect_missing_clauses(char *string, char exclude) {
 program_or_expression: tSTART_PROGRAM program
   | tSTART_EXPRESSION expression
   | tSTART_STRING_EXPRESSION string_expression
-  | tSTART_STATEMENT_LIST statement_list
+  | tSTART_STATEMENT_LIST assignment
   | tSTART_FUNCTION_DEFINITION function_definition
   ;
 
@@ -202,11 +202,14 @@ statement_list: statement
   tSEP statement
   ;
 
-statement:  /* empty */
-  | string_assignment 
+assignment: string_assignment 
   | tLET string_assignment 
+  | number_assignment
+  | tLET number_assignment
+  ;
+  
+statement:  /* empty */
   | assignment
-  | tLET assignment
   | tIMPORT {report_if_missing("can not import a library in a loop or an if-statement",FALSE);}
   | tERROR string_expression {add_command(cERROR,NULL,NULL);}
   | for_loop 
@@ -238,8 +241,11 @@ statement:  /* empty */
   | seek_clause {add_command(cCHECKSEEK,NULL,NULL);}
   | tCOMPILE string_expression {add_command(cCOMPILE,NULL,NULL);}
   | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tEXECUTE call_list {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
-  | tEVAL string_expression {create_function(fEVAL3);add_command(cPOP,NULL,NULL);}
+  | tEXECUTE2 call_list {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tEVAL '(' string_expression ')' {create_eval(2);}
+  | tEVAL string_expression {create_eval(2);}
   | tPRINT printintro printlist {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);} 
   | tPRINT printintro printlist ';' {create_colour(0);create_pps(cPOPSTREAM,0);}
   | tPRINT printintro printlist ',' {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
@@ -254,15 +260,15 @@ statement:  /* empty */
   | tRESTORE {create_restore("");}
   | tRESTORE symbol_or_lineno {create_restore((function_type!=ftNONE)?dotify($2,TRUE):$2);}
   | tRETURN {if (function_type!=ftNONE) {
-	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
+	       add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstref;
 	       add_command(cPOPSYMLIST,NULL,NULL);
                create_check_return_value(ftNONE,function_type);
                add_command(cRETURN_FROM_CALL,NULL,NULL);
-            } else {
+             } else {
                add_command(cRETURN_FROM_GOSUB,NULL,NULL);
             }}
-  | tRETURN expression {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
-  | tRETURN string_expression {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN expression {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN string_expression {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
@@ -398,10 +404,10 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
   | tFRNBF_GET2 '(' string_expression ',' expression ',' expression ')' {create_function(fFRNBF_GET_STRING);} 
   | tFRNBF_GET_BUFFER '(' string_expression ',' expression ')' {create_function(fFRNBF_GET_BUFFER);} 
-  | tEVAL2 '(' string_expression ')' {create_function(fEVAL2);}
+  | tEVAL2 '(' string_expression ')' {create_eval(1);}
   ;
 
-assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
+number_assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
   | function_or_array tEQU expression {create_doarray($1,ASSIGNARRAY);}
   ;
 
@@ -518,7 +524,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tOPEN '(' hashed_number ',' tPRINTER ')' {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-  | tEVAL '(' string_expression ')' {create_function(fEVAL);}
+  | tEVAL '(' expression ')' {create_function(0);}
   ;
 
 const: number {$$=$1;}
@@ -562,11 +568,11 @@ call_item: string_expression
  
 function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("do not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
 	function_name {if (exported) create_subr_link($4); create_label($4,cUSER_FUNCTION);
-	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
+	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARSYMREFS,NULL,NULL);firstref=lastsymref=lastcmd;
 		       create_count_params();}
 	'(' paramlist ')' {create_require(stFREE);add_command(cPOP,NULL,NULL);}
 	statement_list
-	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
+	endsub {add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastsymref=NULL;create_endfunction();poplabel();}
   ;
 
 endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}

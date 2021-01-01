@@ -203,8 +203,8 @@ void switch_compare (void);	/* compare topmost values for switch statement */
 extern struct stackentry *stackroot;	/* first element of stack */
 extern struct stackentry *stackhead;	/* last element of stack; actually stackhead->prev is the last element, that has contents */
 extern void query_array (struct command *cmd);	/* query array */
-extern struct command *lastref;	/* last command in UDS referencing a symbol */
-extern struct command *firstref;	/* first command in UDS referencing a symbol */
+extern struct command *lassymtref;
+extern struct command *firssymtref;
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
@@ -286,7 +286,6 @@ enum functions {
     fSQRT, fSQR, fFRAC, fROUND, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
-    fEVAL, fEVAL2, fEVAL3,
     fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fSHL, fSHR, fLOG2,
     fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2,
@@ -315,9 +314,9 @@ enum cmd_type {
     cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
-    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL,
+    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL, cEVAL_CODE
 
-    cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARREFS,	/* everything with "()" */
+    cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARSYMREFS,	/* everything with "()" */
     cARDIM, cARSIZE, cTOKEN, cTOKEN2, cTOKENALT, cTOKENALT2,
     cSPLIT, cSPLIT2, cSPLITALT, cSPLITALT2,
     cSTARTFOR, cFORCHECK, cFORINCREMENT,	/* for for-loops */
@@ -521,7 +520,8 @@ extern void add_variables (char *);
 void compile (void);
 void create_execute (int);
 void execute (struct command *);
-void eval (struct command *, int);
+void create_eval (char *, int);
+void eval (struct command *);
 int isbound (void);
 
 /* io.c */

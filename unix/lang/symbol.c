@@ -40,8 +40,8 @@ static struct symstack *symhead = NULL;	/* last element ind symbol list */
 struct stackentry *stackroot = NULL;	/* lowest element in stack */
 struct stackentry *stackhead = NULL;	/* topmost element in stack */
 extern char *current_function;	        /* name of currently defined function */
-struct command *lastref = NULL;	        /* last command in UDS referencing a symbol */
-struct command *firstref = NULL;	/* first command in UDS referencing a symbol */
+struct command *lastsymref = NULL;	        /* last command in subroutine referencing a symbol */
+struct command *firssymtref = NULL;	/* first command in subroutine referencing a symbol */
 int labelcount = 0;		/* count self-generated labels */
 
 
