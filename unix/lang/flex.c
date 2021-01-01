@@ -1670,7 +1670,7 @@ char *yytext;
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     FLEX part

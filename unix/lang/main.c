@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     main.c --- main() and auxilliary functions
@@ -23,7 +23,7 @@
 /* ------------- defines ---------------- */
 
 #define DONE {current=current->next;break;}	/* reduces type-work */
-#define COPYRIGHT "Copyright 1995-2020 by Marc Ihm, according to the MIT License"
+#define COPYRIGHT "Copyright 1995-2021 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\nconfigured for "\
@@ -64,7 +64,7 @@ int effective_lineno (void);
 
 struct command *cmdroot;	/* first command */
 struct command *cmdhead;	/* next command */
-struct command *lastcmd;	/* last command */
+struct command *lastcmd;	/* last command, that has been added */
 struct command *current;	/* currently executed command */
 int severity_threshold;	        /* minimum severity the user wants to see */
 int severity_so_far;            /* maximum severity that has been printed until now */
@@ -1250,6 +1250,8 @@ initialize (void)
     cexplanation[cCOMPILE] = "COMPILE";
     cexplanation[cEXECUTE] = "EXECUTE";
     cexplanation[cEXECUTE2] = "EXECUTE$";
+    cexplanation[cEVAL] = "EVAL";
+    cexplanation[cEVAL_CODE] = "EVAL_CODE";
     cexplanation[cCLOSE] = "CLOSE";
     cexplanation[cSEEK] = "SEEK";
     cexplanation[cSEEK2] = "SEEK2";
@@ -1405,8 +1407,6 @@ initialize (void)
     fexplanation[fTHREEARGS] = "THREEARGS";
     fexplanation[fGETBIT] = "GETBIT";
     fexplanation[fGETCHAR] = "GETCHAR";
-    fexplanation[fEVAL] = "EVAL";
-    fexplanation[fEVAL2] = "EVAL2";
     fexplanation[fLAST_FUNCTION] = "LAST_FUNCTION";
     for (i = fFIRST_FUNCTION; i <= fLAST_FUNCTION; i++) {
 	if (!fexplanation[i]) {
@@ -2293,7 +2293,7 @@ execute (struct command *cmd)	/* execute a subroutine */
 
 
 void
-create_eval (char *type)	/* create command 'eval' */
+create_eval (int type)	/* create command 'eval' */
 /* type can be 0 (number), 1 (string) or 2 (assignment) */
 {
     struct command *cmd;
@@ -2312,8 +2312,9 @@ eval (struct command *current)			/* do the work for functions and command eval *
     char *eval_text = my_strdup (pop (stSTRING)->pointer);
     struct stackentry *ret_val;
     struct stackentry *ret_addr;
-    const char start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
+    const int start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
     const char *description[] = {"numeric expression", "string expression", "assignment"};
+    int eval_type = current->args;
 
     /* remember return address */
     ret_addr = push ();
@@ -2329,23 +2330,27 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	/* eval text has been found and need not be compiled again */
 	eval_exec = eval_seek;
 	if (severity_threshold <= sDEBUG) {
-	    sprintf (string, "String for %s has already been compiled before", description[current->type]);
+	    sprintf (string, "String for %s has already been compiled before", description[eval_type]);
 	    error (sDEBUG, string);
 	}
     } else {
 	/* eval text has not been found and needs to be compiled before execution */
 	eval_exec = add_command(cEVAL_CODE, NULL, eval_text);
 	eval_seek_before->jump = eval_exec;
-	start_token = start_tokens[current->type];
+	start_token = start_tokens[eval_type];
 	if (severity_threshold <= sDEBUG) {
-	    sprintf (string, "Compiling string as %s", description[current->type]);
+	    sprintf (string, "Compiling string as %s", description[eval_type]);
 	    error (sDEBUG, string);
 	}
+	
+	add_command(cCLEARSYMREFS,NULL,NULL);
+	firstsymref=lastsymref=lastcmd;
+	
 	if (yyparse () && severity_so_far >= sERROR) {
-	    sprintf (string, "Couldn't parse string as %s: '%s'", description[current->type], eval_text);
+	    sprintf (string, "Couldn't parse string as %s: '%s'", description[eval_type], eval_text);
 	    error_without_position (sERROR, string);
 	    ret_val = push ();
-	    if (current->type == 1) {
+	    if (eval_type == evSTRING) {
 		ret_val->type = stSTRING;
 		ret_val->pointer = my_strdup("");
 	    } else {
@@ -2354,10 +2359,11 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	    }
 	    return;
 	}
-	if (type != 2) {
+	if (eval_type != evASSIGNMENT) {
 	    /* if we evaled an assignment, there will be no value left on stack */
 	    add_command(cSWAP,NULL,NULL);
 	}
+	add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstsymref;
 	add_command(cRETURN_FROM_GOSUB,NULL,NULL);
     }
     /* jump to eval */

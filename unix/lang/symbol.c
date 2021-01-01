@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     symbol.c --- code for symbol, stack and library management, handling of arrays
@@ -146,19 +146,21 @@ freesym (struct symbol *s)	/* free contents of symbol */
 
 
 void
-clearrefs (struct command *cmd)	/* clear references for commands within function */
+clearsymrefs (struct command *cmd)	/* clear references for commands within function */
 {
     struct command *curr;
     int n = 0;
 
-    curr = cmd->nextref;
+    curr = cmd->nextsymref;
     while (curr) {
         n++;
         curr->symbol = NULL;
-        curr = curr->nextref;
+        curr = curr->nextsymref;
     }
-    sprintf (string, "removed references from %d symbols", n);
-    error (sDEBUG, string);
+    if (severity_threshold <= sDEBUG) {
+	sprintf (string, "removed references from %d symbols", n);
+	error (sDEBUG, string);
+    }
 }
 
 

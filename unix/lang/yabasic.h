@@ -203,8 +203,8 @@ void switch_compare (void);	/* compare topmost values for switch statement */
 extern struct stackentry *stackroot;	/* first element of stack */
 extern struct stackentry *stackhead;	/* last element of stack; actually stackhead->prev is the last element, that has contents */
 extern void query_array (struct command *cmd);	/* query array */
-extern struct command *lassymtref;
-extern struct command *firssymtref;
+extern struct command *lastsymref;
+extern struct command *firstsymref;
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
@@ -307,6 +307,11 @@ enum drawing_modes {
     dmNORMAL = 0, dmCLEAR = 1, dmFILL = 2
 };
 
+enum eval_types {
+    /* different types of eval */
+    evNUMBER = 0, evSTRING = 1, evASSIGNMENT = 2
+};
+
 enum cmd_type {
     /* type of command */
     cFIRST_COMMAND,		/* no command, just marks start of list */
@@ -314,7 +319,7 @@ enum cmd_type {
     cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
-    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL, cEVAL_CODE
+    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL, cEVAL_CODE,
 
     cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARSYMREFS,	/* everything with "()" */
     cARDIM, cARSIZE, cTOKEN, cTOKEN2, cTOKENALT, cTOKENALT2,
@@ -447,9 +452,8 @@ struct command {
     void *symbol;			/* pointer to symbol (or data within symbol) associated with command */
     struct command *jump;		/* pointer to jump destination */
     char *symname;			/* name of symbol associated with command */
-    struct command *nextref;	/* next cmd within function referencing a symbol */
-    struct command *nextassoc;	/* next cmd within chain of associated commands; used for commands: data, docu
-				   eval, label */
+    struct command *nextsymref;	/* next cmd within function referencing a symbol */
+    struct command *nextassoc;	/* next cmd within chain of associated commands; used for commands: data, docu, label */
     int args;			/* number of arguments for function/array call 
 				   or stream number for open/close */
     int tag;			/* char/int to pass some information */
@@ -520,7 +524,7 @@ extern void add_variables (char *);
 void compile (void);
 void create_execute (int);
 void execute (struct command *);
-void create_eval (char *, int);
+void create_eval (int);
 void eval (struct command *);
 int isbound (void);
 
@@ -632,7 +636,7 @@ long long current_millis(void);
 
 /* symbol.c */
 struct array *create_array (int, int);
-void clearrefs (struct command *);
+void clearsymrefs (struct command *);
 void duplicate (void);
 void negate (void);
 void create_require (int);
