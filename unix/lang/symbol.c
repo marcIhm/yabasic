@@ -11,6 +11,26 @@
 
 */
 
+/*
+
+  Some background on Symbols:
+
+  symbols are organized as a stack of lists: for every procedure call
+  a new list is pushed onto the stack; all local variables of this
+  function are chained into this list. After return from this procedure,
+  the whole list is discarded and one element is popped from
+  the stack.
+
+  Commands which reference a symbol (e.g. assignments) have to look up the symbol
+  within the current symbol-stack. To access them faster on a second execution, the
+  command stores a pointer to the found symbol.
+
+  However, within subroutines, these references become invalid and need to be 
+  invalidated, so that symbols will be searched again on next execution.
+  
+*/
+
+
 /* ------------- includes ---------------- */
 
 #ifndef YABASIC_INCLUDED
@@ -40,8 +60,8 @@ static struct symstack *symhead = NULL;	/* last element ind symbol list */
 struct stackentry *stackroot = NULL;	/* lowest element in stack */
 struct stackentry *stackhead = NULL;	/* topmost element in stack */
 extern char *current_function;	        /* name of currently defined function */
-struct command *lastsymref = NULL;	        /* last command in subroutine referencing a symbol */
-struct command *firssymtref = NULL;	/* first command in subroutine referencing a symbol */
+struct command *last_symref = NULL;	        /* last command in subroutine referencing a symbol */
+struct command *first_symref = NULL;	/* first command in subroutine referencing a symbol */
 int labelcount = 0;		/* count self-generated labels */
 
 
@@ -145,17 +165,31 @@ freesym (struct symbol *s)	/* free contents of symbol */
 }
 
 
+void start_symref_chain (void)
+/* start new chain of commands referencing symbols; e.g. within an subroutine */
+{
+    first_symref=last_symref=last_cmd;
+}
+
+
+void end_symref_chain (void)
+/* terminate current list of commands referencing symbols */
+{
+    last_cmd->next_symref=NULL;
+}
+
+
 void
-clearsymrefs (struct command *cmd)	/* clear references for commands within function */
+clear_symrefs (struct command *cmd)	/* clear references for commands within function */
 {
     struct command *curr;
     int n = 0;
 
-    curr = cmd->nextsymref;
+    curr = cmd->next_symref;
     while (curr) {
         n++;
         curr->symbol = NULL;
-        curr = curr->nextsymref;
+        curr = curr->next_symref;
     }
     if (severity_threshold <= sDEBUG) {
 	sprintf (string, "removed references from %d symbols", n);
@@ -555,7 +589,7 @@ create_pushdbl (double value)	/* create command 'cPUSHDBL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHDBL, NULL, NULL);
+    cmd = add_command (cPUSHDBL);
     cmd->pointer = my_malloc (sizeof (double));
     *(double *) (cmd->pointer) = value;
 }
@@ -618,7 +652,7 @@ create_makestatic (char *name, int type)	/* create command 'cMAKESTATIC' */
 {
     struct command *cmd;
 
-    cmd = add_command (cMAKESTATIC, name, NULL);
+    cmd = add_command_with_sym_and_diag (cMAKESTATIC, name, NULL);
     cmd->args = type;
 }
 
@@ -667,7 +701,7 @@ create_arraylink (char *name, int type)	/* create command 'cARRAYLINK' */
 {
     struct command *cmd;
 
-    cmd = add_command (cARRAYLINK, name, NULL);
+    cmd = add_command_with_sym_and_diag (cARRAYLINK, name, NULL);
     cmd->pointer = current_function;
     cmd->args = type;
 }
@@ -714,7 +748,7 @@ create_pusharrayref (char *name, int type)	/* create command 'cPUSHARRAYREF' */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHARRAYREF, name, NULL);
+    cmd = add_command_with_sym_and_diag (cPUSHARRAYREF, name, NULL);
     cmd->args = type;
 }
 
@@ -734,7 +768,7 @@ create_require (int type)	/* create command 'cREQUIRE' */
 {
     struct command *cmd;
 
-    cmd = add_command (cREQUIRE, NULL, NULL);
+    cmd = add_command (cREQUIRE);
     cmd->args = type;
 }
 
@@ -808,19 +842,19 @@ create_dblbin (char c)		/* create command for binary double operation */
 {
     switch (c) {
     case '+':
-        add_command (cDBLADD, NULL, NULL);
+        add_command (cDBLADD);
         break;
     case '-':
-        add_command (cDBLMIN, NULL, NULL);
+        add_command (cDBLMIN);
         break;
     case '*':
-        add_command (cDBLMUL, NULL, NULL);
+        add_command (cDBLMUL);
         break;
     case '/':
-        add_command (cDBLDIV, NULL, NULL);
+        add_command (cDBLDIV);
         break;
     case '^':
-        add_command (cDBLPOW, NULL, NULL);
+        add_command (cDBLPOW);
         break;
     }
     /* no specific information needed */
@@ -928,7 +962,7 @@ create_pushstr (char *s)	/* creates command pushstr */
 {
     struct command *cmd;
 
-    cmd = add_command (cPUSHSTR, NULL, s);
+    cmd = add_command_with_sym_and_diag (cPUSHSTR, NULL, s);
     cmd->pointer = my_strdup (s);	/* store string */
 }
 
@@ -964,7 +998,7 @@ create_dim (char *name, char type)	/* create command 'dim' */
 {
     struct command *cmd;
 
-    cmd = add_command (cDIM, name, name);
+    cmd = add_command_with_sym_and_diag (cDIM, name, name);
     cmd->tag = type;		/* type: string or double */
     cmd->args = -1;
 }
@@ -1189,7 +1223,7 @@ create_doarray (char *symbol, int command)	/* creates array-commands */
 {
     struct command *cmd;
 
-    cmd = add_command (cDOARRAY, symbol, symbol);
+    cmd = add_command_with_sym_and_diag (cDOARRAY, symbol, symbol);
     cmd->tag = command;		/* operation to perform */
     cmd->args = -1;
 }

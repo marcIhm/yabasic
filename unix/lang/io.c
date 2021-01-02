@@ -106,7 +106,7 @@ create_print(char type)	/* create command 'print' */
 {
     struct command *cmd;
 
-    cmd = add_command(cPRINT, NULL, NULL);
+    cmd = add_command(cPRINT);
     cmd->pointer = my_malloc(sizeof (int));
     /* store type of print  */
     cmd->tag = type;
@@ -689,7 +689,7 @@ create_myopen(int num)		/* create command 'myopen' */
 {
     struct command *cmd;
 
-    cmd = add_command(cOPEN, NULL, NULL);
+    cmd = add_command(cOPEN);
     cmd->tag = num;
 }
 
@@ -941,7 +941,7 @@ create_pps(int type, int input)	/* create command push_stream or pop_stream */
 {
     struct command *cmd;
 
-    cmd = add_command(type, NULL, NULL);
+    cmd = add_command(type);
     cmd->args = input;
 }
 
@@ -1096,7 +1096,7 @@ create_myread(char type, int tileol)	/* create command 'read' */
 {
     struct command *cmd;
 
-    cmd = add_command(cREAD, NULL, NULL);
+    cmd = add_command(cREAD);
     cmd->args = tileol;		/* true, if read should go til eol */
     cmd->tag = type;		/* can be 'd' or 's' */
 }
@@ -1294,7 +1294,7 @@ create_onestring(char *str)	/* create command 'onestring' */
 {
     struct command *cmd;
 
-    cmd = add_command(cONESTRING, NULL, NULL);
+    cmd = add_command(cONESTRING);
     cmd->pointer = my_strdup(str);
 }
 
@@ -1340,7 +1340,7 @@ create_colour(int flag)	/* create command 'colour' */
 {
     struct command *c;
 
-    c = add_command(cCOLOUR, NULL, NULL);
+    c = add_command(cCOLOUR);
     c->args = flag;
 }
 

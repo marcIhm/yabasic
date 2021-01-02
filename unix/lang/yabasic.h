@@ -94,9 +94,9 @@
 
 /* main.c */
 extern struct command *current;	/* currently executed command */
-extern struct command *cmdroot;	/* first command */
-extern struct command *cmdhead;	/* next command */
-extern struct command *lastcmd;	/* last command */
+extern struct command *cmd_root;	/* first command */
+extern struct command *cmd_head;	/* next command */
+extern struct command *last_cmd;	/* last command */
 extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int interactive;		/* true, if commands come from stdin */
@@ -203,8 +203,8 @@ void switch_compare (void);	/* compare topmost values for switch statement */
 extern struct stackentry *stackroot;	/* first element of stack */
 extern struct stackentry *stackhead;	/* last element of stack; actually stackhead->prev is the last element, that has contents */
 extern void query_array (struct command *cmd);	/* query array */
-extern struct command *lastsymref;
-extern struct command *firstsymref;
+extern struct command *last_symref;
+extern struct command *first_symref;
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
@@ -414,16 +414,6 @@ struct stackentry {
     double value;		/* double value, only one of pointer or value is used */
 };
 
-/*
-  A remark on Symbols:
-
-  symbols are organized as a stack of lists: for every procedure call
-  a new list is pushed onto the stack; all local variables of this
-  function are chained into this list. After return from this procedure,
-  the whole list is discarded and one element is popped from
-  the stack.
-*/
-
 struct symstack {
     /* stack of symbol lists */
     struct symbol *next_in_list;
@@ -452,8 +442,8 @@ struct command {
     void *symbol;			/* pointer to symbol (or data within symbol) associated with command */
     struct command *jump;		/* pointer to jump destination */
     char *symname;			/* name of symbol associated with command */
-    struct command *nextsymref;	/* next cmd within function referencing a symbol */
-    struct command *nextassoc;	/* next cmd within chain of associated commands; used for commands: data, docu, label */
+    struct command *next_symref;	/* next cmd within function referencing a symbol */
+    struct command *next_assoc;	/* next cmd within chain of associated commands; used for commands: data, docu, label */
     int args;			/* number of arguments for function/array call 
 				   or stream number for open/close */
     int tag;			/* char/int to pass some information */
@@ -510,7 +500,10 @@ void std_diag (char *, int, char *, char *);
 void *my_malloc (unsigned);
 void my_free (void *);
 char *my_strerror (int);
-struct command *add_command (int, char *, char *);
+struct command *add_command (int);
+struct command *add_command_with_sym (int, char *);
+struct command *add_command_with_diag (int, char *);
+struct command *add_command_with_sym_and_diag (int, char *, char *);
 struct command *add_command_with_switch_state(int);
 void dump_commands (char *);
 void signal_handler (int);
@@ -636,7 +629,9 @@ long long current_millis(void);
 
 /* symbol.c */
 struct array *create_array (int, int);
-void clearsymrefs (struct command *);
+void start_symref_chain (void);
+void end_symref_chain (void);
+void clear_symrefs (struct command *);
 void duplicate (void);
 void negate (void);
 void create_require (int);

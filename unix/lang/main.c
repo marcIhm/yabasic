@@ -62,9 +62,9 @@ int effective_lineno (void);
 
 /* ------------- global variables ---------------- */
 
-struct command *cmdroot;	/* first command */
-struct command *cmdhead;	/* next command */
-struct command *lastcmd;	/* last command, that has been added */
+struct command *cmd_root;	/* first command */
+struct command *cmd_head;	/* next command */
+struct command *last_cmd;	/* last command, that has been added */
 struct command *current;	/* currently executed command */
 int severity_threshold;	        /* minimum severity the user wants to see */
 int severity_so_far;            /* maximum severity that has been printed until now */
@@ -297,7 +297,7 @@ main (int argc, char **argv)
 
 	if ( severity_so_far < sERROR) {
 	    create_docu_array ();
-	    add_command (cEND, NULL, NULL);
+	    add_command (cEND);
 	}
 
 	sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
@@ -466,9 +466,16 @@ effective_lineno ()
     }
 }
 
+struct command *
+add_command (int type)
+/* common case without a sym */
+{
+    add_command_with_sym_and_diag (type, NULL, NULL);
+}
+
 
 struct command *
-add_command (int type, char *symname, char *diag)
+add_command_with_sym_and_diag (int type, char *symname, char *diag)
 /* get room for new command, and make a link from old one */
 {
     struct command *new;
@@ -476,51 +483,50 @@ add_command (int type, char *symname, char *diag)
     if (severity_threshold <= sDEBUG) {
         std_diag ("creating", type, symname, diag);
     }
-    cmdhead->type = type;		/* store command */
-    cmdhead->line = effective_lineno ();
-    cmdhead->first_column = yylloc.first_column;
-    cmdhead->last_column = yylloc.last_column;
-    cmdhead->lib = currlib;
-    cmdhead->cnt = commandcount;
+    cmd_head->type = type;		/* store command */
+    cmd_head->line = effective_lineno ();
+    cmd_head->first_column = yylloc.first_column;
+    cmd_head->last_column = yylloc.last_column;
+    cmd_head->lib = currlib;
+    cmd_head->cnt = commandcount;
     if (!symname || !*symname) {
-        cmdhead->symname = NULL;
+        cmd_head->symname = NULL;
     } else {
-        cmdhead->symname = my_strdup (symname);
+        cmd_head->symname = my_strdup (symname);
     }
     commandcount++;
-    cmdhead->pointer = NULL;
-    cmdhead->tag = 0;
-    cmdhead->jump = NULL;
-    cmdhead->nextassoc = NULL;
-    cmdhead->diag = my_strdup(diag);
-    if (!currlib->datapointer && cmdhead->type == cDATA) {
-        currlib->firstdata = currlib->datapointer = cmdhead;
+    cmd_head->pointer = NULL;
+    cmd_head->tag = 0;
+    cmd_head->jump = NULL;
+    cmd_head->next_assoc = NULL;
+    if (!currlib->datapointer && cmd_head->type == cDATA) {
+        currlib->firstdata = currlib->datapointer = cmd_head;
     }
 
     /* link into chain of commands referencing a symbol */
     if (symname) {
-        if (lastsymref) {
-            lastsymref->nextsymref = cmdhead;
+        if (last_symref) {
+            last_symref->next_symref = cmd_head;
         }
-        lastsymref = cmdhead;
+        last_symref = cmd_head;
     }
 
     /* create new command */
     new = (struct command *) my_malloc (sizeof (struct command));
     /* and initialize */
     new->next = NULL;
-    new->prev = cmdhead;
+    new->prev = cmd_head;
     new->pointer = NULL;
     new->symbol = NULL;
-    new->nextsymref = NULL;
-    new->nextassoc = NULL;
+    new->next_symref = NULL;
+    new->next_assoc = NULL;
     new->symname = NULL;
     new->switch_state = NULL;
 
-    cmdhead->next = new;
-    lastcmd = cmdhead;
-    cmdhead = cmdhead->next;
-    return lastcmd;
+    cmd_head->next = new;
+    last_cmd = cmd_head;
+    cmd_head = cmd_head->next;
+    return last_cmd;
 }
 
 struct command *
@@ -528,7 +534,7 @@ add_command_with_switch_state (int type)	/* same as add_command, but add switch_
 {
     struct command *cmd;
 
-    cmd = add_command (type, NULL, NULL);
+    cmd = add_command (type);
     return add_switch_state(cmd);
 }
 
@@ -550,7 +556,7 @@ dump_commands (char *dumpfilename)
     }
 
 
-    for (cmd=cmdroot; cmd; cmd=cmd->next) {
+    for (cmd=cmd_root; cmd; cmd=cmd->next) {
         int len;
         len=strlen(cexplanation[cmd->type]);
         if (len>max_explanation_length) {
@@ -566,7 +572,7 @@ dump_commands (char *dumpfilename)
         }
     }
 
-    for (cmd=cmdroot; cmd; cmd=cmd->next) {
+    for (cmd=cmd_root; cmd; cmd=cmd->next) {
         sprintf(string,"");
         fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,cexplanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
         if (cmd->type==cEND) {
@@ -1095,8 +1101,8 @@ initialize (void)
 
     /* initialize command stack */
     /* create first: */
-    cmdroot = (struct command *) my_malloc (sizeof (struct command));
-    cmdroot->next = cmdroot->prev = NULL;
+    cmd_root = (struct command *) my_malloc (sizeof (struct command));
+    cmd_root->next = cmd_root->prev = NULL;
 
     /* initialize random number generator */
 #ifdef UNIX
@@ -1113,7 +1119,7 @@ initialize (void)
     /* initialize stack */
     base = push ();
     base->type = stROOT;		/* push nil, so that pop will not crash */
-    cmdhead = cmdroot; /* list of commands */ ;
+    cmd_head = cmd_root; /* list of commands */ ;
     commandcount = 0;
 
     /* initialize switch_id stack */
@@ -1516,10 +1522,10 @@ run_it ()
 {
     int l = 0;
 
-    current = cmdroot;		/* start with first comand */
+    current = cmd_root;		/* start with first comand */
     if (print_docu) {
         /* don't execute program, just print docu */
-        while (current != cmdhead) {
+        while (current != cmd_head) {
             if (current->type == cDOCU) {
                 if (severity_threshold <= sDEBUG) {
                     std_diag ("executing", current->type, current->symname, current->diag);
@@ -1545,7 +1551,7 @@ run_it ()
             fgets (string, INBUFFLEN, stdin);
         }
     } else {
-        while (current != cmdhead && endreason == rNONE) {
+        while (current != cmd_head && endreason == rNONE) {
             if (severity_threshold <= sDEBUG) {
                 std_diag ("executing", current->type, current->symname, current->diag);
             }
@@ -1649,7 +1655,7 @@ run_it ()
                 pushstr (current);
                 DONE;
             case cCLEARSYMREFS:
-                clearsymrefs (current);
+                clear_symrefs (current);
                 DONE;
             case cPUSHSYMLIST:
                 pushsymlist ();
@@ -2228,7 +2234,7 @@ compile ()			/* create subroutine at runtime */
 	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
 	error_without_position (sERROR, string);
     }
-    add_command (cEND, NULL, NULL);
+    add_command (cEND);
 }
 
 
@@ -2237,7 +2243,7 @@ create_execute (int string)	/* create command 'cEXECUTESUB' */
 {
     struct command *cmd;
 
-    cmd = add_command (string ? cEXECUTE2 : cEXECUTE, NULL, NULL);
+    cmd = add_command (string ? cEXECUTE2 : cEXECUTE);
     cmd->pointer = my_strdup (dotify ("", FALSE));
 }
 
@@ -2298,7 +2304,7 @@ create_eval (int type)	/* create command 'eval' */
 {
     struct command *cmd;
 
-    cmd = add_command (cEVAL, NULL, NULL);
+    cmd = add_command (cEVAL);
     cmd->args = type;
 }
 
@@ -2323,6 +2329,10 @@ eval (struct command *current)			/* do the work for functions and command eval *
 
     /* try to find text of current eval in associated list of previous evals */
     while(eval_seek && !strcmp(eval_text,(char *) eval_seek->pointer)) {
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "Seeking current eval; this prior does not match: %s", (char *) eval_seek->pointer);
+	    error (sDEBUG, string);
+	}
 	eval_seek_before = eval_seek;
 	eval_seek = eval_seek->jump;
     }
@@ -2335,7 +2345,7 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	}
     } else {
 	/* eval text has not been found and needs to be compiled before execution */
-	eval_exec = add_command(cEVAL_CODE, NULL, eval_text);
+	eval_exec = add_command_with_sym_and_diag(cEVAL_CODE, NULL, eval_text);
 	eval_seek_before->jump = eval_exec;
 	start_token = start_tokens[eval_type];
 	if (severity_threshold <= sDEBUG) {
@@ -2343,8 +2353,8 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	    error (sDEBUG, string);
 	}
 	
-	add_command(cCLEARSYMREFS,NULL,NULL);
-	firstsymref=lastsymref=lastcmd;
+	add_command(cCLEARSYMREFS);
+	start_symref_chain();
 	
 	if (yyparse () && severity_so_far >= sERROR) {
 	    sprintf (string, "Couldn't parse string as %s: '%s'", description[eval_type], eval_text);
@@ -2361,10 +2371,11 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	}
 	if (eval_type != evASSIGNMENT) {
 	    /* if we evaled an assignment, there will be no value left on stack */
-	    add_command(cSWAP,NULL,NULL);
+	    add_command(cSWAP);
 	}
-	add_command(cCLEARSYMREFS,NULL,NULL);lastcmd->nextsymref=firstsymref;
-	add_command(cRETURN_FROM_GOSUB,NULL,NULL);
+	add_command(cCLEARSYMREFS);
+	end_symref_chain();
+	add_command(cRETURN_FROM_GOSUB);
     }
     /* jump to eval */
     current = eval_exec;
@@ -2380,10 +2391,10 @@ create_docu (char *doc)		/* create command 'docu' */
     if (inlib) {
         return;
     }
-    cmd = add_command (cDOCU, NULL, NULL);
+    cmd = add_command (cDOCU);
     cmd->pointer = doc;
     if (previous) {
-        previous->nextassoc = cmd;
+        previous->next_assoc = cmd;
     } else {
         docuhead = cmd;
     }
@@ -2408,7 +2419,7 @@ create_docu_array (void)	/* create array with documentation */
     i = 1;
     while (doc) {
         ((char **) ar->pointer)[i] = doc->pointer;
-        doc = doc->nextassoc;
+        doc = doc->next_assoc;
         i++;
     }
     get_sym ("main.docu$", syARRAY, amADD_GLOBAL)->pointer = ar;

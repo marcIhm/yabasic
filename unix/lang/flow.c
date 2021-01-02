@@ -42,7 +42,7 @@ create_check_return_value (int is, int should)	/* create command 'cCHECK_RETURN_
 {
     struct command *cmd;
 
-    cmd = add_command (cCHECK_RETURN_VALUE, NULL, NULL);
+    cmd = add_command_with_sym_and_diag (cCHECK_RETURN_VALUE, NULL, NULL);
     cmd->args = is;
     cmd->tag = should;
 }
@@ -226,7 +226,7 @@ create_subr_link (char *label)	/* create link to subroutine */
         return;
     }
 
-    cmd = add_command (cLINK_SUBR, NULL, label);
+    cmd = add_command_with_sym_and_diag (cLINK_SUBR, NULL, label);
     /* store label */
     cmd->pointer = my_strdup (global);
     link_label (cmd);
@@ -239,7 +239,7 @@ create_endfunction (void)	/* create command cEND_FUNCTION */
 {
     struct command *cmd;
 
-    cmd = add_command (cEND_FUNCTION, NULL, NULL);
+    cmd = add_command_with_sym_and_diag (cEND_FUNCTION, NULL, NULL);
     link_label (cmd);
 }
 
@@ -279,7 +279,7 @@ create_makelocal (char *name, int type)	/* create command 'cMAKELOCAL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cMAKELOCAL, name, NULL);
+    cmd = add_command_with_sym_and_diag (cMAKELOCAL, name, NULL);
     cmd->args = type;
 }
 
@@ -305,7 +305,7 @@ create_count_params (void)		/* create command 'cCOUNT_PARAMS' */
 
     /* dotifying numparams at compiletime (as opposed to runtime) is essential,
        because the function name is not known at runtime */
-    cmd = add_command (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
+    cmd = add_command_with_sym_and_diag (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
 }
 
 
@@ -362,7 +362,7 @@ create_goto (char *label)	/* creates command goto */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOTO, NULL, label);
+    cmd = add_command_with_sym_and_diag (cGOTO, NULL, label);
     cmd->pointer = my_strdup (label);
     add_switch_state(cmd);
 }
@@ -373,7 +373,7 @@ create_gosub (char *label)	/* creates command gosub */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOSUB, NULL, label);
+    cmd = add_command_with_sym_and_diag (cGOSUB, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -384,7 +384,7 @@ create_call (char *label)	/* creates command function call */
 {
     struct command *cmd;
 
-    cmd = add_command (cCALL, NULL, label);
+    cmd = add_command_with_sym_and_diag (cCALL, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -433,7 +433,7 @@ link_label (struct command *cmd)	/* link label into list of labels */
     if (!labelroot) {
         labelroot = cmd;
     } else {
-        labelhead->nextassoc = cmd;
+        labelhead->next_assoc = cmd;
     }
     labelhead = cmd;
 }
@@ -466,7 +466,7 @@ search_label (char *name, int type)  	/* search label */
             if (at) *at = '@';
             return curr;
         }
-        curr = curr->nextassoc;
+        curr = curr->next_assoc;
     }
     return NULL;
 }
@@ -626,7 +626,7 @@ create_label (char *label, int type)	/* creates command label */
         return;
     }
 
-    cmd = add_command (type, NULL, label);
+    cmd = add_command_with_sym_and_diag (type, NULL, label);
     cmd->pointer = my_strdup (label);
     add_switch_state(cmd);
 
@@ -743,10 +743,8 @@ create_mybreak(int depth) /* create command mybreak */
 	error(sERROR,string);
     }
 
-    cmd = add_command (cBREAK_MULTI, NULL, NULL);
+    cmd = add_command (cBREAK_MULTI);
     cmd->tag=depth;
-    sprintf(string,"%d",depth);
-    cmd->diag=my_strdup(string);
 }
 
 

@@ -288,7 +288,7 @@ create_changestring (int type)	/* create command 'changestring' */
 {
     struct command *cmd;
 
-    cmd = add_command (cCHANGESTRING, FALSE, NULL);
+    cmd = add_command (cCHANGESTRING);
     cmd->args = type;
 }
 
@@ -374,7 +374,7 @@ create_function (int type)	/* create command 'function' */
 {
     struct command *cmd;
 
-    cmd = add_command (cFUNCTION, FALSE, NULL);
+    cmd = add_command (cFUNCTION);
     if (severity_threshold <= sDEBUG) {
 	sprintf(estring, "function '%s'",fexplanation[type]);
 	error (sDEBUG, estring);
@@ -1483,9 +1483,9 @@ create_poke (char flag)		/* create Command 'cPOKE' */
     struct command *cmd;
 
     if (flag == 'S' || flag == 'D') {
-        cmd = add_command (cPOKEFILE, FALSE, NULL);
+        cmd = add_command (cPOKEFILE);
     } else {
-        cmd = add_command (cPOKE, FALSE, NULL);
+        cmd = add_command (cPOKE);
     }
     cmd->tag = flag;
 }
@@ -1763,7 +1763,7 @@ create_exception (int flag)	/* create command 'exception' */
 {
     struct command *cmd;
 
-    cmd = add_command (cEXCEPTION, FALSE, NULL);
+    cmd = add_command (cEXCEPTION);
     cmd->args = flag;
 }
 
@@ -1820,7 +1820,7 @@ create_restore (char *label)	/* create command 'restore' */
 {
     struct command *c;
 
-    c = add_command (cRESTORE, FALSE, label);
+    c = add_command (cRESTORE);
     c->pointer = my_strdup (label);
 }
 
@@ -1850,7 +1850,7 @@ restore (struct command *cmd)	/* reset data pointer to given label */
         *datapointer = label;
         if (lastdata) {
             while ((*datapointer)->type != cDATA
-                    && (*datapointer) != cmdhead) {
+                    && (*datapointer) != cmd_head) {
                 *datapointer = (*datapointer)->next;
             }
         }
@@ -1868,10 +1868,10 @@ create_dbldata (double value)	/* create command dbldata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE, NULL);
+    c = add_command (cDATA);
     c->pointer = my_malloc (sizeof (double));
     if (lastdata) {
-        lastdata->nextassoc = c;
+        lastdata->next_assoc = c;
     }
     lastdata = c;
     *((double *) c->pointer) = value;
@@ -1884,9 +1884,9 @@ create_strdata (char *value)	/* create command strdata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE, NULL);
+    c = add_command (cDATA);
     if (lastdata) {
-        lastdata->nextassoc = c;
+        lastdata->next_assoc = c;
     }
     lastdata = c;
     c->pointer = my_strdup (value);
@@ -1899,7 +1899,7 @@ create_readdata (char type)	/* create command readdata */
 {
     struct command *cmd;
 
-    cmd = add_command (cREADDATA, FALSE, NULL);
+    cmd = add_command (cREADDATA);
     cmd->tag = type;
 }
 
@@ -1916,7 +1916,7 @@ readdata (struct command *cmd)	/* read data items */
     while (*datapointer
             && ((*datapointer)->type != cDATA
                 || cmd->lib != (*datapointer)->lib)) {
-        *datapointer = (*datapointer)->nextassoc;
+        *datapointer = (*datapointer)->next_assoc;
     }
     if (!*datapointer) {
         error (sERROR, "run out of data items");
@@ -1935,7 +1935,7 @@ readdata (struct command *cmd)	/* read data items */
         read->type = stSTRING;
         read->pointer = my_strdup ((*datapointer)->pointer);
     }
-    *datapointer = (*datapointer)->nextassoc;	/* next item */
+    *datapointer = (*datapointer)->next_assoc;	/* next item */
 }
 
 
@@ -1964,7 +1964,7 @@ create_dblrelop (char c)	/* create command dblrelop */
         type = cGE;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
@@ -2027,7 +2027,7 @@ create_strrelop (char c)	/* create command strrelop */
         type = cSTRGE;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
@@ -2141,7 +2141,7 @@ create_boole (char c)		/* create command boole */
         type = cNOT;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
