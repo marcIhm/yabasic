@@ -291,6 +291,7 @@ main (int argc, char **argv)
 
 	set_program_state (spCOMPILING);
 	start_token = tSTART_PROGRAM;
+	error (sDEBUG, "parsing complete program");
 	if (yyparse () && severity_so_far >= sERROR) {
 	    error_without_position (sERROR, "Couldn't parse program");
 	}
@@ -2230,6 +2231,7 @@ compile ()			/* create subroutine at runtime */
 	error (sDEBUG, string);
     }
     start_token = tSTART_FUNCTION_DEFINITION;
+    error (sDEBUG, "parsing definition of subroutine");
     if (yyparse () && severity_so_far >= sERROR) {
 	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
 	error_without_position (sERROR, string);

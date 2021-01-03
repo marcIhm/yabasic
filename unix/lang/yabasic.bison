@@ -521,7 +521,7 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tOPEN '(' hashed_number ',' tPRINTER ')' {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-  | tEVAL '(' expression ')' {create_eval(evNUMBER);}
+  | tEVAL '(' string_expression ')' {create_eval(evNUMBER);}
   ;
 
 const: number {$$=$1;}
