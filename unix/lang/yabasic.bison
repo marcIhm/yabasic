@@ -188,10 +188,10 @@ void collect_missing_clauses(char *string, char exclude) {
 %%
 
 program_or_expression: tSTART_PROGRAM program
-  | tSTART_EXPRESSION expression
+  | tSTART_EXPRESSION expression tEOPROG {YYACCEPT;}
   | tSTART_STRING_EXPRESSION string_expression
   | tSTART_ASSIGNMENT assignment
-  | tSTART_FUNCTION_DEFINITION function_definition
+  | tSTART_FUNCTION_DEFINITION function_definition tEOPROG {YYACCEPT;}
   ;
 
 program: statement_list tEOPROG {YYACCEPT;}

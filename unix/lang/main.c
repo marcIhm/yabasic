@@ -41,6 +41,7 @@ extern int yydoublenl;            /* column number */
 extern YYLTYPE yylloc;          /* line numbers and columns */
 extern int yyparse ();		/* call bison parser */
 extern int yydebug;             /* for bison debugging */
+extern int yy_flex_debug;       /* for flex debugging */
 
 /* ------------- local functions ---------------- */
 
@@ -490,6 +491,7 @@ add_command_with_sym_and_diag (int type, char *symname, char *diag)
     cmd_head->last_column = yylloc.last_column;
     cmd_head->lib = currlib;
     cmd_head->cnt = commandcount;
+    cmd_head->diag = my_strdup(diag);
     if (!symname || !*symname) {
         cmd_head->symname = NULL;
     } else {
@@ -663,7 +665,7 @@ parse_arguments (int cargc, char *cargv[])
 	    fprintf (stderr,
 		     "   --version               : show version of yabasic\n");
 	    fprintf (stderr,
-		     "   -i,--infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison\n");
+		     "   -i,--infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison+flex\n");
 	    fprintf (stderr,
 		     "   -e,--execute COMMANDS   : execute yabasic COMMANDS right away\n");
 	    fprintf (stderr,
@@ -722,6 +724,7 @@ parse_arguments (int cargc, char *cargv[])
                     severity_threshold = sFATAL;
                 } else if (!strncmp (info, "bison", strlen (info))) {
                     yydebug = 1;
+		    yy_flex_debug = 1;
                     severity_threshold = sDEBUG;
                 } else {
                     sprintf (string, "there's no infolevel '%s' " YABFORHELP,
@@ -1624,6 +1627,9 @@ run_it ()
             case cEXECUTE2:
                 execute (current);
                 DONE;
+	    case cEVAL:
+		eval (current);
+		DONE;
             case cRETURN_FROM_GOSUB:
             case cRETURN_FROM_CALL:
                 myreturn (current);
@@ -2224,18 +2230,18 @@ strip (char *name)		/* strip down to minimal name */
 void
 compile ()			/* create subroutine at runtime */
 {
-    char *compile_text = pop (stSTRING)->pointer;
-    open_string (compile_text);
+    char *compile_text = my_strdup (pop (stSTRING)->pointer);
+    start_flex_from_string (compile_text);
     if (severity_threshold <= sDEBUG) {
 	sprintf (string, "Compiling string as subroutine definition: '%s'", compile_text);
 	error (sDEBUG, string);
     }
     start_token = tSTART_FUNCTION_DEFINITION;
-    error (sDEBUG, "parsing definition of subroutine");
     if (yyparse () && severity_so_far >= sERROR) {
 	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
 	error_without_position (sERROR, string);
     }
+    free(compile_text);
     add_command (cEND);
 }
 
@@ -2312,21 +2318,21 @@ create_eval (int type)	/* create command 'eval' */
 
 
 void
-eval (struct command *current)			/* do the work for functions and command eval */
+eval (struct command *cmd)			/* do the work for eval functions and command eval */
 {
-    struct command *eval_seek = current->jump;
-    struct command *eval_seek_before = current;
+    struct command *eval_seek = cmd->jump;
+    struct command *eval_seek_before = cmd;
     struct command *eval_exec;
     char *eval_text = my_strdup (pop (stSTRING)->pointer);
     struct stackentry *ret_val;
     struct stackentry *ret_addr;
-    const int start_tokens[] = {tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
-    const char *description[] = {"numeric expression", "string expression", "assignment"};
-    int eval_type = current->args;
+    const int start_tokens[] = {0, tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
+    const char *description[] = {"", "numeric expression", "string expression", "assignment"};
+    int eval_type = cmd->args;
 
     /* remember return address */
     ret_addr = push ();
-    ret_addr->pointer = current;
+    ret_addr->pointer = cmd;
     ret_addr->type = stRET_ADDR;
 
     /* try to find text of current eval in associated list of previous evals */
@@ -2349,6 +2355,7 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	/* eval text has not been found and needs to be compiled before execution */
 	eval_exec = add_command_with_sym_and_diag(cEVAL_CODE, NULL, eval_text);
 	eval_seek_before->jump = eval_exec;
+	start_flex_from_string(eval_text);
 	start_token = start_tokens[eval_type];
 	if (severity_threshold <= sDEBUG) {
 	    sprintf (string, "Compiling string as %s", description[eval_type]);
@@ -2357,7 +2364,6 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	
 	add_command(cCLEARSYMREFS);
 	start_symref_chain();
-	
 	if (yyparse () && severity_so_far >= sERROR) {
 	    sprintf (string, "Couldn't parse string as %s: '%s'", description[eval_type], eval_text);
 	    error_without_position (sERROR, string);
@@ -2371,6 +2377,8 @@ eval (struct command *current)			/* do the work for functions and command eval *
 	    }
 	    return;
 	}
+	end_flex_from_string();
+	free(eval_text);
 	if (eval_type != evASSIGNMENT) {
 	    /* if we evaled an assignment, there will be no value left on stack */
 	    add_command(cSWAP);

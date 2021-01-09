@@ -309,7 +309,7 @@ enum drawing_modes {
 
 enum eval_types {
     /* different types of eval */
-    evNUMBER = 0, evSTRING = 1, evASSIGNMENT = 2
+    evNONE = 0, evNUMBER = 1, evSTRING = 2, evASSIGNMENT = 3
 };
 
 enum cmd_type {
@@ -386,7 +386,7 @@ enum addmodes {
 };
 
 enum states {
-    /* current state of program */
+    /* current state of program (variable program_state) */
     spHATCHED, spINITIALIZED, spCOMPILING, spRUNNING, spFINISHED
 };
 
@@ -722,6 +722,7 @@ void pop_switch_id (void);
 /* flex.c */
 void yyerror (char *);
 void open_main (FILE *, char *, char *);
-void open_string (char *);
 FILE *open_library (char *, char **);
 void leave_lib (void);
+void start_flex_from_string(char *);
+void end_flex_from_string(void);

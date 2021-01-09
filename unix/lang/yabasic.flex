@@ -31,6 +31,7 @@ struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
 int in_short_if=0; /* true, if within a short if */
 int len_of_lineno=0; /* length of last line number */
+YY_BUFFER_STATE from_string_buffer; /* to read from string */
 
 /*
     Remark on yycolumn and yylineno:
@@ -72,13 +73,14 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 %x PRELNO
 %x PASTLNO
 %x PASTIMPORT
+%x EVAL_DIGITS
 
 %%
 %{
-  if (start_token)
+  if (start_token != evNONE)
       {
         int t = start_token;
-        start_token = 0;
+        start_token = evNONE;
         return t;
       }
 %}
@@ -103,7 +105,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 {WS}+ {BEGIN(INITIAL);}     /* ignore whitespace */
 
-^{WS}*/[0-9]+ {BEGIN(PRELNO);return tLABEL;}
+^{WS}*/[0-9]+ {if (program_state<=spCOMPILING) {BEGIN(PRELNO);return tLABEL;} else {BEGIN(EVAL_DIGITS);}} /* for functions eval() and compile(), when program state has advanced to spRUNNING, we do not accept line numbers */
 <PRELNO>[0-9]+ {
   BEGIN(PASTLNO);
   yylval.symbol=(char *)my_strdup(yytext);
@@ -132,7 +134,7 @@ IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMP
   return tDOCU;
 }
 
-^#.*\n {yycolumn=1;return tSEP;} /* hash (#) as first character may introduce comments too */
+^#.*\n {yycolumn=1;return tSEP;} /* hash (#) as first character of a line may introduce comments too */
 ^'.*\n {yycolumn=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
 
 EXECUTE return tEXECUTE;
@@ -352,25 +354,29 @@ GLOB return tGLOB;
 
 [-+*/:(),.;] {return yytext[0];}
 
-0x[0-9a-zA-Z]+ {
+<INITIAL,EVAL_DIGITS>0x[0-9a-zA-Z]+ {
   yylval.digits=(char *)my_strdup(yytext+2);
+  BEGIN(INITIAL);  		    
   return tHEXDIGITS;
 }
 
-0b[0-1]+ {
+<INITIAL,EVAL_DIGITS>0b[0-1]+ {
   yylval.digits=(char *)my_strdup(yytext+2);
+  BEGIN(INITIAL);  		    
   return tBINDIGITS;
 }
 
-[0-9]+ {
+<INITIAL,EVAL_DIGITS>[0-9]+ {
   yylval.digits=(char *)my_strdup(yytext);
+  BEGIN(INITIAL);  		    
   return tDIGITS;
 }
 
-(([0-9]+|([0-9]*\.[0-9]*))([eE][-+]?[0-9]+)?) {
+<INITIAL,EVAL_DIGITS>(([0-9]+|([0-9]*\.[0-9]*))([eE][-+]?[0-9]+)?) {
   { double d;
     sscanf(yytext,"%lg",&d);
     yylval.fnum=d;
+    BEGIN(INITIAL);  		    
     return tFNUM;
   }
 }
@@ -429,9 +435,16 @@ void open_main(FILE *file,char *explicit,char *main_file_name) /* open main file
 }
 
 
-void open_string(char *cmd) /* open string with commands */
+void start_flex_from_string(char *text) /* open string with commands */
 {
-  yy_switch_to_buffer(yy_scan_string(cmd));
+  from_string_buffer = yy_scan_string(text);
+/*  yy_switch_to_buffer(from_string_buffer); */
+}
+
+
+void end_flex_from_string(void) /* free structure used to read string */
+{
+  yy_delete_buffer(from_string_buffer);
 }
 
 
@@ -440,6 +453,7 @@ int import_lib(char *name) /* import library */
   char *full;
   static int end_of_all_imports=FALSE;
   static int ignore_nested_imports=FALSE;
+  FILE *lib_file;
 
   while(isspace(*name)) name++;
   name[strcspn(name, "\n")] = '\0';
@@ -480,9 +494,9 @@ int import_lib(char *name) /* import library */
   if (is_bound) {
     full=name;
   } else {
-    yyin=open_library(name,&full);
-    if (!yyin) return FALSE;
-    yy_switch_to_buffer(yy_create_buffer(yyin,YY_BUF_SIZE));
+    lib_file=open_library(name,&full);
+    if (!lib_file) return FALSE;
+    yy_switch_to_buffer(yy_create_buffer(lib_file,YY_BUF_SIZE));
     include_stack[include_depth]=YY_CURRENT_BUFFER;
   }
   library_stack[include_depth]=new_library(full,NULL);
