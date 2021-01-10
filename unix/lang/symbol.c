@@ -639,7 +639,7 @@ popdblsym (struct command *cmd)	/* pop double from stack */
     if (!cmd->symbol) {
         cmd->symbol = &(get_sym (cmd->symname, syNUMBER, amADD_GLOBAL)->value);
     } else if (severity_threshold <= sDEBUG) {
-	sprintf(string, "writing symbol '%s'", cmd->symname);
+	sprintf(string, "setting symbol '%s'", cmd->symname);
 	error (sDEBUG, string);
     }
 	
@@ -1240,7 +1240,6 @@ doarray (struct command *cmd)	/* call an array */
     double *dbl;
     int i, j, bnd, index, cur, rval;
 
-
     if (!cmd->symbol) {
         sym = get_sym (cmd->symname, syARRAY, amSEARCH);
         if (!sym || !sym->pointer) {
@@ -1251,8 +1250,8 @@ doarray (struct command *cmd)	/* call an array */
         }
         cmd->symbol = sym;
     }
-    rval = (current->tag == CALLARRAY || current->tag == CALLSTRINGARRAY
-            || current->tag == GETSTRINGPOINTER);
+    rval = (cmd->tag == CALLARRAY || cmd->tag == CALLSTRINGARRAY
+            || cmd->tag == GETSTRINGPOINTER);
     if (cmd->args < 0) {
         cmd->args = count_args (!rval);
     }
@@ -1313,7 +1312,7 @@ doarray (struct command *cmd)	/* call an array */
     }
 
     p = ar->pointer;
-    switch (current->tag) {
+    switch (cmd->tag) {
     case CALLARRAY:
         dbl = (double *) p + index;
         stack->value = *dbl;

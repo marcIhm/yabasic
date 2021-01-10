@@ -93,7 +93,7 @@
 /* -------- variables needed in all files and defined in ... -------- */
 
 /* main.c */
-extern struct command *current;	/* currently executed command */
+extern struct command *currcmd;	        /* currently executed command */
 extern struct command *cmd_root;	/* first command */
 extern struct command *cmd_head;	/* next command */
 extern struct command *last_cmd;	/* last command */

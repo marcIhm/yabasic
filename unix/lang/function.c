@@ -294,7 +294,7 @@ create_changestring (int type)	/* create command 'changestring' */
 
 
 void
-changestring (struct command *current)	/* changes a string */
+changestring (struct command *cmd)	/* changes a string */
 {
     int type, a2, a3;
     char *newpart;
@@ -302,7 +302,7 @@ changestring (struct command *current)	/* changes a string */
     int i, len;
     struct stackentry *a1;
 
-    type = current->args;
+    type = cmd->args;
     newpart = pop (stSTRING)->pointer;
     if (type > fTWOARGS) {
         a3 = (int) pop (stNUMBER)->value;
@@ -384,7 +384,7 @@ create_function (int type)	/* create command 'function' */
 
 
 void
-function (struct command *current)	/* performs a function */
+function (struct command *cmd)	/* performs a function */
 {
     struct stackentry *stack, *a1, *a2, *a3, *a4;
     char *pointer;
@@ -394,7 +394,7 @@ function (struct command *current)	/* performs a function */
     char *str, *str2;
 
     a3 = NULL;
-    type = current->args;
+    type = cmd->args;
     if (type > fTHREEARGS) {
         a4 = pop (stSTRING_OR_NUMBER);
     }
@@ -853,7 +853,7 @@ function (struct command *current)	/* performs a function */
         break;
     case fPEEK2:
         str = a1->pointer;
-        pointer = peek2 (str, current);
+        pointer = peek2 (str, currcmd);
         result = stSTRING;
         break;
     case fPEEK3:
@@ -1969,14 +1969,14 @@ create_dblrelop (char c)	/* create command dblrelop */
 
 
 void
-dblrelop (struct command *type)	/* compare topmost double-values */
+dblrelop (struct command *cmd)	/* compare topmost double-values */
 {
     double a, b, c;
     struct stackentry *result;
 
     b = pop (stNUMBER)->value;
     a = pop (stNUMBER)->value;
-    switch (current->type) {
+    switch (cmd->type) {
     case cEQ:
         c = (a == b);
         break;
@@ -2032,7 +2032,7 @@ create_strrelop (char c)	/* create command strrelop */
 
 
 void
-strrelop (struct command *type)	/* compare topmost string-values */
+strrelop (struct command *cmd)	/* compare topmost string-values */
 {
     char *a, *b;
     double c;
@@ -2040,7 +2040,7 @@ strrelop (struct command *type)	/* compare topmost string-values */
 
     b = pop (stSTRING)->pointer;
     a = pop (stSTRING)->pointer;
-    switch (current->type) {
+    switch (cmd->type) {
     case cSTREQ:
         c = (strcmp (a, b) == 0);
         break;
@@ -2107,20 +2107,20 @@ switch_compare (void)		/* compare topmost values for switch statement */
 
 
 void
-logical_shortcut (struct command *type)	/* shortcut and/or if possible */
+logical_shortcut (struct command *cmd)	/* shortcut and/or if possible */
 {
     struct stackentry *result;
     double is;
 
     is = stackhead->prev->value;
-    if ((type->type == cORSHORT && is != 0)
-            || (type->type == cANDSHORT && is == 0)) {
+    if ((cmd->type == cORSHORT && is != 0)
+            || (cmd->type == cANDSHORT && is == 0)) {
         result = push ();
         error (sDEBUG, "logical shortcut taken");
         result->type = stNUMBER;
         result->value = is;
     } else {
-        current = current->next;
+        currcmd = currcmd->next;
     }
 }
 
@@ -2146,17 +2146,17 @@ create_boole (char c)		/* create command boole */
 
 
 void
-boole (struct command *type)	/* perform and/or/not */
+boole (struct command *cmd)	/* perform and/or/not */
 {
     int a, b, c;
     struct stackentry *result;
 
     a = (int) pop (stNUMBER)->value;
-    if (current->type == cNOT) {
+    if (cmd->type == cNOT) {
         c = !a;
     } else {
         b = (int) pop (stNUMBER)->value;
-        if (current->type == cAND) {
+        if (cmd->type == cAND) {
             c = a && b;
         } else {
             c = a || b;

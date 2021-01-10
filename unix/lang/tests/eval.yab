@@ -1,23 +1,30 @@
 #!./yabasic
 
-for a=1 to 2
-  read expr$,result
-  found = eval(expr$)
-  if eval(expr$) <> result then
-     print "Expression " + expr$ + " should eval to " + result + " but gave " + found
-     exit 1
-  end
-next a
+for n=1 to 2
+  restore number
+  for a=1 to 2
+    read expr$,result
+    found = eval(expr$)
+    if found <> result then
+       print "Expression " + expr$ + " should eval to " + str$(result) + " but gave " + str$(found)
+       exit 1
+    endif
+  next a
+next n
 
-for a=1 to 2
-  read expr$,result$
-  found$ = eval(expr$)
-  if eval$(expr$) <> result$ then
-     print "Expression " + expr$ + " should eval to " + result$ + " but gave " + found$
-     exit 1
-  end
-next a
+for n=1 to 2
+  restore string
+  for a=1 to 2
+    read expr$,result$
+    found$ = eval$(expr$)
+    if found$ <> result$ then
+       print "Expression " + expr$ + " should eval to " + result$ + " but gave " + found$
+       exit 1
+    endif
+  next a
+next n
 
-
+label number
 data "1+2",3,"2+3",5
+label string
 data "\"foo\" + \"bar\"","foobar","left$(\"foo\",1)","f"

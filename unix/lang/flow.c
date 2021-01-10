@@ -195,7 +195,7 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
             return;
         }
     }
-    current = (struct command *) address->pointer;
+    currcmd = (struct command *) address->pointer;
 }
 
 
@@ -485,7 +485,7 @@ jump (struct command *cmd)
     if (type == cGOSUB || type == cQGOSUB || type == cCALL || type == cQCALL) {
         /* leave return address for return */
         ret = push ();
-        ret->pointer = current;
+        ret->pointer = currcmd;
         if (type == cGOSUB || type == cQGOSUB) {
             ret->type = stRET_ADDR;
         } else {
@@ -496,7 +496,7 @@ jump (struct command *cmd)
     
     
     if (type == cQGOSUB || type == cQGOTO || type == cQCALL) {
-        current = (struct command *) cmd->jump;	/* use remembered address */
+        currcmd = (struct command *) cmd->jump;	/* use remembered address */
 	if (type == cQGOTO && cmd->switch_state && cmd->switch_state->pop_on_qgoto) { /* jump out of switch-statment ? */
 	    pop(stANY);
 	}
@@ -510,7 +510,7 @@ jump (struct command *cmd)
     }
     if (label) {
         /* found right label */
-        current = label;		/* jump to new location */
+        currcmd = label;		/* jump to new location */
         /* use the address instead of the name next time */
         cmd->jump = label;
         switch (cmd->type) {
@@ -638,8 +638,8 @@ void
 decide()			/*  skips next command, if not 0 on stack */
 {
 	if (pop(stNUMBER)->value != 0) {
-		current = current->next;    /* skip one command */
-		if (severity_threshold <= sDEBUG) std_diag("skipping", current->type, current->symname, current->diag);
+		currcmd = currcmd->next;    /* skip one command */
+		if (severity_threshold <= sDEBUG) std_diag("skipping", currcmd->type, currcmd->symname, currcmd->diag);
 	}
 	else {
 		if (severity_threshold <= sDEBUG) error(sDEBUG, "(no command skipped)");
@@ -656,13 +656,13 @@ skipper ()
 
     len = (int) pop (stNUMBER)->value;
     i = 1;
-    current = current->next;	/* advance to first goto/gosub */
+    currcmd = currcmd->next;	/* advance to first goto/gosub */
     for (i = 1; i < len; i++) {
-        ahead = current->next->next;	/* skip interleaving findnop statement */
+        ahead = currcmd->next->next;	/* skip interleaving findnop statement */
         if (ahead->type == cNOP) {
             break;
         } else {
-            current = ahead;
+            currcmd = ahead;
         }
     }
 }
@@ -672,7 +672,7 @@ void
 skiponce (struct command *cmd)	/* skip next command exectly once */
 {
     if (cmd->tag) {
-        current = current->next;
+        currcmd = currcmd->next;
     }
     if (severity_threshold <= sDEBUG) {
 	if (cmd->tag) {
@@ -787,7 +787,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
         error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -826,7 +826,7 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
 	error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -863,7 +863,7 @@ next_case (struct command *cmd)	/* find next_case_here statement */
 	sprintf(estring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
         error (sDEBUG, estring);
     }
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -871,8 +871,8 @@ void
 findnop ()
 /* used for on_gosub, find trailing nop command */
 {
-    while (current->type != cNOP) {
-        current = current->next;	/* next label */
+    while (currcmd->type != cNOP) {
+        currcmd = currcmd->next;	/* next label */
     }
 }
 
