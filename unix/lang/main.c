@@ -1368,6 +1368,7 @@ initialize (void)
     fexplanation[fLOG] = "LOG";
     fexplanation[fLEN] = "LEN";
     fexplanation[fSTR] = "STR";
+    fexplanation[fSTR4] = "STR4";
     fexplanation[fSQRT] = "SQRT";
     fexplanation[fSQR] = "SQR";
     fexplanation[fFRAC] = "FRAC";

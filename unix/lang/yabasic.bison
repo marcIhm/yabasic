@@ -369,6 +369,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tSTR '(' expression ')' {create_function(fSTR);}
   | tSTR '(' expression ',' string_expression ')' {create_function(fSTR2);} 
   | tSTR '(' expression ',' string_expression ',' string_expression ')' {create_function(fSTR3);} 
+  | tSTR '(' string_expression ')' {create_function(fSTR4);} 
   | tINKEY {create_pushdbl(-1);create_function(fINKEY);}
   | tINKEY '(' ')' {create_pushdbl(-1);create_function(fINKEY);}
   | tINKEY '(' expression ')' {create_function(fINKEY);}

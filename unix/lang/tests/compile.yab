@@ -3,5 +3,5 @@
 compile("sub foo(x):return x+1:end sub")
 for a=1 to 2
   found = execute("foo",a)
-  if found <> a+1 print "Expected " + str$(a+1) "but found " + str$(found):exit 1
+  if found <> a+1 print "Expected " + str$(a+1) + "but found " + str$(found):exit 1
 next a

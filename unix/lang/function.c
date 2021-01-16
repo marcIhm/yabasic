@@ -468,6 +468,9 @@ function (struct command *cmd)	/* performs a function */
         }
         pointer = my_strdup (string);
         break;
+    case fSTR4:
+        result = stSTRING;
+        pointer = my_strdup (a1->pointer);
     case fCHOMP:
         result = stSTRING;
 	pointer = a1->pointer;
