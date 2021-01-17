@@ -1260,16 +1260,10 @@ yabasic*font: 9x15
 
       </variablelist>
     </sect1>
-    <sect1 id="top_other">
-      <title>Other commands</title>
-      <variablelist>
 
-	<varlistentry>
-	  <term><link linkend="ref_bind">bind()</link></term>
-	  <listitem>
-	    <%= purpose['ref_bind'] %>
-	  </listitem>
-	</varlistentry>
+    <sect1 id="top_add_code">
+      <title>How a program may add to its code during execution</title>
+      <variablelist>
 
 	<varlistentry>
 	  <term><link linkend="ref_compile">compile</link></term>
@@ -1279,9 +1273,79 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_eval">eval()</link></term>
+	  <listitem>
+	    <%= purpose['ref_eval'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_eval2">eval$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_eval2'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_execute">execute()</link></term>
+	  <listitem>
+	    <%= purpose['ref_execute'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_execute2">execute$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_execute2'] %>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+    </sect1>
+    
+    <sect1 id="top_time_and_timing">
+      <title>Commands and functions related with time</title>
+      <variablelist>
+
+	<varlistentry>
 	  <term><link linkend="ref_date">date$</link></term>
 	  <listitem>
 	    <%= purpose['ref_date'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_pause">pause</link></term>
+	  <listitem>
+	    <%= purpose['ref_pause'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_sleep">sleep</link></term>
+	  <listitem>
+	    <%= purpose['ref_sleep'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_time">time$</link></term>
+	  <listitem>
+	    <%= purpose['ref_time'] %>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+    </sect1>
+    
+    <sect1 id="top_other">
+      <title>Other commands</title>
+      <variablelist>
+
+	<varlistentry>
+	  <term><link linkend="ref_bind">bind()</link></term>
+	  <listitem>
+	    <%= purpose['ref_bind'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1307,30 +1371,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_execute2">execute$()</link></term>
-	  <listitem>
-	    <%= purpose['ref_execute2'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_execute">execute()</link></term>
-	  <listitem>
-	    <%= purpose['ref_execute'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
 	  <term><link linkend="ref_exit">exit</link></term>
 	  <listitem>
 	    <%= purpose['ref_exit'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_pause">pause</link></term>
-	  <listitem>
-	    <%= purpose['ref_pause'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1340,7 +1383,6 @@ yabasic*font: 9x15
 	    <%= purpose['ref_peek'] %>
 	  </listitem>
 	</varlistentry>
-
 
 	<varlistentry>
 	  <term><link linkend="ref_peek2">peek$</link></term>
@@ -1360,21 +1402,6 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_rem">rem</link></term>
 	  <listitem>
 	    <%= purpose['ref_rem'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_sleep">sleep</link></term>
-	  <listitem>
-	    <%= purpose['ref_sleep'] %>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry>
-	  <term><link linkend="ref_time">time$</link></term>
-	  <listitem>
-	    <%= purpose['ref_time'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1724,17 +1751,59 @@ if (not okay) error "Wrong, wrong !"
 
     <sect1 id="ref_array_references">
       <title>References on arrays</title>
-      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>. Whereas (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>.</para>
-      <para>If you pass an array reference to one of your own subroutines, you need to be aware, that the subroutine will be able to modify the array you have passed in. So passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
+      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>.</para>
+      <para>While (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>. A nice example is the bultin function <link linkend="ref_split"><function>split</function></link>, that accepts an array-reference and modifies the content of this array.</para>
+      <para>You may also pass to and use array reference within your own subroutines; these subroutines will then be able to modify the array you have passed in often this is intended.</para>
+      <para>Passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
       <itemizedlist>
 	<listitem>
 	  <para><emphasis>Speed and space:</emphasis> Creating a copy of an
-array would be a time (and resource) consuming operation; passing just a reference is cheap and fast.</para>
+array would be a time and memory consuming operation; passing just a reference is cheap and fast.</para>
 	</listitem>
 	<listitem>
 	  <para>Returning many values: A subroutine, that wants to give back more than one value, may require an array reference among its arguments and then store its many return values within this array. This is the only way to return more than one value from a subroutine.</para>
 	</listitem>
       </itemizedlist>
+      <sect2>
+	<title>An example</title>
+      	<informalexample>
+	  <para>The following program creates two subroutines (<function>print_words</function> and <function>upcase_words</function>), that operate on an array of words (<literal>words$()</literal> below):
+	    <programlisting>
+dim words$(4)
+for i=1 to 4
+  read words$(i)
+next i
+
+print_words(words$())
+upcase_words(words$())
+print_words(words$())
+
+sub print_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    print w$(i)," ";
+  next i
+  print    
+end sub
+
+sub upcase_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    w$(i) = upper$(w$(i))
+  next i
+end sub
+
+data "case","does","not","matter"
+            </programlisting>
+	    <para>If you run this program, you will get this output:</para>
+	    <screen>
+	      <computeroutput>
+case does not matter
+CASE DOES NOT MATTER		
+	      </computeroutput>
+	    </screen>
+	  </informalexample>
+      </sect2>
     </sect1>
 
 
@@ -1814,6 +1883,14 @@ array would be a time (and resource) consuming operation; passing just a referen
     </sect1>
 
 
+    <sect1 id="ref_add_code">
+      <title>Adding code to a running program</title>
+      <para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you just execute it, probably multiple times. So the program does not change, once you have started it.</para>
+      <para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function> and <function><link linkend="ref_execute">execute</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
+      <para>Why would one want to do this ?</para>
+    </sect1>
+
+    
     <sect1 id="ref_standalone">
       <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
       <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
@@ -4273,7 +4350,7 @@ print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + st
 	<refsect1>
 	  <title>Examples</title>
 	  <informalexample>
-	    <para>The example below allows to apply the internal quoting rules of yabasic to user-input:</para>
+	    <para>The example below allows to apply the quoting rules of yabasic to user-input:</para>
 	    <programlisting>
 input "Please enter a string with some excape-sequences (e.g. \\r,\\n,\\t): " a$
 print eval$("\"" + a$ + "\"")
@@ -9154,6 +9231,7 @@ a=sqr(b)
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>sqr</function>-function computes the square of its numerical argument (i.e. it multiplies its argument with itself).</para>
+	  <para>Please note, that other dialects of <acronym>basic</acronym> use <function>sqr</function> as the <emphasis>square root</emphasis>, rather than the <emphasis>square</emphasis>; this needs to be checked especially when porting programs from other Versions of <acronym>basic</acronym>.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
