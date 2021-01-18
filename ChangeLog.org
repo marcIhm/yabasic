@@ -1,5 +1,6 @@
-Version 2.87.2 (December 15, 2020)
+Version 2.89.0 (December 29, 2020)
   - Fixed for Problem with system-command after clear screen on MacOS
+  - Added functions and command eval and eval$
 
 
 Version 2.87.1 (November 07, 2020)

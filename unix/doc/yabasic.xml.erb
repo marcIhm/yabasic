@@ -1768,7 +1768,7 @@ array would be a time and memory consuming operation; passing just a reference i
       <sect2>
 	<title>An example</title>
       	<informalexample>
-	  <para>The following program creates two subroutines (<function>print_words</function> and <function>upcase_words</function>), that operate on an array of words (<literal>words$()</literal> below):
+	  <para>The following program creates two subroutines (<function>print_words</function> and <function>upcase_words</function>), that operate on an array of words (<literal>words$()</literal> below):</para>
 	    <programlisting>
 dim words$(4)
 for i=1 to 4
@@ -1889,23 +1889,23 @@ CASE DOES NOT MATTER
       <sect2>
 	<title>Purpose</title>
 	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you just execute it, probably multiple times. So the program does not change, once you have started it.</para>
-	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function> and <function><link linkend="ref_execute">execute</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
-	<para>This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied function within a given range; it is shown as an example for <function><link linkend="ref_eval">eval</link></function>. In the same spirit, one could well write a program to plot arithmetic functions (which is left as an excercise to the reader).</para>
+	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute2</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
+	<para>This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied function within a given range; it is shown as an example for <function><link linkend="ref_eval">eval</link></function>. In the same spirit, one could well write a program to plot arithmetic functions.</para>
       </sect2>
       <sect2>
 	<title>How the various functions and commands differ</title>
 	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile and execute an expression (with a numeric or string result) and execute it right away. The compiled code is remembered, so that it need not be compiled again, when executed again; making them efficient enough for their purpose. However they only accept a single expression.</para>
 	<para>
-	  If you need more complex computation, 
+	  If you need more complex computation and logic, the process needs to be split: First create a new subroutine with the <function><link linkend="ref_compile">compile</link></function>-command, then execute this subroutine (maybe multiple times) via <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>. This allows to use the broad logic available in subroutines (e.g. conditions, loops, local variables or even other subroutines) and therefore much more complex calculations than with <function><link linkend="ref_eval">eval</link></function>. If you want to use <function><link linkend="ref_compile">compile</link></function> multiple times within your program (e.g. in a loop), you may want to enumerate the functions you create (as shown in the examples of <function><link linkend="ref_compile">compile</link></function>).
 	</para>
+	<para>To execute the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>.</para>
       </sect2>
     </sect1>
-
     
     <sect1 id="ref_standalone">
       <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
       <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
-      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries it does <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three bits in yabasic, that you may use:</para>
+      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries that it may <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three facilities in yabasic, that you may use:</para>
       <itemizedlist>
 	<listitem>
 	  <para>The <function><link linkend="ref_bind">bind</link></function>-command, which does the actual job of creating the standalone program from the <application>yabasic</application>-interpreter and your program.</para>
@@ -3407,7 +3407,7 @@ next y:next x
 	  <para>Note, that there is no way to <emphasis>remove</emphasis> the compiled code.</para>
 	</refsect1>
 	<refsect1>
-	  <title>Example</title>
+	  <title>Examples</title>
 	  <informalexample>
 	    <programlisting>
 compile("sub mysub(a):print a:end sub")
@@ -4318,7 +4318,7 @@ print euler
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic<application> can be used as well as any numeric variables known.</para>
+	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic</application> can be used as well as any numeric variables known.</para>
 	  <para>The string passed to <function>eval</function> is first compiled and then executed right away, the compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. However <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
 	</refsect1>
 	<refsect1>
@@ -4356,7 +4356,7 @@ print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + st
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>eval$</function> accepts a string, which should be the text of a single string-expression; it processes the expression and returns the result. All string-functions and string-operators of <application>yabasic<application> can be used as well as any string-variables known.</para>
+	  <para><function>eval$</function> accepts a string, which should be the text of a single string-expression; it processes the expression and returns the result. All string-functions and string-operators of <application>yabasic</application> can be used as well as any string-variables known.</para>
 	  <para>The string passed to <function>eval$</function> is first compiled and then executed right away, the compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. See the example below for two interesting use-cases.</para>
 	</refsect1>
 	<refsect1>
@@ -4391,12 +4391,12 @@ sub eval_embedded_expressions$(evemex_str$)
   evemex_pos2 = 1 
   evemex_res$ = ""
   	
-  while (evemex_pos1 < len(evemex_str$))
+  while (evemex_pos1 &lt; len(evemex_str$))
     if (mid$(evemex_str$, evemex_pos1, 2) = "{{") then
       evemex_res$ = evemex_res$ + mid$(evemex_str$, evemex_pos2, evemex_pos1 - evemex_pos2)
       evemex_pos1 = evemex_pos1 + 2
       evemex_pos2 = evemex_pos1
-      while (evemex_pos2 < len(evemex_str$))
+      while (evemex_pos2 &lt; len(evemex_str$))
         if (mid$(evemex_str$, evemex_pos2, 2) = "}}") then
 	   evemex_res$ = evemex_res$ + eval$("str$(" + mid$(evemex_str$, evemex_pos1, evemex_pos2 - evemex_pos1) + ")")
 	   evemex_pos2 = evemex_pos2 + 2
