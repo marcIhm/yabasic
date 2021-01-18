@@ -1262,7 +1262,8 @@ yabasic*font: 9x15
     </sect1>
 
     <sect1 id="top_add_code">
-      <title>How a program may add to its code during execution</title>
+      <title>Adding code during execution</title>
+      <para>See also <link linkend="ref_add_code">adding code during execution</link>.</para>
       <variablelist>
 
 	<varlistentry>
@@ -1885,9 +1886,19 @@ CASE DOES NOT MATTER
 
     <sect1 id="ref_add_code">
       <title>Adding code to a running program</title>
-      <para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you just execute it, probably multiple times. So the program does not change, once you have started it.</para>
-      <para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function> and <function><link linkend="ref_execute">execute</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
-      <para>Why would one want to do this ?</para>
+      <sect2>
+	<title>Purpose</title>
+	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you just execute it, probably multiple times. So the program does not change, once you have started it.</para>
+	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function> and <function><link linkend="ref_execute">execute</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
+	<para>This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied function within a given range; it is shown as an example for <function><link linkend="ref_eval">eval</link></function>. In the same spirit, one could well write a program to plot arithmetic functions (which is left as an excercise to the reader).</para>
+      </sect2>
+      <sect2>
+	<title>How the various functions and commands differ</title>
+	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile and execute an expression (with a numeric or string result) and execute it right away. The compiled code is remembered, so that it need not be compiled again, when executed again; making them efficient enough for their purpose. However they only accept a single expression.</para>
+	<para>
+	  If you need more complex computation, 
+	</para>
+      </sect2>
     </sect1>
 
     
@@ -2282,8 +2293,8 @@ while a and b &hellip;
 	<refsect1>
 	  <title>Description</title>
 	  <para>Used in conditions (e.g within <function><link linkend="ref_if">if</link></function>, <function><link linkend="ref_while">while</link></function> or <function><link linkend="ref_until">until</link></function>) to join two expressions. Returns <constant>true</constant>, if and only if its left and right argument are both <constant>true</constant> and <constant>false</constant> otherwise.</para>
-	  <para>Note, that <link
-linkend="ref_logical_shortcuts"><emphasis>logical shortcuts</emphasis></link> may take place.</para>
+	  <para>Note, that
+	  <link linkend="ref_logical_shortcuts"><emphasis>logical shortcuts</emphasis></link> may take place.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -3420,7 +3431,7 @@ execute(subname$,2)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4314,6 +4325,7 @@ print euler
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
+input "Please enter an aritmetic expression involving the variable x: " expr$
 first = true
 for x=0 to 100 step 0.01
   result = eval(expr$)
@@ -4327,7 +4339,7 @@ print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + st
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute2</link></function></para>
 	</refsect1>
       </refentry>
       
@@ -4409,7 +4421,7 @@ end sub
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4441,7 +4453,7 @@ end sub
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4480,7 +4492,7 @@ print foo$(a$,b$)
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function></para>
 	</refsect1>
       </refentry>
 
