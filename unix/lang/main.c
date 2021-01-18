@@ -2233,7 +2233,12 @@ void
 compile ()			/* create subroutine at runtime */
 {
     char *compile_text = my_strdup (pop (stSTRING)->pointer);
+    struct library *currlib_saved;
+
+    currlib_saved = currlib;
+    currlib = currcmd->lib;
     start_flex_from_string (compile_text);
+
     if (severity_threshold <= sDEBUG) {
 	sprintf (string, "Compiling string as subroutine definition: '%s'", compile_text);
 	error (sDEBUG, string);
@@ -2243,8 +2248,9 @@ compile ()			/* create subroutine at runtime */
 	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
 	error_without_position (sERROR, string);
     }
+    end_flex_from_string();
     free(compile_text);
-    add_command (cEND);
+    currlib = currlib_saved;
 }
 
 
