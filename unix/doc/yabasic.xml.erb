@@ -180,7 +180,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><literal>--execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
 	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
+	    <para>With this option you may specify some <application>yabasic</application>-code to be executed <emphasis>right away</emphasis>. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
 </para>
 	  </listitem>
 	</varlistentry>
@@ -1888,17 +1888,16 @@ CASE DOES NOT MATTER
       <title>Adding code to a running program</title>
       <sect2>
 	<title>Purpose</title>
-	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you just execute it, probably multiple times. So the program does not change, once you have started it.</para>
-	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute2</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running.</para>
-	<para>This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied function within a given range; it is shown as an example for <function><link linkend="ref_eval">eval</link></function>. In the same spirit, one could well write a program to plot arithmetic functions.</para>
+	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you invoke it, probably multiple times. So the program does not change, once you have started it.</para>
+	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute2</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running. This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied expression within a given range; find it as an example for <function><link linkend="ref_eval">eval</link></function>. In the same way, one may well write a program to plot an arithmetic functions, which is entered by the user.</para>
       </sect2>
       <sect2>
 	<title>How the various functions and commands differ</title>
-	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile and execute an expression (with a numeric or string result) and execute it right away. The compiled code is remembered, so that it need not be compiled again, when executed again; making them efficient enough for their purpose. However they only accept a single expression.</para>
+	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile an expression (with a numeric or string result), e.g. and execute it right away. The compiled code is stored, so that it need not be compiled again, when the sames expression is executed again; this makes them efficient enough. However they only accept a <emphasis>single expression</emphasis> and nothing else.</para>
 	<para>
-	  If you need more complex computation and logic, the process needs to be split: First create a new subroutine with the <function><link linkend="ref_compile">compile</link></function>-command, then execute this subroutine (maybe multiple times) via <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>. This allows to use the broad logic available in subroutines (e.g. conditions, loops, local variables or even other subroutines) and therefore much more complex calculations than with <function><link linkend="ref_eval">eval</link></function>. If you want to use <function><link linkend="ref_compile">compile</link></function> multiple times within your program (e.g. in a loop), you may want to enumerate the functions you create (as shown in the examples of <function><link linkend="ref_compile">compile</link></function>).
+	  If you need more complex computation and logic, the process needs to be split: First create a new subroutine with the <function><link linkend="ref_compile">compile</link></function>-command, then execute this subroutine (maybe multiple times) via <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>. This allows to use the broad logic available in subroutines (e.g. conditions, loops, local variables or even other subroutines) and therefore much more complex calculations than with <function><link linkend="ref_eval">eval</link></function>. If you want to use <function><link linkend="ref_compile">compile</link></function> multiple times within your program (e.g. in a loop), you may want to enumerate the functions you create to avoid name-clashes (as shown in the examples of <function><link linkend="ref_compile">compile</link></function>).
 	</para>
-	<para>To execute the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>.</para>
+	<para>To invoke the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>.</para>
       </sect2>
     </sect1>
     
@@ -2062,7 +2061,7 @@ sub message_box(message$, title$)
   return ret
 end sub
 </programlisting>
-<para>The relevant Windows-function <function>MessageBoxA</function> is found within the library <filename>user32.dll</filename>; most of the example deals with properly allocating, handling and freeing buffers to hold the supplied text-snippets. Thanx to Jean-Marc Duro for this example.</para>
+<para>The relevant Windows-function <function>MessageBoxA</function> is found within the library <filename>user32.dll</filename>; most of the example deals with properly allocating, handling and freeing buffers to hold the supplied text-snippets. Thanx to <emphasis>Jean-Marc Duro</emphasis> for this example.</para>
 </sect3>
 </sect2>
 
@@ -2097,7 +2096,7 @@ end sub
   <title>Two more complex examples</title>
   <sect3>
     <title>Dealing with time</title>
-    <para>The example below deals with the time functions from the standard <application>C</application>-library; some of them deal with the <emphasis>tm</emphasis> structure for keeping the segmented time; to understand the example to follow it is helpful to have the tm-structure at hand; see below. In addition it might be helpful to consult the manpages of the various <application>C</application>-functions (e.g. <function>localtime</function>)involved.</para>
+    <para>The example below deals with the time functions from the standard <application>C</application>-library; some of them deal with the <emphasis>tm</emphasis> structure for keeping the segmented time; to understand the example it is good to have the tm-structure at hand; see below. In addition it might be helpful to consult the manpages of the various <application>C</application>-functions (e.g. <function>localtime</function>)involved.</para>
     <programlisting>
 struct tm {
     int tm_sec;    /* Seconds (0-60) */
@@ -3426,7 +3425,7 @@ subname$ = "foo" + str$(count)
 compile("sub "+ subname$ + "(a):print a:end sub")
 execute(subname$,2)
           </programlisting>
-	    <para>This example creates and executes a function, whose name (<function>foo1</function>) is stored within the variable <varname>subname$</varname>; the newly created function simply prints its single argument. This example could be executed multiple times within a single <application>yabasic</application>-program, simply by incrementing the variable <varname>count</varname>; by doing that, multiple subroutines (<function>foo1</function>, <function>foo2</function>, &hellip;) would be created and executed in succession.</para>
+	    <para>This example creates and executes a function, whose name (<function>foo1</function>) is stored within the variable <varname>subname$</varname>; the newly created function simply prints its single argument. This example could be executed multiple times within a single <application>yabasic</application>-program, simply by incrementing the variable <varname>count</varname>; by doing that, multiple subroutines (<function>foo1</function>, <function>foo2</function>, &hellip;) could be created and executed in succession.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4318,8 +4317,8 @@ print euler
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic</application> can be used as well as any numeric variables known.</para>
-	  <para>The string passed to <function>eval</function> is first compiled and then executed right away, the compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. However <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
+	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic</application> can be used as well as any variables known.</para>
+	  <para>The string passed to <function>eval</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4334,7 +4333,7 @@ for x=0 to 100 step 0.01
 next x
 print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + str$(maximum) + " at " + str$(xmaximum) + " (approximately)"
           </programlisting>
-	    <para>The example above reads an arithmetic expression from the user and steps through the range 0 &hellip; 100 to find its maximum. If the user types e.g. <userinput>-(x-50)**2</userinput>, the program would find a maximum of -1.90013e-24 at 50.</para>
+	    <para>The example above reads an arithmetic expression from the user and steps through the range 0 &hellip; 100 to find its maximum. If the user types e.g. <userinput>-(x-50)**2</userinput>, the program would find a maximum of <computeroutput>-1.90013e-24</computeroutput> at 50.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4349,15 +4348,15 @@ print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + st
 	</refmeta>
 	<refnamediv>
 	  <refname>eval$()</refname>
-	  <refpurpose>compile and execute a single numeric expression</refpurpose>
+	  <refpurpose>compile and execute a single string-expression</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis>print eval$("a$ + b$")</synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>eval$</function> accepts a string, which should be the text of a single string-expression; it processes the expression and returns the result. All string-functions and string-operators of <application>yabasic</application> can be used as well as any string-variables known.</para>
-	  <para>The string passed to <function>eval$</function> is first compiled and then executed right away, the compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. See the example below for two interesting use-cases.</para>
+	  <para><function>eval$</function> accepts a string, which should be the text of a single string-expression; it processes the expression and returns the result. All string-functions and string-operators of <application>yabasic</application> can be used as well as any variables known.</para>
+	  <para>The string passed to <function>eval$</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. See the example below for two interesting use-cases.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Examples</title>
@@ -4416,7 +4415,8 @@ sub eval_embedded_expressions$(evemex_str$)
 
 end sub
             </programlisting>
-	    <para>If the user when prompted types <userinput>Marc</userinput>, he is greeted with <computeroutput>Hello Marc, your name has 4 characters.</computeroutput>.</para>
+	    <para>If the user when prompted types <userinput>Marc</userinput>, he is greeted with <computeroutput>Hello Marc, your name has 4 characters.</computeroutput></para>
+	    <para>Please note, that the subroutine prefixes its local variables with <programlisting>evemex</programlisting> (for <emphasis>eval embedded expression</emphasis>) to avoid name name clases with any variable that might be used in the passed string.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4487,12 +4487,12 @@ end sub
 	    <programlisting>
 print foo$(a$,b$)
 	    </programlisting>
-	    <para>So this example does not really <emphasis>need</emphasis> the <function>execute$</function>-function.</para>
+	    <para>So this example does not really <emphasis>need</emphasis> the <function>execute$</function>-function; see <function><link linkend="ref_compile">compile</link></function> for examples, that <emphasis>do</emphasis>.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -8186,8 +8186,10 @@ putbit a$,30,30,"or"
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
-
-c$="rgb 21,21:0000000000000000000000000000000000000000000000000000000000000032c80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c8c8ff000032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+repeat
+  read d$
+  c$ = c$ + d$
+until( d$ = "")
 
 open window 200,200
 
@@ -8196,7 +8198,46 @@ do
   y=ran(220)-10
   putbit c$,x,y,"transparent"
 loop
-          </programlisting>
+  
+data "rgb 21,21:00000000000000000000000000000000000000000000000000000000000000"
+data "32c800000000000000000000000000000000000000000000000000000000000000000000"
+data "00000000000000000000000000000032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c800000000000000000000000000000000000000000000000000000000000000"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "00000000000000000000000000000000000000000000000032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800000000"
+data "00000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c8c8"
+data "ff000032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "00000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c800"
+data "32c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c800"
+data "32c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c800"
+data "32c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c800000000000000"
+data "32c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff000032c80032c80032c80032c80000000032c80032c80032c80032c8c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff0000"
+data "32c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c800"
+data "32c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c800000000000000"
+data "32c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c800"
+data "32c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c800"
+data "32c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c800"
+data "00000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "00000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c800000000000000000000000000000000000000000000"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "00000000000000000000000000000000000000000000000000000000000000000032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "000000000000000000000000000000000000000000000000000000000000000000000000"
+data "0000000000000000000000000000000000000000000000000000000000000000"
+data ""
+            </programlisting>
 	    <para>This program uses a precanned string (containing the image of a blue circle with a yellow centre) and draws it repeatedly into the graphic-window. The mode <literal>"transparent"</literal> ensures, that no pixels will be cleared.</para>
 	  </informalexample>
 	  <para>There are two possible values for the third argument of <function>putbit</function>. Both modes differ in the way, they replace (or not) any pixels from the window with pixels from the bitmap having the background colour.</para>
