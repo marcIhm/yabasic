@@ -1018,7 +1018,7 @@ D["HAVE_CURSES_H"]=" 1"
 D["HAVE_NCURSES_H"]=" 1"
 D["HAVE_GETNSTR"]=" 1"
 D["UNIX_ARCHITECTURE"]=" \"x86_64-unknown-linux-gnu\""
-D["BUILD_TIME"]=" \"Tue Jan 19 21:46:00 UTC 2021\""
+D["BUILD_TIME"]=" \"Wed Jan 20 07:51:18 UTC 2021\""
   for (key in D) D_is_set[key] = 1
   FS = ""
 }
