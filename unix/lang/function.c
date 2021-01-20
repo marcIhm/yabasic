@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     function.c --- code for functions
@@ -288,13 +288,13 @@ create_changestring (int type)	/* create command 'changestring' */
 {
     struct command *cmd;
 
-    cmd = add_command (cCHANGESTRING, FALSE, NULL);
+    cmd = add_command (cCHANGESTRING);
     cmd->args = type;
 }
 
 
 void
-changestring (struct command *current)	/* changes a string */
+changestring (struct command *cmd)	/* changes a string */
 {
     int type, a2, a3;
     char *newpart;
@@ -302,7 +302,7 @@ changestring (struct command *current)	/* changes a string */
     int i, len;
     struct stackentry *a1;
 
-    type = current->args;
+    type = cmd->args;
     newpart = pop (stSTRING)->pointer;
     if (type > fTWOARGS) {
         a3 = (int) pop (stNUMBER)->value;
@@ -374,7 +374,7 @@ create_function (int type)	/* create command 'function' */
 {
     struct command *cmd;
 
-    cmd = add_command (cFUNCTION, FALSE, NULL);
+    cmd = add_command (cFUNCTION);
     if (severity_threshold <= sDEBUG) {
 	sprintf(estring, "function '%s'",fexplanation[type]);
 	error (sDEBUG, estring);
@@ -384,7 +384,7 @@ create_function (int type)	/* create command 'function' */
 
 
 void
-function (struct command *current)	/* performs a function */
+function (struct command *cmd)	/* performs a function */
 {
     struct stackentry *stack, *a1, *a2, *a3, *a4;
     char *pointer;
@@ -394,7 +394,7 @@ function (struct command *current)	/* performs a function */
     char *str, *str2;
 
     a3 = NULL;
-    type = current->args;
+    type = cmd->args;
     if (type > fTHREEARGS) {
         a4 = pop (stSTRING_OR_NUMBER);
     }
@@ -468,6 +468,9 @@ function (struct command *current)	/* performs a function */
         }
         pointer = my_strdup (string);
         break;
+    case fSTR4:
+        result = stSTRING;
+        pointer = my_strdup (a1->pointer);
     case fCHOMP:
         result = stSTRING;
 	pointer = a1->pointer;
@@ -853,7 +856,7 @@ function (struct command *current)	/* performs a function */
         break;
     case fPEEK2:
         str = a1->pointer;
-        pointer = peek2 (str, current);
+        pointer = peek2 (str, currcmd);
         result = stSTRING;
         break;
     case fPEEK3:
@@ -901,9 +904,9 @@ function (struct command *current)	/* performs a function */
     /* copy result */
     stack->type = result;
     if (result == stSTRING) {
-        stack->pointer = pointer;
+	stack->pointer = pointer;
     } else {
-        stack->value = value;
+	stack->value = value;
     }
 }
 
@@ -915,15 +918,17 @@ do_system (char *cmd)		/* hand over execution of command to system, return exit 
     int ret;
     if (curinized) {
         reset_shell_mode ();
+	putp (exit_ca_mode);
     }
     ret = system (cmd);
     if (curinized) {
-        if (tcsetpgrp(STDIN_FILENO, getpid())) {
+        if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
 	    sprintf(string,"could not get control of terminal: %s",
 		    my_strerror(errno));
 	    error (sERROR,string);
 	    return ret;
 	}
+	putp (enter_ca_mode);
 	reset_prog_mode ();
     }
 
@@ -1481,9 +1486,9 @@ create_poke (char flag)		/* create Command 'cPOKE' */
     struct command *cmd;
 
     if (flag == 'S' || flag == 'D') {
-        cmd = add_command (cPOKEFILE, FALSE, NULL);
+        cmd = add_command (cPOKEFILE);
     } else {
-        cmd = add_command (cPOKE, FALSE, NULL);
+        cmd = add_command (cPOKE);
     }
     cmd->tag = flag;
 }
@@ -1761,7 +1766,7 @@ create_exception (int flag)	/* create command 'exception' */
 {
     struct command *cmd;
 
-    cmd = add_command (cEXCEPTION, FALSE, NULL);
+    cmd = add_command (cEXCEPTION);
     cmd->args = flag;
 }
 
@@ -1818,7 +1823,7 @@ create_restore (char *label)	/* create command 'restore' */
 {
     struct command *c;
 
-    c = add_command (cRESTORE, FALSE, label);
+    c = add_command (cRESTORE);
     c->pointer = my_strdup (label);
 }
 
@@ -1848,7 +1853,7 @@ restore (struct command *cmd)	/* reset data pointer to given label */
         *datapointer = label;
         if (lastdata) {
             while ((*datapointer)->type != cDATA
-                    && (*datapointer) != cmdhead) {
+                    && (*datapointer) != cmd_head) {
                 *datapointer = (*datapointer)->next;
             }
         }
@@ -1866,10 +1871,10 @@ create_dbldata (double value)	/* create command dbldata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE, NULL);
+    c = add_command (cDATA);
     c->pointer = my_malloc (sizeof (double));
     if (lastdata) {
-        lastdata->nextassoc = c;
+        lastdata->next_assoc = c;
     }
     lastdata = c;
     *((double *) c->pointer) = value;
@@ -1882,9 +1887,9 @@ create_strdata (char *value)	/* create command strdata */
 {
     struct command *c;
 
-    c = add_command (cDATA, FALSE, NULL);
+    c = add_command (cDATA);
     if (lastdata) {
-        lastdata->nextassoc = c;
+        lastdata->next_assoc = c;
     }
     lastdata = c;
     c->pointer = my_strdup (value);
@@ -1897,7 +1902,7 @@ create_readdata (char type)	/* create command readdata */
 {
     struct command *cmd;
 
-    cmd = add_command (cREADDATA, FALSE, NULL);
+    cmd = add_command (cREADDATA);
     cmd->tag = type;
 }
 
@@ -1914,7 +1919,7 @@ readdata (struct command *cmd)	/* read data items */
     while (*datapointer
             && ((*datapointer)->type != cDATA
                 || cmd->lib != (*datapointer)->lib)) {
-        *datapointer = (*datapointer)->nextassoc;
+        *datapointer = (*datapointer)->next_assoc;
     }
     if (!*datapointer) {
         error (sERROR, "run out of data items");
@@ -1933,7 +1938,7 @@ readdata (struct command *cmd)	/* read data items */
         read->type = stSTRING;
         read->pointer = my_strdup ((*datapointer)->pointer);
     }
-    *datapointer = (*datapointer)->nextassoc;	/* next item */
+    *datapointer = (*datapointer)->next_assoc;	/* next item */
 }
 
 
@@ -1962,19 +1967,19 @@ create_dblrelop (char c)	/* create command dblrelop */
         type = cGE;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
 void
-dblrelop (struct command *type)	/* compare topmost double-values */
+dblrelop (struct command *cmd)	/* compare topmost double-values */
 {
     double a, b, c;
     struct stackentry *result;
 
     b = pop (stNUMBER)->value;
     a = pop (stNUMBER)->value;
-    switch (current->type) {
+    switch (cmd->type) {
     case cEQ:
         c = (a == b);
         break;
@@ -2025,12 +2030,12 @@ create_strrelop (char c)	/* create command strrelop */
         type = cSTRGE;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
 void
-strrelop (struct command *type)	/* compare topmost string-values */
+strrelop (struct command *cmd)	/* compare topmost string-values */
 {
     char *a, *b;
     double c;
@@ -2038,7 +2043,7 @@ strrelop (struct command *type)	/* compare topmost string-values */
 
     b = pop (stSTRING)->pointer;
     a = pop (stSTRING)->pointer;
-    switch (current->type) {
+    switch (cmd->type) {
     case cSTREQ:
         c = (strcmp (a, b) == 0);
         break;
@@ -2105,20 +2110,20 @@ switch_compare (void)		/* compare topmost values for switch statement */
 
 
 void
-logical_shortcut (struct command *type)	/* shortcut and/or if possible */
+logical_shortcut (struct command *cmd)	/* shortcut and/or if possible */
 {
     struct stackentry *result;
     double is;
 
     is = stackhead->prev->value;
-    if ((type->type == cORSHORT && is != 0)
-            || (type->type == cANDSHORT && is == 0)) {
+    if ((cmd->type == cORSHORT && is != 0)
+            || (cmd->type == cANDSHORT && is == 0)) {
         result = push ();
         error (sDEBUG, "logical shortcut taken");
         result->type = stNUMBER;
         result->value = is;
     } else {
-        current = current->next;
+        currcmd = currcmd->next;
     }
 }
 
@@ -2139,22 +2144,22 @@ create_boole (char c)		/* create command boole */
         type = cNOT;
         break;
     }
-    add_command (type, FALSE, NULL);
+    add_command (type);
 }
 
 
 void
-boole (struct command *type)	/* perform and/or/not */
+boole (struct command *cmd)	/* perform and/or/not */
 {
     int a, b, c;
     struct stackentry *result;
 
     a = (int) pop (stNUMBER)->value;
-    if (current->type == cNOT) {
+    if (cmd->type == cNOT) {
         c = !a;
     } else {
         b = (int) pop (stNUMBER)->value;
-        if (current->type == cAND) {
+        if (cmd->type == cAND) {
             c = a && b;
         } else {
             c = a || b;

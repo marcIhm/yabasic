@@ -222,7 +222,14 @@ extern int yydebug;
     tSPLIT = 432,
     tSPLITALT = 433,
     tGLOB = 434,
-    UMINUS = 435
+    tSTART_PROGRAM = 435,
+    tSTART_EXPRESSION = 436,
+    tSTART_STRING_EXPRESSION = 437,
+    tSTART_ASSIGNMENT = 438,
+    tSTART_FUNCTION_DEFINITION = 439,
+    tEVAL = 440,
+    tEVAL2 = 441,
+    UMINUS = 442
   };
 #endif
 

@@ -1,8 +1,8 @@
 %{
 /*
 
-    YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    YABASIC  ---  a simple Basic Interpreter
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     BISON part
@@ -166,6 +166,10 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
 %token tFRNBF_GET_BUFFER tFRNBF_SET_BUFFER
 %token tDATE tTIME tTOKEN tTOKENALT tSPLIT tSPLITALT tGLOB
+%token tSTART_PROGRAM tSTART_EXPRESSION tSTART_STRING_EXPRESSION tSTART_ASSIGNMENT tSTART_FUNCTION_DEFINITION
+%token tEVAL tEVAL2
+
+%start program_or_expression
 
 %left tOR
 %left tAND
@@ -183,6 +187,13 @@ void collect_missing_clauses(char *string, char exclude) {
 
 %%
 
+program_or_expression: tSTART_PROGRAM program
+  | tSTART_EXPRESSION expression tEOPROG {YYACCEPT;}
+  | tSTART_STRING_EXPRESSION string_expression tEOPROG {YYACCEPT;}
+  | tSTART_ASSIGNMENT assignment tEOPROG {YYACCEPT;}
+  | tSTART_FUNCTION_DEFINITION function_definition tEOPROG {YYACCEPT;}
+  ;
+
 program: statement_list tEOPROG {YYACCEPT;}
   ;
 
@@ -191,24 +202,27 @@ statement_list: statement
   tSEP statement
   ;
 
-statement:  /* empty */
-  | string_assignment 
+assignment: string_assignment 
   | tLET string_assignment 
+  | number_assignment
+  | tLET number_assignment
+  ;
+  
+statement:  /* empty */
   | assignment
-  | tLET assignment
   | tIMPORT {report_if_missing("can not import a library in a loop or an if-statement",FALSE);}
-  | tERROR string_expression {add_command(cERROR,NULL,NULL);}
+  | tERROR string_expression {add_command(cERROR);}
   | for_loop 
   | switch_number_or_string
   | repeat_loop
   | while_loop
   | do_loop
-  | tBREAK {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
-  | tBREAK tDIGITS {add_command(cPOP_MULTI,NULL,NULL);create_mybreak(atoi($2));if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
-  | tCONTINUE {add_command(cPOP_MULTI,NULL,NULL);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(sERROR,"continue outside loop");}
+  | tBREAK {add_command(cPOP_MULTI);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
+  | tBREAK tDIGITS {add_command(cPOP_MULTI);create_mybreak(atoi($2));if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
+  | tCONTINUE {add_command(cPOP_MULTI);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(sERROR,"continue outside loop");}
   | function_definition
-  | function_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
-  | stringfunction_or_array {create_call($1);add_command(cPOP,NULL,NULL);}
+  | function_or_array {create_call($1);add_command(cPOP);}
+  | stringfunction_or_array {create_call($1);add_command(cPOP);}
   | tLOCAL {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'local' outside functions");} local_list
   | tSTATIC {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'static' outside functions");} static_list
   | if_clause
@@ -217,90 +231,90 @@ statement:  /* empty */
   | tGOSUB symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($2,TRUE):$2);}
   | tON tINTERRUPT tBREAK {create_exception(TRUE);}
   | tON tINTERRUPT tCONTINUE {create_exception(FALSE);}
-  | tON expression tGOTO {add_command(cSKIPPER,NULL,NULL);}
-    goto_list {add_command(cNOP,NULL,NULL);}
-  | tON expression tGOSUB {add_command(cSKIPPER,NULL,NULL);} 
-    gosub_list {add_command(cNOP,NULL,NULL);}
+  | tON expression tGOTO {add_command(cSKIPPER);}
+    goto_list {add_command(cNOP);}
+  | tON expression tGOSUB {add_command(cSKIPPER);} 
+    gosub_list {add_command(cNOP);}
   | tLABEL symbol_or_lineno {create_label((function_type!=ftNONE)?dotify($2,TRUE):$2,cLABEL);}
-  | open_clause {add_command(cCHECKOPEN,NULL,NULL);}
-  | tCLOSE hashed_number {add_command(cCLOSE,NULL,NULL);}
-  | seek_clause {add_command(cCHECKSEEK,NULL,NULL);}
-  | tCOMPILE string_expression {add_command(cCOMPILE,NULL,NULL);}
-  | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
-  | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cPOP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | open_clause {add_command(cCHECKOPEN);}
+  | tCLOSE hashed_number {add_command(cCLOSE);}
+  | seek_clause {add_command(cCHECKSEEK);}
+  | tCOMPILE string_expression {add_command(cCOMPILE);}
+  | tEXECUTE call_list {create_execute(0);add_command(cPOP);add_command(cPOP);}
+  | tEXECUTE2 call_list {create_execute(1);add_command(cPOP);add_command(cPOP);}
   | tPRINT printintro printlist {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);} 
   | tPRINT printintro printlist ';' {create_colour(0);create_pps(cPOPSTREAM,0);}
   | tPRINT printintro printlist ',' {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
   | tINPUT {tileol=FALSE;} inputbody
   | tLINE tINPUT {tileol=TRUE;} inputbody
-  | tCOLOUR expression ',' expression ',' expression {add_command(cGCOLOUR,NULL,NULL);}
-  | tCOLOUR string_expression {add_command(cGCOLOUR2,NULL,NULL);}
-  | tBACKCOLOUR expression ',' expression ',' expression {add_command(cGBACKCOLOUR,NULL,NULL);}
-  | tBACKCOLOUR string_expression {add_command(cGBACKCOLOUR2,NULL,NULL);}
+  | tCOLOUR expression ',' expression ',' expression {add_command(cGCOLOUR);}
+  | tCOLOUR string_expression {add_command(cGCOLOUR2);}
+  | tBACKCOLOUR expression ',' expression ',' expression {add_command(cGBACKCOLOUR);}
+  | tBACKCOLOUR string_expression {add_command(cGBACKCOLOUR2);}
   | tREAD readlist
   | tDATA datalist
   | tRESTORE {create_restore("");}
   | tRESTORE symbol_or_lineno {create_restore((function_type!=ftNONE)?dotify($2,TRUE):$2);}
   | tRETURN {if (function_type!=ftNONE) {
-	       add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;
-	       add_command(cPOPSYMLIST,NULL,NULL);
+	       add_command(cCLEARSYMREFS);end_symref_chain();
+	       add_command(cPOPSYMLIST);
                create_check_return_value(ftNONE,function_type);
-               add_command(cRETURN_FROM_CALL,NULL,NULL);
-            } else {
-               add_command(cRETURN_FROM_GOSUB,NULL,NULL);
+               add_command(cRETURN_FROM_CALL);
+             } else {
+               add_command(cRETURN_FROM_GOSUB);
             }}
-  | tRETURN expression {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
-  | tRETURN string_expression {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL,NULL,NULL);}
+  | tRETURN expression {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL);}
+  | tRETURN string_expression {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL);}
   | tDIM dimlist
   | tOPEN tWINDOW expression ',' expression {create_openwin(FALSE);}
   | tOPEN tWINDOW expression ',' expression ',' string_expression 
          {create_openwin(TRUE);}
-  | tWINDOW tORIGIN string_expression {add_command(cMOVEORIGIN,NULL,NULL);}
-  | tDOT coordinates {add_command(cDOT,NULL,NULL);}
-  | tCLEAR tDOT coordinates {add_command(cDOT,NULL,NULL);putindrawmode(dmCLEAR);}
+  | tWINDOW tORIGIN string_expression {add_command(cMOVEORIGIN);}
+  | tDOT coordinates {add_command(cDOT);}
+  | tCLEAR tDOT coordinates {add_command(cDOT);putindrawmode(dmCLEAR);}
   | tLINE coordinates to coordinates {create_line(2);}
   | tCLEAR tLINE coordinates to coordinates {create_line(2);putindrawmode(dmCLEAR);}
   | tLINE tTO coordinates {create_line(1);}
   | tLINE coordinates {create_line(1);}
   | tCLEAR tLINE tTO coordinates {create_line(1);putindrawmode(dmCLEAR);}
   | tCLEAR tLINE coordinates {create_line(1);putindrawmode(dmCLEAR);}
-  | tPUTBIT string_expression to expression ',' expression ',' string_expression {add_command(cPUTBIT,NULL,NULL);}
-  | tPUTBIT string_expression to expression ',' expression {create_pushstr("solid"); add_command(cPUTBIT,NULL,NULL);}
-  | tPUTCHAR string_expression to expression ',' expression {add_command(cPUTCHAR,NULL,NULL);}
+  | tPUTBIT string_expression to expression ',' expression ',' string_expression {add_command(cPUTBIT);}
+  | tPUTBIT string_expression to expression ',' expression {create_pushstr("solid"); add_command(cPUTBIT);}
+  | tPUTCHAR string_expression to expression ',' expression {add_command(cPUTCHAR);}
   | tNEW tCURVE {create_line(-1);}
   | tCLOSE tCURVE {create_line(0);}
-  | clear_fill_clause tCIRCLE coordinates ',' expression {add_command(cCIRCLE,NULL,NULL);putindrawmode(0);}
-  | clear_fill_clause tTRIANGLE coordinates to coordinates to coordinates {add_command(cTRIANGLE,NULL,NULL);putindrawmode(0);}
-  | tTEXT coordinates ',' string_expression {add_command(cTEXT1,NULL,NULL);}
-  | tTEXT coordinates ',' string_expression ',' string_expression {add_command(cTEXT2,NULL,NULL);}
-  | tTEXT coordinates ',' string_expression ',' string_expression ',' string_expression {add_command(cTEXT3,NULL,NULL);}
-  | clear_fill_clause tRECT coordinates to coordinates {add_command(cRECT,NULL,NULL);putindrawmode(0);}
-  | tCLOSE tWINDOW {add_command(cCLOSEWIN,NULL,NULL);}
-  | tCLEAR tWINDOW {add_command(cCLEARWIN,NULL,NULL);}
-  | tCLEAR tSCREEN {add_command(cCLEARSCR,NULL,NULL);}
+  | clear_fill_clause tCIRCLE coordinates ',' expression {add_command(cCIRCLE);putindrawmode(0);}
+  | clear_fill_clause tTRIANGLE coordinates to coordinates to coordinates {add_command(cTRIANGLE);putindrawmode(0);}
+  | tTEXT coordinates ',' string_expression {add_command(cTEXT1);}
+  | tTEXT coordinates ',' string_expression ',' string_expression {add_command(cTEXT2);}
+  | tTEXT coordinates ',' string_expression ',' string_expression ',' string_expression {add_command(cTEXT3);}
+  | clear_fill_clause tRECT coordinates to coordinates {add_command(cRECT);putindrawmode(0);}
+  | tCLOSE tWINDOW {add_command(cCLOSEWIN);}
+  | tCLEAR tWINDOW {add_command(cCLEARWIN);}
+  | tCLEAR tSCREEN {add_command(cCLEARSCR);}
   | tOPEN tPRINTER {create_openprinter(0);}
   | tOPEN tPRINTER string_expression {create_openprinter(1);}
-  | tCLOSE tPRINTER {add_command(cCLOSEPRN,NULL,NULL);}
-  | tWAIT expression {add_command(cWAIT,NULL,NULL);}
-  | tBELL {add_command(cBELL,NULL,NULL);}
-  | tINKEY {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
-  | tINKEY '(' ')' {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP,NULL,NULL);}
-  | tINKEY '(' expression ')' {create_function(fINKEY);add_command(cPOP,NULL,NULL);}
+  | tCLOSE tPRINTER {add_command(cCLOSEPRN);}
+  | tWAIT expression {add_command(cWAIT);}
+  | tBELL {add_command(cBELL);}
+  | tINKEY {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
+  | tINKEY '(' ')' {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
+  | tINKEY '(' expression ')' {create_function(fINKEY);add_command(cPOP);}
   | tSYSTEM '(' string_expression ')' {create_function(fSYSTEM);
-	add_command(cPOP,NULL,NULL);} 
+	add_command(cPOP);} 
   | tPOKE string_expression ',' string_expression {create_poke('s');}
   | tPOKE string_expression ',' expression {create_poke('d');}
   | tPOKE hashed_number ',' string_expression {create_poke('S');}
   | tPOKE hashed_number ',' expression {create_poke('D');}
-  | tEND {add_command(cEND,NULL,NULL);}
-  | tEXIT {create_pushdbl(0);add_command(cEXIT,NULL,NULL);}
-  | tEXIT expression {add_command(cEXIT,NULL,NULL);}
+  | tEND {add_command(cEND);}
+  | tEXIT {create_pushdbl(0);add_command(cEXIT);}
+  | tEXIT expression {add_command(cEXIT);}
   | tDOCU {create_docu($1);}
-  | tBIND string_expression {add_command(cBIND,NULL,NULL);}
-  | tFRNBF_FREE string_expression {add_command(cFRNBF_FREE,NULL,NULL);}
-  | tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER, NULL, NULL);} 
-  | tFRNBF_SET string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_STRING, NULL, NULL);} 
-  | tFRNBF_SET_BUFFER string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_BUFFER, NULL, NULL);} 
+  | tBIND string_expression {add_command(cBIND);}
+  | tFRNBF_FREE string_expression {add_command(cFRNBF_FREE);}
+  | tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression {add_command(cFRNBF_SET_NUMBER);} 
+  | tFRNBF_SET string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_STRING);} 
+  | tFRNBF_SET_BUFFER string_expression ',' expression ',' string_expression {add_command(cFRNBF_SET_BUFFER);} 
   ;
 
 
@@ -312,7 +326,7 @@ clear_fill_clause: /* empty */ {drawmode=0;}
   ;
 
 
-string_assignment: tSTRSYM tEQU string_expression {add_command(cPOPSTRSYM,dotify($1,FALSE),NULL);}
+string_assignment: tSTRSYM tEQU string_expression {add_command_with_sym_and_diag(cPOPSTRSYM,dotify($1,FALSE),NULL);}
   | tMID '(' string_scalar_or_array ',' expression ',' expression ')' tEQU string_expression {create_changestring(fMID);}
   | tMID '(' string_scalar_or_array ',' expression ')' tEQU string_expression {create_changestring(fMID2);}
   | tLEFT '(' string_scalar_or_array ',' expression ')' tEQU string_expression {create_changestring(fLEFT);}
@@ -327,23 +341,23 @@ to: ','
 open_clause: tOPEN hashed_number ',' string_expression ',' string_expression {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
   | tOPEN hashed_number ',' string_expression {create_myopen(OPEN_HAS_STREAM);}
   | tOPEN hashed_number ',' tPRINTER {create_myopen(OPEN_HAS_STREAM+OPEN_PRINTER);}
-  | tOPEN string_expression tFOR tREADING tAS hashed_number {add_command(cSWAP,NULL,NULL);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-  | tOPEN string_expression tFOR tWRITING tAS hashed_number {add_command(cSWAP,NULL,NULL);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+  | tOPEN string_expression tFOR tREADING tAS hashed_number {add_command(cSWAP);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+  | tOPEN string_expression tFOR tWRITING tAS hashed_number {add_command(cSWAP);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
   ;
 
-seek_clause: tSEEK hashed_number ',' expression {add_command(cSEEK,NULL,NULL);}
-  | tSEEK hashed_number ',' expression ',' string_expression {add_command(cSEEK2,NULL,NULL);}
+seek_clause: tSEEK hashed_number ',' expression {add_command(cSEEK);}
+  | tSEEK hashed_number ',' expression ',' string_expression {add_command(cSEEK2);}
   ;
 
-string_scalar_or_array: tSTRSYM {add_command(cPUSHSTRPTR,dotify($1,FALSE),NULL);}
+string_scalar_or_array: tSTRSYM {add_command_with_sym_and_diag(cPUSHSTRPTR,dotify($1,FALSE),NULL);}
   | tSTRSYM '(' call_list ')' {create_doarray(dotify($1,FALSE),GETSTRINGPOINTER);} 
   ;
 
-string_expression: tSTRSYM {add_command(cPUSHSTRSYM,dotify($1,FALSE),NULL);}
+string_expression: tSTRSYM {add_command_with_sym_and_diag(cPUSHSTRSYM,dotify($1,FALSE),NULL);}
   | string_function
-  | stringfunction_or_array {add_command(cSTRINGFUNCTION_OR_ARRAY,$1,NULL);}
+  | stringfunction_or_array {add_command_with_sym_and_diag(cSTRINGFUNCTION_OR_ARRAY,$1,NULL);}
   | tSTRING {if ($1==NULL) {lyyerror(sERROR,"String not terminated");create_pushstr("");} else {create_pushstr($1);}}
-  | string_expression '+' string_expression {add_command(cCONCAT,NULL,NULL);}
+  | string_expression '+' string_expression {add_command(cCONCAT);}
   | '(' string_expression ')'
   ;
 
@@ -354,6 +368,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tSTR '(' expression ')' {create_function(fSTR);}
   | tSTR '(' expression ',' string_expression ')' {create_function(fSTR2);} 
   | tSTR '(' expression ',' string_expression ',' string_expression ')' {create_function(fSTR3);} 
+  | tSTR '(' string_expression ')' {create_function(fSTR4);} 
   | tINKEY {create_pushdbl(-1);create_function(fINKEY);}
   | tINKEY '(' ')' {create_pushdbl(-1);create_function(fINKEY);}
   | tINKEY '(' expression ')' {create_function(fINKEY);}
@@ -375,25 +390,26 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tTIME '(' ')' {create_function(fTIME);}
   | tPEEK2 '(' string_expression ')' {create_function(fPEEK2);}
   | tPEEK2 '(' string_expression ',' string_expression ')' {create_function(fPEEK3);}
-  | tTOKENALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cTOKENALT2,NULL,NULL);}
-  | tTOKENALT '(' string_scalar_or_array ')' {add_command(cTOKENALT,NULL,NULL);}
-  | tSPLITALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cSPLITALT2,NULL,NULL);}
-  | tSPLITALT '(' string_scalar_or_array ')' {add_command(cSPLITALT,NULL,NULL);}
+  | tTOKENALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cTOKENALT2);}
+  | tTOKENALT '(' string_scalar_or_array ')' {add_command(cTOKENALT);}
+  | tSPLITALT '(' string_scalar_or_array ',' string_expression ')' {add_command(cSPLITALT2);}
+  | tSPLITALT '(' string_scalar_or_array ')' {add_command(cSPLITALT);}
   | tGETBIT '(' coordinates to coordinates ')' {create_function(fGETBIT);}
   | tGETCHAR '(' expression ',' expression to expression ',' expression ')' {create_function(fGETCHAR);}
   | tHEX '(' expression ')' {create_function(fHEX);}
   | tBIN '(' expression ')' {create_function(fBIN);}
-  | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tEXECUTE2 '(' call_list ')' {create_execute(1);add_command(cSWAP);add_command(cPOP);}
   | tFRNBF_GET2 '(' string_expression ',' expression ',' expression ')' {create_function(fFRNBF_GET_STRING);} 
   | tFRNBF_GET_BUFFER '(' string_expression ',' expression ')' {create_function(fFRNBF_GET_BUFFER);} 
+  | tEVAL2 '(' string_expression ')' {create_eval(evSTRING);}
   ;
 
-assignment: tSYMBOL tEQU expression {add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
+number_assignment: tSYMBOL tEQU expression {add_command_with_sym_and_diag(cPOPDBLSYM,dotify($1,FALSE),NULL);} 
   | function_or_array tEQU expression {create_doarray($1,ASSIGNARRAY);}
   ;
 
-expression: expression tOR {add_command(cORSHORT,NULL,NULL);pushlabel();} expression {poplabel();create_boole('|');}
-  | expression tAND {add_command(cANDSHORT,NULL,NULL);pushlabel();} expression {poplabel();create_boole('&');}
+expression: expression tOR {add_command(cORSHORT);pushlabel();} expression {poplabel();create_boole('|');}
+  | expression tAND {add_command(cANDSHORT);pushlabel();} expression {poplabel();create_boole('&');}
   | tNOT expression {create_boole('!');}
   | expression tEQU expression {create_dblrelop('=');}
   | expression tNEQ expression {create_dblrelop('!');}
@@ -401,21 +417,21 @@ expression: expression tOR {add_command(cORSHORT,NULL,NULL);pushlabel();} expres
   | expression tLEQ expression {create_dblrelop('{');}
   | expression tGTN expression {create_dblrelop('>');}
   | expression tGEQ expression {create_dblrelop('}');}
-  | tMYEOF '(' hashed_number ')' {add_command(cTESTEOF,NULL,NULL);}
-  | tGLOB '(' string_expression ',' string_expression ')' {add_command(cGLOB,NULL,NULL);}
+  | tMYEOF '(' hashed_number ')' {add_command(cTESTEOF);}
+  | tGLOB '(' string_expression ',' string_expression ')' {add_command(cGLOB);}
   | number {create_pushdbl($1);}
-  | tARDIM '(' arrayref ')' {add_command(cARDIM,"",NULL);}
-  | tARDIM '(' string_arrayref ')' {add_command(cARDIM,"",NULL);}
-  | tARSIZE '(' arrayref ',' expression ')' {add_command(cARSIZE,"",NULL);}
-  | tARSIZE '(' string_arrayref ',' expression ')' {add_command(cARSIZE,"",NULL);}
-  | function_or_array {add_command(cFUNCTION_OR_ARRAY,$1,NULL);}
-  | tSYMBOL {add_command(cPUSHDBLSYM,dotify($1,FALSE),NULL);}
+  | tARDIM '(' arrayref ')' {add_command_with_sym_and_diag(cARDIM,"",NULL);}
+  | tARDIM '(' string_arrayref ')' {add_command_with_sym_and_diag(cARDIM,"",NULL);}
+  | tARSIZE '(' arrayref ',' expression ')' {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
+  | tARSIZE '(' string_arrayref ',' expression ')' {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
+  | function_or_array {add_command_with_sym_and_diag(cFUNCTION_OR_ARRAY,$1,NULL);}
+  | tSYMBOL {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($1,FALSE),NULL);}
   | expression '+' expression {create_dblbin('+');}
   | expression '-' expression {create_dblbin('-');}
   | expression '*' expression {create_dblbin('*');}
   | expression '/' expression {create_dblbin('/');}
   | expression tPOW expression {create_dblbin('^');}
-  | '-' expression %prec UMINUS {add_command(cNEGATE,NULL,NULL);}
+  | '-' expression %prec UMINUS {add_command(cNEGATE);}
   | string_expression tEQU string_expression {create_strrelop('=');}
   | string_expression tNEQ string_expression {create_strrelop('!');}
   | string_expression tLTN string_expression {create_strrelop('<');}
@@ -494,17 +510,18 @@ function: tSIN '(' expression ')' {create_function(fSIN);}
   | tSHL '(' expression ',' expression ')' {create_function(fSHL);}
   | tSHR '(' expression ',' expression ')' {create_function(fSHR);}
   | tTELL '(' hashed_number ')' {create_function(fTELL);}
-  | tTOKEN '(' string_expression ',' string_arrayref ',' string_expression ')' {add_command(cTOKEN2,NULL,NULL);}
-  | tTOKEN '(' string_expression ',' string_arrayref ')' {add_command(cTOKEN,NULL,NULL);}
-  | tSPLIT '(' string_expression ',' string_arrayref ',' string_expression ')' {add_command(cSPLIT2,NULL,NULL);}
-  | tSPLIT '(' string_expression ',' string_arrayref ')' {add_command(cSPLIT,NULL,NULL);}
-  | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cSWAP,NULL,NULL);add_command(cPOP,NULL,NULL);}
+  | tTOKEN '(' string_expression ',' string_arrayref ',' string_expression ')' {add_command(cTOKEN2);}
+  | tTOKEN '(' string_expression ',' string_arrayref ')' {add_command(cTOKEN);}
+  | tSPLIT '(' string_expression ',' string_arrayref ',' string_expression ')' {add_command(cSPLIT2);}
+  | tSPLIT '(' string_expression ',' string_arrayref ')' {add_command(cSPLIT);}
+  | tEXECUTE '(' call_list ')' {create_execute(0);add_command(cSWAP);add_command(cPOP);}
   | tOPEN '(' tPRINTER ')' {create_myopen(OPEN_PRINTER);}
   | tOPEN '(' string_expression ')' {create_myopen(0);}
   | tOPEN '(' string_expression ',' string_expression ')' {create_myopen(OPEN_HAS_MODE);}
   | tOPEN '(' hashed_number ',' tPRINTER ')' {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM);}
   | tOPEN '(' hashed_number ',' string_expression ',' string_expression ')' {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
+  | tEVAL '(' string_expression ')' {create_eval(evNUMBER);}
   ;
 
 const: number {$$=$1;}
@@ -534,7 +551,7 @@ function_or_array: tSYMBOL '(' call_list ')' {$$=my_strdup(dotify($1,FALSE));}
 stringfunction_or_array: tSTRSYM '(' call_list ')' {$$=my_strdup(dotify($1,FALSE));}
   ;
 
-call_list: {add_command(cPUSHFREE,NULL,NULL);} calls
+call_list: {add_command(cPUSHFREE);} calls
   ;
 
 calls: /* empty */
@@ -546,13 +563,13 @@ call_item: string_expression
   | expression
   ;
  
-function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("do not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
+function_definition: export tSUB {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("can not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
 	function_name {if (exported) create_subr_link($4); create_label($4,cUSER_FUNCTION);
-	               add_command(cPUSHSYMLIST,NULL,NULL);add_command(cCLEARREFS,NULL,NULL);firstref=lastref=lastcmd;
+	               add_command(cPUSHSYMLIST);add_command(cCLEARSYMREFS);start_symref_chain();
 		       create_count_params();}
-	'(' paramlist ')' {create_require(stFREE);add_command(cPOP,NULL,NULL);}
+	'(' paramlist ')' {create_require(stFREE);add_command(cPOP);}
 	statement_list
-	endsub {add_command(cCLEARREFS,NULL,NULL);lastcmd->nextref=firstref;add_command(cPOPSYMLIST,NULL,NULL);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL,NULL,NULL);lastref=NULL;create_endfunction();poplabel();}
+	endsub {add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL);create_endfunction();poplabel();}
   ;
 
 endsub: tEOPROG {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
@@ -594,36 +611,36 @@ paramlist: /* empty */
   | paramlist ',' paramitem
   ;
   
-paramitem: tSYMBOL {create_require(stNUMBER);create_makelocal(dotify($1,FALSE),syNUMBER);add_command(cPOPDBLSYM,dotify($1,FALSE),NULL);}
-  | tSTRSYM {create_require(stSTRING);create_makelocal(dotify($1,FALSE),sySTRING);add_command(cPOPSTRSYM,dotify($1,FALSE),NULL);}
+paramitem: tSYMBOL {create_require(stNUMBER);create_makelocal(dotify($1,FALSE),syNUMBER);add_command_with_sym_and_diag(cPOPDBLSYM,dotify($1,FALSE),NULL);}
+  | tSTRSYM {create_require(stSTRING);create_makelocal(dotify($1,FALSE),sySTRING);add_command_with_sym_and_diag(cPOPSTRSYM,dotify($1,FALSE),NULL);}
   | tSYMBOL '(' ')' {create_require(stNUMBERARRAYREF);create_arraylink(dotify($1,FALSE),stNUMBERARRAYREF);}
   | tSTRSYM '(' ')' {create_require(stSTRINGARRAYREF);create_arraylink(dotify($1,FALSE),stSTRINGARRAYREF);}
   ;
 
-for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);missing_next++;missing_next_line=yylineno;} tSYMBOL tEQU 
+for_loop: tFOR {loop_nesting++;add_command(cBEGIN_LOOP_MARK);missing_next++;missing_next_line=yylineno;} tSYMBOL tEQU 
             {pushname(dotify($3,FALSE)); /* will be used by next_symbol to check equality,NULL */
-	     add_command(cRESETSKIPONCE,NULL,NULL);
-	     add_command(cRESETSKIPONCE2,NULL,NULL);
+	     add_command(cRESETSKIPONCE);
+	     add_command(cRESETSKIPONCE2);
 	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
 	  expression tTO expression 
 	  step_part { /* pushes another expression */
-	     add_command(cSKIPONCE,NULL,NULL);
+	     add_command(cSKIPONCE);
 	     pushlabel();
-	     add_command(cSTARTFOR,NULL,NULL);
-	     add_command(cPOPDBLSYM,dotify($3,FALSE),NULL);
+	     add_command(cSTARTFOR);
+	     add_command_with_sym_and_diag(cPOPDBLSYM,dotify($3,FALSE),NULL);
 	     poplabel();
 
-	     add_command(cPUSHDBLSYM,dotify($3,FALSE),NULL);
-	     add_command(cSKIPONCE,NULL,NULL);
-	     add_command(cFORINCREMENT,NULL,NULL);
-	     add_command(cPOPDBLSYM,dotify($3,FALSE),NULL);
-	     add_command(cPUSHDBLSYM,dotify($3,FALSE),NULL);
-	     add_command(cFORCHECK,NULL,NULL);
-	     add_command(cDECIDE,NULL,NULL);
+	     add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($3,FALSE),NULL);
+	     add_command(cSKIPONCE);
+	     add_command(cFORINCREMENT);
+	     add_command_with_sym_and_diag(cPOPDBLSYM,dotify($3,FALSE),NULL);
+	     add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($3,FALSE),NULL);
+	     add_command(cFORCHECK);
+	     add_command(cDECIDE);
              pushlabel();}
           statement_list {
              swap();popgoto();poplabel();}
-          next next_symbol {add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+          next next_symbol {add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
   ;
 
 next: tEOPROG {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
@@ -644,8 +661,8 @@ next_symbol:  {pop(stSTRING);}/* can be omitted */
            }
   ;
 
-switch_number_or_string: tSWITCH {push_switch_id();add_command(cBEGIN_SWITCH_MARK,NULL,NULL);} 
-                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE,NULL,NULL);add_command(cPOP,NULL,NULL);add_command(cEND_SWITCH_MARK,NULL,NULL);pop_switch_id();}
+switch_number_or_string: tSWITCH {push_switch_id();add_command(cBEGIN_SWITCH_MARK);} 
+                number_or_string sep_list case_list default tSEND {add_command(cBREAK_HERE);add_command(cPOP);add_command(cEND_SWITCH_MARK);pop_switch_id();}
   ;
 
 sep_list: tSEP 
@@ -659,23 +676,23 @@ number_or_string: expression
 
 case_list: /* empty */
   | case_list tCASE number_or_string
-      {add_command(cSWITCH_COMPARE,NULL,NULL);add_command(cDECIDE,NULL,NULL);add_command(cNEXT_CASE,NULL,NULL);} statement_list {add_command(cNEXT_CASE_HERE,NULL,NULL);}
+      {add_command(cSWITCH_COMPARE);add_command(cDECIDE);add_command(cNEXT_CASE);} statement_list {add_command(cNEXT_CASE_HERE);}
   ;
 
 
 default: /* empty */
-  | tDEFAULT tSEP {add_command(cNEXT_CASE_HERE,NULL,NULL);} statement_list
+  | tDEFAULT tSEP {add_command(cNEXT_CASE_HERE);} statement_list
   ;
 
 
-do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
+do_loop: tDO {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
 	      statement_list
             loop
   ;
 
 
 loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
-  | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tLOOP {missing_loop--;popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
   | tENDIF {report_conflicting_close("a closing loop is expected before endif",'e');}
   | tWEND {report_conflicting_close("a closing loop is expected before wend",'w');}
   | tUNTIL {report_conflicting_close("a closing loop is expected before until",'l');}
@@ -683,32 +700,32 @@ loop: tEOPROG {if (missing_loop) {sprintf(string,"do-loop starting at at line %d
   ;
 
 
-while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();} expression
-	      {add_command(cDECIDE,NULL,NULL);
+while_loop: tWHILE {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();} expression
+	      {add_command(cDECIDE);
 	      pushlabel();}
 	      statement_list
             wend
   ;	    
 
 wend: tEOPROG {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
-  | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tWEND {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
   ;
 
 
-repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK,NULL,NULL);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();} 
+repeat_loop: tREPEAT {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();} 
 	       statement_list
 	     until
   ;
 
 until: tEOPROG {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
-  | tUNTIL expression {missing_until--;add_command(cDECIDE,NULL,NULL);popgoto();add_command(cBREAK_HERE,NULL,NULL);add_command(cEND_LOOP_MARK,NULL,NULL);loop_nesting--;}
+  | tUNTIL expression {missing_until--;add_command(cDECIDE);popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
   | tENDIF {report_conflicting_close("a closing until is expected before endif",'e');}
   | tWEND {report_conflicting_close("a closing until is expected before wend",'w');}
   | tLOOP {report_conflicting_close("a closing until is expected before loop",'l');}
   | tNEXT {report_conflicting_close("a closing until is expected before next",'n');}
   ;
 
-if_clause: tIF expression {add_command(cDECIDE,NULL,NULL);storelabel();pushlabel();}
+if_clause: tIF expression {add_command(cDECIDE);storelabel();pushlabel();}
            tTHEN {missing_endif++;missing_endif_line=yylineno;} statement_list {swap();matchgoto();swap();poplabel();}
 	   elsif_part
            else_part {poplabel();}
@@ -723,7 +740,7 @@ endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %
   | tNEXT {report_conflicting_close("a closing endif is expected before next",'n');}
   ;
 
-short_if:  tIF expression {in_short_if++;add_command(cDECIDE,NULL,NULL);pushlabel();}
+short_if:  tIF expression {in_short_if++;add_command(cDECIDE);pushlabel();}
         statement_list
 	end_of_if
   ;
@@ -738,7 +755,7 @@ else_part: /* can be omitted */
 
 elsif_part: /* can be omitted */
   | tELSIF expression maybe_then
-    	{add_command(cDECIDE,NULL,NULL);pushlabel();} 
+    	{add_command(cDECIDE);pushlabel();} 
     statement_list 
 	{swap();matchgoto();swap();poplabel();} 
     elsif_part
@@ -749,13 +766,13 @@ maybe_then: /* can be omitted */
   ;
 
 inputlist: input
-  | input ',' {add_command(cCHKPROMPT,NULL,NULL);} inputlist
+  | input ',' {add_command(cCHKPROMPT);} inputlist
   ;
 
-input: tSYMBOL {create_myread('d',tileol);add_command(cPOPDBLSYM,dotify($1,FALSE),FALSE);}
+input: tSYMBOL {create_myread('d',tileol);add_command_with_sym_and_diag(cPOPDBLSYM,dotify($1,FALSE),NULL);}
   | tSYMBOL '(' call_list ')' 
     	{create_myread('d',tileol);create_doarray(dotify($1,FALSE),ASSIGNARRAY);}
-  | tSTRSYM {create_myread('s',tileol);add_command(cPOPSTRSYM,dotify($1,FALSE),FALSE);}
+  | tSTRSYM {create_myread('s',tileol);add_command_with_sym_and_diag(cPOPSTRSYM,dotify($1,FALSE),NULL);}
   | tSTRSYM '(' call_list ')' 
     	{create_myread('s',tileol);create_doarray(dotify($1,FALSE),ASSIGNSTRINGARRAY);}
   ;
@@ -764,10 +781,10 @@ readlist: readitem
   | readlist ',' readitem
   ;
 
-readitem: tSYMBOL {create_readdata('d');add_command(cPOPDBLSYM,dotify($1,FALSE),FALSE);}
+readitem: tSYMBOL {create_readdata('d');add_command_with_sym_and_diag(cPOPDBLSYM,dotify($1,FALSE),NULL);}
   | tSYMBOL '(' call_list ')' 
     {create_readdata('d');create_doarray(dotify($1,FALSE),ASSIGNARRAY);}
-  | tSTRSYM {create_readdata('s');add_command(cPOPSTRSYM,dotify($1,FALSE),FALSE);}
+  | tSTRSYM {create_readdata('s');add_command_with_sym_and_diag(cPOPSTRSYM,dotify($1,FALSE),NULL);}
   | tSTRSYM '(' call_list ')' 
     {create_readdata('s');create_doarray(dotify($1,FALSE),ASSIGNSTRINGARRAY);}
   ;
@@ -790,10 +807,10 @@ using: {create_print('d');} /* possible empty */
   | tUSING '(' string_expression ',' string_expression ')' {create_print('U');}
   ;
 
-inputbody: '#' tSYMBOL {add_command(cPUSHDBLSYM,dotify($2,FALSE),FALSE);create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
+inputbody: '#' tSYMBOL {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($2,FALSE),NULL);create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
   | '#' tDIGITS {create_pushdbl(atoi($2));create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
   | '#' '(' expression ')' {create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
-  | tAT '(' expression ',' expression ')' {add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_pps(cPOPSTREAM,0);}
+  | tAT '(' expression ',' expression ')' {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_pps(cPOPSTREAM,0);}
   | {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_pps(cPOPSTREAM,0);}
   ;
 
@@ -802,30 +819,30 @@ prompt: /* empty */ {create_pushstr("?");create_print('s');}
   ;
 
 printintro: /* may be empty */ {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | '#' tSYMBOL {add_command(cPUSHDBLSYM,dotify($2,FALSE),FALSE);create_pps(cPUSHSTREAM,0);}
+  | '#' tSYMBOL {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($2,FALSE),NULL);create_pps(cPUSHSTREAM,0);}
   | '#' tDIGITS {create_pushdbl(atoi($2));create_pps(cPUSHSTREAM,0);}
   | '#' '(' expression ')' {create_pps(cPUSHSTREAM,0);}
   | tREVERSE {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
   | tCOLOUR '(' string_expression ')' {create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
   | tCOLOUR '(' string_expression ',' string_expression ')' {create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tAT '(' expression ',' expression ')' {add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tREVERSE tAT '(' expression ',' expression ')' {add_command(cMOVE,NULL,NULL);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tCOLOUR '(' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE,NULL,NULL);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tCOLOUR '(' string_expression ',' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE,NULL,NULL);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tAT '(' expression ',' expression ')' tREVERSE {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE,NULL,NULL);}
-  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ')' {create_colour(2);add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ',' string_expression ')' {create_colour(3);add_command(cMOVE,NULL,NULL);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tAT '(' expression ',' expression ')' {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tREVERSE tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tCOLOUR '(' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tCOLOUR '(' string_expression ',' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tAT '(' expression ',' expression ')' tREVERSE {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE);}
+  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ')' {create_colour(2);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
+  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ',' string_expression ')' {create_colour(3);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
   ;  
 
 hashed_number: '#' expression
   | expression;
 
-goto_list: symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP,NULL,NULL);}
-  | goto_list ',' symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP,NULL,NULL);}
+goto_list: symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP);}
+  | goto_list ',' symbol_or_lineno {create_goto((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP);}
   ;
 
-gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP,NULL,NULL);}
-  | gosub_list ',' symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP,NULL,NULL);}
+gosub_list: symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($1,TRUE):$1);add_command(cFINDNOP);}
+  | gosub_list ',' symbol_or_lineno {create_gosub((function_type!=ftNONE)?dotify($3,TRUE):$3);add_command(cFINDNOP);}
   ;
 
 %code {

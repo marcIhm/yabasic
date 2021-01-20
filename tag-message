@@ -1,4 +1,4 @@
-Version 2.87.1 (November 07, 2020)
-  - Fixed for libffi on 32 bit systems
-  - Updated included header files (windows) of ffi from libffi 3.3
+Version 2.89.0 (December 29, 2020)
+  - Fixed for Problem with system-command after clear screen on MacOS
+  - Added functions eval and eval$
 

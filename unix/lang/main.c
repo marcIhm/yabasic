@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     main.c --- main() and auxilliary functions
@@ -22,8 +22,8 @@
 
 /* ------------- defines ---------------- */
 
-#define DONE {current=current->next;break;}	/* reduces type-work */
-#define COPYRIGHT "Copyright 1995-2020 by Marc Ihm, according to the MIT License"
+#define DONE {currcmd=currcmd->next;break;}	/* reduces type-work */
+#define COPYRIGHT "Copyright 1995-2021 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\nconfigured for "\
@@ -41,6 +41,7 @@ extern int yydoublenl;            /* column number */
 extern YYLTYPE yylloc;          /* line numbers and columns */
 extern int yyparse ();		/* call bison parser */
 extern int yydebug;             /* for bison debugging */
+extern int yy_flex_debug;       /* for flex debugging */
 
 /* ------------- local functions ---------------- */
 
@@ -62,10 +63,10 @@ int effective_lineno (void);
 
 /* ------------- global variables ---------------- */
 
-struct command *cmdroot;	/* first command */
-struct command *cmdhead;	/* next command */
-struct command *lastcmd;	/* last command */
-struct command *current;	/* currently executed command */
+struct command *cmd_root;	/* first command */
+struct command *cmd_head;	/* next command */
+struct command *last_cmd;	/* last command, that has been added */
+struct command *currcmd;	/* currently executed command */
 int severity_threshold;	        /* minimum severity the user wants to see */
 int severity_so_far;            /* maximum severity that has been printed until now */
 static int debug_count;		/* number of debug messages */
@@ -126,6 +127,7 @@ main (int argc, char **argv)
 
     program_state = spHATCHED;
     severity_threshold = sWARNING;		/* set the default severity threshold */
+    yy_flex_debug = 0;                         /* can be switched on again via -i b */
 
 #ifdef WINDOWS
 
@@ -290,13 +292,15 @@ main (int argc, char **argv)
 	}
 
 	set_program_state (spCOMPILING);
+	start_token = tSTART_PROGRAM;
+	error (sDEBUG, "parsing complete program");
 	if (yyparse () && severity_so_far >= sERROR) {
 	    error_without_position (sERROR, "Couldn't parse program");
 	}
 
 	if ( severity_so_far < sERROR) {
 	    create_docu_array ();
-	    add_command (cEND, NULL, NULL);
+	    add_command (cEND);
 	}
 
 	sprintf (string, "read %d line(s) and generated %d command(s)", yylineno,
@@ -465,9 +469,16 @@ effective_lineno ()
     }
 }
 
+struct command *
+add_command (int type)
+/* common case without a sym */
+{
+    return add_command_with_sym_and_diag (type, NULL, NULL);
+}
+
 
 struct command *
-add_command (int type, char *symname, char *diag)
+add_command_with_sym_and_diag (int type, char *symname, char *diag)
 /* get room for new command, and make a link from old one */
 {
     struct command *new;
@@ -475,59 +486,60 @@ add_command (int type, char *symname, char *diag)
     if (severity_threshold <= sDEBUG) {
         std_diag ("creating", type, symname, diag);
     }
-    cmdhead->type = type;		/* store command */
-    cmdhead->line = effective_lineno ();
-    cmdhead->first_column = yylloc.first_column;
-    cmdhead->last_column = yylloc.last_column;
-    cmdhead->lib = currlib;
-    cmdhead->cnt = commandcount;
+    cmd_head->type = type;		/* store command */
+    cmd_head->line = effective_lineno ();
+    cmd_head->first_column = yylloc.first_column;
+    cmd_head->last_column = yylloc.last_column;
+    cmd_head->lib = currlib;
+    cmd_head->cnt = commandcount;
+    cmd_head->diag = my_strdup(diag);
     if (!symname || !*symname) {
-        cmdhead->symname = NULL;
+        cmd_head->symname = NULL;
     } else {
-        cmdhead->symname = my_strdup (symname);
+        cmd_head->symname = my_strdup (symname);
     }
     commandcount++;
-    cmdhead->pointer = NULL;	/* no data yet */
-    cmdhead->tag = 0;
-    cmdhead->jump = NULL;
-    cmdhead->nextassoc = NULL;
-    cmdhead->diag = my_strdup(diag);
-    if (!currlib->datapointer && cmdhead->type == cDATA) {
-        currlib->firstdata = currlib->datapointer = cmdhead;
+    cmd_head->pointer = NULL;
+    cmd_head->tag = 0;
+    cmd_head->jump = NULL;
+    cmd_head->next_assoc = NULL;
+    if (!currlib->datapointer && cmd_head->type == cDATA) {
+        currlib->firstdata = currlib->datapointer = cmd_head;
     }
 
     /* link into chain of commands referencing a symbol */
     if (symname) {
-        if (lastref) {
-            lastref->nextref = cmdhead;
+        if (last_symref) {
+            last_symref->next_symref = cmd_head;
         }
-        lastref = cmdhead;
+        last_symref = cmd_head;
     }
 
     /* create new command */
     new = (struct command *) my_malloc (sizeof (struct command));
     /* and initialize */
     new->next = NULL;
-    new->prev = cmdhead;
+    new->prev = cmd_head;
     new->pointer = NULL;
     new->symbol = NULL;
-    new->nextref = NULL;
-    new->nextassoc = NULL;
+    new->next_symref = NULL;
+    new->next_assoc = NULL;
     new->symname = NULL;
     new->switch_state = NULL;
 
-    cmdhead->next = new;
-    lastcmd = cmdhead;
-    cmdhead = cmdhead->next;
-    return lastcmd;
+    cmd_head->next = new;
+    last_cmd = cmd_head;
+    cmd_head = cmd_head->next;
+    return last_cmd;
 }
+
 
 struct command *
 add_command_with_switch_state (int type)	/* same as add_command, but add switch_state too */
 {
     struct command *cmd;
-
-    cmd = add_command (type, NULL, NULL);
+    
+    cmd = add_command (type);
     return add_switch_state(cmd);
 }
 
@@ -549,7 +561,7 @@ dump_commands (char *dumpfilename)
     }
 
 
-    for (cmd=cmdroot; cmd; cmd=cmd->next) {
+    for (cmd=cmd_root; cmd; cmd=cmd->next) {
         int len;
         len=strlen(cexplanation[cmd->type]);
         if (len>max_explanation_length) {
@@ -565,7 +577,7 @@ dump_commands (char *dumpfilename)
         }
     }
 
-    for (cmd=cmdroot; cmd; cmd=cmd->next) {
+    for (cmd=cmd_root; cmd; cmd=cmd->next) {
         sprintf(string,"");
         fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,cexplanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
         if (cmd->type==cEND) {
@@ -655,7 +667,7 @@ parse_arguments (int cargc, char *cargv[])
 	    fprintf (stderr,
 		     "   --version               : show version of yabasic\n");
 	    fprintf (stderr,
-		     "   -i,--infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison\n");
+		     "   -i,--infolevel [dnwefb] : set infolevel to debug,note,warning,error,fatal or bison+flex\n");
 	    fprintf (stderr,
 		     "   -e,--execute COMMANDS   : execute yabasic COMMANDS right away\n");
 	    fprintf (stderr,
@@ -714,6 +726,7 @@ parse_arguments (int cargc, char *cargv[])
                     severity_threshold = sFATAL;
                 } else if (!strncmp (info, "bison", strlen (info))) {
                     yydebug = 1;
+		    yy_flex_debug = 1;
                     severity_threshold = sDEBUG;
                 } else {
                     sprintf (string, "there's no infolevel '%s' " YABFORHELP,
@@ -982,21 +995,21 @@ end_it (void)			/* perform shutdown-operations */
 #endif
         mystream (STDIO_STREAM);
         onestring ("---Program done, press RETURN---\n");
-#ifdef WINDOWS
+#ifdef UNIX
+	if (curinized) {
+	    getnstr (l, INBUFFLEN);
+	} else{
+	    fgets (l, INBUFFLEN, stdin);
+	}
+#else
         SetConsoleMode (ConsoleInput, InitialConsole & (~ENABLE_ECHO_INPUT));
         FlushConsoleInputBuffer (ConsoleInput);
-#endif
         fgets (l, INBUFFLEN, stdin);
-#ifdef WINDOWS
         if (wthandle != INVALID_HANDLE_VALUE) {
             TerminateThread (wthandle, 0);
         }
 #endif
-#ifdef UNIX
     }
-#else
-    }
-#endif
 
 #ifdef UNIX
     if (curinized)
@@ -1004,16 +1017,13 @@ end_it (void)			/* perform shutdown-operations */
         endwin ();
     }
 #else
-    if (printerfont)
-    {
+    if (printerfont) {
         DeleteObject (printerfont);
     }
-    if (myfont)
-    {
+    if (myfont) {
         DeleteObject (myfont);
     }
-    if (printer)
-    {
+    if (printer) {
         DeleteDC (printer);
     }
 #endif
@@ -1097,8 +1107,8 @@ initialize (void)
 
     /* initialize command stack */
     /* create first: */
-    cmdroot = (struct command *) my_malloc (sizeof (struct command));
-    cmdroot->next = cmdroot->prev = NULL;
+    cmd_root = (struct command *) my_malloc (sizeof (struct command));
+    cmd_root->next = cmd_root->prev = NULL;
 
     /* initialize random number generator */
 #ifdef UNIX
@@ -1115,7 +1125,7 @@ initialize (void)
     /* initialize stack */
     base = push ();
     base->type = stROOT;		/* push nil, so that pop will not crash */
-    cmdhead = cmdroot; /* list of commands */ ;
+    cmd_head = cmd_root; /* list of commands */ ;
     commandcount = 0;
 
     /* initialize switch_id stack */
@@ -1198,7 +1208,7 @@ initialize (void)
     cexplanation[cNEGATE] = "NEGATE";
     cexplanation[cPUSHDBLSYM] = "PUSHDBLSYM";
     cexplanation[cREQUIRE] = "REQUIRE";
-    cexplanation[cCLEARREFS] = "CLEARREFS";
+    cexplanation[cCLEARSYMREFS] = "CLEARSYMREFS";
     cexplanation[cPUSHSYMLIST] = "PUSHSYMLIST";
     cexplanation[cPOPSYMLIST] = "POPSYMLIST";
     cexplanation[cMAKELOCAL] = "MAKELOCAL";
@@ -1252,6 +1262,8 @@ initialize (void)
     cexplanation[cCOMPILE] = "COMPILE";
     cexplanation[cEXECUTE] = "EXECUTE";
     cexplanation[cEXECUTE2] = "EXECUTE$";
+    cexplanation[cEVAL] = "EVAL";
+    cexplanation[cEVAL_CODE] = "EVAL_CODE";
     cexplanation[cCLOSE] = "CLOSE";
     cexplanation[cSEEK] = "SEEK";
     cexplanation[cSEEK2] = "SEEK2";
@@ -1357,6 +1369,7 @@ initialize (void)
     fexplanation[fLOG] = "LOG";
     fexplanation[fLEN] = "LEN";
     fexplanation[fSTR] = "STR";
+    fexplanation[fSTR4] = "STR4";
     fexplanation[fSQRT] = "SQRT";
     fexplanation[fSQR] = "SQR";
     fexplanation[fFRAC] = "FRAC";
@@ -1516,15 +1529,15 @@ run_it ()
 {
     int l = 0;
 
-    current = cmdroot;		/* start with first comand */
+    currcmd = cmd_root;		/* start with first comand */
     if (print_docu) {
         /* don't execute program, just print docu */
-        while (current != cmdhead) {
-            if (current->type == cDOCU) {
+        while (currcmd != cmd_head) {
+            if (currcmd->type == cDOCU) {
                 if (severity_threshold <= sDEBUG) {
-                    std_diag ("executing", current->type, current->symname, current->diag);
+                    std_diag ("executing", currcmd->type, currcmd->symname, currcmd->diag);
                 }
-                printf ("%s\n", (char *) current->pointer);
+                printf ("%s\n", (char *) currcmd->pointer);
                 l++;
                 if (hold_docu && !(l % 24)) {
                     printf ("---Press RETURN to continue ");
@@ -1532,10 +1545,10 @@ run_it ()
                 }
             } else {
                 if (severity_threshold <= sDEBUG) {
-                    std_diag ("skipping", current->type, current->symname, current->diag);
+                    std_diag ("skipping", currcmd->type, currcmd->symname, currcmd->diag);
                 }
             }
-            current = current->next;
+            currcmd = currcmd->next;
         }
         if (!l) {
             printf ("---No embbeded documentation\n");
@@ -1545,52 +1558,52 @@ run_it ()
             fgets (string, INBUFFLEN, stdin);
         }
     } else {
-        while (current != cmdhead && endreason == rNONE) {
+        while (currcmd != cmd_head && endreason == rNONE) {
             if (severity_threshold <= sDEBUG) {
-                std_diag ("executing", current->type, current->symname, current->diag);
+                std_diag ("executing", currcmd->type, currcmd->symname, currcmd->diag);
             }
-            switch (current->type) {
+            switch (currcmd->type) {
             case cGOTO:
             case cQGOTO:
             case cGOSUB:
             case cQGOSUB:
             case cCALL:
             case cQCALL:
-                jump (current);
+                jump (currcmd);
                 DONE;
             case cEXCEPTION:
-                exception (current);
+                exception (currcmd);
                 DONE;
             case cSKIPPER:
                 skipper ();
                 break;
             case cSKIPONCE:
-                skiponce (current);
+                skiponce (currcmd);
                 DONE;
             case cRESETSKIPONCE:
-                resetskiponce (current,1);
+                resetskiponce (currcmd,1);
                 DONE;
             case cRESETSKIPONCE2:
-                resetskiponce (current,2);
+                resetskiponce (currcmd,2);
                 DONE;
             case cBREAK_MULTI:
-                mybreak (current);
+                mybreak (currcmd);
                 DONE;
             case cNEXT_CASE:
-                next_case (current);
+                next_case (currcmd);
                 DONE;
             case cSWITCH_COMPARE:
                 switch_compare ();
                 DONE;
             case cCONTINUE:
-                mycontinue (current);
+                mycontinue (currcmd);
                 DONE;
             case cFINDNOP:
                 findnop ();
                 DONE;
             case cFUNCTION_OR_ARRAY:
             case cSTRINGFUNCTION_OR_ARRAY:
-                function_or_array (current);
+                function_or_array (currcmd);
                 break;		/* NOT 'DONE' ! */
             case cLABEL:
             case cDATA:
@@ -1615,41 +1628,44 @@ run_it ()
                 DONE;
             case cEXECUTE:
             case cEXECUTE2:
-                execute (current);
+                execute (currcmd);
                 DONE;
+	    case cEVAL:
+		eval (currcmd);
+		DONE;
             case cRETURN_FROM_GOSUB:
             case cRETURN_FROM_CALL:
-                myreturn (current);
+                myreturn (currcmd);
                 DONE;
             case cCHECK_RETURN_VALUE:
-                check_return_value (current);
+                check_return_value (currcmd);
                 DONE;
             case cPUSHDBLSYM:
-                pushdblsym (current);
+                pushdblsym (currcmd);
                 DONE;
             case cPUSHDBL:
-                pushdbl (current);
+                pushdbl (currcmd);
                 DONE;
             case cPOPDBLSYM:
-                popdblsym (current);
+                popdblsym (currcmd);
                 DONE;
             case cPOP:
                 pop (stANY);
                 DONE;
             case cPOP_MULTI:
-                pop_multi (current);
+                pop_multi (currcmd);
                 DONE;
             case cPOPSTRSYM:
-                popstrsym (current);
+                popstrsym (currcmd);
                 DONE;
             case cPUSHSTRSYM:
-                pushstrsym (current);
+                pushstrsym (currcmd);
                 DONE;
             case cPUSHSTR:
-                pushstr (current);
+                pushstr (currcmd);
                 DONE;
-            case cCLEARREFS:
-                clearrefs (current);
+            case cCLEARSYMREFS:
+                clear_symrefs (currcmd);
                 DONE;
             case cPUSHSYMLIST:
                 pushsymlist ();
@@ -1658,38 +1674,38 @@ run_it ()
                 popsymlist ();
                 DONE;
             case cREQUIRE:
-                require (current);
+                require (currcmd);
                 DONE;
             case cMAKELOCAL:
-                makelocal (current);
+                makelocal (currcmd);
                 DONE;
             case cCOUNT_PARAMS:
-                count_params (current);
+                count_params (currcmd);
                 DONE;
             case cMAKESTATIC:
-                makestatic (current);
+                makestatic (currcmd);
                 DONE;
             case cARRAYLINK:
-                arraylink (current);
+                arraylink (currcmd);
                 DONE;
             case cPUSHARRAYREF:
-                pusharrayref (current);
+                pusharrayref (currcmd);
                 DONE;
             case cTOKEN:
             case cTOKEN2:
             case cSPLIT:
             case cSPLIT2:
-                token (current);
+                token (currcmd);
                 DONE;
             case cTOKENALT:
             case cTOKENALT2:
             case cSPLITALT:
             case cSPLITALT2:
-                tokenalt (current);
+                tokenalt (currcmd);
                 DONE;
             case cARDIM:
             case cARSIZE:
-                query_array (current);
+                query_array (currcmd);
                 DONE;
             case cPUSHFREE:
                 push ()->type = stFREE;
@@ -1698,25 +1714,25 @@ run_it ()
                 concat ();
                 DONE;
             case cPRINT:
-                print (current);
+                print (currcmd);
                 DONE;
             case cMOVE:
                 mymove ();
                 DONE;
             case cCOLOUR:
-                colour (current);
+                colour (currcmd);
                 DONE;
             case cCLEARSCR:
                 clearscreen ();
                 DONE;
             case cONESTRING:
-                onestring (current->pointer);
+                onestring (currcmd->pointer);
                 DONE;
             case cTESTEOF:
-                testeof (current);
+                testeof (currcmd);
                 DONE;
             case cOPEN:
-                myopen (current);
+                myopen (currcmd);
                 DONE;
             case cCHECKOPEN:
             case cCHECKSEEK:
@@ -1727,10 +1743,10 @@ run_it ()
                 DONE;
             case cSEEK:
             case cSEEK2:
-                myseek (current);
+                myseek (currcmd);
                 DONE;
             case cPUSHSTREAM:
-                push_stream (current);
+                push_stream (currcmd);
                 DONE;
             case cPOPSTREAM:
                 pop_stream ();
@@ -1739,21 +1755,21 @@ run_it ()
                 chkprompt ();
                 DONE;
             case cREAD:
-                myread (current);
+                myread (currcmd);
                 DONE;
             case cRESTORE:
             case cQRESTORE:
-                restore (current);
+                restore (currcmd);
                 DONE;
             case cREADDATA:
-                readdata (current);
+                readdata (currcmd);
                 DONE;
             case cDBLADD:
             case cDBLMIN:
             case cDBLMUL:
             case cDBLDIV:
             case cDBLPOW:
-                dblbin (current);
+                dblbin (currcmd);
                 DONE;
             case cNEGATE:
                 negate ();
@@ -1764,7 +1780,7 @@ run_it ()
             case cGE:
             case cLT:
             case cLE:
-                dblrelop (current);
+                dblrelop (currcmd);
                 DONE;
             case cSTREQ:
             case cSTRNE:
@@ -1772,52 +1788,52 @@ run_it ()
             case cSTRLE:
             case cSTRGT:
             case cSTRGE:
-                strrelop (current);
+                strrelop (currcmd);
                 DONE;
             case cAND:
             case cOR:
             case cNOT:
-                boole (current);
+                boole (currcmd);
                 DONE;
             case cFUNCTION:
-                function (current);
+                function (currcmd);
                 DONE;
             case cGLOB:
                 glob ();
                 DONE;
             case cDOARRAY:
-                doarray (current);
+                doarray (currcmd);
                 DONE;
             case cCHANGESTRING:
-                changestring (current);
+                changestring (currcmd);
                 DONE;
             case cPUSHSTRPTR:
-                pushstrptr (current);
+                pushstrptr (currcmd);
                 DONE;
             case cDIM:
-                dim (current);
+                dim (currcmd);
                 DONE;
             case cDECIDE:
                 decide ();
                 DONE;
             case cANDSHORT:
             case cORSHORT:
-                logical_shortcut (current);
+                logical_shortcut (currcmd);
                 DONE;
             case cOPENWIN:
-                openwin (current);
+                openwin (currcmd);
                 DONE;
             case cMOVEORIGIN:
                 moveorigin (NULL);
                 DONE;
             case cOPENPRN:
-                openprinter (current);
+                openprinter (currcmd);
                 DONE;
             case cCLOSEPRN:
                 closeprinter ();
                 DONE;
             case cDOT:
-                dot (current);
+                dot (currcmd);
                 DONE;
             case cPUTBIT:
                 putbit ();
@@ -1826,24 +1842,24 @@ run_it ()
                 putchars ();
                 DONE;
             case cLINE:
-                line (current);
+                line (currcmd);
                 DONE;
             case cGCOLOUR:
             case cGCOLOUR2:
             case cGBACKCOLOUR:
             case cGBACKCOLOUR2:
-                change_colour (current);
+                change_colour (currcmd);
                 DONE;
             case cCIRCLE:
-                circle (current);
+                circle (currcmd);
                 DONE;
             case cTRIANGLE:
-                triangle (current);
+                triangle (currcmd);
                 DONE;
             case cTEXT1:
             case cTEXT2:
             case cTEXT3:
-                text (current);
+                text (currcmd);
                 DONE;
             case cCLOSEWIN:
                 closewin ();
@@ -1852,7 +1868,7 @@ run_it ()
                 clearwin ();
                 DONE;
             case cRECT:
-                rect (current);
+                rect (currcmd);
                 DONE;
             case cWAIT:
                 mywait ();
@@ -1861,10 +1877,10 @@ run_it ()
                 mybell ();
                 DONE;
             case cPOKE:
-                poke (current);
+                poke (currcmd);
                 DONE;
             case cPOKEFILE:
-                pokefile (current);
+                pokefile (currcmd);
                 DONE;
             case cSWAP:
                 swap ();
@@ -1906,8 +1922,8 @@ run_it ()
             default:
                 sprintf (string,
                          "Command %s (%d, right before '%s') not implemented",
-                         cexplanation[current->type], current->type,
-                         cexplanation[current->type + 1]);
+                         cexplanation[currcmd->type], currcmd->type,
+                         cexplanation[currcmd->type + 1]);
                 error (sERROR, string);
             }
         }
@@ -1937,8 +1953,8 @@ error (int severity, char *message)
 {
     if (program_state == spCOMPILING) {
         error_with_position (severity, message, currlib->long_name, effective_lineno () , yylloc.first_column, yylloc.last_column );
-    } else if (program_state == spRUNNING && current->line > 0) {
-        error_with_position (severity, message, current->lib->long_name, current->line, current->first_column, current->last_column);
+    } else if (program_state == spRUNNING && currcmd->line > 0) {
+        error_with_position (severity, message, currcmd->lib->long_name, currcmd->line, currcmd->first_column, currcmd->last_column);
     } else {
         error_without_position (severity, message);
     }
@@ -2215,11 +2231,27 @@ strip (char *name)		/* strip down to minimal name */
 
 
 void
-compile ()			/* create s subroutine at runtime */
+compile ()			/* create subroutine at runtime */
 {
-    open_string (pop (stSTRING)->pointer);
-    yyparse ();
-    add_command (cEND, NULL, NULL);
+    char *compile_text = my_strdup (pop (stSTRING)->pointer);
+    struct library *currlib_saved;
+
+    currlib_saved = currlib;
+    currlib = currcmd->lib;
+    start_flex_from_string (compile_text);
+
+    if (severity_threshold <= sDEBUG) {
+	sprintf (string, "Compiling string as subroutine definition: '%s'", compile_text);
+	error (sDEBUG, string);
+    }
+    start_token = tSTART_FUNCTION_DEFINITION;
+    if (yyparse () && severity_so_far >= sERROR) {
+	sprintf (string, "Couldn't parse string as definition of subroutine: '%s'", compile_text);
+	error_without_position (sERROR, string);
+    }
+    end_flex_from_string();
+    free(compile_text);
+    currlib = currlib_saved;
 }
 
 
@@ -2228,7 +2260,7 @@ create_execute (int string)	/* create command 'cEXECUTESUB' */
 {
     struct command *cmd;
 
-    cmd = add_command (string ? cEXECUTE2 : cEXECUTE, NULL, NULL);
+    cmd = add_command (string ? cEXECUTE2 : cEXECUTE);
     cmd->pointer = my_strdup (dotify ("", FALSE));
 }
 
@@ -2275,11 +2307,99 @@ execute (struct command *cmd)	/* execute a subroutine */
         return;
     }
     ret = push ();
-    ret->pointer = current;
+    ret->pointer = currcmd;
     ret->type = stRET_ADDR_CALL;
     reorder_stack_before_call (ret);
-    current = newcurr;
+    currcmd = newcurr;
     free (fullname);
+}
+
+
+void
+create_eval (int type)	/* create command 'eval' */
+/* type can be 0 (number), 1 (string) or 2 (assignment) */
+{
+    struct command *cmd;
+
+    cmd = add_command (cEVAL);
+    cmd->args = type;
+}
+
+
+void
+eval (struct command *cmd)			/* do the work for eval functions and command eval */
+{
+    struct command *eval_seek = cmd->jump;
+    struct command *eval_seek_before = cmd;
+    struct command *eval_exec;
+    struct library *currlib_saved;
+    char *eval_text = my_strdup (pop (stSTRING)->pointer);
+    struct stackentry *ret_val;
+    struct stackentry *ret_addr;
+    const int start_tokens[] = {0, tSTART_EXPRESSION, tSTART_STRING_EXPRESSION};
+    const char *description[] = {"", "numeric expression", "string expression"};
+    int eval_type = cmd->args;
+
+    /* remember return address */
+    ret_addr = push ();
+    ret_addr->pointer = cmd;
+    ret_addr->type = stRET_ADDR;
+
+    /* try to find text of current eval in associated list of previous evals */
+    while(eval_seek && strcmp(eval_text,(char *) eval_seek->pointer)) {
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "Seeking current eval; this prior eval does not match: %s", (char *) eval_seek->pointer);
+	    error (sDEBUG, string);
+	}
+	eval_seek_before = eval_seek;
+	eval_seek = eval_seek->jump;
+    }
+    if (eval_seek) {
+	/* eval text has been found and need not be compiled again */
+	eval_exec = eval_seek;
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "String for %s has already been compiled before", description[eval_type]);
+	    error (sDEBUG, string);
+	}
+    } else {
+	/* eval text has not been found and needs to be compiled before execution */
+	eval_exec = add_command_with_sym_and_diag (cEVAL_CODE, NULL, eval_text);
+	eval_seek_before->jump = eval_exec;
+	eval_exec->pointer = my_strdup(eval_text);
+	start_flex_from_string(eval_text);
+	start_token = start_tokens[eval_type];
+	if (severity_threshold <= sDEBUG) {
+	    sprintf (string, "Compiling string as %s", description[eval_type]);
+	    error (sDEBUG, string);
+	}
+	
+	add_command(cCLEARSYMREFS);
+	start_symref_chain();
+	currlib_saved = currlib;
+	currlib = currcmd->lib;
+	if (yyparse () && severity_so_far >= sERROR) {
+	    sprintf (string, "Couldn't parse string as %s: '%s'", description[eval_type], eval_text);
+	    error_without_position (sERROR, string);
+	    ret_val = push ();
+	    if (eval_type == evSTRING) {
+		ret_val->type = stSTRING;
+		ret_val->pointer = my_strdup("");
+	    } else {
+		ret_val->type = stNUMBER;
+		ret_val->value = 0.0;
+	    }
+	    return;
+	}
+	end_flex_from_string();
+	free(eval_text);
+	currlib = currlib_saved;
+	add_command(cSWAP);
+	add_command(cCLEARSYMREFS);
+	end_symref_chain();
+	add_command(cRETURN_FROM_GOSUB);
+    }
+    /* jump to eval */
+    currcmd = eval_exec;
 }
 
 
@@ -2292,10 +2412,10 @@ create_docu (char *doc)		/* create command 'docu' */
     if (inlib) {
         return;
     }
-    cmd = add_command (cDOCU, NULL, NULL);
+    cmd = add_command (cDOCU);
     cmd->pointer = doc;
     if (previous) {
-        previous->nextassoc = cmd;
+        previous->next_assoc = cmd;
     } else {
         docuhead = cmd;
     }
@@ -2320,7 +2440,7 @@ create_docu_array (void)	/* create array with documentation */
     i = 1;
     while (doc) {
         ((char **) ar->pointer)[i] = doc->pointer;
-        doc = doc->nextassoc;
+        doc = doc->next_assoc;
         i++;
     }
     get_sym ("main.docu$", syARRAY, amADD_GLOBAL)->pointer = ar;

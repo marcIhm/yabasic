@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     flow.c --- code for subroutines and flow-control
@@ -42,7 +42,7 @@ create_check_return_value (int is, int should)	/* create command 'cCHECK_RETURN_
 {
     struct command *cmd;
 
-    cmd = add_command (cCHECK_RETURN_VALUE, NULL, NULL);
+    cmd = add_command_with_sym_and_diag (cCHECK_RETURN_VALUE, NULL, NULL);
     cmd->args = is;
     cmd->tag = should;
 }
@@ -195,7 +195,7 @@ myreturn (struct command *cmd)	/* return from gosub of function call */
             return;
         }
     }
-    current = (struct command *) address->pointer;
+    currcmd = (struct command *) address->pointer;
 }
 
 
@@ -226,7 +226,7 @@ create_subr_link (char *label)	/* create link to subroutine */
         return;
     }
 
-    cmd = add_command (cLINK_SUBR, NULL, label);
+    cmd = add_command_with_sym_and_diag (cLINK_SUBR, NULL, label);
     /* store label */
     cmd->pointer = my_strdup (global);
     link_label (cmd);
@@ -239,7 +239,7 @@ create_endfunction (void)	/* create command cEND_FUNCTION */
 {
     struct command *cmd;
 
-    cmd = add_command (cEND_FUNCTION, NULL, NULL);
+    cmd = add_command_with_sym_and_diag (cEND_FUNCTION, NULL, NULL);
     link_label (cmd);
 }
 
@@ -279,7 +279,7 @@ create_makelocal (char *name, int type)	/* create command 'cMAKELOCAL' */
 {
     struct command *cmd;
 
-    cmd = add_command (cMAKELOCAL, name, NULL);
+    cmd = add_command_with_sym_and_diag (cMAKELOCAL, name, NULL);
     cmd->args = type;
 }
 
@@ -305,7 +305,7 @@ create_count_params (void)		/* create command 'cCOUNT_PARAMS' */
 
     /* dotifying numparams at compiletime (as opposed to runtime) is essential,
        because the function name is not known at runtime */
-    cmd = add_command (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
+    cmd = add_command_with_sym_and_diag (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
 }
 
 
@@ -362,7 +362,7 @@ create_goto (char *label)	/* creates command goto */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOTO, NULL, label);
+    cmd = add_command_with_sym_and_diag (cGOTO, NULL, label);
     cmd->pointer = my_strdup (label);
     add_switch_state(cmd);
 }
@@ -373,7 +373,7 @@ create_gosub (char *label)	/* creates command gosub */
 {
     struct command *cmd;
 
-    cmd = add_command (cGOSUB, NULL, label);
+    cmd = add_command_with_sym_and_diag (cGOSUB, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -384,7 +384,7 @@ create_call (char *label)	/* creates command function call */
 {
     struct command *cmd;
 
-    cmd = add_command (cCALL, NULL, label);
+    cmd = add_command_with_sym_and_diag (cCALL, NULL, label);
     /* specific info */
     cmd->pointer = my_strdup (label);
 }
@@ -433,7 +433,7 @@ link_label (struct command *cmd)	/* link label into list of labels */
     if (!labelroot) {
         labelroot = cmd;
     } else {
-        labelhead->nextassoc = cmd;
+        labelhead->next_assoc = cmd;
     }
     labelhead = cmd;
 }
@@ -466,7 +466,7 @@ search_label (char *name, int type)  	/* search label */
             if (at) *at = '@';
             return curr;
         }
-        curr = curr->nextassoc;
+        curr = curr->next_assoc;
     }
     return NULL;
 }
@@ -485,7 +485,7 @@ jump (struct command *cmd)
     if (type == cGOSUB || type == cQGOSUB || type == cCALL || type == cQCALL) {
         /* leave return address for return */
         ret = push ();
-        ret->pointer = current;
+        ret->pointer = currcmd;
         if (type == cGOSUB || type == cQGOSUB) {
             ret->type = stRET_ADDR;
         } else {
@@ -496,7 +496,7 @@ jump (struct command *cmd)
     
     
     if (type == cQGOSUB || type == cQGOTO || type == cQCALL) {
-        current = (struct command *) cmd->jump;	/* use remembered address */
+        currcmd = (struct command *) cmd->jump;	/* use remembered address */
 	if (type == cQGOTO && cmd->switch_state && cmd->switch_state->pop_on_qgoto) { /* jump out of switch-statment ? */
 	    pop(stANY);
 	}
@@ -510,7 +510,7 @@ jump (struct command *cmd)
     }
     if (label) {
         /* found right label */
-        current = label;		/* jump to new location */
+        currcmd = label;		/* jump to new location */
         /* use the address instead of the name next time */
         cmd->jump = label;
         switch (cmd->type) {
@@ -626,7 +626,7 @@ create_label (char *label, int type)	/* creates command label */
         return;
     }
 
-    cmd = add_command (type, NULL, label);
+    cmd = add_command_with_sym_and_diag (type, NULL, label);
     cmd->pointer = my_strdup (label);
     add_switch_state(cmd);
 
@@ -638,8 +638,8 @@ void
 decide()			/*  skips next command, if not 0 on stack */
 {
 	if (pop(stNUMBER)->value != 0) {
-		current = current->next;    /* skip one command */
-		if (severity_threshold <= sDEBUG) std_diag("skipping", current->type, current->symname, current->diag);
+		currcmd = currcmd->next;    /* skip one command */
+		if (severity_threshold <= sDEBUG) std_diag("skipping", currcmd->type, currcmd->symname, currcmd->diag);
 	}
 	else {
 		if (severity_threshold <= sDEBUG) error(sDEBUG, "(no command skipped)");
@@ -656,13 +656,13 @@ skipper ()
 
     len = (int) pop (stNUMBER)->value;
     i = 1;
-    current = current->next;	/* advance to first goto/gosub */
+    currcmd = currcmd->next;	/* advance to first goto/gosub */
     for (i = 1; i < len; i++) {
-        ahead = current->next->next;	/* skip interleaving findnop statement */
+        ahead = currcmd->next->next;	/* skip interleaving findnop statement */
         if (ahead->type == cNOP) {
             break;
         } else {
-            current = ahead;
+            currcmd = ahead;
         }
     }
 }
@@ -672,7 +672,7 @@ void
 skiponce (struct command *cmd)	/* skip next command exectly once */
 {
     if (cmd->tag) {
-        current = current->next;
+        currcmd = currcmd->next;
     }
     if (severity_threshold <= sDEBUG) {
 	if (cmd->tag) {
@@ -743,10 +743,8 @@ create_mybreak(int depth) /* create command mybreak */
 	error(sERROR,string);
     }
 
-    cmd = add_command (cBREAK_MULTI, NULL, NULL);
+    cmd = add_command (cBREAK_MULTI);
     cmd->tag=depth;
-    sprintf(string,"%d",depth);
-    cmd->diag=my_strdup(string);
 }
 
 
@@ -789,7 +787,7 @@ mybreak (struct command *cmd)	/* find break_here statement */
         error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -828,7 +826,7 @@ mycontinue (struct command *cmd)	/* find continue_here statement */
 	error (sDEBUG, estring);
     }
     load_pop_multi(cmd, to_pop);
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -865,7 +863,7 @@ next_case (struct command *cmd)	/* find next_case_here statement */
 	sprintf(estring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
         error (sDEBUG, estring);
     }
-    cmd->jump = current = curr;
+    cmd->jump = currcmd = curr;
 }
 
 
@@ -873,8 +871,8 @@ void
 findnop ()
 /* used for on_gosub, find trailing nop command */
 {
-    while (current->type != cNOP) {
-        current = current->next;	/* next label */
+    while (currcmd->type != cNOP) {
+        currcmd = currcmd->next;	/* next label */
     }
 }
 

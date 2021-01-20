@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2019
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -63,6 +63,7 @@
 #include <X11/keysymdef.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <term.h>
 #ifdef HAVE_NCURSES_H
 #include <ncurses.h>
 #else
@@ -92,10 +93,10 @@
 /* -------- variables needed in all files and defined in ... -------- */
 
 /* main.c */
-extern struct command *current;	/* currently executed command */
-extern struct command *cmdroot;	/* first command */
-extern struct command *cmdhead;	/* next command */
-extern struct command *lastcmd;	/* last command */
+extern struct command *currcmd;	        /* currently executed command */
+extern struct command *cmd_root;	/* first command */
+extern struct command *cmd_head;	/* next command */
+extern struct command *last_cmd;	/* last command */
 extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int interactive;		/* true, if commands come from stdin */
@@ -200,10 +201,10 @@ void switch_compare (void);	/* compare topmost values for switch statement */
 
 /* symbol.c */
 extern struct stackentry *stackroot;	/* first element of stack */
-extern struct stackentry *stackhead;	/* last element of stack */
+extern struct stackentry *stackhead;	/* last element of stack; actually stackhead->prev is the last element, that has contents */
 extern void query_array (struct command *cmd);	/* query array */
-extern struct command *lastref;	/* last command in UDS referencing a symbol */
-extern struct command *firstref;	/* first command in UDS referencing a symbol */
+extern struct command *last_symref;
+extern struct command *first_symref;
 extern int labelcount;		/* count self-generated labels */
 
 /* flex.c */
@@ -214,6 +215,7 @@ extern int in_short_if;		/* true, if within a short if */
 extern int library_chain_length;	/* length of library_chain */
 extern struct library *library_chain[];	/* list of all library file names */
 extern int include_depth; /* current position in libfile_stack */
+extern int start_token; /* pseudo token used to switch start state */
 
 /* bison.c */
 extern char *current_function;	/* name of currently parsed function */
@@ -280,7 +282,7 @@ enum functions {
     fINKEY, fMOUSEX, fMOUSEY, fMOUSEB, fMOUSEMOD,
     fSIN, fASIN, fCOS, fACOS, fTAN,
     fATAN, fSYSTEM, fSYSTEM2, fPEEK, fPEEK2, fPEEK4, fTELL, fEXP, fLOG, fLEN,
-    fSTR,
+    fSTR, fSTR4,
     fSQRT, fSQR, fFRAC, fROUND, fABS, fSIG, fRAN, fINT, fCEIL, fFLOOR, fVAL, fASC, fHEX, fBIN, fDEC,
     fUPPER, fLOWER, fCHOMP, 
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
@@ -305,6 +307,11 @@ enum drawing_modes {
     dmNORMAL = 0, dmCLEAR = 1, dmFILL = 2
 };
 
+enum eval_types {
+    /* different types of eval */
+    evNONE = 0, evNUMBER = 1, evSTRING = 2
+};
+
 enum cmd_type {
     /* type of command */
     cFIRST_COMMAND,		/* no command, just marks start of list */
@@ -312,9 +319,9 @@ enum cmd_type {
     cLABEL, cLINK_SUBR, cGOTO, cQGOTO, cGOSUB, cQGOSUB, cRETURN_FROM_GOSUB,	/* flow control */
     cEND, cEXIT, cBIND, cDECIDE, cSKIPPER, cNOP, cFINDNOP, cEXCEPTION,
     cANDSHORT,
-    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2,
+    cORSHORT, cSKIPONCE, cRESETSKIPONCE, cRESETSKIPONCE2, cCOMPILE, cEXECUTE, cEXECUTE2, cEVAL, cEVAL_CODE,
 
-    cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARREFS,	/* everything with "()" */
+    cDIM, cFUNCTION, cDOARRAY, cARRAYLINK, cPUSHARRAYREF, cCLEARSYMREFS,	/* everything with "()" */
     cARDIM, cARSIZE, cTOKEN, cTOKEN2, cTOKENALT, cTOKENALT2,
     cSPLIT, cSPLIT2, cSPLITALT, cSPLITALT2,
     cSTARTFOR, cFORCHECK, cFORINCREMENT,	/* for for-loops */
@@ -379,7 +386,7 @@ enum addmodes {
 };
 
 enum states {
-    /* current state of program */
+    /* current state of program (variable program_state) */
     spHATCHED, spINITIALIZED, spCOMPILING, spRUNNING, spFINISHED
 };
 
@@ -400,20 +407,12 @@ enum search_modes {
 
 struct stackentry {
     /* one element on stack */
-    int type;			/* contents of entry */
+    int type;			/* type of entry */
     struct stackentry *next;
     struct stackentry *prev;
-    void *pointer;		/* multiuse ptr */
-    double value;			/* double value, only one of pointer or value is used */
+    void *pointer;		/* multi-use pointer, e.g. for strings */
+    double value;		/* double value, only one of pointer or value is used */
 };
-
-/*
-  symbols are organized as a stack of lists: for every procedure call
-  a new list is pushed onto the stack; all local variables of this
-  function are chained into this list. After return from this procedure,
-  the whole list is discarded and one element is popped from
-  the stack.
-*/
 
 struct symstack {
     /* stack of symbol lists */
@@ -443,10 +442,10 @@ struct command {
     void *symbol;			/* pointer to symbol (or data within symbol) associated with command */
     struct command *jump;		/* pointer to jump destination */
     char *symname;			/* name of symbol associated with command */
-    struct command *nextref;	/* next cmd within function referencing a symbol */
-    struct command *nextassoc;	/* next cmd within within chain of associated commands */
-    int args;			/* number of arguments for function/array call */
-    /* or stream number for open/close             */
+    struct command *next_symref;	/* next cmd within function referencing a symbol */
+    struct command *next_assoc;	/* next cmd within chain of associated commands; used for commands: data, docu, label */
+    int args;			/* number of arguments for function/array call 
+				   or stream number for open/close */
     int tag;			/* char/int to pass some information */
     int line;			/* line this command has been created for */
     int first_column;           /* column, at which this command started */
@@ -501,7 +500,10 @@ void std_diag (char *, int, char *, char *);
 void *my_malloc (unsigned);
 void my_free (void *);
 char *my_strerror (int);
-struct command *add_command (int, char *, char *);
+struct command *add_command (int);
+struct command *add_command_with_sym (int, char *);
+struct command *add_command_with_diag (int, char *);
+struct command *add_command_with_sym_and_diag (int, char *, char *);
 struct command *add_command_with_switch_state(int);
 void dump_commands (char *);
 void signal_handler (int);
@@ -515,6 +517,8 @@ extern void add_variables (char *);
 void compile (void);
 void create_execute (int);
 void execute (struct command *);
+void create_eval (int);
+void eval (struct command *);
 int isbound (void);
 
 /* io.c */
@@ -625,7 +629,9 @@ long long current_millis(void);
 
 /* symbol.c */
 struct array *create_array (int, int);
-void clearrefs (struct command *);
+void start_symref_chain (void);
+void end_symref_chain (void);
+void clear_symrefs (struct command *);
 void duplicate (void);
 void negate (void);
 void create_require (int);
@@ -716,6 +722,7 @@ void pop_switch_id (void);
 /* flex.c */
 void yyerror (char *);
 void open_main (FILE *, char *, char *);
-void open_string (char *);
 FILE *open_library (char *, char **);
 void leave_lib (void);
+void start_flex_from_string(char *);
+void end_flex_from_string(void);

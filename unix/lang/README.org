@@ -14,6 +14,6 @@ Some hints:
   - ./configure CC=clang CFLAGS="-fsanitize=address -fno-omit-frame-pointer -g -O0"
   - make
 
-- To apply changes in confiure.ac
+- To apply changes in configure.ac
   - autoconf
   - If this doesn't help, try autoreconf -i

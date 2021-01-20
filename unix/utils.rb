@@ -83,8 +83,6 @@ class News
   def initialize fname
     @paras = []
     paras = File.read(fname).gsub(/^#.*$/,'').gsub(/\A(\s*\n)+/,'').split(/(?:^\s*\n)+/)
-    puts "length",paras.length
-    paras.each {|p| puts "->",p}
     all_versions = []
     paras.each { |para|
       p = News_para.new(para)
@@ -116,7 +114,6 @@ class News_para
     lines = para.lines
     fail "Cannot parse version from line: '#{lines[0]}'" unless lines[0]=~/^Version (\d\.(?:\d+|\d+\.\d+))(?: \(([^,]+), (20\d+\d)\))?\s*$/;
     @version = $1
-    puts @version
     @month_day = $2
     @year = $3
     @lines = []

@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2020
+    written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
     graphic.c --- code for windowed graphics, printing and plotting
@@ -150,7 +150,7 @@ create_openwin (int fnt)
     /* create Command 'openwin' */
     struct command *cmd;
 
-    cmd = add_command (cOPENWIN, NULL, NULL);
+    cmd = add_command (cOPENWIN);
     cmd->args = fnt;
 }
 
@@ -1017,9 +1017,9 @@ putindrawmode (int mode)
 {
     /* store drawmode in previous command */
     if (mode) {
-        lastcmd->tag = mode;
+        last_cmd->tag = mode;
     } else {
-        lastcmd->tag = drawmode;
+        last_cmd->tag = drawmode;
     }
     drawmode = 0;
 }
@@ -1086,7 +1086,7 @@ create_line (int numpoints)
     /* create Command 'line' */
     struct command *cmd;
 
-    cmd = add_command (cLINE, NULL, NULL);
+    cmd = add_command (cLINE);
     cmd->args = numpoints;
     cmd->tag = dmNORMAL;
 }
@@ -2220,7 +2220,7 @@ create_openprinter (int num)
     /* create command 'openprinter' */
     struct command *cmd;
 
-    cmd = add_command (cOPENPRN, NULL, NULL);
+    cmd = add_command (cOPENPRN);
     cmd->args = num;
 }
 

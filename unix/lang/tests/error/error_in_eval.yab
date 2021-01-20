@@ -1,0 +1,8 @@
+#expect#---Error in error_in_eval.yab, line 8:
+#expect#---Error: syntax error
+#expect#   print eval$("1+2")
+#expect#                    ^
+#expect#---Error: Couldn't parse string as string expression: '1+2'
+#expect#---Error: Program stopped due to an error
+
+print eval$("1+2")

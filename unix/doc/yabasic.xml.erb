@@ -180,7 +180,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><literal>--execute <replaceable>A-PROGRAM-AS-A-SINGLE-STRING</replaceable></literal></term>
 	  <listitem>
-	    <para>With this option you may specify some <application>yabasic</application>-code to be executed right away. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
+	    <para>With this option you may specify some <application>yabasic</application>-code to be executed <emphasis>right away</emphasis>. This is useful for very short programs, which you do not want to save to a file. If this option is given, <application>yabasic</application> will not read any code from a file. E.g. <programlisting>yabasic -e 'for a=1 to 10:print a*a:next a'</programlisting> prints the square numbers from 1 to 10.
 </para>
 	  </listitem>
 	</varlistentry>
@@ -1260,16 +1260,11 @@ yabasic*font: 9x15
 
       </variablelist>
     </sect1>
-    <sect1 id="top_other">
-      <title>Other commands</title>
-      <variablelist>
 
-	<varlistentry>
-	  <term><link linkend="ref_bind">bind()</link></term>
-	  <listitem>
-	    <%= purpose['ref_bind'] %>
-	  </listitem>
-	</varlistentry>
+    <sect1 id="top_add_code">
+      <title>Adding code during execution</title>
+      <para>See also <link linkend="ref_add_code">adding code during execution</link>.</para>
+      <variablelist>
 
 	<varlistentry>
 	  <term><link linkend="ref_compile">compile</link></term>
@@ -1279,9 +1274,79 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_eval">eval()</link></term>
+	  <listitem>
+	    <%= purpose['ref_eval'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_eval2">eval$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_eval2'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_execute">execute()</link></term>
+	  <listitem>
+	    <%= purpose['ref_execute'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_execute2">execute$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_execute2'] %>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+    </sect1>
+    
+    <sect1 id="top_time_and_timing">
+      <title>Commands and functions related with time</title>
+      <variablelist>
+
+	<varlistentry>
 	  <term><link linkend="ref_date">date$</link></term>
 	  <listitem>
 	    <%= purpose['ref_date'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_pause">pause</link></term>
+	  <listitem>
+	    <%= purpose['ref_pause'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_sleep">sleep</link></term>
+	  <listitem>
+	    <%= purpose['ref_sleep'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_time">time$</link></term>
+	  <listitem>
+	    <%= purpose['ref_time'] %>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+    </sect1>
+    
+    <sect1 id="top_other">
+      <title>Other commands</title>
+      <variablelist>
+
+	<varlistentry>
+	  <term><link linkend="ref_bind">bind()</link></term>
+	  <listitem>
+	    <%= purpose['ref_bind'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1307,30 +1372,9 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_execute2">execute$()</link></term>
-	  <listitem>
-	    <%= purpose['ref_execute2'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_execute">execute()</link></term>
-	  <listitem>
-	    <%= purpose['ref_execute'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
 	  <term><link linkend="ref_exit">exit</link></term>
 	  <listitem>
 	    <%= purpose['ref_exit'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_pause">pause</link></term>
-	  <listitem>
-	    <%= purpose['ref_pause'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1340,7 +1384,6 @@ yabasic*font: 9x15
 	    <%= purpose['ref_peek'] %>
 	  </listitem>
 	</varlistentry>
-
 
 	<varlistentry>
 	  <term><link linkend="ref_peek2">peek$</link></term>
@@ -1360,21 +1403,6 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_rem">rem</link></term>
 	  <listitem>
 	    <%= purpose['ref_rem'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_sleep">sleep</link></term>
-	  <listitem>
-	    <%= purpose['ref_sleep'] %>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry>
-	  <term><link linkend="ref_time">time$</link></term>
-	  <listitem>
-	    <%= purpose['ref_time'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1724,17 +1752,59 @@ if (not okay) error "Wrong, wrong !"
 
     <sect1 id="ref_array_references">
       <title>References on arrays</title>
-      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>. Whereas (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>.</para>
-      <para>If you pass an array reference to one of your own subroutines, you need to be aware, that the subroutine will be able to modify the array you have passed in. So passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
+      <para><emphasis>References on arrays</emphasis> are the only way to refer to an array <emphasis>as a whole</emphasis> and to pass it to subroutines or functions like <link linkend="ref_arraydim"><function>arraydim</function></link> or <link linkend="ref_arraysize"><function>arraysize</function></link>.</para>
+      <para>While (for example) <literal>a(2)</literal> designates the second element of the array <literal>a</literal>, <literal>a()</literal> (with empty braces) refers to the array <literal>a</literal> itself. <literal>a()</literal> is called an <emphasis>array reference</emphasis>. A nice example is the bultin function <link linkend="ref_split"><function>split</function></link>, that accepts an array-reference and modifies the content of this array.</para>
+      <para>You may also pass to and use array reference within your own subroutines; these subroutines will then be able to modify the array you have passed in often this is intended.</para>
+      <para>Passing an array reference does not create a copy of the array; this has some interesting consequences:</para>
       <itemizedlist>
 	<listitem>
 	  <para><emphasis>Speed and space:</emphasis> Creating a copy of an
-array would be a time (and resource) consuming operation; passing just a reference is cheap and fast.</para>
+array would be a time and memory consuming operation; passing just a reference is cheap and fast.</para>
 	</listitem>
 	<listitem>
 	  <para>Returning many values: A subroutine, that wants to give back more than one value, may require an array reference among its arguments and then store its many return values within this array. This is the only way to return more than one value from a subroutine.</para>
 	</listitem>
       </itemizedlist>
+      <sect2>
+	<title>An example</title>
+      	<informalexample>
+	  <para>The following program creates two subroutines (<function>print_words</function> and <function>upcase_words</function>), that operate on an array of words (<literal>words$()</literal> below):</para>
+	    <programlisting>
+dim words$(4)
+for i=1 to 4
+  read words$(i)
+next i
+
+print_words(words$())
+upcase_words(words$())
+print_words(words$())
+
+sub print_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    print w$(i)," ";
+  next i
+  print    
+end sub
+
+sub upcase_words(w$())
+  local i
+  for i=1 to arraysize(w$(),1)
+    w$(i) = upper$(w$(i))
+  next i
+end sub
+
+data "case","does","not","matter"
+            </programlisting>
+	    <para>If you run this program, you will get this output:</para>
+	    <screen>
+	      <computeroutput>
+case does not matter
+CASE DOES NOT MATTER		
+	      </computeroutput>
+	    </screen>
+	  </informalexample>
+      </sect2>
     </sect1>
 
 
@@ -1814,10 +1884,27 @@ array would be a time (and resource) consuming operation; passing just a referen
     </sect1>
 
 
+    <sect1 id="ref_add_code">
+      <title>Adding code to a running program</title>
+      <sect2>
+	<title>Purpose</title>
+	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you invoke it, probably multiple times. So the program does not change, once you have started it.</para>
+	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute2</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running. This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied expression within a given range; find it as an example for <function><link linkend="ref_eval">eval</link></function>. In the same way, one may well write a program to plot an arithmetic functions, which is entered by the user.</para>
+      </sect2>
+      <sect2>
+	<title>How the various functions and commands differ</title>
+	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile an expression (with a numeric or string result), e.g. and execute it right away. The compiled code is stored, so that it need not be compiled again, when the sames expression is executed again; this makes them efficient enough. However they only accept a <emphasis>single expression</emphasis> and nothing else.</para>
+	<para>
+	  If you need more complex computation and logic, the process needs to be split: First create a new subroutine with the <function><link linkend="ref_compile">compile</link></function>-command, then execute this subroutine (maybe multiple times) via <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>. This allows to use the broad logic available in subroutines (e.g. conditions, loops, local variables or even other subroutines) and therefore much more complex calculations than with <function><link linkend="ref_eval">eval</link></function>. If you want to use <function><link linkend="ref_compile">compile</link></function> multiple times within your program (e.g. in a loop), you may want to enumerate the functions you create to avoid name-clashes (as shown in the examples of <function><link linkend="ref_compile">compile</link></function>).
+	</para>
+	<para>To invoke the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>.</para>
+      </sect2>
+    </sect1>
+    
     <sect1 id="ref_standalone">
       <title>Creating a <emphasis>standalone</emphasis> program from your yabasic-program</title>
       <para>Sometimes you may want to give one of your yabasic-programs to other people. However, what if those other people do not have <application>yabasic</application> installed ? In that case you may create a <emphasis>standalone</emphasis>-program from your yabasic-program, i.e. an executable, that may be executed on its own, standalone, even (and especially !) on computers, that do not have <application>yabasic</application> installed. Having created a standalone program, you may pass it around like any other program (e.g. one written in <application>C</application>) and you can be sure that your program will execute right away.</para>
-      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries it does <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three bits in yabasic, that you may use:</para>
+      <para>Such a standalone-program is simply created by copying the full <application>yabasic</application>-interpreter and your yabasic-program (plus all the libraries that it may <function>import</function>) together into a single, new program, whose name might be chosen at will (under windows of course it should have the ending <filename>.exe</filename>). If you decide to create a standalone-program, there are three facilities in yabasic, that you may use:</para>
       <itemizedlist>
 	<listitem>
 	  <para>The <function><link linkend="ref_bind">bind</link></function>-command, which does the actual job of creating the standalone program from the <application>yabasic</application>-interpreter and your program.</para>
@@ -1974,7 +2061,7 @@ sub message_box(message$, title$)
   return ret
 end sub
 </programlisting>
-<para>The relevant Windows-function <function>MessageBoxA</function> is found within the library <filename>user32.dll</filename>; most of the example deals with properly allocating, handling and freeing buffers to hold the supplied text-snippets. Thanx to Jean-Marc Duro for this example.</para>
+<para>The relevant Windows-function <function>MessageBoxA</function> is found within the library <filename>user32.dll</filename>; most of the example deals with properly allocating, handling and freeing buffers to hold the supplied text-snippets. Thanx to <emphasis>Jean-Marc Duro</emphasis> for this example.</para>
 </sect3>
 </sect2>
 
@@ -2009,7 +2096,7 @@ end sub
   <title>Two more complex examples</title>
   <sect3>
     <title>Dealing with time</title>
-    <para>The example below deals with the time functions from the standard <application>C</application>-library; some of them deal with the <emphasis>tm</emphasis> structure for keeping the segmented time; to understand the example to follow it is helpful to have the tm-structure at hand; see below. In addition it might be helpful to consult the manpages of the various <application>C</application>-functions (e.g. <function>localtime</function>)involved.</para>
+    <para>The example below deals with the time functions from the standard <application>C</application>-library; some of them deal with the <emphasis>tm</emphasis> structure for keeping the segmented time; to understand the example it is good to have the tm-structure at hand; see below. In addition it might be helpful to consult the manpages of the various <application>C</application>-functions (e.g. <function>localtime</function>)involved.</para>
     <programlisting>
 struct tm {
     int tm_sec;    /* Seconds (0-60) */
@@ -2077,7 +2164,7 @@ print "50 years back:           ", foreign_function_call$(lib$,"string","asctime
 Seconds since the epoch: 1559014899
 Dump of buffer:          F3ADEC5C
 Current year:            2019
-50 years back:           Tue May 28 05:41:39 1969  
+50 years back:           Tue May 28 05:41:39 1969
 </screen>
   </sect3>
   <sect3 id="example_libcurl">
@@ -2205,8 +2292,8 @@ while a and b &hellip;
 	<refsect1>
 	  <title>Description</title>
 	  <para>Used in conditions (e.g within <function><link linkend="ref_if">if</link></function>, <function><link linkend="ref_while">while</link></function> or <function><link linkend="ref_until">until</link></function>) to join two expressions. Returns <constant>true</constant>, if and only if its left and right argument are both <constant>true</constant> and <constant>false</constant> otherwise.</para>
-	  <para>Note, that <link
-linkend="ref_logical_shortcuts"><emphasis>logical shortcuts</emphasis></link> may take place.</para>
+	  <para>Note, that
+	  <link linkend="ref_logical_shortcuts"><emphasis>logical shortcuts</emphasis></link> may take place.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -3319,7 +3406,7 @@ next y:next x
 	  <para>Note, that there is no way to <emphasis>remove</emphasis> the compiled code.</para>
 	</refsect1>
 	<refsect1>
-	  <title>Example</title>
+	  <title>Examples</title>
 	  <informalexample>
 	    <programlisting>
 compile("sub mysub(a):print a:end sub")
@@ -3329,8 +3416,21 @@ mysub(2)
 	  </informalexample>
 	</refsect1>
 	<refsect1>
+	  <title>Another Example</title>
+	  <para>This next example combines the functions <function>compile</function> and <function><link linkend="ref_execute">execute</link></function>:</para>
+	  <informalexample>
+	    <programlisting>
+count = 1	      
+subname$ = "foo" + str$(count)
+compile("sub "+ subname$ + "(a):print a:end sub")
+execute(subname$,2)
+          </programlisting>
+	    <para>This example creates and executes a function, whose name (<function>foo1</function>) is stored within the variable <varname>subname$</varname>; the newly created function simply prints its single argument. This example could be executed multiple times within a single <application>yabasic</application>-program, simply by incrementing the variable <varname>count</varname>; by doing that, multiple subroutines (<function>foo1</function>, <function>foo2</function>, &hellip;) could be created and executed in succession.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -3897,7 +3997,7 @@ endif
 	  <title>Description</title>
 	  <para>The <function>elsif</function>-statement is used to select a single alternative among a series of choices.</para>
 	  <para>With each <function>elsif</function>-statement you may specify a condition, which is tested, if the main condition (specified with the <function>if</function>-statement) has failed. Note that <function>elsif</function> might be just as well written as <function>elseif</function>.</para>
-	  <para>Within the example below, two variables <function>a</function> and <function>b</function> are tested against a range of values. The variable <function>a</function> is tested with the <function>elsif</function>-statement. The very same tests are performed for the variable <function>b</function> too; but here an involved series of <function>if</function>-<function>else</function>-statements is employed, making the tests much more obscure.</para>
+	  <para>Within the example below, two variables <function>a</function> and <function>b</function> are tested against a range of values. The variable <varname>a</varname> is tested with the <function>elsif</function>-statement. The very same tests are performed for the variable <varname>b</varname> too; but here an involved series of <function>if</function>-<function>else</function>-statements is employed, making the tests much more obscure.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4204,41 +4304,124 @@ print euler
 	</refsect1>
       </refentry>
 
-      <refentry id="ref_execute2">
+      <refentry id="ref_eval">
 	<refmeta>
-	  <refentrytitle>execute$()</refentrytitle>
+	  <refentrytitle>eval()</refentrytitle>
 	</refmeta>
 	<refnamediv>
-	  <refname>execute$()</refname>
-	  <refpurpose>execute a user defined subroutine, which must return a string</refpurpose>
+	  <refname>eval()</refname>
+	  <refpurpose>compile and execute a single numeric expression</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
-	  <synopsis>print execute$("foo$","arg1","arg2")</synopsis>
+	  <synopsis>print eval("1+2")</synopsis>
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name may be specified as a string expression.</para>
-	  <para>This feature is the only way to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) during the course of execution of your program.</para>
-	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example below).</para>
+	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic</application> can be used as well as any variables known.</para>
+	  <para>The string passed to <function>eval</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
-print execute$("foo$","Hello","world !")
-sub foo$(a$,b$)
-  return a$+" "+b$
-end sub
+input "Please enter an aritmetic expression involving the variable x: " expr$
+first = true
+for x=0 to 100 step 0.01
+  result = eval(expr$)
+  if (first or result > maximum) maximum = result: xmaximum = x
+  first = false
+next x
+print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + str$(maximum) + " at " + str$(xmaximum) + " (approximately)"
           </programlisting>
-	    <para>The example simply prints <computeroutput>Hello world !</computeroutput>, which is the return value of the user defined subroutine <function>foo$</function>. The same could be achieved by executing:</para>
-	    <programlisting>
-print foo$(a$,b$)
-</programlisting>
+	    <para>The example above reads an arithmetic expression from the user and steps through the range 0 &hellip; 100 to find its maximum. If the user types e.g. <userinput>-(x-50)**2</userinput>, the program would find a maximum of <computeroutput>-1.90013e-24</computeroutput> at 50.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute2</link></function></para>
+	</refsect1>
+      </refentry>
+      
+      <refentry id="ref_eval2">
+	<refmeta>
+	  <refentrytitle>eval$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>eval$()</refname>
+	  <refpurpose>compile and execute a single string-expression</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>print eval$("a$ + b$")</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para><function>eval$</function> accepts a string, which should be the text of a single string-expression; it processes the expression and returns the result. All string-functions and string-operators of <application>yabasic</application> can be used as well as any variables known.</para>
+	  <para>The string passed to <function>eval$</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. See the example below for two interesting use-cases.</para>
+	</refsect1>
+	<refsect1>
+	  <title>Examples</title>
+	  <informalexample>
+	    <para>The example below allows to apply the quoting rules of yabasic to user-input:</para>
+	    <programlisting>
+input "Please enter a string with some excape-sequences (e.g. \\r,\\n,\\t): " a$
+print eval$("\"" + a$ + "\"")
+            </programlisting>
+	    <para>If the user types <userinput>abc\ndef</userinput> at the prompt, the text is echoed like this:</para>
+	    <screen>
+	      <computeroutput>
+		abc
+		def
+	      </computeroutput>
+	    </screen>
+	  </informalexample>
+	  <informalexample>
+	    <para>The next example shows the subroutine <function>eval_embedded_expression$</function> that allows to embed expressions into a string:</para>
+	    <programlisting>
+
+input "Please enter your name: " name$
+print eval_embedded_expressions$("Hello {{name$}}, your name has {{len(name$)}} characters.")
+
+
+sub eval_embedded_expressions$(evemex_str$)
+
+  local evemex_pos1, evemex_pos2, evemex_res$
+
+  evemex_pos1 = 1 
+  evemex_pos2 = 1 
+  evemex_res$ = ""
+  	
+  while (evemex_pos1 &lt; len(evemex_str$))
+    if (mid$(evemex_str$, evemex_pos1, 2) = "{{") then
+      evemex_res$ = evemex_res$ + mid$(evemex_str$, evemex_pos2, evemex_pos1 - evemex_pos2)
+      evemex_pos1 = evemex_pos1 + 2
+      evemex_pos2 = evemex_pos1
+      while (evemex_pos2 &lt; len(evemex_str$))
+        if (mid$(evemex_str$, evemex_pos2, 2) = "}}") then
+	   evemex_res$ = evemex_res$ + eval$("str$(" + mid$(evemex_str$, evemex_pos1, evemex_pos2 - evemex_pos1) + ")")
+	   evemex_pos2 = evemex_pos2 + 2
+	   evemex_pos1 = evemex_pos2
+	   break
+	else
+	  evemex_pos2 = evemex_pos2 + 1
+	endif
+      wend
+    else
+      evemex_pos1 = evemex_pos1 + 1
+    endif
+  wend
+
+  evemex_res$ = evemex_res$ + mid$(evemex_str$, evemex_pos2, evemex_pos1 - evemex_pos2 + 1)	
+  return evemex_res$
+
+end sub
+            </programlisting>
+	    <para>If the user when prompted types <userinput>Marc</userinput>, he is greeted with <computeroutput>Hello Marc, your name has 4 characters.</computeroutput></para>
+	    <para>Please note, that the subroutine prefixes its local variables with <programlisting>evemex</programlisting> (for <emphasis>eval embedded expression</emphasis>) to avoid name name clases with any variable that might be used in the passed string.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4270,7 +4453,46 @@ end sub
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_execute2">
+	<refmeta>
+	  <refentrytitle>execute$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>execute$()</refname>
+	  <refpurpose>execute a user defined subroutine, which must return a string</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis>print execute$("foo$","arg1","arg2")</synopsis>
+	</refsynopsisdiv>
+	<refsect1>
+	  <title>Description</title>
+	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name is specified as a string expression.</para>
+	  <para>This feature is the only way to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) during the course of execution of your program.</para>
+	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example below).</para>
+	</refsect1>
+	<refsect1>
+	  <title>Example</title>
+	  <informalexample>
+	    <programlisting>
+print execute$("foo$","Hello","world !")
+sub foo$(a$,b$)
+  return a$+" "+b$
+end sub
+          </programlisting>
+	    <para>The example simply prints <computeroutput>Hello world !</computeroutput>, which is the return value of the user defined subroutine <function>foo$</function>. The same could be achieved by executing:</para>
+	    <programlisting>
+print foo$(a$,b$)
+	    </programlisting>
+	    <para>So this example does not really <emphasis>need</emphasis> the <function>execute$</function>-function; see <function><link linkend="ref_compile">compile</link></function> for examples, that <emphasis>do</emphasis>.</para>
+	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>See also</title>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute2">execute$</link></function>, <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function></para>
 	</refsect1>
       </refentry>
 
@@ -4414,13 +4636,13 @@ Calling subroutine baz (NOT okay) ...
 ---Dump: sub baz() called in main.yab,16
 ---Error: Program stopped due to an error
 </programlisting>
-	    <para>As the error message above shows, the subroutine <function>baz</function> must be qualified with the name of the library, if used outside the library, wherein it is defined (e.g. <function>foo.baz</function>. I.e. outside the library <filename>foo.yab</filename> you need to write <filename>foo.baz</filename>. <function>baz</function> alone would be an error.</para>
+	    <para>As the error message above shows, the subroutine <function>baz</function> must be qualified with the name of the library, if used outside the library, wherein it is defined (e.g. <function>foo.baz</function>). I.e. outside the library <filename>foo.yab</filename> you need to write <filename>foo.baz</filename>. <function>baz</function> alone would be an error.</para>
 	    
 	    <para>The subroutine <function>bar</function> (without adding the name of the library) however may (and probably should) be used in any program, which imports the library <filename>foo.yab</filename>.</para>
-	  <note>
-	    <para>In some sense the set of exported subroutines constitutes the <emphasis>interface</emphasis> of a library.</para>
-	  </note>
 	</informalexample>
+	<note>
+	  <para>In some sense the set of exported subroutines constitutes the <emphasis>interface</emphasis> of a library.</para>
+	</note>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
@@ -6053,7 +6275,7 @@ end sub
 1 2
 </screen>
 </para>
-	    <para>As you may see, the content of the global variable <function>a</function> is unchanged after the subroutine <function>foo</function>; this is because the assignment <computeroutput>a=2</computeroutput> within the subroutine affects the <emphasis>local</emphasis> variable <computeroutput>a</computeroutput> only and not the global one. However, the variable <computeroutput>b</computeroutput> is never declared local and therefore the subroutine changes the global variable, which is reflected in the output of the second print-statement.</para>
+	    <para>As you may see, the content of the global variable <varname>a</varname> is unchanged after the subroutine <function>foo</function>; this is because the assignment <computeroutput>a=2</computeroutput> within the subroutine affects the <emphasis>local</emphasis> variable <computeroutput>a</computeroutput> only and not the global one. However, the variable <computeroutput>b</computeroutput> is never declared local and therefore the subroutine changes the global variable, which is reflected in the output of the second print-statement.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -6249,7 +6471,7 @@ for a=1 to 9
   print a,": ",m(a)
 next a
           </programlisting>
-	    <para>Within the inner <function>for</function>-loop (the one with the loop-variable <function>b</function>), the example computes the maximum of 10 random numbers. The outer loop (with the loop variable <function>a</function>) now repeats this process 1000 times and counts, how often each maximum appears. The last loop finally reports the result.</para>
+	    <para>Within the inner <function>for</function>-loop (the one with the loop-variable <varname>b</varname>), the example computes the maximum of 10 random numbers. The outer loop (with the loop variable <varname>a</varname>) now repeats this process 1000 times and counts, how often each maximum appears. The last loop finally reports the result.</para>
 	    <para>Now, the interesting question would be, which will be approached, when we increase the number of iterations from thousand to infinity. Well, maybe someone could just tell me <computeroutput>:-)</computeroutput></para>
 
 	  </informalexample>
@@ -6278,7 +6500,7 @@ mid$(a$,5)="foo"
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>mid$</function>-function requires three arguments: a string and two numbers, where the first number specifies a position within the string and the second one gives the number of characters to be returned; if you omit the second argument, the <function>mid$</function>-function returns all characters up to the end of the string.</para>
+	  <para>The <function>mid$</function>-function requires three arguments: a string and two numbers, where the first number specifies a position within the string and the second one gives the number of characters to be returned; if you omit the third argument, the <function>mid$</function>-function returns all characters up to the end of the string.</para>
 	  <para>Note, that you may assign to the <function>mid$</function>-function, i.e. <function>mid$</function> may appear on the left hand side of an assignment. In this way it is possible to change a part of the variable used within the <function>mid$</function>-function. Note, that that way the <emphasis>length</emphasis> of the string cannot be changed, i.e. characters might be overwritten, but not added. For an example see below.</para>
 	</refsect1>
 	<refsect1>
@@ -6719,7 +6941,7 @@ end sub
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>Within a subroutine the local variable <function>numparam</function> or <function>numparams</function> contains the number of parameters, that have been passed to the subroutine. This information can be useful, because the subroutine may have been called with fewer parameters than actually declared. The number of values that actually have been passed while calling the subroutine, can be found in <function>numparams</function>.</para>
+	  <para>Within a subroutine the local variable <varname>numparam</varname> or <varname>numparams</varname> contains the number of parameters, that have been passed to the subroutine. This information can be useful, because the subroutine may have been called with fewer parameters than actually declared. The number of values that actually have been passed while calling the subroutine, can be found in <function>numparams</function>.</para>
 	  <para>Note, that arguments which are used in the definition of a subroutine but are left out during a call to it (thereby reducing the value of <function>numparams</function>) receive a value of <literal>0</literal> or <literal>""</literal> (empty string) respectively.</para>
 	</refsect1>
 	<refsect1>
@@ -7964,8 +8186,10 @@ putbit a$,30,30,"or"
 	  <title>Example</title>
 	  <informalexample>
 	    <programlisting>
-
-c$="rgb 21,21:0000000000000000000000000000000000000000000000000000000000000032c80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c8c8ff000032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c80000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80000000000000000000000000000000000000000000000000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c80032c8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+repeat
+  read d$
+  c$ = c$ + d$
+until( d$ = "")
 
 open window 200,200
 
@@ -7974,7 +8198,46 @@ do
   y=ran(220)-10
   putbit c$,x,y,"transparent"
 loop
-          </programlisting>
+  
+data "rgb 21,21:00000000000000000000000000000000000000000000000000000000000000"
+data "32c800000000000000000000000000000000000000000000000000000000000000000000"
+data "00000000000000000000000000000032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c800000000000000000000000000000000000000000000000000000000000000"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "00000000000000000000000000000000000000000000000032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800000000"
+data "00000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c8c8"
+data "ff000032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "00000032c80032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff000032c80032c80032c80032c80032c80000000000000000000032c80032c80032c800"
+data "32c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c800"
+data "32c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c800"
+data "32c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c800000000000000"
+data "32c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff000032c80032c80032c80032c80000000032c80032c80032c80032c8c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff0000"
+data "32c80032c80032c80032c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c800"
+data "32c80000000000000032c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c800000000000000"
+data "32c80032c80032c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8"
+data "ff00c8ff00c8ff000032c80032c80032c80032c80000000000000032c80032c80032c800"
+data "32c80032c8c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c800"
+data "32c80032c80032c80032c80000000000000000000032c80032c80032c80032c80032c8c8"
+data "ff00c8ff00c8ff00c8ff00c8ff00c8ff00c8ff000032c80032c80032c80032c80032c800"
+data "00000000000000000000000032c80032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "00000000000032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "32c80032c80032c80032c80032c800000000000000000000000000000000000000000000"
+data "32c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c80032c800"
+data "00000000000000000000000000000000000000000000000000000000000000000032c800"
+data "32c80032c80032c80032c80032c80032c80032c80032c800000000000000000000000000"
+data "000000000000000000000000000000000000000000000000000000000000000000000000"
+data "0000000000000000000000000000000000000000000000000000000000000000"
+data ""
+            </programlisting>
 	    <para>This program uses a precanned string (containing the image of a blue circle with a yellow centre) and draws it repeatedly into the graphic-window. The mode <literal>"transparent"</literal> ensures, that no pixels will be cleared.</para>
 	  </informalexample>
 	  <para>There are two possible values for the third argument of <function>putbit</function>. Both modes differ in the way, they replace (or not) any pixels from the window with pixels from the bitmap having the background colour.</para>
@@ -9021,6 +9284,7 @@ a=sqr(b)
 	<refsect1>
 	  <title>Description</title>
 	  <para>The <function>sqr</function>-function computes the square of its numerical argument (i.e. it multiplies its argument with itself).</para>
+	  <para>Please note, that other dialects of <acronym>basic</acronym> use <function>sqr</function> as the <emphasis>square root</emphasis>, rather than the <emphasis>square</emphasis>; this needs to be checked especially when porting programs from other Versions of <acronym>basic</acronym>.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -9183,7 +9447,9 @@ b$=str$(x,"###,###.##","_.")
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>str$</function>-function accepts a numeric argument and returns it as a string. This conversion between number and string can be controlled with the optional third argument (the <emphasis>format</emphasis> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <emphasis>C-style</emphasis> and <emphasis>basic-style</emphasis>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the <application>C</application> programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<literal>#</literal>'; groups of (usually three) digits may be separated with colons ('<literal>,</literal>'), the decimal dot must be marked by a literal dot ('<literal>.</literal>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</para>
+	  <para>The <function>str$</function>-function accepts a numeric argument and returns it as a string.</para>
+	  <para>Note: As a special and trivial case <function>str$</function> also accepts a single string-argument, which it just returns unchanged; this can be useful e.g. when used with <function><link linkend="ref_eval2">eval$</link></function>, see the example there for an application.</para>
+	  <para>For the common case of converting a number to a string, the process can be controlled with an optional third argument (the <emphasis>format</emphasis> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <emphasis>C-style</emphasis> and <emphasis>basic-style</emphasis>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the <application>C</application> programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<literal>#</literal>'; groups of (usually three) digits may be separated with colons ('<literal>,</literal>'), the decimal dot must be marked by a literal dot ('<literal>.</literal>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</para>
 	  <para>Note, that for clarity, each space in the result has been replaced by the letter 'x', because it would be hard to figure out, how many spaces are produced <emphasis>exactly</emphasis> otherwise.</para>
 	  <table frame="all">
 	    <title>Examples for the format argument</title>
@@ -9320,7 +9586,7 @@ braces you may specify a list of parameters, for which values can (but need
 not) be included when calling the subroutine. If you omit one of those
 parameters when calling such a subroutine, it assumes the value zero (for
 numeric parameters) or the empty string (for string-parameters). However from
-the special variable <function><link linkend="ref_numparams">numparams</link></function> you may find out, how many arguments have really been passed when calling the subroutine.</para>
+the special variable <varname><link linkend="ref_numparams">numparams</link></varname> you may find out, how many arguments have really been passed when calling the subroutine.</para>
 	  <para>Parameters of a subroutine are always local variables (see the keyword <function><link linkend="ref_local">local</link></function> for more explanation).</para>
 	  <para>From within the subroutine you may return any time with the keyword <function><link linkend="ref_return">return</link></function>; along with the <function>return</function>-keyword you may specify the return value. Note that more than one <function>return</function> is allowed within a single subroutine.</para>
 	  <para>Finally, the keyword <function>end sub</function> ends the subroutine definition. Note, that the definition of a subroutine <emphasis>need not</emphasis> appear within the program <emphasis>before</emphasis> the first call to this sub.</para>
@@ -10561,8 +10827,8 @@ for a=10 to 150 step 5
   putbit saved$ to a,80: rem restore old window content
 next a
 </programlisting>
-      <para>This program moves moves the picture of a star across the graphics window. The first part of the program draws such a star and then retrieves the bitmap with <function>getbit$()</function>. <application>Yabasic</application> stores bitmaps within ordinary strings and so the star-bitmap can simply be stored within the variable <function>star$</function>.</para>
-<para>Once the program has prepared the bitmap-string, it puts it back into the window with the <function>putbit</function>-command and various locations. Each time before the star-bitmap is put into the window, the prior content is saved within the variable <function>saved$</function> and restored later.</para>
+      <para>This program moves moves the picture of a star across the graphics window. The first part of the program draws such a star and then retrieves the bitmap with <function>getbit$()</function>. <application>Yabasic</application> stores bitmaps within ordinary strings and so the star-bitmap can simply be stored within the variable <varname>star$</varname>.</para>
+<para>Once the program has prepared the bitmap-string, it puts it back into the window with the <function>putbit</function>-command and various locations. Each time before the star-bitmap is put into the window, the prior content is saved within the variable <varname>saved$</varname> and restored later.</para>
     </sect1>
 
     <sect1>
