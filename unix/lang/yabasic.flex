@@ -1,7 +1,7 @@
 %{
 /*
 
-    YABASIC ---  a simple Basic Interpreter
+    YABASIC  ---  a simple Basic Interpreter
     written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 

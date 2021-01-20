@@ -309,7 +309,7 @@ enum drawing_modes {
 
 enum eval_types {
     /* different types of eval */
-    evNONE = 0, evNUMBER = 1, evSTRING = 2, evASSIGNMENT = 3
+    evNONE = 0, evNUMBER = 1, evSTRING = 2
 };
 
 enum cmd_type {

@@ -473,7 +473,7 @@ struct command *
 add_command (int type)
 /* common case without a sym */
 {
-    add_command_with_sym_and_diag (type, NULL, NULL);
+    return add_command_with_sym_and_diag (type, NULL, NULL);
 }
 
 
@@ -533,11 +533,12 @@ add_command_with_sym_and_diag (int type, char *symname, char *diag)
     return last_cmd;
 }
 
+
 struct command *
 add_command_with_switch_state (int type)	/* same as add_command, but add switch_state too */
 {
     struct command *cmd;
-
+    
     cmd = add_command (type);
     return add_switch_state(cmd);
 }
@@ -2335,8 +2336,8 @@ eval (struct command *cmd)			/* do the work for eval functions and command eval 
     char *eval_text = my_strdup (pop (stSTRING)->pointer);
     struct stackentry *ret_val;
     struct stackentry *ret_addr;
-    const int start_tokens[] = {0, tSTART_EXPRESSION, tSTART_STRING_EXPRESSION, tSTART_ASSIGNMENT};
-    const char *description[] = {"", "numeric expression", "string expression", "assignment"};
+    const int start_tokens[] = {0, tSTART_EXPRESSION, tSTART_STRING_EXPRESSION};
+    const char *description[] = {"", "numeric expression", "string expression"};
     int eval_type = cmd->args;
 
     /* remember return address */
@@ -2392,10 +2393,7 @@ eval (struct command *cmd)			/* do the work for eval functions and command eval 
 	end_flex_from_string();
 	free(eval_text);
 	currlib = currlib_saved;
-	if (eval_type != evASSIGNMENT) {
-	    /* if we evaled an assignment, there will be no value left on stack */
-	    add_command(cSWAP);
-	}
+	add_command(cSWAP);
 	add_command(cCLEARSYMREFS);
 	end_symref_chain();
 	add_command(cRETURN_FROM_GOSUB);

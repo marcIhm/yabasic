@@ -1,7 +1,7 @@
 %{
 /*
 
-    YABASIC ---  a simple Basic Interpreter
+    YABASIC  ---  a simple Basic Interpreter
     written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
@@ -242,7 +242,6 @@ statement:  /* empty */
   | tCOMPILE string_expression {add_command(cCOMPILE);}
   | tEXECUTE call_list {create_execute(0);add_command(cPOP);add_command(cPOP);}
   | tEXECUTE2 call_list {create_execute(1);add_command(cPOP);add_command(cPOP);}
-  | tEVAL assignment {create_eval(evASSIGNMENT);}
   | tPRINT printintro printlist {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);} 
   | tPRINT printintro printlist ';' {create_colour(0);create_pps(cPOPSTREAM,0);}
   | tPRINT printintro printlist ',' {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
