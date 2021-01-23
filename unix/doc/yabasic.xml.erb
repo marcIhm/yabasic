@@ -1888,16 +1888,18 @@ CASE DOES NOT MATTER
       <title>Adding code to a running program</title>
       <sect2>
 	<title>Purpose</title>
-	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you invoke it, probably multiple times. So the program does not change, once you have started it.</para>
-	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution quite a bit. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute2</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running. This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied expression within a given range; find it as an example for <function><link linkend="ref_eval">eval</link></function>. In the same way, one may well write a program to plot an arithmetic functions, which is entered by the user.</para>
+	<para>Normally, you write programs in yabasic and specify all the necessary logic and calculations within your program. Once you are done, you invoke it, probably multiple times; and while it is running, it does not change.</para>
+	<para>However, there are some commands within <application>yabasic</application>, that allow to blur the line between writing and execution. Namely <function><link linkend="ref_eval">eval</link></function>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function> and <function><link linkend="ref_execute2">execute$</link></function> allow to create and execute new <application>yabasic</application>-code while your program is running. This comes in handy, if the code to be used comes from the user of your program and will only be known <emphasis>after</emphasis> your program has started. A simple example is the <application>yabasic</application>-code to calculate the maximum of a user-supplied expression within a given range; find it as an example for <function><link linkend="ref_eval">eval</link></function>. In the same way, one may write a program to plot an arithmetic function, whose definition is entered by the user.</para>
+	<para>Note: Even if the commands listed above allow to change the <application>yabasic</application>-program, that is currently running, the <emphasis>file</emphasis> where the program is stored, does not change. Therefore, the changes to the running program are not permanent.</para>
       </sect2>
+
       <sect2>
 	<title>How the various functions and commands differ</title>
-	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile an expression (with a numeric or string result), e.g. and execute it right away. The compiled code is stored, so that it need not be compiled again, when the sames expression is executed again; this makes them efficient enough. However they only accept a <emphasis>single expression</emphasis> and nothing else.</para>
+	<para>The most simple functions are <function><link linkend="ref_eval">eval</link></function> and <function><link linkend="ref_eval2">eval$</link></function>; they compile an expression (with a numeric or string result), e.g. and execute it right away. The compiled code is remembered, so that it need not be compiled again, when the sames expression is executed again; this caters efficiency. However these functions only accept a <emphasis>single expression</emphasis> and nothing else.</para>
 	<para>
 	  If you need more complex computation and logic, the process needs to be split: First create a new subroutine with the <function><link linkend="ref_compile">compile</link></function>-command, then execute this subroutine (maybe multiple times) via <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>. This allows to use the broad logic available in subroutines (e.g. conditions, loops, local variables or even other subroutines) and therefore much more complex calculations than with <function><link linkend="ref_eval">eval</link></function>. If you want to use <function><link linkend="ref_compile">compile</link></function> multiple times within your program (e.g. in a loop), you may want to enumerate the functions you create to avoid name-clashes (as shown in the examples of <function><link linkend="ref_compile">compile</link></function>).
 	</para>
-	<para>To invoke the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>.</para>
+	<para>To invoke the subroutines created, you need to execute them with <function><link linkend="ref_execute">execute</link></function> or <function><link linkend="ref_execute2">execute$</link></function>, which require the name of the function (a string) as their first argument.</para>
       </sect2>
     </sect1>
     
@@ -4318,7 +4320,7 @@ print euler
 	<refsect1>
 	  <title>Description</title>
 	  <para><function>eval</function> accepts a string, which should be the text of a single numeric expression; it processes the expression and returns the result. All numeric functions and arithmetic operators of <application>yabasic</application> can be used as well as any variables known.</para>
-	  <para>The string passed to <function>eval</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
+	  <para>The string passed to <function>eval</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens just before the execution and may cause compilation errors, if you pass an invalid expression. <function>eval</function> might come handy, if you want to calculate an expression, that is not known at the start of your program, e.g. because it is read from the user; see the example below.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4333,12 +4335,12 @@ for x=0 to 100 step 0.01
 next x
 print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + str$(maximum) + " at " + str$(xmaximum) + " (approximately)"
           </programlisting>
-	    <para>The example above reads an arithmetic expression from the user and steps through the range 0 &hellip; 100 to find its maximum. If the user types e.g. <userinput>-(x-50)**2</userinput>, the program would find a maximum of <computeroutput>-1.90013e-24</computeroutput> at 50.</para>
+	    <para>The example above reads an arithmetic expression from the user and steps through the range 0 &hellip; 100 to find its maximum. If the user types e.g. <userinput>-(x-50)**2</userinput>, the program would find a maximum of around zero (e.g. <computeroutput>-1.90013e-24</computeroutput>) at 50.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute2</link></function></para>
+	  <para><link linkend="ref_add_code">adding code during execution</link>, <function><link linkend="ref_eval2">eval$</link></function>, <function><link linkend="ref_compile">compile</link></function>, <function><link linkend="ref_execute">execute</link></function>, <function><link linkend="ref_execute2">execute$</link></function></para>
 	</refsect1>
       </refentry>
       
@@ -4359,7 +4361,7 @@ print "In the range 0 to 100, expression " + expr$ + " has its maximum of " + st
 	  <para>The string passed to <function>eval$</function> is first compiled and then executed <emphasis>right away</emphasis>. The compilation happens right before the execution and may cause compilation errors, if you pass an invalid expression. See the example below for two interesting use-cases.</para>
 	</refsect1>
 	<refsect1>
-	  <title>Examples</title>
+	  <title>A short but useful Example</title>
 	  <informalexample>
 	    <para>The example below allows to apply the quoting rules of yabasic to user-input:</para>
 	    <programlisting>
@@ -4374,15 +4376,18 @@ print eval$("\"" + a$ + "\"")
 	      </computeroutput>
 	    </screen>
 	  </informalexample>
+	</refsect1>
+	<refsect1>
+	  <title>A longer Example</title>
 	  <informalexample>
-	    <para>The next example shows the subroutine <function>eval_embedded_expression$</function> that allows to embed expressions into a string:</para>
+	    <para>The next example shows the subroutine <function>evemex$</function> (for <emphasis>eval embedded expression</emphasis>) that allows to embed expressions into a string, simply by enclosing them with <literal>{{</literal> and <literal>}}</literal>:</para>
 	    <programlisting>
 
 input "Please enter your name: " name$
-print eval_embedded_expressions$("Hello {{name$}}, your name has {{len(name$)}} characters.")
+print evemex$("Hello {{name$}}, your name has {{len(name$)}} characters.")
 
 
-sub eval_embedded_expressions$(evemex_str$)
+sub evemex$(evemex_str$)
 
   local evemex_pos1, evemex_pos2, evemex_res$
 
@@ -4397,6 +4402,9 @@ sub eval_embedded_expressions$(evemex_str$)
       evemex_pos2 = evemex_pos1
       while (evemex_pos2 &lt; len(evemex_str$))
         if (mid$(evemex_str$, evemex_pos2, 2) = "}}") then
+           rem 
+           rem  See the use of eval in the next line
+           rem
 	   evemex_res$ = evemex_res$ + eval$("str$(" + mid$(evemex_str$, evemex_pos1, evemex_pos2 - evemex_pos1) + ")")
 	   evemex_pos2 = evemex_pos2 + 2
 	   evemex_pos1 = evemex_pos2
@@ -4415,8 +4423,8 @@ sub eval_embedded_expressions$(evemex_str$)
 
 end sub
             </programlisting>
-	    <para>If the user when prompted types <userinput>Marc</userinput>, he is greeted with <computeroutput>Hello Marc, your name has 4 characters.</computeroutput></para>
-	    <para>Please note, that the subroutine prefixes its local variables with <programlisting>evemex</programlisting> (for <emphasis>eval embedded expression</emphasis>) to avoid name name clases with any variable that might be used in the passed string.</para>
+	    <para>If the user when prompted types <userinput>Marc</userinput>, he is greeted with <computeroutput>Hello Marc, your name has 4 characters.</computeroutput> The program uses <function>eval$</function> only once, and it adds <function><link linkend="ref_str">str$</link></function> around the embedded expression to ensure, that the result is always a string and can be concatenated with the other strings.</para>
+	    <para>Please note, that the subroutine prefixes its local variables with <function>evemex</function> (for <emphasis>eval embedded expression</emphasis>) to avoid name clashes with any variable that might be used in expressions within the string passed.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4438,7 +4446,7 @@ end sub
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>The <function>execute</function>-function is the counterpart of the <function><link linkend="ref_execute2">execute$</link></function>-function (please see there for some caveats). <function>execute</function> executes subroutines, which returns a number.</para>
+	  <para>The <function>execute</function>-function is the counterpart of the <function><link linkend="ref_execute2">execute$</link></function>-function (please see there for some caveats). <function>execute</function> may be used to execute subroutines, which return a number.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -4448,7 +4456,8 @@ print execute("bar",2,3)
 sub bar(a,b)
   return a+b
 end sub
-          </programlisting>
+            </programlisting>
+	    <para>This example would print out <computeroutput>5</computeroutput>.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -4471,7 +4480,7 @@ end sub
 	<refsect1>
 	  <title>Description</title>
 	  <para><function>execute$</function> can be used to execute a user defined subroutine, whose name is specified as a string expression.</para>
-	  <para>This feature is the only way to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) during the course of execution of your program.</para>
+	  <para>This function allows to execute a subroutine, whose name is not known by the time you write your program. This might happen, if you want to execute a subroutine, which is compiled (using the <function><link linkend="ref_compile">compile</link></function> command) as late as of execution of your program.</para>
 	  <para>Note however, that the <function>execute$</function>-function is <emphasis>not</emphasis> the preferred method to execute a user defined subroutine; in almost all cases you should just execute a subroutine by writing down its name within your yabasic program (see the example below).</para>
 	</refsect1>
 	<refsect1>
