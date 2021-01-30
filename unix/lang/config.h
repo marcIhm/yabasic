@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Wed Jan 20 07:51:18 UTC 2021"
+#define BUILD_TIME "Sat Jan 30 16:56:17 UTC 2021"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -89,7 +89,7 @@
 #define PACKAGE_NAME "yabasic"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "yabasic 2.89.0"
+#define PACKAGE_STRING "yabasic 2.89.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "yabasic"
@@ -98,7 +98,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.89.0"
+#define PACKAGE_VERSION "2.89.1"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -118,7 +118,7 @@
 #define USE_DL_FFI 1
 
 /* Version number of package */
-#define VERSION "2.89.0"
+#define VERSION "2.89.1"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */

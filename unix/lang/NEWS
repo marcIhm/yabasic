@@ -1,6 +1,9 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.89.1 (January 30, 2020)
+  - Fixes for documentation
+  
 Version 2.89.0 (December 29, 2020)
   - Fixed for Problem with system-command after clear screen on MacOS
   - Added functions eval and eval$
