@@ -1,10 +1,10 @@
 /*
 
-    YABASIC ---  a simple Basic Interpreter
+    YABASIC  ---  a simple Basic Interpreter
     written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
-    symbol.c --- code for symbol, stack and library management, handling of arrays
+    symbol.c -- code for symbols, stack and library management, handling of arrays
 
     This file is part of yabasic and may be copied under the terms of
     MIT License which can be found in the file LICENSE.

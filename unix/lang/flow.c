@@ -1,10 +1,10 @@
 /*
 
-    YABASIC ---  a simple Basic Interpreter
+    YABASIC  ---  a simple Basic Interpreter
     written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
-    flow.c --- code for subroutines and flow-control
+    flow.c -- code for subroutines and flow-control
 
     This file is part of yabasic and may be copied under the terms of
     MIT License which can be found in the file LICENSE.

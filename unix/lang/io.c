@@ -1,10 +1,10 @@
 /*
 
-    YABASIC ---  a simple Basic Interpreter
+    YABASIC  ---  a simple Basic Interpreter
     written by Marc Ihm 1995-2021
     more info at www.yabasic.de
 
-    io.c --- code for screen and file i/o
+    io.c -- code for screen and file i/o
 
     This file is part of yabasic and may be copied under the terms of
     MIT License which can be found in the file LICENSE.
