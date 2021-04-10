@@ -1,0 +1,14 @@
+# Ansible playbook to install tools to build and develop yabasic
+# Run this with: ansible-playbook ansible.yaml
+---
+# hosts could have been "remote" or "all" as well
+- hosts: localhost
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+   - name: Install Emacs
+     package:
+       name: emacs-nox
+       state: present
+
