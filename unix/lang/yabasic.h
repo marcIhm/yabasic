@@ -55,6 +55,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <sys/ipc.h>
+#include <sys/ioctl.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Intrinsic.h>
@@ -83,6 +84,10 @@
 #ifdef UNIX
 #ifndef LIBRARY_PATH
 #define LIBRARY_PATH "/usr/lib"
+#endif
+#ifdef HAVE_LINUX_PERF_EVENT_H
+#include <linux/perf_event.h>
+#include <linux/hw_breakpoint.h>
 #endif
 #endif
 #define OPEN_HAS_STREAM 1

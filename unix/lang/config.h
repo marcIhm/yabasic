@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Sat Jul  3 05:15:57 UTC 2021"
+#define BUILD_TIME "Sat Jul  3 14:45:46 UTC 2021"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -48,6 +48,9 @@
 
 /* Define to 1 if you have the <ncurses.h> header file. */
 #define HAVE_NCURSES_H 1
+
+/* Define to 1 if you have the `perf_event_open' function. */
+/* #undef HAVE_PERF_EVENT_OPEN */
 
 /* Define to 1 if you have the <prctl.h> header file. */
 /* #undef HAVE_PRCTL_H */

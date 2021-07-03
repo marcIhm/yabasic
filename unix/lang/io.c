@@ -1223,7 +1223,7 @@ readline(void)			/* read one line from current stream */
     }
 #endif
     else {
-        fgets(linebuffer, INBUFFLEN, cinstr);
+      (void)!fgets(linebuffer, INBUFFLEN, cinstr);
     }
     currchar = linebuffer;
     prompted = FALSE;

@@ -325,8 +325,8 @@ main (int argc, char **argv)
     }
     
     if (severity_so_far < sERROR && !check_compat) {
-        set_program_state (spRUNNING);
-        run_it ();
+      set_program_state (spRUNNING);
+      run_it ();
     } else {
         if (check_compat)
             printf ("Check for possible compatibility problems done\nProgram will not be executed, %d possible problem(s) reported\n",
@@ -345,6 +345,7 @@ main (int argc, char **argv)
              (double) (compilation_end - compilation_start)/1000,
              (double) (execution_end - compilation_end)/1000);
     error (sNOTE, string);
+
     end_it ();
     return !(severity_so_far >= sERROR);
 }
@@ -578,8 +579,7 @@ dump_commands (char *dumpfilename)
     }
 
     for (cmd=cmd_root; cmd; cmd=cmd->next) {
-        sprintf(string,"");
-        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x%s)\n",cmd->line,cmd,max_explanation_length,cexplanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag,string);
+        fprintf(dump,"Line %4d, Address %p:   %-*s   (lib %s, ptr %p, tag 0x%x)\n",cmd->line,cmd,max_explanation_length,cexplanation[cmd->type],cmd->lib->short_name,cmd->pointer,cmd->tag);
         if (cmd->type==cEND) {
             break;
         }
@@ -999,7 +999,7 @@ end_it (void)			/* perform shutdown-operations */
 	if (curinized) {
 	    getnstr (l, INBUFFLEN);
 	} else{
-	    fgets (l, INBUFFLEN, stdin);
+	  (void)!fgets (l, INBUFFLEN, stdin);
 	}
 #else
         SetConsoleMode (ConsoleInput, InitialConsole & (~ENABLE_ECHO_INPUT));
@@ -1541,7 +1541,7 @@ run_it ()
                 l++;
                 if (hold_docu && !(l % 24)) {
                     printf ("---Press RETURN to continue ");
-                    fgets (string, INBUFFLEN, stdin);
+                    (void)!fgets (string, INBUFFLEN, stdin);
                 }
             } else {
                 if (severity_threshold <= sDEBUG) {
@@ -1555,7 +1555,7 @@ run_it ()
         }
         if (hold_docu) {
             printf ("---End of embbedded documentation, press RETURN ");
-            fgets (string, INBUFFLEN, stdin);
+            (void)!fgets (string, INBUFFLEN, stdin);
         }
     } else {
         while (currcmd != cmd_head && endreason == rNONE) {

@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.5.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,11 +41,14 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 /* Identify Bison output.  */
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.5"
+#define YYBISON_VERSION "3.5.1"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -61,8 +65,7 @@
 
 
 
-/* Copy the first part of user declarations.  */
-
+/* First part of user prologue.  */
 
 /*
 
@@ -178,12 +181,24 @@ void collect_missing_clauses(char *string, char exclude) {
 }
 
 
-
-# ifndef YY_NULLPTR
-#  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULLPTR nullptr
+# ifndef YY_CAST
+#  ifdef __cplusplus
+#   define YY_CAST(Type, Val) static_cast<Type> (Val)
+#   define YY_REINTERPRET_CAST(Type, Val) reinterpret_cast<Type> (Val)
 #  else
-#   define YY_NULLPTR 0
+#   define YY_CAST(Type, Val) ((Type) (Val))
+#   define YY_REINTERPRET_CAST(Type, Val) ((Type) (Val))
+#  endif
+# endif
+# ifndef YY_NULLPTR
+#  if defined __cplusplus
+#   if 201103L <= __cplusplus
+#    define YY_NULLPTR nullptr
+#   else
+#    define YY_NULLPTR 0
+#   endif
+#  else
+#   define YY_NULLPTR ((void*)0)
 #  endif
 # endif
 
@@ -195,8 +210,8 @@ void collect_missing_clauses(char *string, char exclude) {
 # define YYERROR_VERBOSE 0
 #endif
 
-/* In a future release of Bison, this section will be replaced
-   by #include "bison.h".  */
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
 #ifndef YY_YY_BISON_H_INCLUDED
 # define YY_YY_BISON_H_INCLUDED
 /* Debug traces.  */
@@ -402,10 +417,8 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-
 
   double fnum;          /* double number */
   int inum;             /* integer number */
@@ -418,7 +431,6 @@ union YYSTYPE
 
 
 };
-
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -445,11 +457,8 @@ int yyparse (void);
 
 #endif /* !YY_YY_BISON_H_INCLUDED  */
 
-/* Copy the second part of user declarations.  */
-
 
 /* Unqualified %code blocks.  */
-
 
 void
 yyerror(char *message) {
@@ -462,33 +471,79 @@ lyyerror(int severity, char *message) {
 }
 
 
-
 #ifdef short
 # undef short
 #endif
 
-#ifdef YYTYPE_UINT8
-typedef YYTYPE_UINT8 yytype_uint8;
-#else
-typedef unsigned char yytype_uint8;
+/* On compilers that do not define __PTRDIFF_MAX__ etc., make sure
+   <limits.h> and (if available) <stdint.h> are included
+   so that the code can choose integer types of a good width.  */
+
+#ifndef __PTRDIFF_MAX__
+# include <limits.h> /* INFRINGES ON USER NAME SPACE */
+# if defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
+#  include <stdint.h> /* INFRINGES ON USER NAME SPACE */
+#  define YY_STDINT_H
+# endif
 #endif
 
-#ifdef YYTYPE_INT8
-typedef YYTYPE_INT8 yytype_int8;
+/* Narrow types that promote to a signed type and that can represent a
+   signed or unsigned integer of at least N bits.  In tables they can
+   save space and decrease cache pressure.  Promoting to a signed type
+   helps avoid bugs in integer arithmetic.  */
+
+#ifdef __INT_LEAST8_MAX__
+typedef __INT_LEAST8_TYPE__ yytype_int8;
+#elif defined YY_STDINT_H
+typedef int_least8_t yytype_int8;
 #else
 typedef signed char yytype_int8;
 #endif
 
-#ifdef YYTYPE_UINT16
-typedef YYTYPE_UINT16 yytype_uint16;
+#ifdef __INT_LEAST16_MAX__
+typedef __INT_LEAST16_TYPE__ yytype_int16;
+#elif defined YY_STDINT_H
+typedef int_least16_t yytype_int16;
 #else
-typedef unsigned short int yytype_uint16;
+typedef short yytype_int16;
 #endif
 
-#ifdef YYTYPE_INT16
-typedef YYTYPE_INT16 yytype_int16;
+#if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST8_TYPE__ yytype_uint8;
+#elif (!defined __UINT_LEAST8_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST8_MAX <= INT_MAX)
+typedef uint_least8_t yytype_uint8;
+#elif !defined __UINT_LEAST8_MAX__ && UCHAR_MAX <= INT_MAX
+typedef unsigned char yytype_uint8;
 #else
-typedef short int yytype_int16;
+typedef short yytype_uint8;
+#endif
+
+#if defined __UINT_LEAST16_MAX__ && __UINT_LEAST16_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST16_TYPE__ yytype_uint16;
+#elif (!defined __UINT_LEAST16_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST16_MAX <= INT_MAX)
+typedef uint_least16_t yytype_uint16;
+#elif !defined __UINT_LEAST16_MAX__ && USHRT_MAX <= INT_MAX
+typedef unsigned short yytype_uint16;
+#else
+typedef int yytype_uint16;
+#endif
+
+#ifndef YYPTRDIFF_T
+# if defined __PTRDIFF_TYPE__ && defined __PTRDIFF_MAX__
+#  define YYPTRDIFF_T __PTRDIFF_TYPE__
+#  define YYPTRDIFF_MAXIMUM __PTRDIFF_MAX__
+# elif defined PTRDIFF_MAX
+#  ifndef ptrdiff_t
+#   include <stddef.h> /* INFRINGES ON USER NAME SPACE */
+#  endif
+#  define YYPTRDIFF_T ptrdiff_t
+#  define YYPTRDIFF_MAXIMUM PTRDIFF_MAX
+# else
+#  define YYPTRDIFF_T long
+#  define YYPTRDIFF_MAXIMUM LONG_MAX
+# endif
 #endif
 
 #ifndef YYSIZE_T
@@ -496,15 +551,27 @@ typedef short int yytype_int16;
 #  define YYSIZE_T __SIZE_TYPE__
 # elif defined size_t
 #  define YYSIZE_T size_t
-# elif ! defined YYSIZE_T
+# elif defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
-#  define YYSIZE_T unsigned int
+#  define YYSIZE_T unsigned
 # endif
 #endif
 
-#define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
+#define YYSIZE_MAXIMUM                                  \
+  YY_CAST (YYPTRDIFF_T,                                 \
+           (YYPTRDIFF_MAXIMUM < YY_CAST (YYSIZE_T, -1)  \
+            ? YYPTRDIFF_MAXIMUM                         \
+            : YY_CAST (YYSIZE_T, -1)))
+
+#define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
+
+/* Stored state numbers (used for stacks). */
+typedef yytype_int16 yy_state_t;
+
+/* State numbers in computations.  */
+typedef int yy_state_fast_t;
 
 #ifndef YY_
 # if defined YYENABLE_NLS && YYENABLE_NLS
@@ -518,30 +585,19 @@ typedef short int yytype_int16;
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE
-# if (defined __GNUC__                                               \
-      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
-     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
-#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+#ifndef YY_ATTRIBUTE_PURE
+# if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_PURE __attribute__ ((__pure__))
 # else
-#  define YY_ATTRIBUTE(Spec) /* empty */
+#  define YY_ATTRIBUTE_PURE
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE_PURE
-# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
-#endif
-
 #ifndef YY_ATTRIBUTE_UNUSED
-# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
-#endif
-
-#if !defined _Noreturn \
-     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
-# if defined _MSC_VER && 1200 <= _MSC_VER
-#  define _Noreturn __declspec (noreturn)
+# if defined __GNUC__ && 2 < __GNUC__ + (7 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 # else
-#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
+#  define YY_ATTRIBUTE_UNUSED
 # endif
 #endif
 
@@ -552,13 +608,13 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
-    _Pragma ("GCC diagnostic push") \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
 # define YY_INITIAL_VALUE(Value) Value
@@ -571,6 +627,20 @@ typedef short int yytype_int16;
 # define YY_INITIAL_VALUE(Value) /* Nothing. */
 #endif
 
+#if defined __cplusplus && defined __GNUC__ && ! defined __ICC && 6 <= __GNUC__
+# define YY_IGNORE_USELESS_CAST_BEGIN                          \
+    _Pragma ("GCC diagnostic push")                            \
+    _Pragma ("GCC diagnostic ignored \"-Wuseless-cast\"")
+# define YY_IGNORE_USELESS_CAST_END            \
+    _Pragma ("GCC diagnostic pop")
+#endif
+#ifndef YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_END
+#endif
+
+
+#define YY_ASSERT(E) ((void) (0 && (E)))
 
 #if ! defined yyoverflow || YYERROR_VERBOSE
 
@@ -648,18 +718,19 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  yytype_int16 yyss_alloc;
+  yy_state_t yyss_alloc;
   YYSTYPE yyvs_alloc;
   YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
+# define YYSTACK_GAP_MAXIMUM (YYSIZEOF (union yyalloc) - 1)
 
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
+     ((N) * (YYSIZEOF (yy_state_t) + YYSIZEOF (YYSTYPE) \
+             + YYSIZEOF (YYLTYPE)) \
       + 2 * YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
@@ -672,11 +743,11 @@ union yyalloc
 # define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
     do                                                                  \
       {                                                                 \
-        YYSIZE_T yynewbytes;                                            \
+        YYPTRDIFF_T yynewbytes;                                         \
         YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
         Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-        yyptr += yynewbytes / sizeof (*yyptr);                          \
+        yynewbytes = yystacksize * YYSIZEOF (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        yyptr += yynewbytes / YYSIZEOF (*yyptr);                        \
       }                                                                 \
     while (0)
 
@@ -688,12 +759,12 @@ union yyalloc
 # ifndef YYCOPY
 #  if defined __GNUC__ && 1 < __GNUC__
 #   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, (Count) * sizeof (*(Src)))
+      __builtin_memcpy (Dst, Src, YY_CAST (YYSIZE_T, (Count)) * sizeof (*(Src)))
 #  else
 #   define YYCOPY(Dst, Src, Count)              \
       do                                        \
         {                                       \
-          YYSIZE_T yyi;                         \
+          YYPTRDIFF_T yyi;                      \
           for (yyi = 0; yyi < (Count); yyi++)   \
             (Dst)[yyi] = (Src)[yyi];            \
         }                                       \
@@ -716,16 +787,17 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  1135
 
-/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
-   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   442
 
+
+/* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, with out-of-bounds checking.  */
 #define YYTRANSLATE(YYX)                                                \
-  ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex, without out-of-bounds checking.  */
+   as returned by yylex.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -777,7 +849,7 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint16 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
        0,   190,   190,   191,   192,   193,   194,   197,   200,   201,
      201,   205,   206,   207,   208,   211,   212,   213,   214,   215,
@@ -891,7 +963,7 @@ static const char *const yytname[] =
 # ifdef YYPRINT
 /* YYTOKNUM[NUM] -- (External) token number corresponding to the
    (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_uint16 yytoknum[] =
+static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
@@ -916,14 +988,14 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -825
+#define YYPACT_NINF (-825)
 
-#define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-825)))
+#define yypact_value_is_default(Yyn) \
+  ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF -398
+#define YYTABLE_NINF (-398)
 
-#define yytable_value_is_error(Yytable_value) \
+#define yytable_value_is_error(Yyn) \
   0
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -1049,7 +1121,7 @@ static const yytype_int16 yypact[] =
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
      Performed when YYTABLE does not specify something else to do.  Zero
      means the default is an error.  */
-static const yytype_uint16 yydefact[] =
+static const yytype_int16 yydefact[] =
 {
        0,   117,     0,     0,     0,   326,     0,     0,     0,   111,
      349,   384,   389,    17,     0,     0,     0,     0,    30,    32,
@@ -2442,7 +2514,7 @@ static const yytype_int16 yycheck[] =
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
-static const yytype_uint16 yystos[] =
+static const yytype_int16 yystos[] =
 {
        0,   180,   181,   182,   183,   184,   198,     4,     5,     6,
       11,    15,    17,    19,    20,    21,    22,    23,    26,    27,
@@ -2561,7 +2633,7 @@ static const yytype_uint16 yystos[] =
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const yytype_uint16 yyr1[] =
+static const yytype_int16 yyr1[] =
 {
        0,   197,   198,   198,   198,   198,   198,   199,   200,   201,
      200,   202,   202,   202,   202,   203,   203,   203,   203,   203,
@@ -2614,7 +2686,7 @@ static const yytype_uint16 yyr1[] =
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
-static const yytype_uint8 yyr2[] =
+static const yytype_int8 yyr2[] =
 {
        0,     2,     2,     3,     3,     3,     3,     2,     1,     0,
        4,     1,     2,     1,     2,     0,     1,     1,     2,     1,
@@ -2679,22 +2751,22 @@ static const yytype_uint8 yyr2[] =
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)                                  \
-do                                                              \
-  if (yychar == YYEMPTY)                                        \
-    {                                                           \
-      yychar = (Token);                                         \
-      yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
-      yystate = *yyssp;                                         \
-      goto yybackup;                                            \
-    }                                                           \
-  else                                                          \
-    {                                                           \
-      yyerror (YY_("syntax error: cannot back up")); \
-      YYERROR;                                                  \
-    }                                                           \
-while (0)
+#define YYBACKUP(Token, Value)                                    \
+  do                                                              \
+    if (yychar == YYEMPTY)                                        \
+      {                                                           \
+        yychar = (Token);                                         \
+        yylval = (Value);                                         \
+        YYPOPSTACK (yylen);                                       \
+        yystate = *yyssp;                                         \
+        goto yybackup;                                            \
+      }                                                           \
+    else                                                          \
+      {                                                           \
+        yyerror (YY_("syntax error: cannot back up")); \
+        YYERROR;                                                  \
+      }                                                           \
+  while (0)
 
 /* Error token number */
 #define YYTERROR        1
@@ -2753,10 +2825,10 @@ do {                                            \
 /* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
 
 YY_ATTRIBUTE_UNUSED
-static unsigned
+static int
 yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
 {
-  unsigned res = 0;
+  int res = 0;
   int end_col = 0 != yylocp->last_column ? yylocp->last_column - 1 : 0;
   if (0 <= yylocp->first_line)
     {
@@ -2799,40 +2871,42 @@ do {                                                                      \
 } while (0)
 
 
-/*----------------------------------------.
-| Print this symbol's value on YYOUTPUT.  |
-`----------------------------------------*/
+/*-----------------------------------.
+| Print this symbol's value on YYO.  |
+`-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
-  FILE *yyo = yyoutput;
-  YYUSE (yyo);
+  FILE *yyoutput = yyo;
+  YYUSE (yyoutput);
   YYUSE (yylocationp);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
-    YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
+    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
 # endif
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+/*---------------------------.
+| Print this symbol on YYO.  |
+`---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
-  YYFPRINTF (yyoutput, "%s %s (",
+  YYFPRINTF (yyo, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  YY_LOCATION_PRINT (yyoutput, *yylocationp);
-  YYFPRINTF (yyoutput, ": ");
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp);
-  YYFPRINTF (yyoutput, ")");
+  YY_LOCATION_PRINT (yyo, *yylocationp);
+  YYFPRINTF (yyo, ": ");
+  yy_symbol_value_print (yyo, yytype, yyvaluep, yylocationp);
+  YYFPRINTF (yyo, ")");
 }
 
 /*------------------------------------------------------------------.
@@ -2841,7 +2915,7 @@ yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, YYL
 `------------------------------------------------------------------*/
 
 static void
-yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
+yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
 {
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
@@ -2864,20 +2938,20 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
+yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
 {
-  unsigned long int yylno = yyrline[yyrule];
+  int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+  YYFPRINTF (stderr, "Reducing stack by rule %d (line %d):\n",
              yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
-                       yystos[yyssp[yyi + 1 - yynrhs]],
-                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                       yystos[+yyssp[yyi + 1 - yynrhs]],
+                       &yyvsp[(yyi + 1) - (yynrhs)]
                        , &(yylsp[(yyi + 1) - (yynrhs)])                       );
       YYFPRINTF (stderr, "\n");
     }
@@ -2921,13 +2995,13 @@ int yydebug;
 
 # ifndef yystrlen
 #  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen strlen
+#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
 #  else
 /* Return the length of YYSTR.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yystrlen (const char *yystr)
 {
-  YYSIZE_T yylen;
+  YYPTRDIFF_T yylen;
   for (yylen = 0; yystr[yylen]; yylen++)
     continue;
   return yylen;
@@ -2963,12 +3037,12 @@ yystpcpy (char *yydest, const char *yysrc)
    backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
    null, do not copy; instead, return the length of what the result
    would have been.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yytnamerr (char *yyres, const char *yystr)
 {
   if (*yystr == '"')
     {
-      YYSIZE_T yyn = 0;
+      YYPTRDIFF_T yyn = 0;
       char const *yyp = yystr;
 
       for (;;)
@@ -2981,7 +3055,10 @@ yytnamerr (char *yyres, const char *yystr)
           case '\\':
             if (*++yyp != '\\')
               goto do_not_strip_quotes;
-            /* Fall through.  */
+            else
+              goto append;
+
+          append:
           default:
             if (yyres)
               yyres[yyn] = *yyp;
@@ -2996,10 +3073,10 @@ yytnamerr (char *yyres, const char *yystr)
     do_not_strip_quotes: ;
     }
 
-  if (! yyres)
+  if (yyres)
+    return yystpcpy (yyres, yystr) - yyres;
+  else
     return yystrlen (yystr);
-
-  return yystpcpy (yyres, yystr) - yyres;
 }
 # endif
 
@@ -3012,19 +3089,19 @@ yytnamerr (char *yyres, const char *yystr)
    *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
    required number of bytes is too large to store.  */
 static int
-yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
-                yytype_int16 *yyssp, int yytoken)
+yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
+                yy_state_t *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
-  YYSIZE_T yysize = yysize0;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
   const char *yyformat = YY_NULLPTR;
-  /* Arguments of yyformat. */
+  /* Arguments of yyformat: reported tokens (one for the "unexpected",
+     one per "expected"). */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Number of reported tokens (one for the "unexpected", one per
-     "expected"). */
+  /* Actual size of YYARG. */
   int yycount = 0;
+  /* Cumulated lengths of YYARG.  */
+  YYPTRDIFF_T yysize = 0;
 
   /* There are many possibilities here to consider:
      - If this state is a consistent state with a default action, then
@@ -3051,7 +3128,9 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
   */
   if (yytoken != YYEMPTY)
     {
-      int yyn = yypact[*yyssp];
+      int yyn = yypact[+*yyssp];
+      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
+      yysize = yysize0;
       yyarg[yycount++] = yytname[yytoken];
       if (!yypact_value_is_default (yyn))
         {
@@ -3076,11 +3155,12 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                   }
                 yyarg[yycount++] = yytname[yyx];
                 {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                  YYPTRDIFF_T yysize1
+                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
+                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+                    yysize = yysize1;
+                  else
                     return 2;
-                  yysize = yysize1;
                 }
               }
         }
@@ -3103,10 +3183,13 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
     }
 
   {
-    YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    /* Don't count the "%s"s in the final size, but reserve room for
+       the terminator.  */
+    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
+    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+      yysize = yysize1;
+    else
       return 2;
-    yysize = yysize1;
   }
 
   if (*yymsg_alloc < yysize)
@@ -3132,8 +3215,8 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
         }
       else
         {
-          yyp++;
-          yyformat++;
+          ++yyp;
+          ++yyformat;
         }
   }
   return 0;
@@ -3183,7 +3266,7 @@ int yynerrs;
 int
 yyparse (void)
 {
-    int yystate;
+    yy_state_fast_t yystate;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
@@ -3196,9 +3279,9 @@ yyparse (void)
        to reallocate them elsewhere.  */
 
     /* The state stack.  */
-    yytype_int16 yyssa[YYINITDEPTH];
-    yytype_int16 *yyss;
-    yytype_int16 *yyssp;
+    yy_state_t yyssa[YYINITDEPTH];
+    yy_state_t *yyss;
+    yy_state_t *yyssp;
 
     /* The semantic value stack.  */
     YYSTYPE yyvsa[YYINITDEPTH];
@@ -3213,7 +3296,7 @@ yyparse (void)
     /* The locations where the error started and ended.  */
     YYLTYPE yyerror_range[3];
 
-    YYSIZE_T yystacksize;
+    YYPTRDIFF_T yystacksize;
 
   int yyn;
   int yyresult;
@@ -3228,7 +3311,7 @@ yyparse (void)
   /* Buffer for error messages, and its allocated size.  */
   char yymsgbuf[128];
   char *yymsg = yymsgbuf;
-  YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
+  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
@@ -3251,29 +3334,41 @@ yyparse (void)
   yylsp[0] = yylloc;
   goto yysetstate;
 
+
 /*------------------------------------------------------------.
-| yynewstate -- Push a new state, which is found in yystate.  |
+| yynewstate -- push a new state, which is found in yystate.  |
 `------------------------------------------------------------*/
- yynewstate:
+yynewstate:
   /* In all cases, when you get here, the value and location stacks
      have just been pushed.  So pushing a state here evens the stacks.  */
   yyssp++;
 
- yysetstate:
-  *yyssp = yystate;
+
+/*--------------------------------------------------------------------.
+| yysetstate -- set current state (the top of the stack) to yystate.  |
+`--------------------------------------------------------------------*/
+yysetstate:
+  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
+  YY_ASSERT (0 <= yystate && yystate < YYNSTATES);
+  YY_IGNORE_USELESS_CAST_BEGIN
+  *yyssp = YY_CAST (yy_state_t, yystate);
+  YY_IGNORE_USELESS_CAST_END
 
   if (yyss + yystacksize - 1 <= yyssp)
+#if !defined yyoverflow && !defined YYSTACK_RELOCATE
+    goto yyexhaustedlab;
+#else
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = yyssp - yyss + 1;
+      YYPTRDIFF_T yysize = yyssp - yyss + 1;
 
-#ifdef yyoverflow
+# if defined yyoverflow
       {
         /* Give user a chance to reallocate the stack.  Use copies of
            these so that the &'s don't force the real ones into
            memory.  */
+        yy_state_t *yyss1 = yyss;
         YYSTYPE *yyvs1 = yyvs;
-        yytype_int16 *yyss1 = yyss;
         YYLTYPE *yyls1 = yyls;
 
         /* Each stack pointer address is followed by the size of the
@@ -3281,19 +3376,15 @@ yyparse (void)
            conditional around just the two extra args, but that might
            be undefined if yyoverflow is a macro.  */
         yyoverflow (YY_("memory exhausted"),
-                    &yyss1, yysize * sizeof (*yyssp),
-                    &yyvs1, yysize * sizeof (*yyvsp),
-                    &yyls1, yysize * sizeof (*yylsp),
+                    &yyss1, yysize * YYSIZEOF (*yyssp),
+                    &yyvs1, yysize * YYSIZEOF (*yyvsp),
+                    &yyls1, yysize * YYSIZEOF (*yylsp),
                     &yystacksize);
-
-        yyls = yyls1;
         yyss = yyss1;
         yyvs = yyvs1;
+        yyls = yyls1;
       }
-#else /* no yyoverflow */
-# ifndef YYSTACK_RELOCATE
-      goto yyexhaustedlab;
-# else
+# else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
         goto yyexhaustedlab;
@@ -3302,44 +3393,45 @@ yyparse (void)
         yystacksize = YYMAXDEPTH;
 
       {
-        yytype_int16 *yyss1 = yyss;
+        yy_state_t *yyss1 = yyss;
         union yyalloc *yyptr =
-          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+          YY_CAST (union yyalloc *,
+                   YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
         if (! yyptr)
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
         YYSTACK_RELOCATE (yyls_alloc, yyls);
-#  undef YYSTACK_RELOCATE
+# undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
 # endif
-#endif /* no yyoverflow */
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
       yylsp = yyls + yysize - 1;
 
-      YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long int) yystacksize));
+      YY_IGNORE_USELESS_CAST_BEGIN
+      YYDPRINTF ((stderr, "Stack size increased to %ld\n",
+                  YY_CAST (long, yystacksize)));
+      YY_IGNORE_USELESS_CAST_END
 
       if (yyss + yystacksize - 1 <= yyssp)
         YYABORT;
     }
-
-  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
+#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
 
   if (yystate == YYFINAL)
     YYACCEPT;
 
   goto yybackup;
 
+
 /*-----------.
 | yybackup.  |
 `-----------*/
 yybackup:
-
   /* Do appropriate processing given the current state.  Read a
      lookahead token if we need one and don't already have one.  */
 
@@ -3389,15 +3481,14 @@ yybackup:
 
   /* Shift the lookahead token.  */
   YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
-
-  /* Discard the shifted token.  */
-  yychar = YYEMPTY;
-
   yystate = yyn;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
   *++yylsp = yylloc;
+
+  /* Discard the shifted token.  */
+  yychar = YYEMPTY;
   goto yynewstate;
 
 
@@ -3412,7 +3503,7 @@ yydefault:
 
 
 /*-----------------------------.
-| yyreduce -- Do a reduction.  |
+| yyreduce -- do a reduction.  |
 `-----------------------------*/
 yyreduce:
   /* yyn is the number of a rule to reduce with.  */
@@ -3434,255 +3525,172 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 3:
-
-    {YYACCEPT;}
-
+  case 3:
+                                         {YYACCEPT;}
     break;
 
   case 4:
-
-    {YYACCEPT;}
-
+                                                       {YYACCEPT;}
     break;
 
   case 5:
-
-    {YYACCEPT;}
-
+                                         {YYACCEPT;}
     break;
 
   case 6:
-
-    {YYACCEPT;}
-
+                                                           {YYACCEPT;}
     break;
 
   case 7:
-
-    {YYACCEPT;}
-
+                                {YYACCEPT;}
     break;
 
   case 9:
-
-    {if (severity_so_far >= sERROR) {YYABORT;}}
-
+                   {if (severity_so_far >= sERROR) {YYABORT;}}
     break;
 
   case 17:
-
-    {report_if_missing("can not import a library in a loop or an if-statement",FALSE);}
-
+            {report_if_missing("can not import a library in a loop or an if-statement",FALSE);}
     break;
 
   case 18:
-
-    {add_command(cERROR);}
-
+                             {add_command(cERROR);}
     break;
 
   case 24:
-
-    {add_command(cPOP_MULTI);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
-
+           {add_command(cPOP_MULTI);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
     break;
 
   case 25:
-
-    {add_command(cPOP_MULTI);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
-
+                   {add_command(cPOP_MULTI);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
     break;
 
   case 26:
-
-    {add_command(cPOP_MULTI);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(sERROR,"continue outside loop");}
-
+              {add_command(cPOP_MULTI);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(sERROR,"continue outside loop");}
     break;
 
   case 28:
-
-    {create_call((yyvsp[0].symbol));add_command(cPOP);}
-
+                      {create_call((yyvsp[0].symbol));add_command(cPOP);}
     break;
 
   case 29:
-
-    {create_call((yyvsp[0].symbol));add_command(cPOP);}
-
+                            {create_call((yyvsp[0].symbol));add_command(cPOP);}
     break;
 
   case 30:
-
-    {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'local' outside functions");}
-
+           {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'local' outside functions");}
     break;
 
   case 32:
-
-    {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'static' outside functions");}
-
+            {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'static' outside functions");}
     break;
 
   case 36:
-
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
-
+                           {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
   case 37:
-
-    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
-
+                            {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
   case 38:
-
-    {create_exception(TRUE);}
-
+                          {create_exception(TRUE);}
     break;
 
   case 39:
-
-    {create_exception(FALSE);}
-
+                             {create_exception(FALSE);}
     break;
 
   case 40:
-
-    {add_command(cSKIPPER);}
-
+                         {add_command(cSKIPPER);}
     break;
 
   case 41:
-
-    {add_command(cNOP);}
-
+              {add_command(cNOP);}
     break;
 
   case 42:
-
-    {add_command(cSKIPPER);}
-
+                          {add_command(cSKIPPER);}
     break;
 
   case 43:
-
-    {add_command(cNOP);}
-
+               {add_command(cNOP);}
     break;
 
   case 44:
-
-    {create_label((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),cLABEL);}
-
+                            {create_label((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),cLABEL);}
     break;
 
   case 45:
-
-    {add_command(cCHECKOPEN);}
-
+                {add_command(cCHECKOPEN);}
     break;
 
   case 46:
-
-    {add_command(cCLOSE);}
-
+                         {add_command(cCLOSE);}
     break;
 
   case 47:
-
-    {add_command(cCHECKSEEK);}
-
+                {add_command(cCHECKSEEK);}
     break;
 
   case 48:
-
-    {add_command(cCOMPILE);}
-
+                               {add_command(cCOMPILE);}
     break;
 
   case 49:
-
-    {create_execute(0);add_command(cPOP);add_command(cPOP);}
-
+                       {create_execute(0);add_command(cPOP);add_command(cPOP);}
     break;
 
   case 50:
-
-    {create_execute(1);add_command(cPOP);add_command(cPOP);}
-
+                        {create_execute(1);add_command(cPOP);add_command(cPOP);}
     break;
 
   case 51:
-
-    {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);}
-
+                                {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);}
     break;
 
   case 52:
-
-    {create_colour(0);create_pps(cPOPSTREAM,0);}
-
+                                    {create_colour(0);create_pps(cPOPSTREAM,0);}
     break;
 
   case 53:
-
-    {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
-
+                                    {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
     break;
 
   case 54:
-
-    {tileol=FALSE;}
-
+           {tileol=FALSE;}
     break;
 
   case 56:
-
-    {tileol=TRUE;}
-
+                 {tileol=TRUE;}
     break;
 
   case 58:
-
-    {add_command(cGCOLOUR);}
-
+                                                     {add_command(cGCOLOUR);}
     break;
 
   case 59:
-
-    {add_command(cGCOLOUR2);}
-
+                              {add_command(cGCOLOUR2);}
     break;
 
   case 60:
-
-    {add_command(cGBACKCOLOUR);}
-
+                                                         {add_command(cGBACKCOLOUR);}
     break;
 
   case 61:
-
-    {add_command(cGBACKCOLOUR2);}
-
+                                  {add_command(cGBACKCOLOUR2);}
     break;
 
   case 64:
-
-    {create_restore("");}
-
+             {create_restore("");}
     break;
 
   case 65:
-
-    {create_restore((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
-
+                              {create_restore((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
   case 66:
-
-    {if (function_type!=ftNONE) {
+            {if (function_type!=ftNONE) {
 	       add_command(cCLEARSYMREFS);end_symref_chain();
 	       add_command(cPOPSYMLIST);
                create_check_return_value(ftNONE,function_type);
@@ -3690,1596 +3698,1068 @@ yyreduce:
              } else {
                add_command(cRETURN_FROM_GOSUB);
             }}
-
     break;
 
   case 67:
-
-    {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL);}
-
+                       {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL);}
     break;
 
   case 68:
-
-    {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL);}
-
+                              {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL);}
     break;
 
   case 70:
-
-    {create_openwin(FALSE);}
-
+                                            {create_openwin(FALSE);}
     break;
 
   case 71:
-
-    {create_openwin(TRUE);}
-
+         {create_openwin(TRUE);}
     break;
 
   case 72:
-
-    {add_command(cMOVEORIGIN);}
-
+                                      {add_command(cMOVEORIGIN);}
     break;
 
   case 73:
-
-    {add_command(cDOT);}
-
+                     {add_command(cDOT);}
     break;
 
   case 74:
-
-    {add_command(cDOT);putindrawmode(dmCLEAR);}
-
+                            {add_command(cDOT);putindrawmode(dmCLEAR);}
     break;
 
   case 75:
-
-    {create_line(2);}
-
+                                     {create_line(2);}
     break;
 
   case 76:
-
-    {create_line(2);putindrawmode(dmCLEAR);}
-
+                                            {create_line(2);putindrawmode(dmCLEAR);}
     break;
 
   case 77:
-
-    {create_line(1);}
-
+                          {create_line(1);}
     break;
 
   case 78:
-
-    {create_line(1);}
-
+                      {create_line(1);}
     break;
 
   case 79:
-
-    {create_line(1);putindrawmode(dmCLEAR);}
-
+                                 {create_line(1);putindrawmode(dmCLEAR);}
     break;
 
   case 80:
-
-    {create_line(1);putindrawmode(dmCLEAR);}
-
+                             {create_line(1);putindrawmode(dmCLEAR);}
     break;
 
   case 81:
-
-    {add_command(cPUTBIT);}
-
+                                                                                 {add_command(cPUTBIT);}
     break;
 
   case 82:
-
-    {create_pushstr("solid"); add_command(cPUTBIT);}
-
+                                                           {create_pushstr("solid"); add_command(cPUTBIT);}
     break;
 
   case 83:
-
-    {add_command(cPUTCHAR);}
-
+                                                            {add_command(cPUTCHAR);}
     break;
 
   case 84:
-
-    {create_line(-1);}
-
+                {create_line(-1);}
     break;
 
   case 85:
-
-    {create_line(0);}
-
+                  {create_line(0);}
     break;
 
   case 86:
-
-    {add_command(cCIRCLE);putindrawmode(0);}
-
+                                                         {add_command(cCIRCLE);putindrawmode(0);}
     break;
 
   case 87:
-
-    {add_command(cTRIANGLE);putindrawmode(0);}
-
+                                                                          {add_command(cTRIANGLE);putindrawmode(0);}
     break;
 
   case 88:
-
-    {add_command(cTEXT1);}
-
+                                            {add_command(cTEXT1);}
     break;
 
   case 89:
-
-    {add_command(cTEXT2);}
-
+                                                                  {add_command(cTEXT2);}
     break;
 
   case 90:
-
-    {add_command(cTEXT3);}
-
+                                                                                        {add_command(cTEXT3);}
     break;
 
   case 91:
-
-    {add_command(cRECT);putindrawmode(0);}
-
+                                                       {add_command(cRECT);putindrawmode(0);}
     break;
 
   case 92:
-
-    {add_command(cCLOSEWIN);}
-
+                   {add_command(cCLOSEWIN);}
     break;
 
   case 93:
-
-    {add_command(cCLEARWIN);}
-
+                   {add_command(cCLEARWIN);}
     break;
 
   case 94:
-
-    {add_command(cCLEARSCR);}
-
+                   {add_command(cCLEARSCR);}
     break;
 
   case 95:
-
-    {create_openprinter(0);}
-
+                   {create_openprinter(0);}
     break;
 
   case 96:
-
-    {create_openprinter(1);}
-
+                                     {create_openprinter(1);}
     break;
 
   case 97:
-
-    {add_command(cCLOSEPRN);}
-
+                    {add_command(cCLOSEPRN);}
     break;
 
   case 98:
-
-    {add_command(cWAIT);}
-
+                     {add_command(cWAIT);}
     break;
 
   case 99:
-
-    {add_command(cBELL);}
-
+          {add_command(cBELL);}
     break;
 
   case 100:
-
-    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
-
+           {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
     break;
 
   case 101:
-
-    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
-
+                   {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
     break;
 
   case 102:
-
-    {create_function(fINKEY);add_command(cPOP);}
-
+                              {create_function(fINKEY);add_command(cPOP);}
     break;
 
   case 103:
-
-    {create_function(fSYSTEM);
+                                      {create_function(fSYSTEM);
 	add_command(cPOP);}
-
     break;
 
   case 104:
-
-    {create_poke('s');}
-
+                                                  {create_poke('s');}
     break;
 
   case 105:
-
-    {create_poke('d');}
-
+                                           {create_poke('d');}
     break;
 
   case 106:
-
-    {create_poke('S');}
-
+                                              {create_poke('S');}
     break;
 
   case 107:
-
-    {create_poke('D');}
-
+                                       {create_poke('D');}
     break;
 
   case 108:
-
-    {add_command(cEND);}
-
+         {add_command(cEND);}
     break;
 
   case 109:
-
-    {create_pushdbl(0);add_command(cEXIT);}
-
+          {create_pushdbl(0);add_command(cEXIT);}
     break;
 
   case 110:
-
-    {add_command(cEXIT);}
-
+                     {add_command(cEXIT);}
     break;
 
   case 111:
-
-    {create_docu((yyvsp[0].symbol));}
-
+          {create_docu((yyvsp[0].symbol));}
     break;
 
   case 112:
-
-    {add_command(cBIND);}
-
+                            {add_command(cBIND);}
     break;
 
   case 113:
-
-    {add_command(cFRNBF_FREE);}
-
+                                  {add_command(cFRNBF_FREE);}
     break;
 
   case 114:
-
-    {add_command(cFRNBF_SET_NUMBER);}
-
+                                                                                     {add_command(cFRNBF_SET_NUMBER);}
     break;
 
   case 115:
-
-    {add_command(cFRNBF_SET_STRING);}
-
+                                                                      {add_command(cFRNBF_SET_STRING);}
     break;
 
   case 116:
-
-    {add_command(cFRNBF_SET_BUFFER);}
-
+                                                                             {add_command(cFRNBF_SET_BUFFER);}
     break;
 
   case 117:
-
-    {drawmode=0;}
-
+                               {drawmode=0;}
     break;
 
   case 118:
-
-    {drawmode=dmCLEAR;}
-
+           {drawmode=dmCLEAR;}
     break;
 
   case 119:
-
-    {drawmode=dmFILL;}
-
+          {drawmode=dmFILL;}
     break;
 
   case 120:
-
-    {drawmode=dmFILL+dmCLEAR;}
-
+                 {drawmode=dmFILL+dmCLEAR;}
     break;
 
   case 121:
-
-    {drawmode=dmFILL+dmCLEAR;}
-
+                 {drawmode=dmFILL+dmCLEAR;}
     break;
 
   case 122:
-
-    {add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
-
+                                                  {add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
     break;
 
   case 123:
-
-    {create_changestring(fMID);}
-
+                                                                                             {create_changestring(fMID);}
     break;
 
   case 124:
-
-    {create_changestring(fMID2);}
-
+                                                                              {create_changestring(fMID2);}
     break;
 
   case 125:
-
-    {create_changestring(fLEFT);}
-
+                                                                               {create_changestring(fLEFT);}
     break;
 
   case 126:
-
-    {create_changestring(fRIGHT);}
-
+                                                                                {create_changestring(fRIGHT);}
     break;
 
   case 127:
-
-    {create_doarray(dotify((yyvsp[-2].symbol),FALSE),ASSIGNSTRINGARRAY);}
-
+                                                   {create_doarray(dotify((yyvsp[-2].symbol),FALSE),ASSIGNSTRINGARRAY);}
     break;
 
   case 130:
-
-    {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-
+                                                                             {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
   case 131:
-
-    {create_myopen(OPEN_HAS_STREAM);}
-
+                                              {create_myopen(OPEN_HAS_STREAM);}
     break;
 
   case 132:
-
-    {create_myopen(OPEN_HAS_STREAM+OPEN_PRINTER);}
-
+                                     {create_myopen(OPEN_HAS_STREAM+OPEN_PRINTER);}
     break;
 
   case 133:
-
-    {add_command(cSWAP);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-
+                                                            {add_command(cSWAP);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
   case 134:
-
-    {add_command(cSWAP);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-
+                                                            {add_command(cSWAP);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
   case 135:
-
-    {add_command(cSEEK);}
-
+                                                {add_command(cSEEK);}
     break;
 
   case 136:
-
-    {add_command(cSEEK2);}
-
+                                                             {add_command(cSEEK2);}
     break;
 
   case 137:
-
-    {add_command_with_sym_and_diag(cPUSHSTRPTR,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+                                {add_command_with_sym_and_diag(cPUSHSTRPTR,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 138:
-
-    {create_doarray(dotify((yyvsp[-3].symbol),FALSE),GETSTRINGPOINTER);}
-
+                              {create_doarray(dotify((yyvsp[-3].symbol),FALSE),GETSTRINGPOINTER);}
     break;
 
   case 139:
-
-    {add_command_with_sym_and_diag(cPUSHSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+                           {add_command_with_sym_and_diag(cPUSHSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 141:
-
-    {add_command_with_sym_and_diag(cSTRINGFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
-
+                            {add_command_with_sym_and_diag(cSTRINGFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
     break;
 
   case 142:
-
-    {if ((yyvsp[0].string)==NULL) {lyyerror(sERROR,"String not terminated");create_pushstr("");} else {create_pushstr((yyvsp[0].string));}}
-
+            {if ((yyvsp[0].string)==NULL) {lyyerror(sERROR,"String not terminated");create_pushstr("");} else {create_pushstr((yyvsp[0].string));}}
     break;
 
   case 143:
-
-    {add_command(cCONCAT);}
-
+                                            {add_command(cCONCAT);}
     break;
 
   case 145:
-
-    {create_function(fLEFT);}
-
+                                                                {create_function(fLEFT);}
     break;
 
   case 146:
-
-    {create_function(fRIGHT);}
-
+                                                    {create_function(fRIGHT);}
     break;
 
   case 147:
-
-    {create_function(fMID);}
-
+                                                                 {create_function(fMID);}
     break;
 
   case 148:
-
-    {create_function(fMID2);}
-
+                                                  {create_function(fMID2);}
     break;
 
   case 149:
-
-    {create_function(fSTR);}
-
+                            {create_function(fSTR);}
     break;
 
   case 150:
-
-    {create_function(fSTR2);}
-
+                                                  {create_function(fSTR2);}
     break;
 
   case 151:
-
-    {create_function(fSTR3);}
-
+                                                                        {create_function(fSTR3);}
     break;
 
   case 152:
-
-    {create_function(fSTR4);}
-
+                                   {create_function(fSTR4);}
     break;
 
   case 153:
-
-    {create_pushdbl(-1);create_function(fINKEY);}
-
+           {create_pushdbl(-1);create_function(fINKEY);}
     break;
 
   case 154:
-
-    {create_pushdbl(-1);create_function(fINKEY);}
-
+                   {create_pushdbl(-1);create_function(fINKEY);}
     break;
 
   case 155:
-
-    {create_function(fINKEY);}
-
+                              {create_function(fINKEY);}
     break;
 
   case 156:
-
-    {create_function(fCHR);}
-
+                            {create_function(fCHR);}
     break;
 
   case 157:
-
-    {create_function(fUPPER);}
-
+                                     {create_function(fUPPER);}
     break;
 
   case 158:
-
-    {create_function(fLOWER);}
-
+                                     {create_function(fLOWER);}
     break;
 
   case 159:
-
-    {create_function(fLTRIM);}
-
+                                     {create_function(fLTRIM);}
     break;
 
   case 160:
-
-    {create_function(fRTRIM);}
-
+                                     {create_function(fRTRIM);}
     break;
 
   case 161:
-
-    {create_function(fTRIM);}
-
+                                    {create_function(fTRIM);}
     break;
 
   case 162:
-
-    {create_function(fCHOMP);}
-
+                                     {create_function(fCHOMP);}
     break;
 
   case 163:
-
-    {create_function(fSYSTEM2);}
-
+                                       {create_function(fSYSTEM2);}
     break;
 
   case 164:
-
-    {create_function(fFRNFN_CALL2);}
-
+                                   {create_function(fFRNFN_CALL2);}
     break;
 
   case 165:
-
-    {create_function(fFRNBF_ALLOC);}
-
+                                    {create_function(fFRNBF_ALLOC);}
     break;
 
   case 166:
-
-    {create_function(fFRNBF_DUMP);}
-
+                                          {create_function(fFRNBF_DUMP);}
     break;
 
   case 167:
-
-    {create_function(fFRNBF_DUMP2);}
-
+                                                         {create_function(fFRNBF_DUMP2);}
     break;
 
   case 168:
-
-    {create_function(fDATE);}
-
+          {create_function(fDATE);}
     break;
 
   case 169:
-
-    {create_function(fDATE);}
-
+                  {create_function(fDATE);}
     break;
 
   case 170:
-
-    {create_function(fTIME);}
-
+          {create_function(fTIME);}
     break;
 
   case 171:
-
-    {create_function(fTIME);}
-
+                  {create_function(fTIME);}
     break;
 
   case 172:
-
-    {create_function(fPEEK2);}
-
+                                     {create_function(fPEEK2);}
     break;
 
   case 173:
-
-    {create_function(fPEEK3);}
-
+                                                           {create_function(fPEEK3);}
     break;
 
   case 174:
-
-    {add_command(cTOKENALT2);}
-
+                                                                   {add_command(cTOKENALT2);}
     break;
 
   case 175:
-
-    {add_command(cTOKENALT);}
-
+                                             {add_command(cTOKENALT);}
     break;
 
   case 176:
-
-    {add_command(cSPLITALT2);}
-
+                                                                   {add_command(cSPLITALT2);}
     break;
 
   case 177:
-
-    {add_command(cSPLITALT);}
-
+                                             {add_command(cSPLITALT);}
     break;
 
   case 178:
-
-    {create_function(fGETBIT);}
-
+                                               {create_function(fGETBIT);}
     break;
 
   case 179:
-
-    {create_function(fGETCHAR);}
-
+                                                                            {create_function(fGETCHAR);}
     break;
 
   case 180:
-
-    {create_function(fHEX);}
-
+                            {create_function(fHEX);}
     break;
 
   case 181:
-
-    {create_function(fBIN);}
-
+                            {create_function(fBIN);}
     break;
 
   case 182:
-
-    {create_execute(1);add_command(cSWAP);add_command(cPOP);}
-
+                                {create_execute(1);add_command(cSWAP);add_command(cPOP);}
     break;
 
   case 183:
-
-    {create_function(fFRNBF_GET_STRING);}
-
+                                                                        {create_function(fFRNBF_GET_STRING);}
     break;
 
   case 184:
-
-    {create_function(fFRNBF_GET_BUFFER);}
-
+                                                               {create_function(fFRNBF_GET_BUFFER);}
     break;
 
   case 185:
-
-    {create_eval(evSTRING);}
-
+                                     {create_eval(evSTRING);}
     break;
 
   case 186:
-
-    {add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
-
+                                           {add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
     break;
 
   case 187:
-
-    {create_doarray((yyvsp[-2].symbol),ASSIGNARRAY);}
-
+                                      {create_doarray((yyvsp[-2].symbol),ASSIGNARRAY);}
     break;
 
   case 188:
-
-    {add_command(cORSHORT);pushlabel();}
-
+                           {add_command(cORSHORT);pushlabel();}
     break;
 
   case 189:
-
-    {poplabel();create_boole('|');}
-
+                                                                           {poplabel();create_boole('|');}
     break;
 
   case 190:
-
-    {add_command(cANDSHORT);pushlabel();}
-
+                    {add_command(cANDSHORT);pushlabel();}
     break;
 
   case 191:
-
-    {poplabel();create_boole('&');}
-
+                                                                     {poplabel();create_boole('&');}
     break;
 
   case 192:
-
-    {create_boole('!');}
-
+                    {create_boole('!');}
     break;
 
   case 193:
-
-    {create_dblrelop('=');}
-
+                               {create_dblrelop('=');}
     break;
 
   case 194:
-
-    {create_dblrelop('!');}
-
+                               {create_dblrelop('!');}
     break;
 
   case 195:
-
-    {create_dblrelop('<');}
-
+                               {create_dblrelop('<');}
     break;
 
   case 196:
-
-    {create_dblrelop('{');}
-
+                               {create_dblrelop('{');}
     break;
 
   case 197:
-
-    {create_dblrelop('>');}
-
+                               {create_dblrelop('>');}
     break;
 
   case 198:
-
-    {create_dblrelop('}');}
-
+                               {create_dblrelop('}');}
     break;
 
   case 199:
-
-    {add_command(cTESTEOF);}
-
+                                 {add_command(cTESTEOF);}
     break;
 
   case 200:
-
-    {add_command(cGLOB);}
-
+                                                          {add_command(cGLOB);}
     break;
 
   case 201:
-
-    {create_pushdbl((yyvsp[0].fnum));}
-
+           {create_pushdbl((yyvsp[0].fnum));}
     break;
 
   case 202:
-
-    {add_command_with_sym_and_diag(cARDIM,"",NULL);}
-
+                            {add_command_with_sym_and_diag(cARDIM,"",NULL);}
     break;
 
   case 203:
-
-    {add_command_with_sym_and_diag(cARDIM,"",NULL);}
-
+                                   {add_command_with_sym_and_diag(cARDIM,"",NULL);}
     break;
 
   case 204:
-
-    {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
-
+                                            {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
     break;
 
   case 205:
-
-    {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
-
+                                                   {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
     break;
 
   case 206:
-
-    {add_command_with_sym_and_diag(cFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
-
+                      {add_command_with_sym_and_diag(cFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
     break;
 
   case 207:
-
-    {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+            {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 208:
-
-    {create_dblbin('+');}
-
+                              {create_dblbin('+');}
     break;
 
   case 209:
-
-    {create_dblbin('-');}
-
+                              {create_dblbin('-');}
     break;
 
   case 210:
-
-    {create_dblbin('*');}
-
+                              {create_dblbin('*');}
     break;
 
   case 211:
-
-    {create_dblbin('/');}
-
+                              {create_dblbin('/');}
     break;
 
   case 212:
-
-    {create_dblbin('^');}
-
+                               {create_dblbin('^');}
     break;
 
   case 213:
-
-    {add_command(cNEGATE);}
-
+                                {add_command(cNEGATE);}
     break;
 
   case 214:
-
-    {create_strrelop('=');}
-
+                                             {create_strrelop('=');}
     break;
 
   case 215:
-
-    {create_strrelop('!');}
-
+                                             {create_strrelop('!');}
     break;
 
   case 216:
-
-    {create_strrelop('<');}
-
+                                             {create_strrelop('<');}
     break;
 
   case 217:
-
-    {create_strrelop('{');}
-
+                                             {create_strrelop('{');}
     break;
 
   case 218:
-
-    {create_strrelop('>');}
-
+                                             {create_strrelop('>');}
     break;
 
   case 219:
-
-    {create_strrelop('}');}
-
+                                             {create_strrelop('}');}
     break;
 
   case 222:
-
-    {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
-
+                          {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
     break;
 
   case 223:
-
-    {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
-
+                                 {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
     break;
 
   case 225:
-
-    {create_function(fSIN);}
-
+                                  {create_function(fSIN);}
     break;
 
   case 226:
-
-    {create_function(fASIN);}
-
+                             {create_function(fASIN);}
     break;
 
   case 227:
-
-    {create_function(fCOS);}
-
+                            {create_function(fCOS);}
     break;
 
   case 228:
-
-    {create_function(fACOS);}
-
+                             {create_function(fACOS);}
     break;
 
   case 229:
-
-    {create_function(fTAN);}
-
+                            {create_function(fTAN);}
     break;
 
   case 230:
-
-    {create_function(fATAN);}
-
+                             {create_function(fATAN);}
     break;
 
   case 231:
-
-    {create_function(fATAN2);}
-
+                                             {create_function(fATAN2);}
     break;
 
   case 232:
-
-    {create_function(fEXP);}
-
+                            {create_function(fEXP);}
     break;
 
   case 233:
-
-    {create_function(fLOG);}
-
+                            {create_function(fLOG);}
     break;
 
   case 234:
-
-    {create_function(fLOG2);}
-
+                                           {create_function(fLOG2);}
     break;
 
   case 235:
-
-    {create_function(fSQRT);}
-
+                             {create_function(fSQRT);}
     break;
 
   case 236:
-
-    {create_function(fSQR);}
-
+                            {create_function(fSQR);}
     break;
 
   case 237:
-
-    {create_function(fINT);}
-
+                            {create_function(fINT);}
     break;
 
   case 238:
-
-    {create_function(fROUND);}
-
+                              {create_function(fROUND);}
     break;
 
   case 239:
-
-    {create_function(fCEIL);}
-
+                             {create_function(fCEIL);}
     break;
 
   case 240:
-
-    {create_function(fFLOOR);}
-
+                              {create_function(fFLOOR);}
     break;
 
   case 241:
-
-    {create_function(fFRAC);}
-
+                             {create_function(fFRAC);}
     break;
 
   case 242:
-
-    {create_function(fABS);}
-
+                            {create_function(fABS);}
     break;
 
   case 243:
-
-    {create_function(fSIG);}
-
+                            {create_function(fSIG);}
     break;
 
   case 244:
-
-    {create_function(fMOD);}
-
+                                           {create_function(fMOD);}
     break;
 
   case 245:
-
-    {create_function(fRAN);}
-
+                            {create_function(fRAN);}
     break;
 
   case 246:
-
-    {create_function(fRAN2);}
-
+                 {create_function(fRAN2);}
     break;
 
   case 247:
-
-    {create_function(fMIN);}
-
+                                           {create_function(fMIN);}
     break;
 
   case 248:
-
-    {create_function(fMAX);}
-
+                                           {create_function(fMAX);}
     break;
 
   case 249:
-
-    {create_function(fLEN);}
-
+                                   {create_function(fLEN);}
     break;
 
   case 250:
-
-    {create_function(fVAL);}
-
+                                   {create_function(fVAL);}
     break;
 
   case 251:
-
-    {create_function(fASC);}
-
+                                   {create_function(fASC);}
     break;
 
   case 252:
-
-    {create_function(fDEC);}
-
+                                   {create_function(fDEC);}
     break;
 
   case 253:
-
-    {create_function(fDEC2);}
-
+                                                  {create_function(fDEC2);}
     break;
 
   case 254:
-
-    {if (check_compat) lyyerror(sWARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
-
+                                                           {if (check_compat) lyyerror(sWARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
     break;
 
   case 255:
-
-    {create_function(fINSTR2);}
-
+                                                                          {create_function(fINSTR2);}
     break;
 
   case 256:
-
-    {create_function(fRINSTR);}
-
+                                                            {create_function(fRINSTR);}
     break;
 
   case 257:
-
-    {create_function(fRINSTR2);}
-
+                                                                            {create_function(fRINSTR2);}
     break;
 
   case 258:
-
-    {create_function(fSYSTEM);}
-
+                                      {create_function(fSYSTEM);}
     break;
 
   case 259:
-
-    {create_function(fFRNFN_CALL);}
-
+                                  {create_function(fFRNFN_CALL);}
     break;
 
   case 260:
-
-    {create_function(fFRNFN_SIZE);}
-
+                                          {create_function(fFRNFN_SIZE);}
     break;
 
   case 261:
-
-    {create_function(fFRNBF_GET_NUMBER);}
-
+                                                                              {create_function(fFRNBF_GET_NUMBER);}
     break;
 
   case 262:
-
-    {create_function(fFRNBF_SIZE);}
-
+                                          {create_function(fFRNBF_SIZE);}
     break;
 
   case 263:
-
-    {create_function(fPEEK4);}
-
+                                {create_function(fPEEK4);}
     break;
 
   case 264:
-
-    {create_function(fPEEK);}
-
+                                    {create_function(fPEEK);}
     break;
 
   case 265:
-
-    {create_function(fMOUSEX);}
-
+                                      {create_function(fMOUSEX);}
     break;
 
   case 266:
-
-    {create_pushstr("");create_function(fMOUSEX);}
-
+            {create_pushstr("");create_function(fMOUSEX);}
     break;
 
   case 267:
-
-    {create_pushstr("");create_function(fMOUSEX);}
-
+                    {create_pushstr("");create_function(fMOUSEX);}
     break;
 
   case 268:
-
-    {create_function(fMOUSEY);}
-
+                                      {create_function(fMOUSEY);}
     break;
 
   case 269:
-
-    {create_pushstr("");create_function(fMOUSEY);}
-
+            {create_pushstr("");create_function(fMOUSEY);}
     break;
 
   case 270:
-
-    {create_pushstr("");create_function(fMOUSEY);}
-
+                    {create_pushstr("");create_function(fMOUSEY);}
     break;
 
   case 271:
-
-    {create_function(fMOUSEB);}
-
+                                      {create_function(fMOUSEB);}
     break;
 
   case 272:
-
-    {create_pushstr("");create_function(fMOUSEB);}
-
+            {create_pushstr("");create_function(fMOUSEB);}
     break;
 
   case 273:
-
-    {create_pushstr("");create_function(fMOUSEB);}
-
+                    {create_pushstr("");create_function(fMOUSEB);}
     break;
 
   case 274:
-
-    {create_function(fMOUSEMOD);}
-
+                                        {create_function(fMOUSEMOD);}
     break;
 
   case 275:
-
-    {create_pushstr("");create_function(fMOUSEMOD);}
-
+              {create_pushstr("");create_function(fMOUSEMOD);}
     break;
 
   case 276:
-
-    {create_pushstr("");create_function(fMOUSEMOD);}
-
+                      {create_pushstr("");create_function(fMOUSEMOD);}
     break;
 
   case 277:
-
-    {create_function(fAND);}
-
+                                           {create_function(fAND);}
     break;
 
   case 278:
-
-    {create_function(fOR);}
-
+                                          {create_function(fOR);}
     break;
 
   case 279:
-
-    {create_function(fBITNOT);}
-
+                               {create_function(fBITNOT);}
     break;
 
   case 280:
-
-    {create_function(fEOR);}
-
+                                           {create_function(fEOR);}
     break;
 
   case 281:
-
-    {create_function(fSHL);}
-
+                                           {create_function(fSHL);}
     break;
 
   case 282:
-
-    {create_function(fSHR);}
-
+                                           {create_function(fSHR);}
     break;
 
   case 283:
-
-    {create_function(fTELL);}
-
+                                {create_function(fTELL);}
     break;
 
   case 284:
-
-    {add_command(cTOKEN2);}
-
+                                                                               {add_command(cTOKEN2);}
     break;
 
   case 285:
-
-    {add_command(cTOKEN);}
-
+                                                         {add_command(cTOKEN);}
     break;
 
   case 286:
-
-    {add_command(cSPLIT2);}
-
+                                                                               {add_command(cSPLIT2);}
     break;
 
   case 287:
-
-    {add_command(cSPLIT);}
-
+                                                         {add_command(cSPLIT);}
     break;
 
   case 288:
-
-    {create_execute(0);add_command(cSWAP);add_command(cPOP);}
-
+                               {create_execute(0);add_command(cSWAP);add_command(cPOP);}
     break;
 
   case 289:
-
-    {create_myopen(OPEN_PRINTER);}
-
+                           {create_myopen(OPEN_PRINTER);}
     break;
 
   case 290:
-
-    {create_myopen(0);}
-
+                                    {create_myopen(0);}
     break;
 
   case 291:
-
-    {create_myopen(OPEN_HAS_MODE);}
-
+                                                          {create_myopen(OPEN_HAS_MODE);}
     break;
 
   case 292:
-
-    {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
-
+                                             {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
     break;
 
   case 293:
-
-    {create_myopen(OPEN_HAS_STREAM);}
-
+                                                      {create_myopen(OPEN_HAS_STREAM);}
     break;
 
   case 294:
-
-    {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
-
+                                                                            {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
   case 295:
-
-    {create_eval(evNUMBER);}
-
+                                    {create_eval(evNUMBER);}
     break;
 
   case 296:
-
-    {(yyval.fnum)=(yyvsp[0].fnum);}
-
+              {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
   case 297:
-
-    {(yyval.fnum)=(yyvsp[0].fnum);}
-
+               {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
   case 298:
-
-    {(yyval.fnum)=-(yyvsp[0].fnum);}
-
+               {(yyval.fnum)=-(yyvsp[0].fnum);}
     break;
 
   case 299:
-
-    {(yyval.fnum)=(yyvsp[0].fnum);}
-
+              {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
   case 300:
-
-    {(yyval.fnum)=strtod((yyvsp[0].digits),NULL);}
-
+            {(yyval.fnum)=strtod((yyvsp[0].digits),NULL);}
     break;
 
   case 301:
-
-    {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,16);}
-
+               {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,16);}
     break;
 
   case 302:
-
-    {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,2);}
-
+               {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,2);}
     break;
 
   case 303:
-
-    {(yyval.symbol)=my_strdup(dotify((yyvsp[0].digits),FALSE));}
-
+                          {(yyval.symbol)=my_strdup(dotify((yyvsp[0].digits),FALSE));}
     break;
 
   case 304:
-
-    {(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
-
+            {(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
   case 305:
-
-    {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
-
+                                   {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
     break;
 
   case 306:
-
-    {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
-
+                                          {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
     break;
 
   case 307:
-
-    {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
-
+                              {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
     break;
 
   case 308:
-
-    {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
-
+                                          {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
     break;
 
   case 309:
-
-    {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
-
+                                             {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
     break;
 
   case 310:
-
-    {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
-
+                                                   {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
     break;
 
   case 311:
-
-    {add_command(cPUSHFREE);}
-
+           {add_command(cPUSHFREE);}
     break;
 
   case 318:
-
-    {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("can not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
-
+                                 {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("can not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
     break;
 
   case 319:
-
-    {if (exported) create_subr_link((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION);
+                      {if (exported) create_subr_link((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST);add_command(cCLEARSYMREFS);start_symref_chain();
 		       create_count_params();}
-
     break;
 
   case 320:
-
-    {create_require(stFREE);add_command(cPOP);}
-
+                          {create_require(stFREE);add_command(cPOP);}
     break;
 
   case 321:
-
-    {add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL);create_endfunction();poplabel();}
-
+               {add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL);create_endfunction();poplabel();}
     break;
 
   case 322:
-
-    {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
-
+                {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 323:
-
-    {missing_endsub--;}
-
+            {missing_endsub--;}
     break;
 
   case 324:
-
-    {function_type=ftNUMBER;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
-
+                       {function_type=ftNUMBER;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
   case 325:
-
-    {function_type=ftSTRING;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
-
+            {function_type=ftSTRING;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
   case 326:
-
-    {exported=FALSE;}
-
+                    {exported=FALSE;}
     break;
 
   case 327:
-
-    {exported=TRUE;}
-
+            {exported=TRUE;}
     break;
 
   case 328:
-
-    {exported=FALSE;}
-
+                         {exported=FALSE;}
     break;
 
   case 329:
-
-    {exported=TRUE;}
-
+                                 {exported=TRUE;}
     break;
 
   case 332:
-
-    {create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);}
-
+                    {create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);}
     break;
 
   case 333:
-
-    {create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);}
-
+            {create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);}
     break;
 
   case 334:
-
-    {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'d');}
-
+                              {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'d');}
     break;
 
   case 335:
-
-    {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'s');}
-
+                              {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'s');}
     break;
 
   case 338:
-
-    {create_makestatic(dotify((yyvsp[0].symbol),TRUE),syNUMBER);}
-
+                     {create_makestatic(dotify((yyvsp[0].symbol),TRUE),syNUMBER);}
     break;
 
   case 339:
-
-    {create_makestatic(dotify((yyvsp[0].symbol),TRUE),sySTRING);}
-
+            {create_makestatic(dotify((yyvsp[0].symbol),TRUE),sySTRING);}
     break;
 
   case 340:
-
-    {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'D');}
-
+                              {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'D');}
     break;
 
   case 341:
-
-    {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'S');}
-
+                              {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'S');}
     break;
 
   case 345:
-
-    {create_require(stNUMBER);create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+                   {create_require(stNUMBER);create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 346:
-
-    {create_require(stSTRING);create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+            {create_require(stSTRING);create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 347:
-
-    {create_require(stNUMBERARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
-
+                    {create_require(stNUMBERARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
     break;
 
   case 348:
-
-    {create_require(stSTRINGARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
-
+                    {create_require(stSTRINGARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
     break;
 
   case 349:
-
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK);missing_next++;missing_next_line=yylineno;}
-
+               {loop_nesting++;add_command(cBEGIN_LOOP_MARK);missing_next++;missing_next_line=yylineno;}
     break;
 
   case 350:
-
-    {pushname(dotify((yyvsp[-1].symbol),FALSE)); /* will be used by next_symbol to check equality,NULL */
+            {pushname(dotify((yyvsp[-1].symbol),FALSE)); /* will be used by next_symbol to check equality,NULL */
 	     add_command(cRESETSKIPONCE);
 	     add_command(cRESETSKIPONCE2);
 	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
-
     break;
 
   case 351:
-
-    { /* pushes another expression */
+                    { /* pushes another expression */
 	     add_command(cSKIPONCE);
 	     pushlabel();
 	     add_command(cSTARTFOR);
@@ -5294,593 +4774,398 @@ yyreduce:
 	     add_command(cFORCHECK);
 	     add_command(cDECIDE);
              pushlabel();}
-
     break;
 
   case 352:
-
-    {
+                         {
              swap();popgoto();poplabel();}
-
     break;
 
   case 353:
-
-    {add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
-
+                           {add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
   case 354:
-
-    {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
-
+              {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 355:
-
-    {missing_next--;}
-
+          {missing_next--;}
     break;
 
   case 356:
-
-    {report_conflicting_close("a closing next is expected before endif",'e');}
-
+           {report_conflicting_close("a closing next is expected before endif",'e');}
     break;
 
   case 357:
-
-    {report_conflicting_close("a closing next is expected before wend",'w');}
-
+          {report_conflicting_close("a closing next is expected before wend",'w');}
     break;
 
   case 358:
-
-    {report_conflicting_close("a closing next is expected before until",'l');}
-
+           {report_conflicting_close("a closing next is expected before until",'l');}
     break;
 
   case 359:
-
-    {report_conflicting_close("a closing next is expected before loop",'l');}
-
+          {report_conflicting_close("a closing next is expected before loop",'l');}
     break;
 
   case 360:
-
-    {create_pushdbl(1);}
-
+           {create_pushdbl(1);}
     break;
 
   case 362:
-
-    {pop(stSTRING);}
-
+              {pop(stSTRING);}
     break;
 
   case 363:
-
-    {if (strcmp(pop(stSTRING)->pointer,dotify((yyvsp[0].symbol),FALSE))) 
+            {if (strcmp(pop(stSTRING)->pointer,dotify((yyvsp[0].symbol),FALSE))) 
              {lyyerror(sERROR,"'for' and 'next' do not match"); YYABORT;}
            }
-
     break;
 
   case 364:
-
-    {push_switch_id();add_command(cBEGIN_SWITCH_MARK);}
-
+                                 {push_switch_id();add_command(cBEGIN_SWITCH_MARK);}
     break;
 
   case 365:
-
-    {add_command(cBREAK_HERE);add_command(cPOP);add_command(cEND_SWITCH_MARK);pop_switch_id();}
-
+                                                                  {add_command(cBREAK_HERE);add_command(cPOP);add_command(cEND_SWITCH_MARK);pop_switch_id();}
     break;
 
   case 371:
-
-    {add_command(cSWITCH_COMPARE);add_command(cDECIDE);add_command(cNEXT_CASE);}
-
+      {add_command(cSWITCH_COMPARE);add_command(cDECIDE);add_command(cNEXT_CASE);}
     break;
 
   case 372:
-
-    {add_command(cNEXT_CASE_HERE);}
-
+                                                                                                  {add_command(cNEXT_CASE_HERE);}
     break;
 
   case 374:
-
-    {add_command(cNEXT_CASE_HERE);}
-
+                  {add_command(cNEXT_CASE_HERE);}
     break;
 
   case 376:
-
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
-
+             {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
     break;
 
   case 378:
-
-    {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
-
+              {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 379:
-
-    {missing_loop--;popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
-
+          {missing_loop--;popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
   case 380:
-
-    {report_conflicting_close("a closing loop is expected before endif",'e');}
-
+           {report_conflicting_close("a closing loop is expected before endif",'e');}
     break;
 
   case 381:
-
-    {report_conflicting_close("a closing loop is expected before wend",'w');}
-
+          {report_conflicting_close("a closing loop is expected before wend",'w');}
     break;
 
   case 382:
-
-    {report_conflicting_close("a closing loop is expected before until",'l');}
-
+           {report_conflicting_close("a closing loop is expected before until",'l');}
     break;
 
   case 383:
-
-    {report_conflicting_close("a closing loop is expected before next",'n');}
-
+          {report_conflicting_close("a closing loop is expected before next",'n');}
     break;
 
   case 384:
-
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();}
-
+                   {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();}
     break;
 
   case 385:
-
-    {add_command(cDECIDE);
+              {add_command(cDECIDE);
 	      pushlabel();}
-
     break;
 
   case 387:
-
-    {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
-
+              {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 388:
-
-    {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
-
+          {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
   case 389:
-
-    {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();}
-
+                     {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();}
     break;
 
   case 391:
-
-    {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
-
+               {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 392:
-
-    {missing_until--;add_command(cDECIDE);popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
-
+                      {missing_until--;add_command(cDECIDE);popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
   case 393:
-
-    {report_conflicting_close("a closing until is expected before endif",'e');}
-
+           {report_conflicting_close("a closing until is expected before endif",'e');}
     break;
 
   case 394:
-
-    {report_conflicting_close("a closing until is expected before wend",'w');}
-
+          {report_conflicting_close("a closing until is expected before wend",'w');}
     break;
 
   case 395:
-
-    {report_conflicting_close("a closing until is expected before loop",'l');}
-
+          {report_conflicting_close("a closing until is expected before loop",'l');}
     break;
 
   case 396:
-
-    {report_conflicting_close("a closing until is expected before next",'n');}
-
+          {report_conflicting_close("a closing until is expected before next",'n');}
     break;
 
   case 397:
-
-    {add_command(cDECIDE);storelabel();pushlabel();}
-
+                          {add_command(cDECIDE);storelabel();pushlabel();}
     break;
 
   case 398:
-
-    {missing_endif++;missing_endif_line=yylineno;}
-
+                 {missing_endif++;missing_endif_line=yylineno;}
     break;
 
   case 399:
-
-    {swap();matchgoto();swap();poplabel();}
-
+                                                                               {swap();matchgoto();swap();poplabel();}
     break;
 
   case 400:
-
-    {poplabel();}
-
+                     {poplabel();}
     break;
 
   case 402:
-
-    {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
-
+               {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 403:
-
-    {missing_endif--;}
-
+           {missing_endif--;}
     break;
 
   case 404:
-
-    {report_conflicting_close("a closing endif is expected before wend",'w');}
-
+          {report_conflicting_close("a closing endif is expected before wend",'w');}
     break;
 
   case 405:
-
-    {report_conflicting_close("a closing endif is expected before until",'l');}
-
+           {report_conflicting_close("a closing endif is expected before until",'l');}
     break;
 
   case 406:
-
-    {report_conflicting_close("a closing endif is expected before loop",'l');}
-
+          {report_conflicting_close("a closing endif is expected before loop",'l');}
     break;
 
   case 407:
-
-    {report_conflicting_close("a closing endif is expected before next",'n');}
-
+          {report_conflicting_close("a closing endif is expected before next",'n');}
     break;
 
   case 408:
-
-    {in_short_if++;add_command(cDECIDE);pushlabel();}
-
+                          {in_short_if++;add_command(cDECIDE);pushlabel();}
     break;
 
   case 410:
-
-    {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
-
+                  {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
     break;
 
   case 411:
-
-    {poplabel();}
-
+                   {poplabel();}
     break;
 
   case 415:
-
-    {add_command(cDECIDE);pushlabel();}
-
+        {add_command(cDECIDE);pushlabel();}
     break;
 
   case 416:
-
-    {swap();matchgoto();swap();poplabel();}
-
+        {swap();matchgoto();swap();poplabel();}
     break;
 
   case 421:
-
-    {add_command(cCHKPROMPT);}
-
+              {add_command(cCHKPROMPT);}
     break;
 
   case 423:
-
-    {create_myread('d',tileol);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+               {create_myread('d',tileol);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 424:
-
-    {create_myread('d',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNARRAY);}
-
+        {create_myread('d',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNARRAY);}
     break;
 
   case 425:
-
-    {create_myread('s',tileol);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+            {create_myread('s',tileol);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 426:
-
-    {create_myread('s',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNSTRINGARRAY);}
-
+        {create_myread('s',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNSTRINGARRAY);}
     break;
 
   case 429:
-
-    {create_readdata('d');add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+                  {create_readdata('d');add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 430:
-
     {create_readdata('d');create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNARRAY);}
-
     break;
 
   case 431:
-
-    {create_readdata('s');add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
-
+            {create_readdata('s');add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
   case 432:
-
     {create_readdata('s');create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNSTRINGARRAY);}
-
     break;
 
   case 433:
-
-    {create_strdata((yyvsp[0].string));}
-
+                  {create_strdata((yyvsp[0].string));}
     break;
 
   case 434:
-
-    {create_dbldata((yyvsp[0].fnum));}
-
+          {create_dbldata((yyvsp[0].fnum));}
     break;
 
   case 435:
-
-    {create_strdata((yyvsp[0].string));}
-
+                          {create_strdata((yyvsp[0].string));}
     break;
 
   case 436:
-
-    {create_dbldata((yyvsp[0].fnum));}
-
+                       {create_dbldata((yyvsp[0].fnum));}
     break;
 
   case 440:
-
-    {create_print('s');}
-
+                      {create_print('s');}
     break;
 
   case 441:
-
-    {create_print('s');}
-
+                                    {create_print('s');}
     break;
 
   case 442:
-
-    {create_print('d');}
-
+       {create_print('d');}
     break;
 
   case 443:
-
-    {create_print('u');}
-
+                             {create_print('u');}
     break;
 
   case 444:
-
-    {create_print('U');}
-
+                                                           {create_print('U');}
     break;
 
   case 445:
-
-    {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,1);}
-
+                       {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,1);}
     break;
 
   case 446:
-
-    {create_pps(cPOPSTREAM,0);}
-
+                                                                                                                               {create_pps(cPOPSTREAM,0);}
     break;
 
   case 447:
-
-    {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,1);}
-
+                {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,1);}
     break;
 
   case 448:
-
-    {create_pps(cPOPSTREAM,0);}
-
+                                                                                {create_pps(cPOPSTREAM,0);}
     break;
 
   case 449:
-
-    {create_pps(cPUSHSTREAM,1);}
-
+                           {create_pps(cPUSHSTREAM,1);}
     break;
 
   case 450:
-
-    {create_pps(cPOPSTREAM,0);}
-
+                                                                  {create_pps(cPOPSTREAM,0);}
     break;
 
   case 451:
-
-    {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
-
+                                          {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
     break;
 
   case 452:
-
-    {create_pps(cPOPSTREAM,0);}
-
+                                                                                                                                        {create_pps(cPOPSTREAM,0);}
     break;
 
   case 453:
-
     {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
-
     break;
 
   case 454:
-
-    {create_pps(cPOPSTREAM,0);}
-
+                                                                               {create_pps(cPOPSTREAM,0);}
     break;
 
   case 455:
-
-    {create_pushstr("?");create_print('s');}
-
+                    {create_pushstr("?");create_print('s');}
     break;
 
   case 456:
-
-    {create_pushstr((yyvsp[0].string));create_print('s');}
-
+            {create_pushstr((yyvsp[0].string));create_print('s');}
     break;
 
   case 457:
-
-    {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                               {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 458:
-
-    {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,0);}
-
+                {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 459:
-
-    {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,0);}
-
+                {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,0);}
     break;
 
   case 460:
-
-    {create_pps(cPUSHSTREAM,0);}
-
+                           {create_pps(cPUSHSTREAM,0);}
     break;
 
   case 461:
-
-    {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+             {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 462:
-
-    {create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                      {create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 463:
-
-    {create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                            {create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 464:
-
-    {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                          {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 465:
-
-    {add_command(cMOVE);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                   {add_command(cMOVE);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 466:
-
-    {add_command(cMOVE);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                                            {add_command(cMOVE);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 467:
-
-    {add_command(cMOVE);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                                                                  {add_command(cMOVE);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 468:
-
-    {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE);}
-
+                                                   {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE);}
     break;
 
   case 469:
-
-    {create_colour(2);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                                            {create_colour(2);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 470:
-
-    {create_colour(3);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
-
+                                                                                                  {create_colour(3);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
   case 473:
-
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
-
+                            {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
   case 474:
-
-    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
-
+                                   {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
   case 475:
-
-    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
-
+                             {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
   case 476:
-
-    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
-
+                                    {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
 
@@ -5910,14 +5195,13 @@ yyreduce:
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
-
-  yyn = yyr1[yyn];
-
-  yystate = yypgoto[yyn - YYNTOKENS] + *yyssp;
-  if (0 <= yystate && yystate <= YYLAST && yycheck[yystate] == *yyssp)
-    yystate = yytable[yystate];
-  else
-    yystate = yydefgoto[yyn - YYNTOKENS];
+  {
+    const int yylhs = yyr1[yyn] - YYNTOKENS;
+    const int yyi = yypgoto[yylhs] + *yyssp;
+    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
+               ? yytable[yyi]
+               : yydefgoto[yylhs]);
+  }
 
   goto yynewstate;
 
@@ -5949,7 +5233,7 @@ yyerrlab:
           {
             if (yymsg != yymsgbuf)
               YYSTACK_FREE (yymsg);
-            yymsg = (char *) YYSTACK_ALLOC (yymsg_alloc);
+            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
             if (!yymsg)
               {
                 yymsg = yymsgbuf;
@@ -6000,12 +5284,10 @@ yyerrlab:
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
 yyerrorlab:
-
-  /* Pacify compilers like GCC when the user code never invokes
-     YYERROR and the label yyerrorlab therefore never appears in user
-     code.  */
-  if (/*CONSTCOND*/ 0)
-     goto yyerrorlab;
+  /* Pacify compilers when the user code never invokes YYERROR and the
+     label yyerrorlab therefore never appears in user code.  */
+  if (0)
+    YYERROR;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -6072,12 +5354,14 @@ yyacceptlab:
   yyresult = 0;
   goto yyreturn;
 
+
 /*-----------------------------------.
 | yyabortlab -- YYABORT comes here.  |
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
   goto yyreturn;
+
 
 #if !defined yyoverflow || YYERROR_VERBOSE
 /*-------------------------------------------------.
@@ -6089,6 +5373,10 @@ yyexhaustedlab:
   /* Fall through.  */
 #endif
 
+
+/*-----------------------------------------------------.
+| yyreturn -- parsing is finished, return the result.  |
+`-----------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
@@ -6105,7 +5393,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[*yyssp], yyvsp, yylsp);
+                  yystos[+*yyssp], yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow

@@ -1,4 +1,5 @@
-# Ansible playbook to install tools to build and develop yabasic
+# Ansible playbook to install tools to build and
+# develop yabasic under ubuntu
 # Run this with: ansible-playbook prep2build.yaml
 ---
 # hosts could have been "remote" or "all" as well
@@ -24,6 +25,10 @@
         - xorg
         - openbox
         - libx11-dev
+        - libxt-dev
+        - bison
+        - flex
+        - stress-ng
       state: latest
       update_cache: true
   - name: Install Gems
