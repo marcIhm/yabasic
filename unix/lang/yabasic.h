@@ -26,7 +26,7 @@
 #error UNIX and WINDOWS are defined together; check your compiler settings
 #endif
 /* ------------- includes ---------------- */
-#include <config.h>
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>

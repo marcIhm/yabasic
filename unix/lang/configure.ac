@@ -1,6 +1,6 @@
 
 dnl  Process this file with 'autoconf' to get a configure-script
-dnl  Maybe run before (which constitutes a basic version if autogen.sh):
+dnl  Maybe run these two lines before:
 dnl    autoreconf --install
 dnl    automake --add-missing --copy
 

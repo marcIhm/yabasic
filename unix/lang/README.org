@@ -17,3 +17,7 @@ Some hints:
 - To apply changes in configure.ac
   - autoconf
   - If this doesn't help, try autoreconf -i
+
+- On first build after a fresh checkout from github
+  - autoconf
+  - ./configure
