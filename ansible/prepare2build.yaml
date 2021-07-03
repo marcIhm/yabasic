@@ -1,0 +1,38 @@
+# Ansible playbook to install tools to build and develop yabasic
+# Run this with: ansible-playbook prep2build.yaml
+---
+# hosts could have been "remote" or "all" as well
+- hosts: localhost
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+  - name: Install Packages
+    apt:
+      pkg:
+        - emacs-nox
+        - rake
+        - make
+        - gcc
+        - autoconf
+        - pkg-config
+        - libtool
+        - libffi7
+        - libffi-dev
+        - libncurses6
+        - libncurses-dev
+        - xorg
+        - openbox
+        - libx11-dev
+      state: latest
+      update_cache: true
+  - name: Install Gems
+    community.general.gem:
+      name: nokogiri
+      user_install: no
+      state: present
+  - name: Symlink for libffi
+    file:
+      src: /usr/lib/x86_64-linux-gnu/libffi.so.7
+      dest: /usr/lib/libffi.so
+      state: link

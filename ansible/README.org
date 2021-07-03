@@ -1,0 +1,6 @@
+
+First install some ansible-stuff:
+  
+  ansible-galaxy collection install community.general
+
+then see the yaml-files for instructions on how to run them with ansible.
