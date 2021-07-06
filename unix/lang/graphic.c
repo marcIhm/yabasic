@@ -1939,7 +1939,7 @@ void
 putbit (void)
 {
     /* put rect into win */
-    char *mode, *pm, *bitstring, *pb;
+    char *mode, *pm, *bitstring;
     char m;
     int xe, ye, we, he;
     int x, y, xdest, ydest, w, h, n;

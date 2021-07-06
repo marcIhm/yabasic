@@ -1626,7 +1626,6 @@ static double
 peek (char *dest)		/* peek into internals */
 {
     char *s;
-    time_t now;
 
     for (s = dest; *s; s++) {
         *s = tolower ((int) *s);

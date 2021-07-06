@@ -187,11 +187,9 @@ union FFI_VAL **pvalues;     /* pointers to values */
 void
 frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute function from external library */
 {
-    char *call_err;
     int ffi_ret;
     union FFI_VAL ffi_result;
     void *fu;
-    int is_struct_not_string; /* distinguish return types */
     
 
     last_frnfn_call_error_text[0] = '\0';
@@ -361,10 +359,10 @@ frnbf_dump (int type)  /* dump a foreign buffer into readable form */
 void
 frnbf_set ()  /* set a value within a foreign buffer */
 {
-    int size;
+    size_t size;
     void *ptr;
     double val;
-    int offset;
+    size_t offset;
     char *type;
     ffi_type *valtype;
 
@@ -415,9 +413,9 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
 void
 frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 {
-    int size1,size2;
+    size_t size1,size2;
     void *ptr1,*ptr2;
-    int offset;
+    size_t offset;
     ffi_type *bufftype;
 
     if (!frnbf_parse_handle(pop (stSTRING)->pointer, &size2, &ptr2)) return;
@@ -441,9 +439,9 @@ frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 double
 frnbf_get ()  /* get a value from a foreign buffer */
 {
-    int size;
+    size_t size;
     void *ptr;
-    int offset;
+    size_t offset;
     char *type;
     ffi_type *valtype;
 
