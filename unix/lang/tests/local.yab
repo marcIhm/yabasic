@@ -1,0 +1,14 @@
+
+recurse(1)
+
+sub recurse(x)
+  local i
+
+  if x>4 return 
+
+  for i=1 to 2
+    recurse(x+1)
+    if i>2 error "Improper handling of local variable"
+  next i
+  return
+end sub

@@ -48,9 +48,6 @@
 /* Define to 1 if you have the <ncurses.h> header file. */
 #undef HAVE_NCURSES_H
 
-/* Define to 1 if you have the `perf_event_open' function. */
-#undef HAVE_PERF_EVENT_OPEN
-
 /* Define to 1 if you have the <prctl.h> header file. */
 #undef HAVE_PRCTL_H
 

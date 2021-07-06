@@ -175,7 +175,7 @@ void start_symref_chain (void)
 void end_symref_chain (void)
 /* terminate current list of commands referencing symbols */
 {
-    last_cmd->next_symref=NULL;
+    last_cmd->next_symref=first_symref;
 }
 
 
