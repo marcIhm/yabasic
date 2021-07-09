@@ -3972,7 +3972,7 @@ static void yy_load_buffer_state  (void)
 
 /* %if-c-only */
 
-        b->yy_is_interactive = file ? (_isatty( fileno(file) ) > 0) : 0;
+        b->yy_is_interactive = file ? (_isatty( _fileno(file) ) > 0) : 0;
     
 /* %endif */
 /* %if-c++-only */

@@ -68,6 +68,9 @@
     <IncludePath>C:\work\yabasic\windows\lang;$(IncludePath)</IncludePath>
     <LibraryPath>C:\work\yabasic\windows\lang;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <XPDeprecationWarning>false</XPDeprecationWarning>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -109,6 +112,7 @@
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;libffi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.LIB</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,6 +149,7 @@
       <SubSystem>Console</SubSystem>
       <OutputFile>.\Release\yabasic.exe</OutputFile>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;libffi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
