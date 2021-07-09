@@ -52,7 +52,7 @@ version = nil
 desc 'Collect Versions'
 task :versions => :build do
   File.open('version.yab','w') { |f| f.puts 'open 1,"../yabasic.version","w":print #1 peek$("version");:close 1:exit' }
-  sh 'cygstart --wait ./lang/Release/yabasic.exe version.yab'
+  sh './lang/Release/yabasic.exe version.yab'
   version=File.new('../yabasic.version').read.chomp.strip
   puts "Version = " + version
 end
@@ -67,19 +67,25 @@ end
 
 desc 'Pack binaries'
 task :pack => :tests do
-  fail "\n\n*** This should be run as admin user ! ***\n\n" unless %x{id -G}.match(/\s(114|544)\s/)
-  cp '../unix/lang/LICENSE', '/cygdrive/c/Windows/Temp/LICENSE.txt'
+#  fail "\n\n*** This should be run as admin user ! ***\n\n" unless %x{id -G}.match(/\s(114|544)\s/)
+  cp '../unix/lang/LICENSE', '/mnt/c/Windows/Temp/LICENSE.txt'
   File.open('yabasic-setup.SED','w') do |file|
     file.write ERB.new(File.read('resources/yabasic-setup.SED.erb')).result(binding)
   end
   File.open('resources/yabver.txt','w') { |f| f.puts version }
-  sh 'iexpress /N yabasic-setup.SED'
+  setup_exe = "/mnt/c/work/yabasic/products/yabasic-#{version}-setup.exe"
+  rm setup_exe if File.exist?(setup_exe)
+  sh 'powershell.exe -File C:/work/yabasic/windows/run_iexpress.ps1'
+  while !File.exist?(setup_exe)
+    puts "Waiting for #{setup_exe} to appear"
+    sleep 2
+  end
 end
 
 desc 'Create zip-file, e.g. for Windows XP'
 task :zip => :pack do
   zipdir = 'yabasic-zip'
-  yabdir = '/cygdrive/c/work/yabasic/windows'
+  yabdir = '/mnt/c/work/yabasic/windows'
   zipfile = "../products/yabasic-#{version}.zip"
   rm_r zipdir if File.exist?(zipdir)
   rm_r zipfile if File.exist?(zipfile)
@@ -91,7 +97,7 @@ task :zip => :pack do
     "#{yabdir}/resources/yabico.ico",
     "#{yabdir}/../products/yabasic.htm",
     "#{yabdir}/../unix/lang/demo.yab",
-    "/cygdrive/c/Windows/Temp/LICENSE.txt" ].each {|file|
+    "/mnt/c/Windows/Temp/LICENSE.txt" ].each {|file|
     cp file, zipdir
   }
   sh "zip #{zipfile} #{zipdir}/*"
