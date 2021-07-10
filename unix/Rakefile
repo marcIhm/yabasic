@@ -67,7 +67,14 @@ end
 desc 'Create html doc from xml'
 task :html => :xml do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
-  sh 'xsltproc --stringparam  html.stylesheet "docbook.css" doc/mystyle.xsl doc/_yabasic.xml >lang/yabasic.htm'
+  sh 'xsltproc --stringparam html.stylesheet docbook.css doc/mystyle2.xsl doc/_yabasic.xml >lang/yabasic.htm'
+  # The above produces A0 for &nbsp; to avoid invalid utf8 we need to
+  # replace this with simple space and verify with isutf8
+  hex = File.open("lang/yabasic.htm","rb") {|f| f.read.unpack("H*")[0].scan(/../)}
+  hex = hex.map {|x| x == 'a0' ? '20' : x}
+  File.open("lang/yabasic.htm","wb") {|f| f.write([hex.join].pack("H*"))}
+  sh "isutf8 lang/yabasic.htm"
+    
 end
 
 desc 'Create man page'

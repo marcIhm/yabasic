@@ -141,12 +141,12 @@ task :upload => :tag do
   puts "Please enter password for 2484.de@ftp.2484.de to continue: "
   password = STDIN.noecho(&:gets).chomp
   ftp.login('2484.de',password)
-  Dir.chdir('/work/yabasic/products/web') do
+  Dir.chdir('../products/web') do
     ftp.chdir('yabasic')
     files = Dir['*.html'] + %w{yabasic.htm docbook.css}
     files.each do |f|
-      ftp.puttextfile(f)
       print f," "
+      ftp.puttextfile(f)
     end
     Dir.chdir('download') do
       puts "\n\nUploading binaries:"

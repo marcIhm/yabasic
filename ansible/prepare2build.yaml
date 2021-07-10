@@ -31,6 +31,8 @@
         - stress-ng
         - xsltproc
         - rpm
+        - docbook-xsl
+        - moreutils
       state: latest
       update_cache: true
   - name: Install Gems

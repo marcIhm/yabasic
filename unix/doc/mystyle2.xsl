@@ -4,8 +4,7 @@
                 xmlns="http://www.w3.org/TR/xhtml1/transitional"
                 exclude-result-prefixes="#default">
 
-  <xsl:import href="/usr/share/xml/docbook/stylesheet/nwalsh/current/xhtml/docbook.xsl"/>
-  
+  <xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl/html/docbook.xsl"/>
 <xsl:template match="preface|chapter|appendix|article" mode="toc">
   <xsl:param name="toc-context" select="."/>
 
