@@ -29,6 +29,7 @@
         - bison
         - flex
         - stress-ng
+        - xsltproc
       state: latest
       update_cache: true
   - name: Install Gems

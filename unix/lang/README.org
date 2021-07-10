@@ -19,5 +19,6 @@ Some hints:
   - If this doesn't help, try autoreconf -i
 
 - On first build after a fresh checkout from github
+  - aclocal
   - autoconf
   - ./configure

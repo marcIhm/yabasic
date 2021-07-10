@@ -190,6 +190,9 @@ frnfn_call (int type,double *pvalue,char **ppointer)  /* load and execute functi
     int ffi_ret;
     union FFI_VAL ffi_result;
     void *fu;
+#ifdef UNIX
+    char *call_err;
+#endif
     
 
     last_frnfn_call_error_text[0] = '\0';
@@ -359,7 +362,7 @@ frnbf_dump (int type)  /* dump a foreign buffer into readable form */
 void
 frnbf_set ()  /* set a value within a foreign buffer */
 {
-    size_t size;
+    int size;
     void *ptr;
     double val;
     size_t offset;
@@ -373,7 +376,7 @@ frnbf_set ()  /* set a value within a foreign buffer */
     if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return;
     if (!frnbf_verify_not_null(size)) return;
     if (offset<0 || ( size >= 0 && offset+valtype->size > size)) {
-	sprintf(estring, "overrun: offset of %d plus size of type %s = %lu exceeds size of buffer %d",
+	sprintf(estring, "overrun: offset of %ld plus size of type %s = %lu exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, estring);
 	return;
@@ -413,7 +416,7 @@ frnbf_set2 ()  /* set a string within a foreign buffer */
 void
 frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 {
-    size_t size1,size2;
+    int size1,size2;
     void *ptr1,*ptr2;
     size_t offset;
     ffi_type *bufftype;
@@ -424,7 +427,7 @@ frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
     frn_decode_ffi_type("buffer", &bufftype, NULL, ktCOMPLEX);
     if (!frnbf_verify_not_null(size1)) return;
     if (offset<0 || (size1 >= 0 && offset+bufftype->size > size1)) {
-	sprintf(estring, "overrun: offset of %d plus size of pointer = %lu exceeds size of buffer %d",
+	sprintf(estring, "overrun: offset of %ld plus size of pointer = %lu exceeds size of buffer %d",
 		offset, bufftype->size, size1);
 	error(sERROR, estring);
 	return;
@@ -439,7 +442,7 @@ frnbf_set_buffer ()  /* set a buffer within a foreign buffer */
 double
 frnbf_get ()  /* get a value from a foreign buffer */
 {
-    size_t size;
+    int size;
     void *ptr;
     size_t offset;
     char *type;
@@ -451,7 +454,7 @@ frnbf_get ()  /* get a value from a foreign buffer */
     if (!frn_decode_ffi_type(type, &valtype, NULL, ktSIMPLE)) return 0.0;
     if (!frnbf_verify_not_null(size)) return 0.0;
     if (offset<0 || (size >= 0 && offset+valtype->size > size)) {
-	sprintf(estring, "overrun: offset of %d plus size of type %s = %lu exceeds size of buffer %d",
+	sprintf(estring, "overrun: offset of %ld plus size of type %s = %lu exceeds size of buffer %d",
 		offset, type, valtype->size, size);
 	error(sERROR, estring);
 	return 0.0;

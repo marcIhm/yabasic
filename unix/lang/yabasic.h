@@ -25,6 +25,9 @@
 #if defined(UNIX) && defined(WINDOWS)
 #error UNIX and WINDOWS are defined together; check your compiler settings
 #endif
+#ifdef WINDOWS
+#define _CRT_NONSTDC_NO_WARNINGS
+#endif
 /* ------------- includes ---------------- */
 #include "config.h"
 #include <stdio.h>
