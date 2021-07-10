@@ -57,15 +57,37 @@
 
 * Building Yabasic
 
+  To build yabasic just under Unix, please read the matching section
+  further down below. In a nutshell it is just the usual make.
+
+  This (hopefully) applies to linux, bsd and commercial variants of 
+  unix, including MacOS.
+
+  The rest of this section gives some hints on the full building
+  process of yabasic including windows, linux and the pages of the
+  website.
+
+  For this everything runs on windows, but is started from within wsl
+  (windows subsystem for linux); this even applies to building the
+  windows binaries with visual studio. As a result, you will need to
+  install both before starting.
+
+  The repository contains a directory named ansible, with the
+  information to install the necessary prerequisites.
+  
+  If you build both for Windows and linux, you should check out the
+  repository into c:\work\yabasic. Your should use the same repo from
+  within wsl too.
+  
 ** Building with rake
 
    Yabasic's build process relies on rake. Rake is similar to make,
    but its Rakefiles (and the tool itself) are written in ruby.
    Therefore you need to install ruby and rake to build yabasic.
 
-   Each of the three top-level directories (see above) has its own
-   Rakefile, and just typing 'rake' should be enough to build the
-   respective components.
+   Each of the three top-level directories (windows, unix and web) has
+   its own Rakefile, and just typing 'rake' should be enough to build
+   the respective components.
 
 *** A Note on .erb-Files
 
@@ -78,7 +100,6 @@
     So if you intend to edit any of those files, make sure, that you
     rather edit the corresponding '.erb' file; because otherwise your
     changes will be overwritten by the next Rakefile-processing.
-
 
 ** Building under Unix
 
@@ -96,15 +117,8 @@
 
 ** Building under Windows
    
-   Yabasic is be compiled with Visual Studio 2015, which can be
+   Yabasic is be compiled with Visual Studio 2019, which can be
    installed free of charge.
-
-   The project files assume 'C:\work\yabasic' as the git checkout
-   directory.
-
-   The rest of the windows-toolchain relies on the presence of a
-   fairly complete cygwin-installation, including ruby. The
-   git-directory should be symlinked to /work/yabasic.
 
    All steps are automated with rake (ruby make); so typically you
    just need to invoke rake, which e.g. invokes the Visual Studio
@@ -112,41 +126,33 @@
    
 ** A typical building sequence
 
-   To build yabasic, go through the steps below; please note that this involves changing
-   directories as well as platforms. The process is mostly automated, only asking for
-   confirmation at certain key-points.  Depending on your changes and desired products, you may
-   be able to skip certain steps. See the previous chapters for a more detailed description of
-   the build process.
+   To build yabasic, go through the steps below. The process is mostly
+   automated, only asking for confirmation at certain key-points.
+   Depending on your changes and desired products, you may be able to
+   skip certain steps.
 
-   The list below contains two shorthands: "do git" and "do rake"; their meaning:
-   
-   - do git :: git pull/add/commit/push appropriately, as all changes between the platforms unix
-               and windows are only propagated by git; frequent commit messages are "new
-               version" or "built on windows/linux". A more meaningful message (taken from the
-               file NEWS) will be added when creating a new tag (during do rake) below.
-   - do rake :: rake (without arguments)  as all tasks are automated within the Rakefile.
+   (Type "rake h" to read this text again from within any directory)
 
-   Here the detailed steps (type "rake h" to read them again from any directory):
+   All steps are done from within wsl (windows subsystem for linux),
+   only the directory changes.
 
-   - Implement some features, fix some bugs, write tests, improve the docu
-   - Under Unix in directory unix/lang:
-     - do git, as there might be prior changes under windows
+   - Implement some features, fix some bugs, write tests, improve the
+     docu; the files for nearly all of the features of yabasic can be
+     found in directory unix/lang.
+   - In directory unix/lang:
      - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
      - do rake; this does:
        - Run tests
        - Create tar, rpm and deb
-     - do git
-   - Under Windows as administrator (!) in directory windows:
-     - do git
+   - In directory windows:
      - do rake; this does:
        - Build windows executable
-       - Create setup.exe and zip-files
-   - Under Windows in directory web: 
+       - Create setup.exe and zip-files (which will ask for admin priveleges)
+   - In directory web: 
      - do rake; this does:
        - Create new git tag and use the content of NEWS as the message
        - Upload everything to www.yabasic.de
-     - do git
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
           

@@ -30,13 +30,16 @@
         - flex
         - stress-ng
         - xsltproc
+        - rpm
       state: latest
       update_cache: true
   - name: Install Gems
     community.general.gem:
       name: nokogiri
       user_install: no
-      state: present
+    community.general.gem:
+      name: fpm
+      user_install: no
   - name: Symlink for libffi
     file:
       src: /usr/lib/x86_64-linux-gnu/libffi.so.7

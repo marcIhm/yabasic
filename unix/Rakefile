@@ -193,21 +193,11 @@ task :rpm => :products_dir do
   end
 end
 
-desc 'Cleanup, sync and show products'
+desc 'Cleanup and show products'
 task :default => [:news,:check, 'lang/yabasic.1', :html, :rpm, :sources] do
   rm Dir.glob('../products/web/download/*')
   prod_globs = %w( yabasic*.x86_64.rpm yabasic*amd64.deb yabasic*.tar.gz )
   prod_globs.each { |glob| cleanup "../products/#{glob}" }
-  sync_dest = '/work/yabasic/products'
-  if File.directory?(sync_dest)
-    Dir['../products/*'].each do |p|
-      cp p, sync_dest
-    end
-    prod_globs.each { |glob| cleanup sync_dest+"/"+glob }
-    cp 'lang/yabasic.htm', sync_dest
-    sh "ls -l #{sync_dest}"
-  else
-    puts "Sync destination #{sync_dest} not present !"
-  end
+  sh "ls -l ../products"
 end
 
