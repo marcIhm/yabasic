@@ -67,14 +67,8 @@ end
 desc 'Create html doc from xml'
 task :html => :xml do
   ENV['SGML_CATALOG_FILES']='/etc/xml/catalog'
-  sh 'xsltproc --stringparam html.stylesheet docbook.css doc/mystyle2.xsl doc/_yabasic.xml >lang/yabasic.htm'
-  # The above produces A0 for &nbsp; to avoid invalid utf8 we need to
-  # replace this with simple space and verify with isutf8
-  hex = File.open("lang/yabasic.htm","rb") {|f| f.read.unpack("H*")[0].scan(/../)}
-  hex = hex.map {|x| x == 'a0' ? '20' : x}
-  File.open("lang/yabasic.htm","wb") {|f| f.write([hex.join].pack("H*"))}
-  sh "isutf8 lang/yabasic.htm"
-    
+  sh 'xsltproc --stringparam html.stylesheet docbook.css doc/mystyle.xsl doc/_yabasic.xml >lang/yabasic.htm'
+  cp 'lang/yabasic.htm', '../products'
 end
 
 desc 'Create man page'
@@ -159,7 +153,7 @@ task :check => :tests do
 end
 
 desc 'Collect Versions'
-task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configure',:news] do
+task :versions => [:git,:html,:tests,'lang/Makefile','lang/configure',:news] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
   vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
   vs['NEWS']=news.version;
@@ -169,13 +163,8 @@ task :versions => [:git,'lang/yabasic.htm',:tests,'lang/Makefile','lang/configur
   fail "Mismatch between versions of 'NEWS' and 'configure.ac'" if vs['NEWS'] != vs['configure.ac']
 end
 
-desc 'Create directory to collect products'
-task :products_dir => [:news,:versions] do
-  mkdir '../products' unless Dir.exists?('../products')
-end
-
 desc 'Create tar with sources'
-task :sources => :products_dir do
+task :sources => [:news,:versions] do
   cd 'lang' do
     rm 'tests/bind_import'
     rm 'tests/nested_bind_import'
@@ -185,7 +174,7 @@ task :sources => :products_dir do
 end
   
 desc 'Create rpm and debian'
-task :rpm => :products_dir do
+task :rpm => :sources do
   cd "lang" do
     sh "make install DESTDIR=#{Dir.pwd}/pkg"
     mkdir_p "pkg/#{yab_app_dir}"
@@ -205,6 +194,6 @@ task :default => [:news,:check, 'lang/yabasic.1', :html, :rpm, :sources] do
   rm Dir.glob('../products/web/download/*')
   prod_globs = %w( yabasic*.x86_64.rpm yabasic*amd64.deb yabasic*.tar.gz )
   prod_globs.each { |glob| cleanup "../products/#{glob}" }
-  sh "ls -l ../products"
+  sh "ls -lrt ../products"
 end
 

@@ -5,16 +5,17 @@ require 'fileutils'
 include FileUtils
 require 'erb'
 require_relative '../unix/utils.rb'
-require 'net/ftp'
 require 'io/console'
 import '../help_build.rake'
 
 desc 'Check git'
+git_pending = false
 task :git do 
   sh "/usr/bin/git diff --exit-code --quiet" do |ok,res|
     if !ok
       sh "git status"
       warn "Uncommited local changes, please fix with 'git add' etc."
+      git_pending = true
     end
   end
 end
@@ -43,7 +44,6 @@ task :version => :git do
 end
 
 # colors from https://color.adobe.com
-
 colors_legacy = { :toc_bg => "#FFBD7C",
                   :head_bg => "#79BD8F",
                   :head_biggest => "#00A388",
@@ -71,7 +71,7 @@ task :templates => :version do
   end
 
   structure=File.read('structure.html.erb')
-  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html faq.html history.html log.html manual_yabasic.html new_docu.html old_docu.html mit.html changing.html ).each do |name|
+  %w( index.html download.html whatsnew.html support.html screenshots.html copyright.html related.html faq.html history.html log.html manual_yabasic.html mit.html changing.html ).each do |name|
     if name == 'manual_yabasic.html'
       frame_html = 'yabasic.htm'
     elsif name == 'index.html'
@@ -119,56 +119,79 @@ end
 
 desc 'Create and push new tag'
 task :tag => :copy do
-  tags = %x{ git tag --list}.lines.map(&:chomp)
-  new_tag = File.open('../yabasic.version').read
-  if tags.include?(new_tag)
-    puts "\nTag #{new_tag} is already present.\n"
-  else
-    puts "\nCreating new tag #{new_tag} with this message:"
-    File.open('../tag-message').read.lines.each {|l| print ">  ",l}
-    puts "Press RETURN to continue: "
+  if git_pending
+    puts "\n\n**** Changes for git still pending (see above), will not create a new Tag ****\n\n"
+    puts 'Press RETURN to continue: '
     gets
-    sh "git tag -a #{new_tag} -F ../tag-message" do |ok,res|
-      fail "Could not create tag: #{res}" unless ok
+  else
+    tags = %x{ git tag --list}.lines.map(&:chomp)
+    new_tag = File.open('../yabasic.version').read
+    if tags.include?(new_tag)
+      puts "\nTag #{new_tag} is already present.\n"
+    else
+      puts "\nCreating new tag #{new_tag} with this message:"
+      File.open('../tag-message').read.lines.each {|l| print ">  ",l}
+      puts 'Press RETURN to continue: '
+      gets
+      sh "git tag -a #{new_tag} -F ../tag-message" do |ok,res|
+        fail "Could not create tag: #{res}" unless ok
+      end
     end
   end
 end
 
 desc 'Upload new files'
 task :upload => :tag do
-  ftp = Net::FTP.new('ftp.2484.de')
-  puts "\nUploading html-files:"
-  puts "Please enter password for 2484.de@ftp.2484.de to continue: "
+  puts "\nUploading html-files ..."
+  puts "Please enter password for 2484.de@ftp.2484.de to continue   ** OR **   just hit RETURN to skip upload: "
   password = STDIN.noecho(&:gets).chomp
-  ftp.login('2484.de',password)
-  Dir.chdir('../products/web') do
-    ftp.chdir('yabasic')
-    files = Dir['*.html'] + %w{yabasic.htm docbook.css}
-    files.each do |f|
-      print f," "
-      ftp.puttextfile(f)
-    end
-    Dir.chdir('download') do
-      puts "\n\nUploading binaries:"
-      puts "Press RETURN to continue: "
-      gets
-      ftp.chdir('download')
-      Dir['???*'].each do |f|
-        ftp.putbinaryfile(f)
-        print f," "
+  if password.length == 0
+    puts "\n\n**** Skipping upload ****\n\n"
+  else
+    ENV['CURLPW'] = password
+    template = 'curl --insecure "ftp://ftp.2484.de/%s/" --user "2484.de:$CURLPW" --upload-file %s'
+    
+    puts 'Transfering files from products/web'
+    Dir.chdir('../products/web') do
+      files = %w{yabasic.htm docbook.css} + Dir['*.html']
+      files.each do |file|
+        puts file
+        sh ( template % [ 'yabasic', file ] )
+      end
+      Dir.chdir('download') do
+        puts "\n\nUploading binaries ..."
+        puts 'Press RETURN to continue: '
+        gets
+        Dir['???*'].each do |file|
+          puts file
+          sh ( template % [ 'yabasic/download', file ] )
+        end
       end
     end
   end
-  ftp.close
 end
 
 desc 'Invoke site'
-task :default => :upload do
-  puts "\nBrowsing to www.yabasic.de; if satisfied you should return here to accept pushing the new tag"
-  puts "Press RETURN to continue: "
+task :browse => :upload do
+  puts 'Starting adsf locally'
+  system 'killall adsf'
+  system 'cd ../products/web ; nohup adsf -p 3000 &'
+  puts "\nBrowsing to http://www.yabasic.de and to adsf serving local files"
+  puts "\n\nPress RETURN    ** TWICE **    to continue: \n\n"
   gets
-  sh 'cygstart cmd /c "start microsoft-edge:http://www.yabasic.de"'
-  puts "Press RETURN to push tag: "
-  gets
-  sh '/usr/bin/git push --tags'
+  sh '"/mnt/c/Program Files/Mozilla Firefox/firefox.exe" localhost:3000 http://www.yabasic.de '
+end
+
+desc 'Push tag'
+task :default => :browse do
+  if git_pending
+    puts "\n\n**** Changes for git still pending, no new tag has been created; cannot push it ****\n\n"
+    puts 'Press RETURN to continue: '
+    gets
+  else
+    puts "Press RETURN to push tag: "
+    gets
+    sh '/usr/bin/git push --tags'
+  end
+  system 'killall adsf'
 end

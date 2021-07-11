@@ -12,7 +12,6 @@
     <xsl:when test="local-name($toc-context) = 'book'">
       <xsl:call-template name="subtoc">
         <xsl:with-param name="toc-context" select="$toc-context"/>
-        <xsl:with-param name="nodes" select="foo"/>
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>

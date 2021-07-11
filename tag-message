@@ -1,4 +1,4 @@
-Version 2.90.0 (July 10, 20201)
-  - Fixed an error with local variables
-  - Moved to a new building-environment (see toplevel README.org for details)
+Version 2.90.1 (July 11, 20201)
+  - Repaired the docu (especially yabasic.htm)
+  - Removed references to the old documentation (still available on github)
 

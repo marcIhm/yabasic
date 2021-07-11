@@ -31,8 +31,11 @@
         - stress-ng
         - xsltproc
         - rpm
+        - docbool
         - docbook-xsl
+        - docbook-utils
         - moreutils
+        - tidy
       state: latest
       update_cache: true
   - name: Install Gems
@@ -41,6 +44,9 @@
       user_install: no
     community.general.gem:
       name: fpm
+      user_install: no
+    community.general.gem:
+      name: adsf
       user_install: no
   - name: Symlink for libffi
     file:
