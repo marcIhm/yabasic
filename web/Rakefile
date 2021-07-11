@@ -191,6 +191,7 @@ task :default => :browse do
   else
     puts "Press RETURN to push tag: "
     gets
+    sh '/usr/bin/git push'
     sh '/usr/bin/git push --tags'
   end
   system 'killall adsf'
