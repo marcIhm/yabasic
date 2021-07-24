@@ -1,0 +1,22 @@
+# Ansible playbook to install minimal set of tools
+# develop yabasic under freebsd
+# Run this with: ansible-playbook prep2build.yaml
+---
+# hosts could have been "remote" or "all" as well
+- hosts: localhost
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+  - name: Install Packages
+    community.general.pkgng:
+      name:
+      - emacs-nox
+      - gcc
+      - libffi
+      - xorg
+      - libx11-dev
+      - libxt-dev
+      - aclocal
+      - git
+      state: present

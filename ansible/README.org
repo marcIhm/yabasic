@@ -4,3 +4,10 @@ First install some ansible-stuff:
   ansible-galaxy collection install community.general
 
 then see the yaml-files for instructions on how to run them with ansible.
+
+* Some notes on FreeBSD
+
+  - /etc/login.access anhängen: +:wheel:ALL
+  - sudo pkg install bash emacs-nox python py38-ansible
+  - chsh -s /usr/local/bin/bash ihm
+  - Eintragen in .profile:  TERM=rxvt; export TERM    

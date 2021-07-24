@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Sun Jul 11 12:27:04 UTC 2021"
+#define BUILD_TIME "Thu Jul 22 23:46:09 UTC 2021"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -17,7 +17,7 @@
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
-#define HAVE_ALLOCA_H 1
+/* #undef HAVE_ALLOCA_H */
 
 /* Define to 1 if you have the <alloc.h> header file. */
 /* #undef HAVE_ALLOC_H */
@@ -112,7 +112,7 @@
 #define STDC_HEADERS 1
 
 /* architecture of build machine */
-#define UNIX_ARCHITECTURE "x86_64-unknown-linux-gnu"
+#define UNIX_ARCHITECTURE "x86_64-unknown-freebsd13.0"
 
 /* libffi and dlopen available */
 #define USE_DL_FFI 1
