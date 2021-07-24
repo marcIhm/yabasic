@@ -2708,7 +2708,7 @@ find_interpreter (char *name)	/* find interpreter with full path, use code from 
     int length, dirname_length;
     
     length = wai_getExecutablePath(NULL, 0, NULL);
-    if (length <= 0) return my_strdup(name)
+    if (length <= 0) return my_strdup(name);
     path = (char*)malloc(length + 1);
     wai_getExecutablePath(path, length, &dirname_length);
     path[length] = '\0';
