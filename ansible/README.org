@@ -5,32 +5,4 @@ First install some ansible-stuff:
 
 then see the yaml-files for instructions on how to run them with ansible.
 
-* Some notes on FreeBSD
 
-  - https://pctipps.de/wp-content/uploads/2020/09/englische-tastatur-englische-tastatur.jpg
-    - +,= auf `,´ (links neben Backspace)
-    - : auf Ö
-    - _ auf ?
-    - - auf ß
-    - " auf Ä
-    - / auf -
-  - /etc/login.access anhängen: +:wheel:ALL
-  - adduser (ihm mit Gruppe wheel)
-  - rmuser osboxes
-  - passwd root
-  - Im Interface von VirtualBox: Netwerk / Port-Weiterleitung 22 Gast auf 2022 Host. Nur Ports ausfüllen
-  - sysrc sshd_enable="YES"
-  - poweroff
-  - /mnt/c/Program\ Files/Oracle/VirtualBox/VBoxManage.exe modifyvm FreeBSD --defaultfrontend headless
-  - Snapshot der VM
-  - Als root: pkg
-  - pkg install nano bash sudo git  ## emacs-nox needs too much other stuff
-  - chsh -s /usr/local/bin/bash ihm
-  - visudo  # und einkommentieren: %wheel ALL=(ALL) ALL
-  - nano /usr/local/etc/sudoers.d/ihm  
-    - und eintragen:   ihm ALL=(ALL) NOPASSWD:ALL
-  - pkg install python py38-ansible
-    - installiert bereits libffi
-  - Eintragen in .profile:  TERM=rxvt; export TERM  ## nur Notwendig für Zugang über Windows Terminal
-    - Analog auch für root
-    
