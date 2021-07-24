@@ -11,12 +11,10 @@
   - name: Install Packages
     community.general.pkgng:
       name:
-      - emacs-nox
       - gcc
       - libffi
       - xorg
       - libx11-dev
       - libxt-dev
-      - aclocal
-      - git
+      - automake
       state: present
