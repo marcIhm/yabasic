@@ -3,10 +3,6 @@
 //   by Gregory Pakosz (@gpakosz)
 // https://github.com/gpakosz/whereami
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-
 // in case you want to #include "whereami.c" in a larger compilation unit
 #if !defined(WHEREAMI_H)
 #include <whereami.h>
@@ -14,12 +10,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(__DragonFly__) || defined(__FreeBSD__) || \
-      defined(__FreeBSD_kernel__) || defined(__NetBSD__)
-#include <sys/types.h>
-#include <sys/sysctl.h>
 #endif
 
 #if !defined(WAI_MALLOC) || !defined(WAI_FREE) || !defined(WAI_REALLOC)
@@ -58,7 +48,9 @@ extern "C" {
 
 #if defined(_WIN32)
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 #if defined(_MSC_VER)
 #pragma warning(push, 3)
 #endif
@@ -168,7 +160,7 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
   return length;
 }
 
-#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(__GNU__) || (defined(__NetBSD__) && !defined(KERN_PROC_PATHNAME))
+#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(WAI_USE_PROC_SELF_EXE)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -189,10 +181,6 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
 #else
 #define WAI_PROC_SELF_EXE "/proc/self/exe"
 #endif
-#endif
-
-#ifndef PATH_MAX
-#define PATH_MAX 4096
 #endif
 
 WAI_FUNCSPEC
@@ -258,8 +246,7 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
   int length = -1;
   FILE* maps = NULL;
 
-  int r;
-  for (r = 0; r < WAI_PROC_SELF_MAPS_RETRY; ++r)
+  for (int r = 0; r < WAI_PROC_SELF_MAPS_RETRY; ++r)
   {
     maps = fopen(WAI_PROC_SELF_MAPS, "r");
     if (!maps)
@@ -298,15 +285,24 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
               &&buffer[length - 4] == '.')
           {
             int fd = open(path, O_RDONLY);
-            char* begin;
-            char* p;
+            if (fd == -1)
+            {
+              length = -1; // retry
+              break;
+            }
 
-            begin = (char*)mmap(0, offset, PROT_READ, MAP_SHARED, fd, 0);
-            p = begin + offset;
+            char* begin = (char*)mmap(0, offset, PROT_READ, MAP_SHARED, fd, 0);
+            if (begin == MAP_FAILED)
+            {
+              close(fd);
+              length = -1; // retry
+              break;
+            }
 
+            char* p = begin + offset - 30; // minimum size of local file header
             while (p >= begin) // scan backwards
             {
-              if (*((uint32_t*)p) == 0x04034b50UL) // local file header found
+              if (*((uint32_t*)p) == 0x04034b50UL) // local file header signature found
               {
                 uint16_t length_ = *((uint16_t*)(p + 26));
 
@@ -320,7 +316,7 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
                 break;
               }
 
-              p -= 4;
+              --p;
             }
 
             munmap(begin, offset);
@@ -575,11 +571,14 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
   return length;
 }
 
-#elif defined(KERN_PROC_PATHNAME)
+#elif defined(__DragonFly__) || defined(__FreeBSD__) || \
+      defined(__FreeBSD_kernel__) || defined(__NetBSD__)
 
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #include <dlfcn.h>
 
 WAI_FUNCSPEC

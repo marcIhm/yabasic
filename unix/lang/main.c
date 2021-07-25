@@ -2461,13 +2461,13 @@ isbound (void)			/* check if this interpreter is bound to a program */
     int offset = 0;
 
     if (!inter_path || !inter_path[0]) {
-        error (sFATAL, "inter_path is not set !");
+        error (sINFO, "inter_path is not set !");
         return 0;
     }
     if (!(inter = fopen (inter_path, "r"))) {
         sprintf (string, "Couldn't open '%s' to check, if it is bound: %s",
                  inter_path, my_strerror (errno));
-        error (sWARNING, string);
+        error (sINFO, string);
         return 0;
     }
 
@@ -2708,6 +2708,7 @@ find_interpreter (char *name)	/* find interpreter with full path, use code from 
     int length, dirname_length;
     
     length = wai_getExecutablePath(NULL, 0, NULL);
+    if (length <= 0) return my_strdup(name)
     path = (char*)malloc(length + 1);
     wai_getExecutablePath(path, length, &dirname_length);
     path[length] = '\0';
