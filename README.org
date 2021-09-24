@@ -1,4 +1,4 @@
-***  Yabasic - A simple Basic interpreter for Unix and Windows.
+*  Yabasic - A simple Basic interpreter for Unix and Windows.
 
   Yabasic is a traditional basic-interpreter. It comes with goto and various loops and
   allows to define subroutines and libraries. It does simple graphics and printing.
