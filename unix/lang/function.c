@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2021
+    written by Marc Ihm 1995-2022
     more info at www.yabasic.de
 
     function.c -- code for functions
@@ -1379,6 +1379,8 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
 	    dest[cr++] = '.';
 	    /* construct fractional part digit by digit */
 	    while (cr < len) {
+        /* remove integer part to avoid loss of precision */
+        fp = modf(fp, &ipdbl);
 		fp *= 10;
 		digit = ((unsigned long) fp) % 10;
 		dest[cr++] = digits[digit];

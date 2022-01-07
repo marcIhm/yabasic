@@ -1,6 +1,6 @@
 #! /bin/sh
-# Generated automatically by config.status (yabasic) 2.90.1
-# Libtool was configured on host osboxes:
+# Generated automatically by config.status (yabasic) 2.90.2
+# Libtool was configured on host LAPTOP-ICE9P8LF:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
@@ -67,13 +67,13 @@ PATH_SEPARATOR=":"
 
 # The host system.
 host_alias=
-host=x86_64-unknown-freebsd13.0
-host_os=freebsd13.0
+host=x86_64-unknown-linux-gnu
+host_os=linux-gnu
 
 # The build system.
 build_alias=
-build=x86_64-unknown-freebsd13.0
-build_os=freebsd13.0
+build=x86_64-unknown-linux-gnu
+build_os=linux-gnu
 
 # A sed program that does not truncate output.
 SED="/usr/bin/sed"
@@ -91,13 +91,13 @@ EGREP="/usr/bin/grep -E"
 FGREP="/usr/bin/grep -F"
 
 # A BSD- or MS-compatible name lister.
-NM="/usr/local/bin/nm -B"
+NM="/usr/bin/nm -B"
 
 # Whether we need soft or hard links.
 LN_S="ln -s"
 
 # What is the maximum length of a command?
-max_cmd_len=393216
+max_cmd_len=1572864
 
 # Object file suffix (normally "o").
 objext=o
@@ -148,7 +148,7 @@ AR="ar"
 AR_FLAGS="cru"
 
 # How to feed a file listing to the archiver.
-archiver_list_spec=""
+archiver_list_spec="@"
 
 # A symbol stripping program.
 STRIP="strip"
@@ -165,7 +165,7 @@ lock_old_archive_extraction=no
 LTCC="gcc"
 
 # LTCC compiler flags.
-LTCFLAGS="-g -O2"
+LTCFLAGS="-g -O2 "
 
 # Take the output of nm and produce a listing of raw symbols and C names.
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*\\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\2 \\2/p' | sed '/ __gnu_lto/d'"
@@ -192,7 +192,7 @@ nm_file_list_spec="@"
 lt_sysroot=
 
 # Command to truncate a binary pipe.
-lt_truncate_bin="/bin/dd bs=4096 count=1"
+lt_truncate_bin="/usr/bin/dd bs=4096 count=1"
 
 # The name of the directory that contains temporary libtool files.
 objdir=.libs
@@ -241,7 +241,7 @@ need_lib_prefix=no
 need_version=no
 
 # Library versioning type.
-version_type=freebsd-elf
+version_type=linux
 
 # Shared library runtime path variable.
 runpath_var=LD_RUN_PATH
@@ -272,7 +272,7 @@ postinstall_cmds=""
 postuninstall_cmds=""
 
 # Commands used to finish a libtool library installation in a directory.
-finish_cmds=""
+finish_cmds="PATH=\\\"\\\$PATH:/sbin\\\" ldconfig -n \$libdir"
 
 # As "finish_cmds", except a single script fragment to be evaled but
 # not shown.
@@ -282,10 +282,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/local/lib/gcc10/gcc/x86_64-portbld-freebsd13.0/10.3.0 /usr/local/x86_64-portbld-freebsd13.0/lib /usr/local/lib/gcc10 /lib /usr/lib "
+sys_lib_search_path_spec="/usr/lib/gcc/x86_64-linux-gnu/10 /usr/lib/x86_64-linux-gnu /usr/lib /lib/x86_64-linux-gnu /lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib"
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/lib/wsl/lib /usr/local/lib /usr/local/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""
@@ -300,12 +300,12 @@ dlopen_self=unknown
 dlopen_self_static=unknown
 
 # Commands to strip libraries.
-old_striplib=""
-striplib=""
+old_striplib="strip --strip-debug"
+striplib="strip --strip-unneeded"
 
 
 # The linker used to build libraries.
-LD="/usr/local/bin/ld"
+LD="/usr/bin/ld -m elf_x86_64"
 
 # How to create reloadable object files.
 reload_flag=" -r"
@@ -358,7 +358,10 @@ old_archive_from_expsyms_cmds=""
 
 # Commands used to build a shared archive.
 archive_cmds="\$CC -shared \$pic_flag \$libobjs \$deplibs \$compiler_flags \$wl-soname \$wl\$soname -o \$lib"
-archive_expsym_cmds="\$CC -shared \$pic_flag \$libobjs \$deplibs \$compiler_flags \$wl-soname \$wl\$soname \$wl-retain-symbols-file \$wl\$export_symbols -o \$lib"
+archive_expsym_cmds="echo \\\"{ global:\\\" > \$output_objdir/\$libname.ver~
+            cat \$export_symbols | sed -e \\\"s/\\\\(.*\\\\)/\\\\1;/\\\" >> \$output_objdir/\$libname.ver~
+            echo \\\"local: *; };\\\" >> \$output_objdir/\$libname.ver~
+            \$CC -shared \$pic_flag \$libobjs \$deplibs \$compiler_flags \$wl-soname \$wl\$soname \$wl-version-script \$wl\$output_objdir/\$libname.ver -o \$lib"
 
 # Commands used to build a loadable module if different from building
 # a shared archive.

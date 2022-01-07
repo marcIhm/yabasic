@@ -2,7 +2,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2021
+    written by Marc Ihm 1995-2022
     more info at www.yabasic.de
 
     BISON part
@@ -42,6 +42,7 @@ int exported=FALSE; /* true, if function is exported */
 int yylex(void);
 extern struct library *current_library; /* defined in main.c: name of currently parsed library */
 extern int yylineno; /* defined in flex */
+extern int token_count; /* defined in flex */
 int missing_endif=0;
 int missing_endif_line=0;
 int missing_endsub=0;
@@ -56,6 +57,7 @@ int missing_loop=0;
 int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
+int token_count_start_of_short_if=0;
 
 void report_if_missing(char *text,int eof) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -118,7 +120,7 @@ void collect_missing_clauses(char *string, char exclude) {
   double fnum;          /* double number */
   int inum;             /* integer number */
   int token;            /* token of command */
-  int sep;              /* number of newlines */
+  int nnl;              /* number of newlines */
   char *string;         /* quoted string */
   char *symbol;         /* general symbol */
   char *digits;         /* string of digits */
@@ -131,7 +133,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %type <symbol> function_name
 %type <symbol> function_or_array
 %type <symbol> stringfunction_or_array
-%type <sep> tSEP sep_list
+%type <nnl> tSEP sep_list
 
 %token <fnum> tFNUM
 %token <symbol> tSYMBOL
@@ -740,13 +742,13 @@ endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %
   | tNEXT {report_conflicting_close("a closing endif is expected before next",'n');}
   ;
 
-short_if:  tIF expression {in_short_if++;add_command(cDECIDE);pushlabel();}
-        statement_list
-	end_of_if
+short_if: tIF expression {token_count_start_of_short_if=token_count;in_short_if++;add_command(cDECIDE);pushlabel();}
+            statement_list
+	    end_of_if
   ;
 
-end_of_if: tENDIF {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
-  | tIMPLICITENDIF {poplabel();}
+end_of_if: tENDIF {error(sERROR,"short if-statement (i.e. without 'then') does not allow 'endif'");}
+  | tIMPLICITENDIF {printf("%d,%d\n", token_count_start_of_short_if, token_count);lyyerror(sERROR,"short if-statement (i.e. without 'then' and ended by newline) does not contain any statements");poplabel();}
   ;
 
 else_part: /* can be omitted */

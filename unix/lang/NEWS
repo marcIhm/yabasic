@@ -1,18 +1,15 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
-Version 2.90.1 (July 11, 20201)
+Version 2.90.2 (January 6. 2022)
+  - Fixed precision error for print using under windows
+  - Better error-reporting for an edge case of short-if
+
+Version 2.90.1 (July 11, 2021)
   - Repaired the docu (especially yabasic.htm)
   - Removed references to the old documentation (still available on github)
 
-Version 2.90.0 (July 10, 20201)
+Version 2.90.0 (July 10, 2021)
   - Fixed an error with local variables
   - Moved to a new building-environment (see github and there README.org for details)
-
-Version 2.89.1 (January 30, 2021)
-  - Fixes for documentation
-  
-Version 2.89.0 (December 29, 2020)
-  - Fixed for Problem with system-command after clear screen on MacOS
-  - Added functions eval and eval$
 

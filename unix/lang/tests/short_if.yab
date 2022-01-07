@@ -1,2 +1,29 @@
 
 if (1<2) print "hi"
+if (1<2) :
+
+x=0
+if (1<2) x=1
+if (x<>0) then
+  exit 1
+endif
+
+x=0
+if (1=2) x=1:x=1:x=1
+if (x<>0) then
+  exit 1
+endif
+
+x=0
+if (1=2) x=1:x=1:x=1
+x=2
+if (x<>2) then
+  exit 1
+endif
+
+x=0
+if (1<2) x=1:y=1:z=1
+if (x<>1) then
+  exit 1
+endif
+

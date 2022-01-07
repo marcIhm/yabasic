@@ -1,0 +1,3 @@
+#expect#---Error in error_short_if_with_endif.yab, line 7:
+#expect#---Error: syntax error
+if (2>1) x=1:endif

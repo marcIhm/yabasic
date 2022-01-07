@@ -1,0 +1,9 @@
+print "Check, that print using does not give spurious digits ..."
+seen$ = str$(1 + 1/64, "###.###########################")
+expected$ = "  1.015625000000000000000000000"
+if seen$ <> expected$ then
+  print "Formatting yields " + seen$ + ", but expecting " + expected$
+  exit 2
+endif
+
+exit 0

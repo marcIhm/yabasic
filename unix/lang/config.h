@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Thu Jul 22 23:46:09 UTC 2021"
+#define BUILD_TIME "Fri Jan  7 05:50:16 UTC 2022"
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -17,7 +17,7 @@
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
-/* #undef HAVE_ALLOCA_H */
+#define HAVE_ALLOCA_H 1
 
 /* Define to 1 if you have the <alloc.h> header file. */
 /* #undef HAVE_ALLOC_H */
@@ -89,7 +89,7 @@
 #define PACKAGE_NAME "yabasic"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "yabasic 2.90.1"
+#define PACKAGE_STRING "yabasic 2.90.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "yabasic"
@@ -98,7 +98,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.90.1"
+#define PACKAGE_VERSION "2.90.2"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -112,13 +112,13 @@
 #define STDC_HEADERS 1
 
 /* architecture of build machine */
-#define UNIX_ARCHITECTURE "x86_64-unknown-freebsd13.0"
+#define UNIX_ARCHITECTURE "x86_64-unknown-linux-gnu"
 
 /* libffi and dlopen available */
 #define USE_DL_FFI 1
 
 /* Version number of package */
-#define VERSION "2.90.1"
+#define VERSION "2.90.2"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */

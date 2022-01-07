@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.7.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,10 @@
 /* C LALR(1) parser skeleton written by Richard Stallman, by
    simplifying the original so-called "semantic" parser.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 /* All symbols defined below should begin with yy or YY, to avoid
    infringing on user name space.  This should be done even for local
    variables, as they might otherwise be expanded by user macros.
@@ -41,14 +45,11 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* Identify Bison output, and Bison version.  */
+#define YYBISON 30705
 
-/* Identify Bison output.  */
-#define YYBISON 1
-
-/* Bison version.  */
-#define YYBISON_VERSION "3.5.1"
+/* Bison version string.  */
+#define YYBISON_VERSION "3.7.5"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -70,7 +71,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2021
+    written by Marc Ihm 1995-2022
     more info at www.yabasic.de
 
     BISON part
@@ -110,6 +111,7 @@ int exported=FALSE; /* true, if function is exported */
 int yylex(void);
 extern struct library *current_library; /* defined in main.c: name of currently parsed library */
 extern int yylineno; /* defined in flex */
+extern int token_count; /* defined in flex */
 int missing_endif=0;
 int missing_endif_line=0;
 int missing_endsub=0;
@@ -124,6 +126,7 @@ int missing_loop=0;
 int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
+int token_count_start_of_short_if=0;
 
 void report_if_missing(char *text,int eof) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -202,260 +205,322 @@ void collect_missing_clauses(char *string, char exclude) {
 #  endif
 # endif
 
-/* Enabling verbose error messages.  */
-#ifdef YYERROR_VERBOSE
-# undef YYERROR_VERBOSE
-# define YYERROR_VERBOSE 1
-#else
-# define YYERROR_VERBOSE 0
-#endif
-
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_BISON_H_INCLUDED
-# define YY_YY_BISON_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 1
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    tFNUM = 258,
-    tSYMBOL = 259,
-    tSTRSYM = 260,
-    tDOCU = 261,
-    tDIGITS = 262,
-    tHEXDIGITS = 263,
-    tBINDIGITS = 264,
-    tSTRING = 265,
-    tFOR = 266,
-    tTO = 267,
-    tSTEP = 268,
-    tNEXT = 269,
-    tWHILE = 270,
-    tWEND = 271,
-    tREPEAT = 272,
-    tUNTIL = 273,
-    tIMPORT = 274,
-    tGOTO = 275,
-    tGOSUB = 276,
-    tLABEL = 277,
-    tON = 278,
-    tSUB = 279,
-    tENDSUB = 280,
-    tLOCAL = 281,
-    tSTATIC = 282,
-    tEXPORT = 283,
-    tERROR = 284,
-    tEXECUTE = 285,
-    tEXECUTE2 = 286,
-    tCOMPILE = 287,
-    tRUNTIME_CREATED_SUB = 288,
-    tINTERRUPT = 289,
-    tBREAK = 290,
-    tCONTINUE = 291,
-    tSWITCH = 292,
-    tSEND = 293,
-    tCASE = 294,
-    tDEFAULT = 295,
-    tLOOP = 296,
-    tDO = 297,
-    tSEP = 298,
-    tEOPROG = 299,
-    tIF = 300,
-    tTHEN = 301,
-    tELSE = 302,
-    tELSIF = 303,
-    tENDIF = 304,
-    tIMPLICITENDIF = 305,
-    tUSING = 306,
-    tPRINT = 307,
-    tINPUT = 308,
-    tRETURN = 309,
-    tDIM = 310,
-    tEND = 311,
-    tEXIT = 312,
-    tAT = 313,
-    tSCREEN = 314,
-    tREVERSE = 315,
-    tCOLOUR = 316,
-    tBACKCOLOUR = 317,
-    tAND = 318,
-    tOR = 319,
-    tNOT = 320,
-    tBITNOT = 321,
-    tEOR = 322,
-    tSHL = 323,
-    tSHR = 324,
-    tNEQ = 325,
-    tLEQ = 326,
-    tGEQ = 327,
-    tLTN = 328,
-    tGTN = 329,
-    tEQU = 330,
-    tPOW = 331,
-    tREAD = 332,
-    tDATA = 333,
-    tRESTORE = 334,
-    tOPEN = 335,
-    tCLOSE = 336,
-    tSEEK = 337,
-    tTELL = 338,
-    tAS = 339,
-    tREADING = 340,
-    tWRITING = 341,
-    tORIGIN = 342,
-    tWINDOW = 343,
-    tDOT = 344,
-    tLINE = 345,
-    tCIRCLE = 346,
-    tTRIANGLE = 347,
-    tTEXT = 348,
-    tCLEAR = 349,
-    tFILL = 350,
-    tPRINTER = 351,
-    tWAIT = 352,
-    tBELL = 353,
-    tLET = 354,
-    tARDIM = 355,
-    tARSIZE = 356,
-    tBIND = 357,
-    tRECT = 358,
-    tGETBIT = 359,
-    tPUTBIT = 360,
-    tGETCHAR = 361,
-    tPUTCHAR = 362,
-    tNEW = 363,
-    tCURVE = 364,
-    tSIN = 365,
-    tASIN = 366,
-    tCOS = 367,
-    tACOS = 368,
-    tTAN = 369,
-    tATAN = 370,
-    tEXP = 371,
-    tLOG = 372,
-    tSQRT = 373,
-    tSQR = 374,
-    tMYEOF = 375,
-    tABS = 376,
-    tSIG = 377,
-    tINT = 378,
-    tCEIL = 379,
-    tFLOOR = 380,
-    tFRAC = 381,
-    tROUND = 382,
-    tMOD = 383,
-    tRAN = 384,
-    tVAL = 385,
-    tLEFT = 386,
-    tRIGHT = 387,
-    tMID = 388,
-    tLEN = 389,
-    tMIN = 390,
-    tMAX = 391,
-    tSTR = 392,
-    tINKEY = 393,
-    tCHR = 394,
-    tASC = 395,
-    tHEX = 396,
-    tDEC = 397,
-    tBIN = 398,
-    tUPPER = 399,
-    tLOWER = 400,
-    tMOUSEX = 401,
-    tMOUSEY = 402,
-    tMOUSEB = 403,
-    tMOUSEMOD = 404,
-    tTRIM = 405,
-    tLTRIM = 406,
-    tRTRIM = 407,
-    tINSTR = 408,
-    tRINSTR = 409,
-    tCHOMP = 410,
-    tSYSTEM = 411,
-    tSYSTEM2 = 412,
-    tPEEK = 413,
-    tPEEK2 = 414,
-    tPOKE = 415,
-    tFRNFN_CALL = 416,
-    tFRNFN_CALL2 = 417,
-    tFRNFN_SIZE = 418,
-    tFRNBF_ALLOC = 419,
-    tFRNBF_FREE = 420,
-    tFRNBF_SIZE = 421,
-    tFRNBF_DUMP = 422,
-    tFRNBF_SET = 423,
-    tFRNBF_GET = 424,
-    tFRNBF_GET2 = 425,
-    tFRNBF_GET_BUFFER = 426,
-    tFRNBF_SET_BUFFER = 427,
-    tDATE = 428,
-    tTIME = 429,
-    tTOKEN = 430,
-    tTOKENALT = 431,
-    tSPLIT = 432,
-    tSPLITALT = 433,
-    tGLOB = 434,
-    tSTART_PROGRAM = 435,
-    tSTART_EXPRESSION = 436,
-    tSTART_STRING_EXPRESSION = 437,
-    tSTART_ASSIGNMENT = 438,
-    tSTART_FUNCTION_DEFINITION = 439,
-    tEVAL = 440,
-    tEVAL2 = 441,
-    UMINUS = 442
-  };
-#endif
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
+#include "bison.h"
+/* Symbol kind.  */
+enum yysymbol_kind_t
 {
-
-  double fnum;          /* double number */
-  int inum;             /* integer number */
-  int token;            /* token of command */
-  int sep;              /* number of newlines */
-  char *string;         /* quoted string */
-  char *symbol;         /* general symbol */
-  char *digits;         /* string of digits */
-  char *docu;		/* embedded documentation */
-
-
+  YYSYMBOL_YYEMPTY = -2,
+  YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
+  YYSYMBOL_YYerror = 1,                    /* error  */
+  YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
+  YYSYMBOL_tFNUM = 3,                      /* tFNUM  */
+  YYSYMBOL_tSYMBOL = 4,                    /* tSYMBOL  */
+  YYSYMBOL_tSTRSYM = 5,                    /* tSTRSYM  */
+  YYSYMBOL_tDOCU = 6,                      /* tDOCU  */
+  YYSYMBOL_tDIGITS = 7,                    /* tDIGITS  */
+  YYSYMBOL_tHEXDIGITS = 8,                 /* tHEXDIGITS  */
+  YYSYMBOL_tBINDIGITS = 9,                 /* tBINDIGITS  */
+  YYSYMBOL_tSTRING = 10,                   /* tSTRING  */
+  YYSYMBOL_tFOR = 11,                      /* tFOR  */
+  YYSYMBOL_tTO = 12,                       /* tTO  */
+  YYSYMBOL_tSTEP = 13,                     /* tSTEP  */
+  YYSYMBOL_tNEXT = 14,                     /* tNEXT  */
+  YYSYMBOL_tWHILE = 15,                    /* tWHILE  */
+  YYSYMBOL_tWEND = 16,                     /* tWEND  */
+  YYSYMBOL_tREPEAT = 17,                   /* tREPEAT  */
+  YYSYMBOL_tUNTIL = 18,                    /* tUNTIL  */
+  YYSYMBOL_tIMPORT = 19,                   /* tIMPORT  */
+  YYSYMBOL_tGOTO = 20,                     /* tGOTO  */
+  YYSYMBOL_tGOSUB = 21,                    /* tGOSUB  */
+  YYSYMBOL_tLABEL = 22,                    /* tLABEL  */
+  YYSYMBOL_tON = 23,                       /* tON  */
+  YYSYMBOL_tSUB = 24,                      /* tSUB  */
+  YYSYMBOL_tENDSUB = 25,                   /* tENDSUB  */
+  YYSYMBOL_tLOCAL = 26,                    /* tLOCAL  */
+  YYSYMBOL_tSTATIC = 27,                   /* tSTATIC  */
+  YYSYMBOL_tEXPORT = 28,                   /* tEXPORT  */
+  YYSYMBOL_tERROR = 29,                    /* tERROR  */
+  YYSYMBOL_tEXECUTE = 30,                  /* tEXECUTE  */
+  YYSYMBOL_tEXECUTE2 = 31,                 /* tEXECUTE2  */
+  YYSYMBOL_tCOMPILE = 32,                  /* tCOMPILE  */
+  YYSYMBOL_tRUNTIME_CREATED_SUB = 33,      /* tRUNTIME_CREATED_SUB  */
+  YYSYMBOL_tINTERRUPT = 34,                /* tINTERRUPT  */
+  YYSYMBOL_tBREAK = 35,                    /* tBREAK  */
+  YYSYMBOL_tCONTINUE = 36,                 /* tCONTINUE  */
+  YYSYMBOL_tSWITCH = 37,                   /* tSWITCH  */
+  YYSYMBOL_tSEND = 38,                     /* tSEND  */
+  YYSYMBOL_tCASE = 39,                     /* tCASE  */
+  YYSYMBOL_tDEFAULT = 40,                  /* tDEFAULT  */
+  YYSYMBOL_tLOOP = 41,                     /* tLOOP  */
+  YYSYMBOL_tDO = 42,                       /* tDO  */
+  YYSYMBOL_tSEP = 43,                      /* tSEP  */
+  YYSYMBOL_tEOPROG = 44,                   /* tEOPROG  */
+  YYSYMBOL_tIF = 45,                       /* tIF  */
+  YYSYMBOL_tTHEN = 46,                     /* tTHEN  */
+  YYSYMBOL_tELSE = 47,                     /* tELSE  */
+  YYSYMBOL_tELSIF = 48,                    /* tELSIF  */
+  YYSYMBOL_tENDIF = 49,                    /* tENDIF  */
+  YYSYMBOL_tIMPLICITENDIF = 50,            /* tIMPLICITENDIF  */
+  YYSYMBOL_tUSING = 51,                    /* tUSING  */
+  YYSYMBOL_tPRINT = 52,                    /* tPRINT  */
+  YYSYMBOL_tINPUT = 53,                    /* tINPUT  */
+  YYSYMBOL_tRETURN = 54,                   /* tRETURN  */
+  YYSYMBOL_tDIM = 55,                      /* tDIM  */
+  YYSYMBOL_tEND = 56,                      /* tEND  */
+  YYSYMBOL_tEXIT = 57,                     /* tEXIT  */
+  YYSYMBOL_tAT = 58,                       /* tAT  */
+  YYSYMBOL_tSCREEN = 59,                   /* tSCREEN  */
+  YYSYMBOL_tREVERSE = 60,                  /* tREVERSE  */
+  YYSYMBOL_tCOLOUR = 61,                   /* tCOLOUR  */
+  YYSYMBOL_tBACKCOLOUR = 62,               /* tBACKCOLOUR  */
+  YYSYMBOL_tAND = 63,                      /* tAND  */
+  YYSYMBOL_tOR = 64,                       /* tOR  */
+  YYSYMBOL_tNOT = 65,                      /* tNOT  */
+  YYSYMBOL_tBITNOT = 66,                   /* tBITNOT  */
+  YYSYMBOL_tEOR = 67,                      /* tEOR  */
+  YYSYMBOL_tSHL = 68,                      /* tSHL  */
+  YYSYMBOL_tSHR = 69,                      /* tSHR  */
+  YYSYMBOL_tNEQ = 70,                      /* tNEQ  */
+  YYSYMBOL_tLEQ = 71,                      /* tLEQ  */
+  YYSYMBOL_tGEQ = 72,                      /* tGEQ  */
+  YYSYMBOL_tLTN = 73,                      /* tLTN  */
+  YYSYMBOL_tGTN = 74,                      /* tGTN  */
+  YYSYMBOL_tEQU = 75,                      /* tEQU  */
+  YYSYMBOL_tPOW = 76,                      /* tPOW  */
+  YYSYMBOL_tREAD = 77,                     /* tREAD  */
+  YYSYMBOL_tDATA = 78,                     /* tDATA  */
+  YYSYMBOL_tRESTORE = 79,                  /* tRESTORE  */
+  YYSYMBOL_tOPEN = 80,                     /* tOPEN  */
+  YYSYMBOL_tCLOSE = 81,                    /* tCLOSE  */
+  YYSYMBOL_tSEEK = 82,                     /* tSEEK  */
+  YYSYMBOL_tTELL = 83,                     /* tTELL  */
+  YYSYMBOL_tAS = 84,                       /* tAS  */
+  YYSYMBOL_tREADING = 85,                  /* tREADING  */
+  YYSYMBOL_tWRITING = 86,                  /* tWRITING  */
+  YYSYMBOL_tORIGIN = 87,                   /* tORIGIN  */
+  YYSYMBOL_tWINDOW = 88,                   /* tWINDOW  */
+  YYSYMBOL_tDOT = 89,                      /* tDOT  */
+  YYSYMBOL_tLINE = 90,                     /* tLINE  */
+  YYSYMBOL_tCIRCLE = 91,                   /* tCIRCLE  */
+  YYSYMBOL_tTRIANGLE = 92,                 /* tTRIANGLE  */
+  YYSYMBOL_tTEXT = 93,                     /* tTEXT  */
+  YYSYMBOL_tCLEAR = 94,                    /* tCLEAR  */
+  YYSYMBOL_tFILL = 95,                     /* tFILL  */
+  YYSYMBOL_tPRINTER = 96,                  /* tPRINTER  */
+  YYSYMBOL_tWAIT = 97,                     /* tWAIT  */
+  YYSYMBOL_tBELL = 98,                     /* tBELL  */
+  YYSYMBOL_tLET = 99,                      /* tLET  */
+  YYSYMBOL_tARDIM = 100,                   /* tARDIM  */
+  YYSYMBOL_tARSIZE = 101,                  /* tARSIZE  */
+  YYSYMBOL_tBIND = 102,                    /* tBIND  */
+  YYSYMBOL_tRECT = 103,                    /* tRECT  */
+  YYSYMBOL_tGETBIT = 104,                  /* tGETBIT  */
+  YYSYMBOL_tPUTBIT = 105,                  /* tPUTBIT  */
+  YYSYMBOL_tGETCHAR = 106,                 /* tGETCHAR  */
+  YYSYMBOL_tPUTCHAR = 107,                 /* tPUTCHAR  */
+  YYSYMBOL_tNEW = 108,                     /* tNEW  */
+  YYSYMBOL_tCURVE = 109,                   /* tCURVE  */
+  YYSYMBOL_tSIN = 110,                     /* tSIN  */
+  YYSYMBOL_tASIN = 111,                    /* tASIN  */
+  YYSYMBOL_tCOS = 112,                     /* tCOS  */
+  YYSYMBOL_tACOS = 113,                    /* tACOS  */
+  YYSYMBOL_tTAN = 114,                     /* tTAN  */
+  YYSYMBOL_tATAN = 115,                    /* tATAN  */
+  YYSYMBOL_tEXP = 116,                     /* tEXP  */
+  YYSYMBOL_tLOG = 117,                     /* tLOG  */
+  YYSYMBOL_tSQRT = 118,                    /* tSQRT  */
+  YYSYMBOL_tSQR = 119,                     /* tSQR  */
+  YYSYMBOL_tMYEOF = 120,                   /* tMYEOF  */
+  YYSYMBOL_tABS = 121,                     /* tABS  */
+  YYSYMBOL_tSIG = 122,                     /* tSIG  */
+  YYSYMBOL_tINT = 123,                     /* tINT  */
+  YYSYMBOL_tCEIL = 124,                    /* tCEIL  */
+  YYSYMBOL_tFLOOR = 125,                   /* tFLOOR  */
+  YYSYMBOL_tFRAC = 126,                    /* tFRAC  */
+  YYSYMBOL_tROUND = 127,                   /* tROUND  */
+  YYSYMBOL_tMOD = 128,                     /* tMOD  */
+  YYSYMBOL_tRAN = 129,                     /* tRAN  */
+  YYSYMBOL_tVAL = 130,                     /* tVAL  */
+  YYSYMBOL_tLEFT = 131,                    /* tLEFT  */
+  YYSYMBOL_tRIGHT = 132,                   /* tRIGHT  */
+  YYSYMBOL_tMID = 133,                     /* tMID  */
+  YYSYMBOL_tLEN = 134,                     /* tLEN  */
+  YYSYMBOL_tMIN = 135,                     /* tMIN  */
+  YYSYMBOL_tMAX = 136,                     /* tMAX  */
+  YYSYMBOL_tSTR = 137,                     /* tSTR  */
+  YYSYMBOL_tINKEY = 138,                   /* tINKEY  */
+  YYSYMBOL_tCHR = 139,                     /* tCHR  */
+  YYSYMBOL_tASC = 140,                     /* tASC  */
+  YYSYMBOL_tHEX = 141,                     /* tHEX  */
+  YYSYMBOL_tDEC = 142,                     /* tDEC  */
+  YYSYMBOL_tBIN = 143,                     /* tBIN  */
+  YYSYMBOL_tUPPER = 144,                   /* tUPPER  */
+  YYSYMBOL_tLOWER = 145,                   /* tLOWER  */
+  YYSYMBOL_tMOUSEX = 146,                  /* tMOUSEX  */
+  YYSYMBOL_tMOUSEY = 147,                  /* tMOUSEY  */
+  YYSYMBOL_tMOUSEB = 148,                  /* tMOUSEB  */
+  YYSYMBOL_tMOUSEMOD = 149,                /* tMOUSEMOD  */
+  YYSYMBOL_tTRIM = 150,                    /* tTRIM  */
+  YYSYMBOL_tLTRIM = 151,                   /* tLTRIM  */
+  YYSYMBOL_tRTRIM = 152,                   /* tRTRIM  */
+  YYSYMBOL_tINSTR = 153,                   /* tINSTR  */
+  YYSYMBOL_tRINSTR = 154,                  /* tRINSTR  */
+  YYSYMBOL_tCHOMP = 155,                   /* tCHOMP  */
+  YYSYMBOL_tSYSTEM = 156,                  /* tSYSTEM  */
+  YYSYMBOL_tSYSTEM2 = 157,                 /* tSYSTEM2  */
+  YYSYMBOL_tPEEK = 158,                    /* tPEEK  */
+  YYSYMBOL_tPEEK2 = 159,                   /* tPEEK2  */
+  YYSYMBOL_tPOKE = 160,                    /* tPOKE  */
+  YYSYMBOL_tFRNFN_CALL = 161,              /* tFRNFN_CALL  */
+  YYSYMBOL_tFRNFN_CALL2 = 162,             /* tFRNFN_CALL2  */
+  YYSYMBOL_tFRNFN_SIZE = 163,              /* tFRNFN_SIZE  */
+  YYSYMBOL_tFRNBF_ALLOC = 164,             /* tFRNBF_ALLOC  */
+  YYSYMBOL_tFRNBF_FREE = 165,              /* tFRNBF_FREE  */
+  YYSYMBOL_tFRNBF_SIZE = 166,              /* tFRNBF_SIZE  */
+  YYSYMBOL_tFRNBF_DUMP = 167,              /* tFRNBF_DUMP  */
+  YYSYMBOL_tFRNBF_SET = 168,               /* tFRNBF_SET  */
+  YYSYMBOL_tFRNBF_GET = 169,               /* tFRNBF_GET  */
+  YYSYMBOL_tFRNBF_GET2 = 170,              /* tFRNBF_GET2  */
+  YYSYMBOL_tFRNBF_GET_BUFFER = 171,        /* tFRNBF_GET_BUFFER  */
+  YYSYMBOL_tFRNBF_SET_BUFFER = 172,        /* tFRNBF_SET_BUFFER  */
+  YYSYMBOL_tDATE = 173,                    /* tDATE  */
+  YYSYMBOL_tTIME = 174,                    /* tTIME  */
+  YYSYMBOL_tTOKEN = 175,                   /* tTOKEN  */
+  YYSYMBOL_tTOKENALT = 176,                /* tTOKENALT  */
+  YYSYMBOL_tSPLIT = 177,                   /* tSPLIT  */
+  YYSYMBOL_tSPLITALT = 178,                /* tSPLITALT  */
+  YYSYMBOL_tGLOB = 179,                    /* tGLOB  */
+  YYSYMBOL_tSTART_PROGRAM = 180,           /* tSTART_PROGRAM  */
+  YYSYMBOL_tSTART_EXPRESSION = 181,        /* tSTART_EXPRESSION  */
+  YYSYMBOL_tSTART_STRING_EXPRESSION = 182, /* tSTART_STRING_EXPRESSION  */
+  YYSYMBOL_tSTART_ASSIGNMENT = 183,        /* tSTART_ASSIGNMENT  */
+  YYSYMBOL_tSTART_FUNCTION_DEFINITION = 184, /* tSTART_FUNCTION_DEFINITION  */
+  YYSYMBOL_tEVAL = 185,                    /* tEVAL  */
+  YYSYMBOL_tEVAL2 = 186,                   /* tEVAL2  */
+  YYSYMBOL_187_ = 187,                     /* '-'  */
+  YYSYMBOL_188_ = 188,                     /* '+'  */
+  YYSYMBOL_189_ = 189,                     /* '*'  */
+  YYSYMBOL_190_ = 190,                     /* '/'  */
+  YYSYMBOL_UMINUS = 191,                   /* UMINUS  */
+  YYSYMBOL_192_ = 192,                     /* ';'  */
+  YYSYMBOL_193_ = 193,                     /* ','  */
+  YYSYMBOL_194_ = 194,                     /* '('  */
+  YYSYMBOL_195_ = 195,                     /* ')'  */
+  YYSYMBOL_196_ = 196,                     /* '#'  */
+  YYSYMBOL_YYACCEPT = 197,                 /* $accept  */
+  YYSYMBOL_program_or_expression = 198,    /* program_or_expression  */
+  YYSYMBOL_program = 199,                  /* program  */
+  YYSYMBOL_statement_list = 200,           /* statement_list  */
+  YYSYMBOL_201_1 = 201,                    /* $@1  */
+  YYSYMBOL_assignment = 202,               /* assignment  */
+  YYSYMBOL_statement = 203,                /* statement  */
+  YYSYMBOL_204_2 = 204,                    /* $@2  */
+  YYSYMBOL_205_3 = 205,                    /* $@3  */
+  YYSYMBOL_206_4 = 206,                    /* $@4  */
+  YYSYMBOL_207_5 = 207,                    /* $@5  */
+  YYSYMBOL_208_6 = 208,                    /* $@6  */
+  YYSYMBOL_209_7 = 209,                    /* $@7  */
+  YYSYMBOL_clear_fill_clause = 210,        /* clear_fill_clause  */
+  YYSYMBOL_string_assignment = 211,        /* string_assignment  */
+  YYSYMBOL_to = 212,                       /* to  */
+  YYSYMBOL_open_clause = 213,              /* open_clause  */
+  YYSYMBOL_seek_clause = 214,              /* seek_clause  */
+  YYSYMBOL_string_scalar_or_array = 215,   /* string_scalar_or_array  */
+  YYSYMBOL_string_expression = 216,        /* string_expression  */
+  YYSYMBOL_string_function = 217,          /* string_function  */
+  YYSYMBOL_number_assignment = 218,        /* number_assignment  */
+  YYSYMBOL_expression = 219,               /* expression  */
+  YYSYMBOL_220_8 = 220,                    /* $@8  */
+  YYSYMBOL_221_9 = 221,                    /* $@9  */
+  YYSYMBOL_arrayref = 222,                 /* arrayref  */
+  YYSYMBOL_string_arrayref = 223,          /* string_arrayref  */
+  YYSYMBOL_coordinates = 224,              /* coordinates  */
+  YYSYMBOL_function = 225,                 /* function  */
+  YYSYMBOL_const = 226,                    /* const  */
+  YYSYMBOL_number = 227,                   /* number  */
+  YYSYMBOL_symbol_or_lineno = 228,         /* symbol_or_lineno  */
+  YYSYMBOL_dimlist = 229,                  /* dimlist  */
+  YYSYMBOL_function_or_array = 230,        /* function_or_array  */
+  YYSYMBOL_stringfunction_or_array = 231,  /* stringfunction_or_array  */
+  YYSYMBOL_call_list = 232,                /* call_list  */
+  YYSYMBOL_233_10 = 233,                   /* $@10  */
+  YYSYMBOL_calls = 234,                    /* calls  */
+  YYSYMBOL_call_item = 235,                /* call_item  */
+  YYSYMBOL_function_definition = 236,      /* function_definition  */
+  YYSYMBOL_237_11 = 237,                   /* $@11  */
+  YYSYMBOL_238_12 = 238,                   /* $@12  */
+  YYSYMBOL_239_13 = 239,                   /* $@13  */
+  YYSYMBOL_endsub = 240,                   /* endsub  */
+  YYSYMBOL_function_name = 241,            /* function_name  */
+  YYSYMBOL_export = 242,                   /* export  */
+  YYSYMBOL_local_list = 243,               /* local_list  */
+  YYSYMBOL_local_item = 244,               /* local_item  */
+  YYSYMBOL_static_list = 245,              /* static_list  */
+  YYSYMBOL_static_item = 246,              /* static_item  */
+  YYSYMBOL_paramlist = 247,                /* paramlist  */
+  YYSYMBOL_paramitem = 248,                /* paramitem  */
+  YYSYMBOL_for_loop = 249,                 /* for_loop  */
+  YYSYMBOL_250_14 = 250,                   /* $@14  */
+  YYSYMBOL_251_15 = 251,                   /* $@15  */
+  YYSYMBOL_252_16 = 252,                   /* $@16  */
+  YYSYMBOL_253_17 = 253,                   /* $@17  */
+  YYSYMBOL_next = 254,                     /* next  */
+  YYSYMBOL_step_part = 255,                /* step_part  */
+  YYSYMBOL_next_symbol = 256,              /* next_symbol  */
+  YYSYMBOL_switch_number_or_string = 257,  /* switch_number_or_string  */
+  YYSYMBOL_258_18 = 258,                   /* $@18  */
+  YYSYMBOL_sep_list = 259,                 /* sep_list  */
+  YYSYMBOL_number_or_string = 260,         /* number_or_string  */
+  YYSYMBOL_case_list = 261,                /* case_list  */
+  YYSYMBOL_262_19 = 262,                   /* $@19  */
+  YYSYMBOL_default = 263,                  /* default  */
+  YYSYMBOL_264_20 = 264,                   /* $@20  */
+  YYSYMBOL_do_loop = 265,                  /* do_loop  */
+  YYSYMBOL_266_21 = 266,                   /* $@21  */
+  YYSYMBOL_loop = 267,                     /* loop  */
+  YYSYMBOL_while_loop = 268,               /* while_loop  */
+  YYSYMBOL_269_22 = 269,                   /* $@22  */
+  YYSYMBOL_270_23 = 270,                   /* $@23  */
+  YYSYMBOL_wend = 271,                     /* wend  */
+  YYSYMBOL_repeat_loop = 272,              /* repeat_loop  */
+  YYSYMBOL_273_24 = 273,                   /* $@24  */
+  YYSYMBOL_until = 274,                    /* until  */
+  YYSYMBOL_if_clause = 275,                /* if_clause  */
+  YYSYMBOL_276_25 = 276,                   /* $@25  */
+  YYSYMBOL_277_26 = 277,                   /* $@26  */
+  YYSYMBOL_278_27 = 278,                   /* $@27  */
+  YYSYMBOL_279_28 = 279,                   /* $@28  */
+  YYSYMBOL_endif = 280,                    /* endif  */
+  YYSYMBOL_short_if = 281,                 /* short_if  */
+  YYSYMBOL_282_29 = 282,                   /* $@29  */
+  YYSYMBOL_end_of_if = 283,                /* end_of_if  */
+  YYSYMBOL_else_part = 284,                /* else_part  */
+  YYSYMBOL_elsif_part = 285,               /* elsif_part  */
+  YYSYMBOL_286_30 = 286,                   /* $@30  */
+  YYSYMBOL_287_31 = 287,                   /* $@31  */
+  YYSYMBOL_maybe_then = 288,               /* maybe_then  */
+  YYSYMBOL_inputlist = 289,                /* inputlist  */
+  YYSYMBOL_290_32 = 290,                   /* $@32  */
+  YYSYMBOL_input = 291,                    /* input  */
+  YYSYMBOL_readlist = 292,                 /* readlist  */
+  YYSYMBOL_readitem = 293,                 /* readitem  */
+  YYSYMBOL_datalist = 294,                 /* datalist  */
+  YYSYMBOL_printlist = 295,                /* printlist  */
+  YYSYMBOL_using = 296,                    /* using  */
+  YYSYMBOL_inputbody = 297,                /* inputbody  */
+  YYSYMBOL_298_33 = 298,                   /* $@33  */
+  YYSYMBOL_299_34 = 299,                   /* $@34  */
+  YYSYMBOL_300_35 = 300,                   /* $@35  */
+  YYSYMBOL_301_36 = 301,                   /* $@36  */
+  YYSYMBOL_302_37 = 302,                   /* $@37  */
+  YYSYMBOL_prompt = 303,                   /* prompt  */
+  YYSYMBOL_printintro = 304,               /* printintro  */
+  YYSYMBOL_hashed_number = 305,            /* hashed_number  */
+  YYSYMBOL_goto_list = 306,                /* goto_list  */
+  YYSYMBOL_gosub_list = 307                /* gosub_list  */
 };
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
+typedef enum yysymbol_kind_t yysymbol_kind_t;
 
-/* Location type.  */
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE YYLTYPE;
-struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-};
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
-
-extern YYSTYPE yylval;
-extern YYLTYPE yylloc;
-int yyparse (void);
-
-#endif /* !YY_YY_BISON_H_INCLUDED  */
 
 
 /* Unqualified %code blocks.  */
@@ -506,6 +571,18 @@ typedef __INT_LEAST16_TYPE__ yytype_int16;
 typedef int_least16_t yytype_int16;
 #else
 typedef short yytype_int16;
+#endif
+
+/* Work around bug in HP-UX 11.23, which defines these macros
+   incorrectly for preprocessor constants.  This workaround can likely
+   be removed in 2023, as HPE has promised support for HP-UX 11.23
+   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
+   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
+#ifdef __hpux
+# undef UINT_LEAST8_MAX
+# undef UINT_LEAST16_MAX
+# define UINT_LEAST8_MAX 255
+# define UINT_LEAST16_MAX 65535
 #endif
 
 #if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
@@ -567,6 +644,7 @@ typedef int yytype_uint16;
 
 #define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
 
+
 /* Stored state numbers (used for stacks). */
 typedef yytype_int16 yy_state_t;
 
@@ -584,6 +662,7 @@ typedef int yy_state_fast_t;
 #  define YY_(Msgid) Msgid
 # endif
 #endif
+
 
 #ifndef YY_ATTRIBUTE_PURE
 # if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
@@ -603,9 +682,9 @@ typedef int yy_state_fast_t;
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YYUSE(E) ((void) (E))
+# define YY_USE(E) ((void) (E))
 #else
-# define YYUSE(E) /* empty */
+# define YY_USE(E) /* empty */
 #endif
 
 #if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
@@ -642,7 +721,7 @@ typedef int yy_state_fast_t;
 
 #define YY_ASSERT(E) ((void) (0 && (E)))
 
-#if ! defined yyoverflow || YYERROR_VERBOSE
+#if !defined yyoverflow
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
@@ -707,8 +786,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 # endif
-#endif /* ! defined yyoverflow || YYERROR_VERBOSE */
-
+#endif /* !defined yyoverflow */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
@@ -787,14 +865,16 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  1135
 
-#define YYUNDEFTOK  2
+/* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   442
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
-#define YYTRANSLATE(YYX)                                                \
-  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+#define YYTRANSLATE(YYX)                                \
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK                     \
+   ? YY_CAST (yysymbol_kind_t, yytranslate[YYX])        \
+   : YYSYMBOL_YYUNDEF)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex.  */
@@ -851,83 +931,90 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   190,   190,   191,   192,   193,   194,   197,   200,   201,
-     201,   205,   206,   207,   208,   211,   212,   213,   214,   215,
-     216,   217,   218,   219,   220,   221,   222,   223,   224,   225,
-     226,   226,   227,   227,   228,   229,   230,   231,   232,   233,
-     234,   234,   236,   236,   238,   239,   240,   241,   242,   243,
-     244,   245,   246,   247,   248,   248,   249,   249,   250,   251,
-     252,   253,   254,   255,   256,   257,   258,   266,   267,   268,
-     269,   270,   272,   273,   274,   275,   276,   277,   278,   279,
-     280,   281,   282,   283,   284,   285,   286,   287,   288,   289,
-     290,   291,   292,   293,   294,   295,   296,   297,   298,   299,
-     300,   301,   302,   303,   305,   306,   307,   308,   309,   310,
-     311,   312,   313,   314,   315,   316,   317,   321,   322,   323,
-     324,   325,   329,   330,   331,   332,   333,   334,   337,   338,
-     341,   342,   343,   344,   345,   348,   349,   352,   353,   356,
-     357,   358,   359,   360,   361,   364,   365,   366,   367,   368,
-     369,   370,   371,   372,   373,   374,   375,   376,   377,   378,
-     379,   380,   381,   382,   383,   384,   385,   386,   387,   388,
-     389,   390,   391,   392,   393,   394,   395,   396,   397,   398,
-     399,   400,   401,   402,   403,   404,   407,   408,   411,   411,
-     412,   412,   413,   414,   415,   416,   417,   418,   419,   420,
-     421,   422,   423,   424,   425,   426,   427,   428,   429,   430,
-     431,   432,   433,   434,   435,   436,   437,   438,   439,   440,
-     441,   442,   445,   448,   451,   454,   455,   456,   457,   458,
-     459,   460,   461,   462,   463,   464,   465,   466,   467,   468,
-     469,   470,   471,   472,   473,   474,   475,   476,   477,   478,
-     479,   480,   481,   482,   483,   484,   485,   486,   487,   488,
-     489,   490,   491,   492,   493,   494,   495,   496,   497,   498,
-     499,   500,   501,   502,   503,   504,   505,   506,   507,   508,
-     509,   510,   511,   512,   513,   514,   515,   516,   517,   518,
-     519,   520,   521,   522,   523,   524,   527,   528,   529,   532,
-     533,   534,   535,   538,   539,   542,   543,   544,   545,   548,
-     551,   554,   554,   557,   558,   559,   562,   563,   566,   567,
-     570,   566,   575,   576,   579,   580,   583,   584,   585,   586,
-     589,   590,   593,   594,   595,   596,   599,   600,   603,   604,
-     605,   606,   609,   610,   611,   614,   615,   616,   617,   620,
-     621,   626,   641,   620,   646,   647,   648,   649,   650,   651,
-     654,   655,   658,   659,   664,   664,   668,   669,   672,   673,
-     677,   679,   678,   683,   684,   684,   688,   688,   694,   695,
-     696,   697,   698,   699,   703,   704,   703,   710,   711,   715,
-     715,   720,   721,   722,   723,   724,   725,   728,   729,   729,
-     731,   728,   735,   736,   737,   738,   739,   740,   743,   743,
-     748,   749,   752,   753,   756,   758,   760,   757,   764,   765,
-     768,   769,   769,   772,   773,   775,   776,   780,   781,   784,
-     785,   787,   788,   792,   793,   794,   795,   798,   799,   800,
-     801,   802,   805,   806,   807,   810,   810,   811,   811,   812,
-     812,   813,   813,   814,   814,   817,   818,   821,   822,   823,
-     824,   825,   826,   827,   828,   829,   830,   831,   832,   833,
-     834,   837,   838,   840,   841,   844,   845
+       0,   192,   192,   193,   194,   195,   196,   199,   202,   203,
+     203,   207,   208,   209,   210,   213,   214,   215,   216,   217,
+     218,   219,   220,   221,   222,   223,   224,   225,   226,   227,
+     228,   228,   229,   229,   230,   231,   232,   233,   234,   235,
+     236,   236,   238,   238,   240,   241,   242,   243,   244,   245,
+     246,   247,   248,   249,   250,   250,   251,   251,   252,   253,
+     254,   255,   256,   257,   258,   259,   260,   268,   269,   270,
+     271,   272,   274,   275,   276,   277,   278,   279,   280,   281,
+     282,   283,   284,   285,   286,   287,   288,   289,   290,   291,
+     292,   293,   294,   295,   296,   297,   298,   299,   300,   301,
+     302,   303,   304,   305,   307,   308,   309,   310,   311,   312,
+     313,   314,   315,   316,   317,   318,   319,   323,   324,   325,
+     326,   327,   331,   332,   333,   334,   335,   336,   339,   340,
+     343,   344,   345,   346,   347,   350,   351,   354,   355,   358,
+     359,   360,   361,   362,   363,   366,   367,   368,   369,   370,
+     371,   372,   373,   374,   375,   376,   377,   378,   379,   380,
+     381,   382,   383,   384,   385,   386,   387,   388,   389,   390,
+     391,   392,   393,   394,   395,   396,   397,   398,   399,   400,
+     401,   402,   403,   404,   405,   406,   409,   410,   413,   413,
+     414,   414,   415,   416,   417,   418,   419,   420,   421,   422,
+     423,   424,   425,   426,   427,   428,   429,   430,   431,   432,
+     433,   434,   435,   436,   437,   438,   439,   440,   441,   442,
+     443,   444,   447,   450,   453,   456,   457,   458,   459,   460,
+     461,   462,   463,   464,   465,   466,   467,   468,   469,   470,
+     471,   472,   473,   474,   475,   476,   477,   478,   479,   480,
+     481,   482,   483,   484,   485,   486,   487,   488,   489,   490,
+     491,   492,   493,   494,   495,   496,   497,   498,   499,   500,
+     501,   502,   503,   504,   505,   506,   507,   508,   509,   510,
+     511,   512,   513,   514,   515,   516,   517,   518,   519,   520,
+     521,   522,   523,   524,   525,   526,   529,   530,   531,   534,
+     535,   536,   537,   540,   541,   544,   545,   546,   547,   550,
+     553,   556,   556,   559,   560,   561,   564,   565,   568,   569,
+     572,   568,   577,   578,   581,   582,   585,   586,   587,   588,
+     591,   592,   595,   596,   597,   598,   601,   602,   605,   606,
+     607,   608,   611,   612,   613,   616,   617,   618,   619,   622,
+     623,   628,   643,   622,   648,   649,   650,   651,   652,   653,
+     656,   657,   660,   661,   666,   666,   670,   671,   674,   675,
+     679,   681,   680,   685,   686,   686,   690,   690,   696,   697,
+     698,   699,   700,   701,   705,   706,   705,   712,   713,   717,
+     717,   722,   723,   724,   725,   726,   727,   730,   731,   731,
+     733,   730,   737,   738,   739,   740,   741,   742,   745,   745,
+     750,   751,   754,   755,   758,   760,   762,   759,   766,   767,
+     770,   771,   771,   774,   775,   777,   778,   782,   783,   786,
+     787,   789,   790,   794,   795,   796,   797,   800,   801,   802,
+     803,   804,   807,   808,   809,   812,   812,   813,   813,   814,
+     814,   815,   815,   816,   816,   819,   820,   823,   824,   825,
+     826,   827,   828,   829,   830,   831,   832,   833,   834,   835,
+     836,   839,   840,   842,   843,   846,   847
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 0
+/** Accessing symbol of state STATE.  */
+#define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
+
+#if YYDEBUG || 0
+/* The user-facing name of the symbol whose (internal) number is
+   YYSYMBOL.  No bounds checking.  */
+static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
+
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "tFNUM", "tSYMBOL", "tSTRSYM", "tDOCU",
-  "tDIGITS", "tHEXDIGITS", "tBINDIGITS", "tSTRING", "tFOR", "tTO", "tSTEP",
-  "tNEXT", "tWHILE", "tWEND", "tREPEAT", "tUNTIL", "tIMPORT", "tGOTO",
-  "tGOSUB", "tLABEL", "tON", "tSUB", "tENDSUB", "tLOCAL", "tSTATIC",
-  "tEXPORT", "tERROR", "tEXECUTE", "tEXECUTE2", "tCOMPILE",
-  "tRUNTIME_CREATED_SUB", "tINTERRUPT", "tBREAK", "tCONTINUE", "tSWITCH",
-  "tSEND", "tCASE", "tDEFAULT", "tLOOP", "tDO", "tSEP", "tEOPROG", "tIF",
-  "tTHEN", "tELSE", "tELSIF", "tENDIF", "tIMPLICITENDIF", "tUSING",
-  "tPRINT", "tINPUT", "tRETURN", "tDIM", "tEND", "tEXIT", "tAT", "tSCREEN",
-  "tREVERSE", "tCOLOUR", "tBACKCOLOUR", "tAND", "tOR", "tNOT", "tBITNOT",
-  "tEOR", "tSHL", "tSHR", "tNEQ", "tLEQ", "tGEQ", "tLTN", "tGTN", "tEQU",
-  "tPOW", "tREAD", "tDATA", "tRESTORE", "tOPEN", "tCLOSE", "tSEEK",
-  "tTELL", "tAS", "tREADING", "tWRITING", "tORIGIN", "tWINDOW", "tDOT",
-  "tLINE", "tCIRCLE", "tTRIANGLE", "tTEXT", "tCLEAR", "tFILL", "tPRINTER",
-  "tWAIT", "tBELL", "tLET", "tARDIM", "tARSIZE", "tBIND", "tRECT",
-  "tGETBIT", "tPUTBIT", "tGETCHAR", "tPUTCHAR", "tNEW", "tCURVE", "tSIN",
-  "tASIN", "tCOS", "tACOS", "tTAN", "tATAN", "tEXP", "tLOG", "tSQRT",
-  "tSQR", "tMYEOF", "tABS", "tSIG", "tINT", "tCEIL", "tFLOOR", "tFRAC",
-  "tROUND", "tMOD", "tRAN", "tVAL", "tLEFT", "tRIGHT", "tMID", "tLEN",
-  "tMIN", "tMAX", "tSTR", "tINKEY", "tCHR", "tASC", "tHEX", "tDEC", "tBIN",
-  "tUPPER", "tLOWER", "tMOUSEX", "tMOUSEY", "tMOUSEB", "tMOUSEMOD",
+  "\"end of file\"", "error", "\"invalid token\"", "tFNUM", "tSYMBOL",
+  "tSTRSYM", "tDOCU", "tDIGITS", "tHEXDIGITS", "tBINDIGITS", "tSTRING",
+  "tFOR", "tTO", "tSTEP", "tNEXT", "tWHILE", "tWEND", "tREPEAT", "tUNTIL",
+  "tIMPORT", "tGOTO", "tGOSUB", "tLABEL", "tON", "tSUB", "tENDSUB",
+  "tLOCAL", "tSTATIC", "tEXPORT", "tERROR", "tEXECUTE", "tEXECUTE2",
+  "tCOMPILE", "tRUNTIME_CREATED_SUB", "tINTERRUPT", "tBREAK", "tCONTINUE",
+  "tSWITCH", "tSEND", "tCASE", "tDEFAULT", "tLOOP", "tDO", "tSEP",
+  "tEOPROG", "tIF", "tTHEN", "tELSE", "tELSIF", "tENDIF", "tIMPLICITENDIF",
+  "tUSING", "tPRINT", "tINPUT", "tRETURN", "tDIM", "tEND", "tEXIT", "tAT",
+  "tSCREEN", "tREVERSE", "tCOLOUR", "tBACKCOLOUR", "tAND", "tOR", "tNOT",
+  "tBITNOT", "tEOR", "tSHL", "tSHR", "tNEQ", "tLEQ", "tGEQ", "tLTN",
+  "tGTN", "tEQU", "tPOW", "tREAD", "tDATA", "tRESTORE", "tOPEN", "tCLOSE",
+  "tSEEK", "tTELL", "tAS", "tREADING", "tWRITING", "tORIGIN", "tWINDOW",
+  "tDOT", "tLINE", "tCIRCLE", "tTRIANGLE", "tTEXT", "tCLEAR", "tFILL",
+  "tPRINTER", "tWAIT", "tBELL", "tLET", "tARDIM", "tARSIZE", "tBIND",
+  "tRECT", "tGETBIT", "tPUTBIT", "tGETCHAR", "tPUTCHAR", "tNEW", "tCURVE",
+  "tSIN", "tASIN", "tCOS", "tACOS", "tTAN", "tATAN", "tEXP", "tLOG",
+  "tSQRT", "tSQR", "tMYEOF", "tABS", "tSIG", "tINT", "tCEIL", "tFLOOR",
+  "tFRAC", "tROUND", "tMOD", "tRAN", "tVAL", "tLEFT", "tRIGHT", "tMID",
+  "tLEN", "tMIN", "tMAX", "tSTR", "tINKEY", "tCHR", "tASC", "tHEX", "tDEC",
+  "tBIN", "tUPPER", "tLOWER", "tMOUSEX", "tMOUSEY", "tMOUSEB", "tMOUSEMOD",
   "tTRIM", "tLTRIM", "tRTRIM", "tINSTR", "tRINSTR", "tCHOMP", "tSYSTEM",
   "tSYSTEM2", "tPEEK", "tPEEK2", "tPOKE", "tFRNFN_CALL", "tFRNFN_CALL2",
   "tFRNFN_SIZE", "tFRNBF_ALLOC", "tFRNBF_FREE", "tFRNBF_SIZE",
@@ -958,9 +1045,15 @@ static const char *const yytname[] =
   "$@33", "$@34", "$@35", "$@36", "$@37", "prompt", "printintro",
   "hashed_number", "goto_list", "gosub_list", YY_NULLPTR
 };
+
+static const char *
+yysymbol_name (yysymbol_kind_t yysymbol)
+{
+  return yytname[yysymbol];
+}
 #endif
 
-# ifdef YYPRINT
+#ifdef YYPRINT
 /* YYTOKNUM[NUM] -- (External) token number corresponding to the
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_int16 yytoknum[] =
@@ -986,7 +1079,7 @@ static const yytype_int16 yytoknum[] =
      435,   436,   437,   438,   439,   440,   441,    45,    43,    42,
       47,   442,    59,    44,    40,    41,    35
 };
-# endif
+#endif
 
 #define YYPACT_NINF (-825)
 
@@ -1259,7 +1352,7 @@ static const yytype_int16 yypgoto[] =
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     6,    67,    68,   288,    69,    70,   207,   208,   625,
+       0,     6,    67,    68,   288,    69,    70,   207,   208,   625,
      626,   224,   468,    71,    72,   471,    73,    74,   479,   179,
      180,    75,   258,   602,   601,   510,   511,   259,   182,   242,
      183,   202,   229,   184,   185,   210,   211,   427,   428,    78,
@@ -2739,10 +2832,10 @@ static const yytype_int8 yyr2[] =
 };
 
 
+enum { YYENOMEM = -2 };
+
 #define yyerrok         (yyerrstatus = 0)
 #define yyclearin       (yychar = YYEMPTY)
-#define YYEMPTY         (-2)
-#define YYEOF           0
 
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
@@ -2768,10 +2861,9 @@ static const yytype_int8 yyr2[] =
       }                                                           \
   while (0)
 
-/* Error token number */
-#define YYTERROR        1
-#define YYERRCODE       256
-
+/* Backward compatibility with an undocumented macro.
+   Use YYerror or YYUNDEF. */
+#define YYERRCODE YYUNDEF
 
 /* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
    If N is 0, then set CURRENT to the empty location which ends
@@ -2819,8 +2911,8 @@ do {                                            \
    This macro was not mandated originally: define only if we know
    we won't break user code: when these are the locations we know.  */
 
-#ifndef YY_LOCATION_PRINT
-# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+# ifndef YY_LOCATION_PRINT
+#  if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
 
 /* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
 
@@ -2850,22 +2942,22 @@ yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
   return res;
  }
 
-#  define YY_LOCATION_PRINT(File, Loc)          \
+#   define YY_LOCATION_PRINT(File, Loc)          \
   yy_location_print_ (File, &(Loc))
 
-# else
-#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-# endif
-#endif
+#  else
+#   define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+#  endif
+# endif /* !defined YY_LOCATION_PRINT */
 
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)                    \
 do {                                                                      \
   if (yydebug)                                                            \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Type, Value, Location); \
+                  Kind, Value, Location); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -2876,19 +2968,20 @@ do {                                                                      \
 `-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_value_print (FILE *yyo,
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   FILE *yyoutput = yyo;
-  YYUSE (yyoutput);
-  YYUSE (yylocationp);
+  YY_USE (yyoutput);
+  YY_USE (yylocationp);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
-  if (yytype < YYNTOKENS)
-    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
+  if (yykind < YYNTOKENS)
+    YYPRINT (yyo, yytoknum[yykind], *yyvaluep);
 # endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -2898,14 +2991,15 @@ yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YY
 `---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_print (FILE *yyo,
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   YYFPRINTF (yyo, "%s %s (",
-             yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
+             yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
   YY_LOCATION_PRINT (yyo, *yylocationp);
   YYFPRINTF (yyo, ": ");
-  yy_symbol_value_print (yyo, yytype, yyvaluep, yylocationp);
+  yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp);
   YYFPRINTF (yyo, ")");
 }
 
@@ -2938,7 +3032,8 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
+yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
+                 int yyrule)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -2950,9 +3045,9 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
-                       yystos[+yyssp[yyi + 1 - yynrhs]],
-                       &yyvsp[(yyi + 1) - (yynrhs)]
-                       , &(yylsp[(yyi + 1) - (yynrhs)])                       );
+                       YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
+                       &yyvsp[(yyi + 1) - (yynrhs)],
+                       &(yylsp[(yyi + 1) - (yynrhs)]));
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -2967,8 +3062,8 @@ do {                                    \
    multiple parsers can coexist.  */
 int yydebug;
 #else /* !YYDEBUG */
-# define YYDPRINTF(Args)
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
+# define YYDPRINTF(Args) ((void) 0)
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
@@ -2991,260 +3086,31 @@ int yydebug;
 #endif
 
 
-#if YYERROR_VERBOSE
 
-# ifndef yystrlen
-#  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
-#  else
-/* Return the length of YYSTR.  */
-static YYPTRDIFF_T
-yystrlen (const char *yystr)
-{
-  YYPTRDIFF_T yylen;
-  for (yylen = 0; yystr[yylen]; yylen++)
-    continue;
-  return yylen;
-}
-#  endif
-# endif
 
-# ifndef yystpcpy
-#  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
-#   define yystpcpy stpcpy
-#  else
-/* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
-   YYDEST.  */
-static char *
-yystpcpy (char *yydest, const char *yysrc)
-{
-  char *yyd = yydest;
-  const char *yys = yysrc;
 
-  while ((*yyd++ = *yys++) != '\0')
-    continue;
-
-  return yyd - 1;
-}
-#  endif
-# endif
-
-# ifndef yytnamerr
-/* Copy to YYRES the contents of YYSTR after stripping away unnecessary
-   quotes and backslashes, so that it's suitable for yyerror.  The
-   heuristic is that double-quoting is unnecessary unless the string
-   contains an apostrophe, a comma, or backslash (other than
-   backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
-   null, do not copy; instead, return the length of what the result
-   would have been.  */
-static YYPTRDIFF_T
-yytnamerr (char *yyres, const char *yystr)
-{
-  if (*yystr == '"')
-    {
-      YYPTRDIFF_T yyn = 0;
-      char const *yyp = yystr;
-
-      for (;;)
-        switch (*++yyp)
-          {
-          case '\'':
-          case ',':
-            goto do_not_strip_quotes;
-
-          case '\\':
-            if (*++yyp != '\\')
-              goto do_not_strip_quotes;
-            else
-              goto append;
-
-          append:
-          default:
-            if (yyres)
-              yyres[yyn] = *yyp;
-            yyn++;
-            break;
-
-          case '"':
-            if (yyres)
-              yyres[yyn] = '\0';
-            return yyn;
-          }
-    do_not_strip_quotes: ;
-    }
-
-  if (yyres)
-    return yystpcpy (yyres, yystr) - yyres;
-  else
-    return yystrlen (yystr);
-}
-# endif
-
-/* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
-   about the unexpected token YYTOKEN for the state stack whose top is
-   YYSSP.
-
-   Return 0 if *YYMSG was successfully written.  Return 1 if *YYMSG is
-   not large enough to hold the message.  In that case, also set
-   *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
-   required number of bytes is too large to store.  */
-static int
-yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
-                yy_state_t *yyssp, int yytoken)
-{
-  enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
-  /* Internationalized format string. */
-  const char *yyformat = YY_NULLPTR;
-  /* Arguments of yyformat: reported tokens (one for the "unexpected",
-     one per "expected"). */
-  char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Actual size of YYARG. */
-  int yycount = 0;
-  /* Cumulated lengths of YYARG.  */
-  YYPTRDIFF_T yysize = 0;
-
-  /* There are many possibilities here to consider:
-     - If this state is a consistent state with a default action, then
-       the only way this function was invoked is if the default action
-       is an error action.  In that case, don't check for expected
-       tokens because there are none.
-     - The only way there can be no lookahead present (in yychar) is if
-       this state is a consistent state with a default action.  Thus,
-       detecting the absence of a lookahead is sufficient to determine
-       that there is no unexpected or expected token to report.  In that
-       case, just report a simple "syntax error".
-     - Don't assume there isn't a lookahead just because this state is a
-       consistent state with a default action.  There might have been a
-       previous inconsistent state, consistent state with a non-default
-       action, or user semantic action that manipulated yychar.
-     - Of course, the expected token list depends on states to have
-       correct lookahead information, and it depends on the parser not
-       to perform extra reductions after fetching a lookahead from the
-       scanner and before detecting a syntax error.  Thus, state merging
-       (from LALR or IELR) and default reductions corrupt the expected
-       token list.  However, the list is correct for canonical LR with
-       one exception: it will still contain any token that will not be
-       accepted due to an error action in a later state.
-  */
-  if (yytoken != YYEMPTY)
-    {
-      int yyn = yypact[+*yyssp];
-      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
-      yysize = yysize0;
-      yyarg[yycount++] = yytname[yytoken];
-      if (!yypact_value_is_default (yyn))
-        {
-          /* Start YYX at -YYN if negative to avoid negative indexes in
-             YYCHECK.  In other words, skip the first -YYN actions for
-             this state because they are default actions.  */
-          int yyxbegin = yyn < 0 ? -yyn : 0;
-          /* Stay within bounds of both yycheck and yytname.  */
-          int yychecklim = YYLAST - yyn + 1;
-          int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
-          int yyx;
-
-          for (yyx = yyxbegin; yyx < yyxend; ++yyx)
-            if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR
-                && !yytable_value_is_error (yytable[yyx + yyn]))
-              {
-                if (yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
-                  {
-                    yycount = 1;
-                    yysize = yysize0;
-                    break;
-                  }
-                yyarg[yycount++] = yytname[yyx];
-                {
-                  YYPTRDIFF_T yysize1
-                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-                    yysize = yysize1;
-                  else
-                    return 2;
-                }
-              }
-        }
-    }
-
-  switch (yycount)
-    {
-# define YYCASE_(N, S)                      \
-      case N:                               \
-        yyformat = S;                       \
-      break
-    default: /* Avoid compiler warnings. */
-      YYCASE_(0, YY_("syntax error"));
-      YYCASE_(1, YY_("syntax error, unexpected %s"));
-      YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
-      YYCASE_(3, YY_("syntax error, unexpected %s, expecting %s or %s"));
-      YYCASE_(4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
-      YYCASE_(5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
-# undef YYCASE_
-    }
-
-  {
-    /* Don't count the "%s"s in the final size, but reserve room for
-       the terminator.  */
-    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
-    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-      yysize = yysize1;
-    else
-      return 2;
-  }
-
-  if (*yymsg_alloc < yysize)
-    {
-      *yymsg_alloc = 2 * yysize;
-      if (! (yysize <= *yymsg_alloc
-             && *yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
-        *yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
-      return 1;
-    }
-
-  /* Avoid sprintf, as that infringes on the user's name space.
-     Don't have undefined behavior even if the translation
-     produced a string with the wrong number of "%s"s.  */
-  {
-    char *yyp = *yymsg;
-    int yyi = 0;
-    while ((*yyp = *yyformat) != '\0')
-      if (*yyp == '%' && yyformat[1] == 's' && yyi < yycount)
-        {
-          yyp += yytnamerr (yyp, yyarg[yyi++]);
-          yyformat += 2;
-        }
-      else
-        {
-          ++yyp;
-          ++yyformat;
-        }
-  }
-  return 0;
-}
-#endif /* YYERROR_VERBOSE */
 
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
+yydestruct (const char *yymsg,
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 {
-  YYUSE (yyvaluep);
-  YYUSE (yylocationp);
+  YY_USE (yyvaluep);
+  YY_USE (yylocationp);
   if (!yymsg)
     yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+  YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
-
-
-/* The lookahead symbol.  */
+/* Lookahead token kind.  */
 int yychar;
 
 /* The semantic value of the lookahead symbol.  */
@@ -3259,6 +3125,8 @@ YYLTYPE yylloc
 int yynerrs;
 
 
+
+
 /*----------.
 | yyparse.  |
 `----------*/
@@ -3266,53 +3134,45 @@ int yynerrs;
 int
 yyparse (void)
 {
-    yy_state_fast_t yystate;
+    yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
-    int yyerrstatus;
+    int yyerrstatus = 0;
 
-    /* The stacks and their tools:
-       'yyss': related to states.
-       'yyvs': related to semantic values.
-       'yyls': related to locations.
-
-       Refer to the stacks through separate pointers, to allow yyoverflow
+    /* Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
 
-    /* The state stack.  */
+    /* Their size.  */
+    YYPTRDIFF_T yystacksize = YYINITDEPTH;
+
+    /* The state stack: array, bottom, top.  */
     yy_state_t yyssa[YYINITDEPTH];
-    yy_state_t *yyss;
-    yy_state_t *yyssp;
+    yy_state_t *yyss = yyssa;
+    yy_state_t *yyssp = yyss;
 
-    /* The semantic value stack.  */
+    /* The semantic value stack: array, bottom, top.  */
     YYSTYPE yyvsa[YYINITDEPTH];
-    YYSTYPE *yyvs;
-    YYSTYPE *yyvsp;
+    YYSTYPE *yyvs = yyvsa;
+    YYSTYPE *yyvsp = yyvs;
 
-    /* The location stack.  */
+    /* The location stack: array, bottom, top.  */
     YYLTYPE yylsa[YYINITDEPTH];
-    YYLTYPE *yyls;
-    YYLTYPE *yylsp;
-
-    /* The locations where the error started and ended.  */
-    YYLTYPE yyerror_range[3];
-
-    YYPTRDIFF_T yystacksize;
+    YYLTYPE *yyls = yylsa;
+    YYLTYPE *yylsp = yyls;
 
   int yyn;
+  /* The return value of yyparse.  */
   int yyresult;
-  /* Lookahead token as an internal (translated) token number.  */
-  int yytoken = 0;
+  /* Lookahead symbol kind.  */
+  yysymbol_kind_t yytoken = YYSYMBOL_YYEMPTY;
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
   YYLTYPE yyloc;
 
-#if YYERROR_VERBOSE
-  /* Buffer for error messages, and its allocated size.  */
-  char yymsgbuf[128];
-  char *yymsg = yymsgbuf;
-  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
-#endif
+  /* The locations where the error started and ended.  */
+  YYLTYPE yyerror_range[3];
+
+
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
 
@@ -3320,16 +3180,8 @@ yyparse (void)
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
 
-  yyssp = yyss = yyssa;
-  yyvsp = yyvs = yyvsa;
-  yylsp = yyls = yylsa;
-  yystacksize = YYINITDEPTH;
-
   YYDPRINTF ((stderr, "Starting parse\n"));
 
-  yystate = 0;
-  yyerrstatus = 0;
-  yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
   yylsp[0] = yylloc;
   goto yysetstate;
@@ -3353,6 +3205,7 @@ yysetstate:
   YY_IGNORE_USELESS_CAST_BEGIN
   *yyssp = YY_CAST (yy_state_t, yystate);
   YY_IGNORE_USELESS_CAST_END
+  YY_STACK_PRINT (yyss, yyssp);
 
   if (yyss + yystacksize - 1 <= yyssp)
 #if !defined yyoverflow && !defined YYSTACK_RELOCATE
@@ -3402,7 +3255,7 @@ yysetstate:
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
         YYSTACK_RELOCATE (yyls_alloc, yyls);
-# undef YYSTACK_RELOCATE
+#  undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
@@ -3442,17 +3295,29 @@ yybackup:
 
   /* Not known => get a lookahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
+  /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
   if (yychar == YYEMPTY)
     {
-      YYDPRINTF ((stderr, "Reading a token: "));
+      YYDPRINTF ((stderr, "Reading a token\n"));
       yychar = yylex ();
     }
 
   if (yychar <= YYEOF)
     {
-      yychar = yytoken = YYEOF;
+      yychar = YYEOF;
+      yytoken = YYSYMBOL_YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
+    }
+  else if (yychar == YYerror)
+    {
+      /* The scanner already issued an error message, process directly
+         to error recovery.  But do not keep the error token as
+         lookahead, it is too special and may lead us to an endless
+         loop in error recovery. */
+      yychar = YYUNDEF;
+      yytoken = YYSYMBOL_YYerror;
+      yyerror_range[1] = yylloc;
+      goto yyerrlab1;
     }
   else
     {
@@ -3525,171 +3390,171 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 3:
+  case 3: /* program_or_expression: tSTART_EXPRESSION expression tEOPROG  */
                                          {YYACCEPT;}
     break;
 
-  case 4:
+  case 4: /* program_or_expression: tSTART_STRING_EXPRESSION string_expression tEOPROG  */
                                                        {YYACCEPT;}
     break;
 
-  case 5:
+  case 5: /* program_or_expression: tSTART_ASSIGNMENT assignment tEOPROG  */
                                          {YYACCEPT;}
     break;
 
-  case 6:
+  case 6: /* program_or_expression: tSTART_FUNCTION_DEFINITION function_definition tEOPROG  */
                                                            {YYACCEPT;}
     break;
 
-  case 7:
+  case 7: /* program: statement_list tEOPROG  */
                                 {YYACCEPT;}
     break;
 
-  case 9:
+  case 9: /* $@1: %empty  */
                    {if (severity_so_far >= sERROR) {YYABORT;}}
     break;
 
-  case 17:
+  case 17: /* statement: tIMPORT  */
             {report_if_missing("can not import a library in a loop or an if-statement",FALSE);}
     break;
 
-  case 18:
+  case 18: /* statement: tERROR string_expression  */
                              {add_command(cERROR);}
     break;
 
-  case 24:
+  case 24: /* statement: tBREAK  */
            {add_command(cPOP_MULTI);create_mybreak(1);if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
     break;
 
-  case 25:
+  case 25: /* statement: tBREAK tDIGITS  */
                    {add_command(cPOP_MULTI);create_mybreak(atoi((yyvsp[0].digits)));if (!loop_nesting && !switch_nesting) lyyerror(sERROR,"break outside loop or switch");}
     break;
 
-  case 26:
+  case 26: /* statement: tCONTINUE  */
               {add_command(cPOP_MULTI);add_command_with_switch_state(cCONTINUE);if (!loop_nesting) lyyerror(sERROR,"continue outside loop");}
     break;
 
-  case 28:
+  case 28: /* statement: function_or_array  */
                       {create_call((yyvsp[0].symbol));add_command(cPOP);}
     break;
 
-  case 29:
+  case 29: /* statement: stringfunction_or_array  */
                             {create_call((yyvsp[0].symbol));add_command(cPOP);}
     break;
 
-  case 30:
+  case 30: /* $@2: %empty  */
            {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'local' outside functions");}
     break;
 
-  case 32:
+  case 32: /* $@3: %empty  */
             {if (function_type==ftNONE) lyyerror(sERROR,"no use for 'static' outside functions");}
     break;
 
-  case 36:
+  case 36: /* statement: tGOTO symbol_or_lineno  */
                            {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
-  case 37:
+  case 37: /* statement: tGOSUB symbol_or_lineno  */
                             {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
-  case 38:
+  case 38: /* statement: tON tINTERRUPT tBREAK  */
                           {create_exception(TRUE);}
     break;
 
-  case 39:
+  case 39: /* statement: tON tINTERRUPT tCONTINUE  */
                              {create_exception(FALSE);}
     break;
 
-  case 40:
+  case 40: /* $@4: %empty  */
                          {add_command(cSKIPPER);}
     break;
 
-  case 41:
+  case 41: /* statement: tON expression tGOTO $@4 goto_list  */
               {add_command(cNOP);}
     break;
 
-  case 42:
+  case 42: /* $@5: %empty  */
                           {add_command(cSKIPPER);}
     break;
 
-  case 43:
+  case 43: /* statement: tON expression tGOSUB $@5 gosub_list  */
                {add_command(cNOP);}
     break;
 
-  case 44:
+  case 44: /* statement: tLABEL symbol_or_lineno  */
                             {create_label((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol),cLABEL);}
     break;
 
-  case 45:
+  case 45: /* statement: open_clause  */
                 {add_command(cCHECKOPEN);}
     break;
 
-  case 46:
+  case 46: /* statement: tCLOSE hashed_number  */
                          {add_command(cCLOSE);}
     break;
 
-  case 47:
+  case 47: /* statement: seek_clause  */
                 {add_command(cCHECKSEEK);}
     break;
 
-  case 48:
+  case 48: /* statement: tCOMPILE string_expression  */
                                {add_command(cCOMPILE);}
     break;
 
-  case 49:
+  case 49: /* statement: tEXECUTE call_list  */
                        {create_execute(0);add_command(cPOP);add_command(cPOP);}
     break;
 
-  case 50:
+  case 50: /* statement: tEXECUTE2 call_list  */
                         {create_execute(1);add_command(cPOP);add_command(cPOP);}
     break;
 
-  case 51:
+  case 51: /* statement: tPRINT printintro printlist  */
                                 {create_colour(0);create_print('n');create_pps(cPOPSTREAM,0);}
     break;
 
-  case 52:
+  case 52: /* statement: tPRINT printintro printlist ';'  */
                                     {create_colour(0);create_pps(cPOPSTREAM,0);}
     break;
 
-  case 53:
+  case 53: /* statement: tPRINT printintro printlist ','  */
                                     {create_colour(0);create_print('t');create_pps(cPOPSTREAM,0);}
     break;
 
-  case 54:
+  case 54: /* $@6: %empty  */
            {tileol=FALSE;}
     break;
 
-  case 56:
+  case 56: /* $@7: %empty  */
                  {tileol=TRUE;}
     break;
 
-  case 58:
+  case 58: /* statement: tCOLOUR expression ',' expression ',' expression  */
                                                      {add_command(cGCOLOUR);}
     break;
 
-  case 59:
+  case 59: /* statement: tCOLOUR string_expression  */
                               {add_command(cGCOLOUR2);}
     break;
 
-  case 60:
+  case 60: /* statement: tBACKCOLOUR expression ',' expression ',' expression  */
                                                          {add_command(cGBACKCOLOUR);}
     break;
 
-  case 61:
+  case 61: /* statement: tBACKCOLOUR string_expression  */
                                   {add_command(cGBACKCOLOUR2);}
     break;
 
-  case 64:
+  case 64: /* statement: tRESTORE  */
              {create_restore("");}
     break;
 
-  case 65:
+  case 65: /* statement: tRESTORE symbol_or_lineno  */
                               {create_restore((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));}
     break;
 
-  case 66:
+  case 66: /* statement: tRETURN  */
             {if (function_type!=ftNONE) {
 	       add_command(cCLEARSYMREFS);end_symref_chain();
 	       add_command(cPOPSYMLIST);
@@ -3700,1065 +3565,1065 @@ yyreduce:
             }}
     break;
 
-  case 67:
+  case 67: /* statement: tRETURN expression  */
                        {if (function_type==ftNONE) {lyyerror(sERROR,"a value can only be returned from a subroutine"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNUMBER,function_type);add_command(cRETURN_FROM_CALL);}
     break;
 
-  case 68:
+  case 68: /* statement: tRETURN string_expression  */
                               {if (function_type==ftNONE) {lyyerror(sERROR,"can not return value"); YYABORT;} add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftSTRING,function_type);add_command(cRETURN_FROM_CALL);}
     break;
 
-  case 70:
+  case 70: /* statement: tOPEN tWINDOW expression ',' expression  */
                                             {create_openwin(FALSE);}
     break;
 
-  case 71:
+  case 71: /* statement: tOPEN tWINDOW expression ',' expression ',' string_expression  */
          {create_openwin(TRUE);}
     break;
 
-  case 72:
+  case 72: /* statement: tWINDOW tORIGIN string_expression  */
                                       {add_command(cMOVEORIGIN);}
     break;
 
-  case 73:
+  case 73: /* statement: tDOT coordinates  */
                      {add_command(cDOT);}
     break;
 
-  case 74:
+  case 74: /* statement: tCLEAR tDOT coordinates  */
                             {add_command(cDOT);putindrawmode(dmCLEAR);}
     break;
 
-  case 75:
+  case 75: /* statement: tLINE coordinates to coordinates  */
                                      {create_line(2);}
     break;
 
-  case 76:
+  case 76: /* statement: tCLEAR tLINE coordinates to coordinates  */
                                             {create_line(2);putindrawmode(dmCLEAR);}
     break;
 
-  case 77:
+  case 77: /* statement: tLINE tTO coordinates  */
                           {create_line(1);}
     break;
 
-  case 78:
+  case 78: /* statement: tLINE coordinates  */
                       {create_line(1);}
     break;
 
-  case 79:
+  case 79: /* statement: tCLEAR tLINE tTO coordinates  */
                                  {create_line(1);putindrawmode(dmCLEAR);}
     break;
 
-  case 80:
+  case 80: /* statement: tCLEAR tLINE coordinates  */
                              {create_line(1);putindrawmode(dmCLEAR);}
     break;
 
-  case 81:
+  case 81: /* statement: tPUTBIT string_expression to expression ',' expression ',' string_expression  */
                                                                                  {add_command(cPUTBIT);}
     break;
 
-  case 82:
+  case 82: /* statement: tPUTBIT string_expression to expression ',' expression  */
                                                            {create_pushstr("solid"); add_command(cPUTBIT);}
     break;
 
-  case 83:
+  case 83: /* statement: tPUTCHAR string_expression to expression ',' expression  */
                                                             {add_command(cPUTCHAR);}
     break;
 
-  case 84:
+  case 84: /* statement: tNEW tCURVE  */
                 {create_line(-1);}
     break;
 
-  case 85:
+  case 85: /* statement: tCLOSE tCURVE  */
                   {create_line(0);}
     break;
 
-  case 86:
+  case 86: /* statement: clear_fill_clause tCIRCLE coordinates ',' expression  */
                                                          {add_command(cCIRCLE);putindrawmode(0);}
     break;
 
-  case 87:
+  case 87: /* statement: clear_fill_clause tTRIANGLE coordinates to coordinates to coordinates  */
                                                                           {add_command(cTRIANGLE);putindrawmode(0);}
     break;
 
-  case 88:
+  case 88: /* statement: tTEXT coordinates ',' string_expression  */
                                             {add_command(cTEXT1);}
     break;
 
-  case 89:
+  case 89: /* statement: tTEXT coordinates ',' string_expression ',' string_expression  */
                                                                   {add_command(cTEXT2);}
     break;
 
-  case 90:
+  case 90: /* statement: tTEXT coordinates ',' string_expression ',' string_expression ',' string_expression  */
                                                                                         {add_command(cTEXT3);}
     break;
 
-  case 91:
+  case 91: /* statement: clear_fill_clause tRECT coordinates to coordinates  */
                                                        {add_command(cRECT);putindrawmode(0);}
     break;
 
-  case 92:
+  case 92: /* statement: tCLOSE tWINDOW  */
                    {add_command(cCLOSEWIN);}
     break;
 
-  case 93:
+  case 93: /* statement: tCLEAR tWINDOW  */
                    {add_command(cCLEARWIN);}
     break;
 
-  case 94:
+  case 94: /* statement: tCLEAR tSCREEN  */
                    {add_command(cCLEARSCR);}
     break;
 
-  case 95:
+  case 95: /* statement: tOPEN tPRINTER  */
                    {create_openprinter(0);}
     break;
 
-  case 96:
+  case 96: /* statement: tOPEN tPRINTER string_expression  */
                                      {create_openprinter(1);}
     break;
 
-  case 97:
+  case 97: /* statement: tCLOSE tPRINTER  */
                     {add_command(cCLOSEPRN);}
     break;
 
-  case 98:
+  case 98: /* statement: tWAIT expression  */
                      {add_command(cWAIT);}
     break;
 
-  case 99:
+  case 99: /* statement: tBELL  */
           {add_command(cBELL);}
     break;
 
-  case 100:
+  case 100: /* statement: tINKEY  */
            {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
     break;
 
-  case 101:
+  case 101: /* statement: tINKEY '(' ')'  */
                    {create_pushdbl(-1);create_function(fINKEY);add_command(cPOP);}
     break;
 
-  case 102:
+  case 102: /* statement: tINKEY '(' expression ')'  */
                               {create_function(fINKEY);add_command(cPOP);}
     break;
 
-  case 103:
+  case 103: /* statement: tSYSTEM '(' string_expression ')'  */
                                       {create_function(fSYSTEM);
 	add_command(cPOP);}
     break;
 
-  case 104:
+  case 104: /* statement: tPOKE string_expression ',' string_expression  */
                                                   {create_poke('s');}
     break;
 
-  case 105:
+  case 105: /* statement: tPOKE string_expression ',' expression  */
                                            {create_poke('d');}
     break;
 
-  case 106:
+  case 106: /* statement: tPOKE hashed_number ',' string_expression  */
                                               {create_poke('S');}
     break;
 
-  case 107:
+  case 107: /* statement: tPOKE hashed_number ',' expression  */
                                        {create_poke('D');}
     break;
 
-  case 108:
+  case 108: /* statement: tEND  */
          {add_command(cEND);}
     break;
 
-  case 109:
+  case 109: /* statement: tEXIT  */
           {create_pushdbl(0);add_command(cEXIT);}
     break;
 
-  case 110:
+  case 110: /* statement: tEXIT expression  */
                      {add_command(cEXIT);}
     break;
 
-  case 111:
+  case 111: /* statement: tDOCU  */
           {create_docu((yyvsp[0].symbol));}
     break;
 
-  case 112:
+  case 112: /* statement: tBIND string_expression  */
                             {add_command(cBIND);}
     break;
 
-  case 113:
+  case 113: /* statement: tFRNBF_FREE string_expression  */
                                   {add_command(cFRNBF_FREE);}
     break;
 
-  case 114:
+  case 114: /* statement: tFRNBF_SET string_expression ',' expression ',' string_expression ',' expression  */
                                                                                      {add_command(cFRNBF_SET_NUMBER);}
     break;
 
-  case 115:
+  case 115: /* statement: tFRNBF_SET string_expression ',' expression ',' string_expression  */
                                                                       {add_command(cFRNBF_SET_STRING);}
     break;
 
-  case 116:
+  case 116: /* statement: tFRNBF_SET_BUFFER string_expression ',' expression ',' string_expression  */
                                                                              {add_command(cFRNBF_SET_BUFFER);}
     break;
 
-  case 117:
+  case 117: /* clear_fill_clause: %empty  */
                                {drawmode=0;}
     break;
 
-  case 118:
+  case 118: /* clear_fill_clause: tCLEAR  */
            {drawmode=dmCLEAR;}
     break;
 
-  case 119:
+  case 119: /* clear_fill_clause: tFILL  */
           {drawmode=dmFILL;}
     break;
 
-  case 120:
+  case 120: /* clear_fill_clause: tCLEAR tFILL  */
                  {drawmode=dmFILL+dmCLEAR;}
     break;
 
-  case 121:
+  case 121: /* clear_fill_clause: tFILL tCLEAR  */
                  {drawmode=dmFILL+dmCLEAR;}
     break;
 
-  case 122:
+  case 122: /* string_assignment: tSTRSYM tEQU string_expression  */
                                                   {add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
     break;
 
-  case 123:
+  case 123: /* string_assignment: tMID '(' string_scalar_or_array ',' expression ',' expression ')' tEQU string_expression  */
                                                                                              {create_changestring(fMID);}
     break;
 
-  case 124:
+  case 124: /* string_assignment: tMID '(' string_scalar_or_array ',' expression ')' tEQU string_expression  */
                                                                               {create_changestring(fMID2);}
     break;
 
-  case 125:
+  case 125: /* string_assignment: tLEFT '(' string_scalar_or_array ',' expression ')' tEQU string_expression  */
                                                                                {create_changestring(fLEFT);}
     break;
 
-  case 126:
+  case 126: /* string_assignment: tRIGHT '(' string_scalar_or_array ',' expression ')' tEQU string_expression  */
                                                                                 {create_changestring(fRIGHT);}
     break;
 
-  case 127:
+  case 127: /* string_assignment: stringfunction_or_array tEQU string_expression  */
                                                    {create_doarray(dotify((yyvsp[-2].symbol),FALSE),ASSIGNSTRINGARRAY);}
     break;
 
-  case 130:
+  case 130: /* open_clause: tOPEN hashed_number ',' string_expression ',' string_expression  */
                                                                              {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
-  case 131:
+  case 131: /* open_clause: tOPEN hashed_number ',' string_expression  */
                                               {create_myopen(OPEN_HAS_STREAM);}
     break;
 
-  case 132:
+  case 132: /* open_clause: tOPEN hashed_number ',' tPRINTER  */
                                      {create_myopen(OPEN_HAS_STREAM+OPEN_PRINTER);}
     break;
 
-  case 133:
+  case 133: /* open_clause: tOPEN string_expression tFOR tREADING tAS hashed_number  */
                                                             {add_command(cSWAP);create_pushstr("r");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
-  case 134:
+  case 134: /* open_clause: tOPEN string_expression tFOR tWRITING tAS hashed_number  */
                                                             {add_command(cSWAP);create_pushstr("w");create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
-  case 135:
+  case 135: /* seek_clause: tSEEK hashed_number ',' expression  */
                                                 {add_command(cSEEK);}
     break;
 
-  case 136:
+  case 136: /* seek_clause: tSEEK hashed_number ',' expression ',' string_expression  */
                                                              {add_command(cSEEK2);}
     break;
 
-  case 137:
+  case 137: /* string_scalar_or_array: tSTRSYM  */
                                 {add_command_with_sym_and_diag(cPUSHSTRPTR,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 138:
+  case 138: /* string_scalar_or_array: tSTRSYM '(' call_list ')'  */
                               {create_doarray(dotify((yyvsp[-3].symbol),FALSE),GETSTRINGPOINTER);}
     break;
 
-  case 139:
+  case 139: /* string_expression: tSTRSYM  */
                            {add_command_with_sym_and_diag(cPUSHSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 141:
+  case 141: /* string_expression: stringfunction_or_array  */
                             {add_command_with_sym_and_diag(cSTRINGFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
     break;
 
-  case 142:
+  case 142: /* string_expression: tSTRING  */
             {if ((yyvsp[0].string)==NULL) {lyyerror(sERROR,"String not terminated");create_pushstr("");} else {create_pushstr((yyvsp[0].string));}}
     break;
 
-  case 143:
+  case 143: /* string_expression: string_expression '+' string_expression  */
                                             {add_command(cCONCAT);}
     break;
 
-  case 145:
+  case 145: /* string_function: tLEFT '(' string_expression ',' expression ')'  */
                                                                 {create_function(fLEFT);}
     break;
 
-  case 146:
+  case 146: /* string_function: tRIGHT '(' string_expression ',' expression ')'  */
                                                     {create_function(fRIGHT);}
     break;
 
-  case 147:
+  case 147: /* string_function: tMID '(' string_expression ',' expression ',' expression ')'  */
                                                                  {create_function(fMID);}
     break;
 
-  case 148:
+  case 148: /* string_function: tMID '(' string_expression ',' expression ')'  */
                                                   {create_function(fMID2);}
     break;
 
-  case 149:
+  case 149: /* string_function: tSTR '(' expression ')'  */
                             {create_function(fSTR);}
     break;
 
-  case 150:
+  case 150: /* string_function: tSTR '(' expression ',' string_expression ')'  */
                                                   {create_function(fSTR2);}
     break;
 
-  case 151:
+  case 151: /* string_function: tSTR '(' expression ',' string_expression ',' string_expression ')'  */
                                                                         {create_function(fSTR3);}
     break;
 
-  case 152:
+  case 152: /* string_function: tSTR '(' string_expression ')'  */
                                    {create_function(fSTR4);}
     break;
 
-  case 153:
+  case 153: /* string_function: tINKEY  */
            {create_pushdbl(-1);create_function(fINKEY);}
     break;
 
-  case 154:
+  case 154: /* string_function: tINKEY '(' ')'  */
                    {create_pushdbl(-1);create_function(fINKEY);}
     break;
 
-  case 155:
+  case 155: /* string_function: tINKEY '(' expression ')'  */
                               {create_function(fINKEY);}
     break;
 
-  case 156:
+  case 156: /* string_function: tCHR '(' expression ')'  */
                             {create_function(fCHR);}
     break;
 
-  case 157:
+  case 157: /* string_function: tUPPER '(' string_expression ')'  */
                                      {create_function(fUPPER);}
     break;
 
-  case 158:
+  case 158: /* string_function: tLOWER '(' string_expression ')'  */
                                      {create_function(fLOWER);}
     break;
 
-  case 159:
+  case 159: /* string_function: tLTRIM '(' string_expression ')'  */
                                      {create_function(fLTRIM);}
     break;
 
-  case 160:
+  case 160: /* string_function: tRTRIM '(' string_expression ')'  */
                                      {create_function(fRTRIM);}
     break;
 
-  case 161:
+  case 161: /* string_function: tTRIM '(' string_expression ')'  */
                                     {create_function(fTRIM);}
     break;
 
-  case 162:
+  case 162: /* string_function: tCHOMP '(' string_expression ')'  */
                                      {create_function(fCHOMP);}
     break;
 
-  case 163:
+  case 163: /* string_function: tSYSTEM2 '(' string_expression ')'  */
                                        {create_function(fSYSTEM2);}
     break;
 
-  case 164:
+  case 164: /* string_function: tFRNFN_CALL2 '(' call_list ')'  */
                                    {create_function(fFRNFN_CALL2);}
     break;
 
-  case 165:
+  case 165: /* string_function: tFRNBF_ALLOC '(' expression ')'  */
                                     {create_function(fFRNBF_ALLOC);}
     break;
 
-  case 166:
+  case 166: /* string_function: tFRNBF_DUMP '(' string_expression ')'  */
                                           {create_function(fFRNBF_DUMP);}
     break;
 
-  case 167:
+  case 167: /* string_function: tFRNBF_DUMP '(' string_expression ',' expression ')'  */
                                                          {create_function(fFRNBF_DUMP2);}
     break;
 
-  case 168:
+  case 168: /* string_function: tDATE  */
           {create_function(fDATE);}
     break;
 
-  case 169:
+  case 169: /* string_function: tDATE '(' ')'  */
                   {create_function(fDATE);}
     break;
 
-  case 170:
+  case 170: /* string_function: tTIME  */
           {create_function(fTIME);}
     break;
 
-  case 171:
+  case 171: /* string_function: tTIME '(' ')'  */
                   {create_function(fTIME);}
     break;
 
-  case 172:
+  case 172: /* string_function: tPEEK2 '(' string_expression ')'  */
                                      {create_function(fPEEK2);}
     break;
 
-  case 173:
+  case 173: /* string_function: tPEEK2 '(' string_expression ',' string_expression ')'  */
                                                            {create_function(fPEEK3);}
     break;
 
-  case 174:
+  case 174: /* string_function: tTOKENALT '(' string_scalar_or_array ',' string_expression ')'  */
                                                                    {add_command(cTOKENALT2);}
     break;
 
-  case 175:
+  case 175: /* string_function: tTOKENALT '(' string_scalar_or_array ')'  */
                                              {add_command(cTOKENALT);}
     break;
 
-  case 176:
+  case 176: /* string_function: tSPLITALT '(' string_scalar_or_array ',' string_expression ')'  */
                                                                    {add_command(cSPLITALT2);}
     break;
 
-  case 177:
+  case 177: /* string_function: tSPLITALT '(' string_scalar_or_array ')'  */
                                              {add_command(cSPLITALT);}
     break;
 
-  case 178:
+  case 178: /* string_function: tGETBIT '(' coordinates to coordinates ')'  */
                                                {create_function(fGETBIT);}
     break;
 
-  case 179:
+  case 179: /* string_function: tGETCHAR '(' expression ',' expression to expression ',' expression ')'  */
                                                                             {create_function(fGETCHAR);}
     break;
 
-  case 180:
+  case 180: /* string_function: tHEX '(' expression ')'  */
                             {create_function(fHEX);}
     break;
 
-  case 181:
+  case 181: /* string_function: tBIN '(' expression ')'  */
                             {create_function(fBIN);}
     break;
 
-  case 182:
+  case 182: /* string_function: tEXECUTE2 '(' call_list ')'  */
                                 {create_execute(1);add_command(cSWAP);add_command(cPOP);}
     break;
 
-  case 183:
+  case 183: /* string_function: tFRNBF_GET2 '(' string_expression ',' expression ',' expression ')'  */
                                                                         {create_function(fFRNBF_GET_STRING);}
     break;
 
-  case 184:
+  case 184: /* string_function: tFRNBF_GET_BUFFER '(' string_expression ',' expression ')'  */
                                                                {create_function(fFRNBF_GET_BUFFER);}
     break;
 
-  case 185:
+  case 185: /* string_function: tEVAL2 '(' string_expression ')'  */
                                      {create_eval(evSTRING);}
     break;
 
-  case 186:
+  case 186: /* number_assignment: tSYMBOL tEQU expression  */
                                            {add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[-2].symbol),FALSE),NULL);}
     break;
 
-  case 187:
+  case 187: /* number_assignment: function_or_array tEQU expression  */
                                       {create_doarray((yyvsp[-2].symbol),ASSIGNARRAY);}
     break;
 
-  case 188:
+  case 188: /* $@8: %empty  */
                            {add_command(cORSHORT);pushlabel();}
     break;
 
-  case 189:
+  case 189: /* expression: expression tOR $@8 expression  */
                                                                            {poplabel();create_boole('|');}
     break;
 
-  case 190:
+  case 190: /* $@9: %empty  */
                     {add_command(cANDSHORT);pushlabel();}
     break;
 
-  case 191:
+  case 191: /* expression: expression tAND $@9 expression  */
                                                                      {poplabel();create_boole('&');}
     break;
 
-  case 192:
+  case 192: /* expression: tNOT expression  */
                     {create_boole('!');}
     break;
 
-  case 193:
+  case 193: /* expression: expression tEQU expression  */
                                {create_dblrelop('=');}
     break;
 
-  case 194:
+  case 194: /* expression: expression tNEQ expression  */
                                {create_dblrelop('!');}
     break;
 
-  case 195:
+  case 195: /* expression: expression tLTN expression  */
                                {create_dblrelop('<');}
     break;
 
-  case 196:
+  case 196: /* expression: expression tLEQ expression  */
                                {create_dblrelop('{');}
     break;
 
-  case 197:
+  case 197: /* expression: expression tGTN expression  */
                                {create_dblrelop('>');}
     break;
 
-  case 198:
+  case 198: /* expression: expression tGEQ expression  */
                                {create_dblrelop('}');}
     break;
 
-  case 199:
+  case 199: /* expression: tMYEOF '(' hashed_number ')'  */
                                  {add_command(cTESTEOF);}
     break;
 
-  case 200:
+  case 200: /* expression: tGLOB '(' string_expression ',' string_expression ')'  */
                                                           {add_command(cGLOB);}
     break;
 
-  case 201:
+  case 201: /* expression: number  */
            {create_pushdbl((yyvsp[0].fnum));}
     break;
 
-  case 202:
+  case 202: /* expression: tARDIM '(' arrayref ')'  */
                             {add_command_with_sym_and_diag(cARDIM,"",NULL);}
     break;
 
-  case 203:
+  case 203: /* expression: tARDIM '(' string_arrayref ')'  */
                                    {add_command_with_sym_and_diag(cARDIM,"",NULL);}
     break;
 
-  case 204:
+  case 204: /* expression: tARSIZE '(' arrayref ',' expression ')'  */
                                             {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
     break;
 
-  case 205:
+  case 205: /* expression: tARSIZE '(' string_arrayref ',' expression ')'  */
                                                    {add_command_with_sym_and_diag(cARSIZE,"",NULL);}
     break;
 
-  case 206:
+  case 206: /* expression: function_or_array  */
                       {add_command_with_sym_and_diag(cFUNCTION_OR_ARRAY,(yyvsp[0].symbol),NULL);}
     break;
 
-  case 207:
+  case 207: /* expression: tSYMBOL  */
             {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 208:
+  case 208: /* expression: expression '+' expression  */
                               {create_dblbin('+');}
     break;
 
-  case 209:
+  case 209: /* expression: expression '-' expression  */
                               {create_dblbin('-');}
     break;
 
-  case 210:
+  case 210: /* expression: expression '*' expression  */
                               {create_dblbin('*');}
     break;
 
-  case 211:
+  case 211: /* expression: expression '/' expression  */
                               {create_dblbin('/');}
     break;
 
-  case 212:
+  case 212: /* expression: expression tPOW expression  */
                                {create_dblbin('^');}
     break;
 
-  case 213:
+  case 213: /* expression: '-' expression  */
                                 {add_command(cNEGATE);}
     break;
 
-  case 214:
+  case 214: /* expression: string_expression tEQU string_expression  */
                                              {create_strrelop('=');}
     break;
 
-  case 215:
+  case 215: /* expression: string_expression tNEQ string_expression  */
                                              {create_strrelop('!');}
     break;
 
-  case 216:
+  case 216: /* expression: string_expression tLTN string_expression  */
                                              {create_strrelop('<');}
     break;
 
-  case 217:
+  case 217: /* expression: string_expression tLEQ string_expression  */
                                              {create_strrelop('{');}
     break;
 
-  case 218:
+  case 218: /* expression: string_expression tGTN string_expression  */
                                              {create_strrelop('>');}
     break;
 
-  case 219:
+  case 219: /* expression: string_expression tGEQ string_expression  */
                                              {create_strrelop('}');}
     break;
 
-  case 222:
+  case 222: /* arrayref: tSYMBOL '(' ')'  */
                           {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
     break;
 
-  case 223:
+  case 223: /* string_arrayref: tSTRSYM '(' ')'  */
                                  {create_pusharrayref(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
     break;
 
-  case 225:
+  case 225: /* function: tSIN '(' expression ')'  */
                                   {create_function(fSIN);}
     break;
 
-  case 226:
+  case 226: /* function: tASIN '(' expression ')'  */
                              {create_function(fASIN);}
     break;
 
-  case 227:
+  case 227: /* function: tCOS '(' expression ')'  */
                             {create_function(fCOS);}
     break;
 
-  case 228:
+  case 228: /* function: tACOS '(' expression ')'  */
                              {create_function(fACOS);}
     break;
 
-  case 229:
+  case 229: /* function: tTAN '(' expression ')'  */
                             {create_function(fTAN);}
     break;
 
-  case 230:
+  case 230: /* function: tATAN '(' expression ')'  */
                              {create_function(fATAN);}
     break;
 
-  case 231:
+  case 231: /* function: tATAN '(' expression ',' expression ')'  */
                                              {create_function(fATAN2);}
     break;
 
-  case 232:
+  case 232: /* function: tEXP '(' expression ')'  */
                             {create_function(fEXP);}
     break;
 
-  case 233:
+  case 233: /* function: tLOG '(' expression ')'  */
                             {create_function(fLOG);}
     break;
 
-  case 234:
+  case 234: /* function: tLOG '(' expression ',' expression ')'  */
                                            {create_function(fLOG2);}
     break;
 
-  case 235:
+  case 235: /* function: tSQRT '(' expression ')'  */
                              {create_function(fSQRT);}
     break;
 
-  case 236:
+  case 236: /* function: tSQR '(' expression ')'  */
                             {create_function(fSQR);}
     break;
 
-  case 237:
+  case 237: /* function: tINT '(' expression ')'  */
                             {create_function(fINT);}
     break;
 
-  case 238:
+  case 238: /* function: tROUND '(' expression ')'  */
                               {create_function(fROUND);}
     break;
 
-  case 239:
+  case 239: /* function: tCEIL '(' expression ')'  */
                              {create_function(fCEIL);}
     break;
 
-  case 240:
+  case 240: /* function: tFLOOR '(' expression ')'  */
                               {create_function(fFLOOR);}
     break;
 
-  case 241:
+  case 241: /* function: tFRAC '(' expression ')'  */
                              {create_function(fFRAC);}
     break;
 
-  case 242:
+  case 242: /* function: tABS '(' expression ')'  */
                             {create_function(fABS);}
     break;
 
-  case 243:
+  case 243: /* function: tSIG '(' expression ')'  */
                             {create_function(fSIG);}
     break;
 
-  case 244:
+  case 244: /* function: tMOD '(' expression ',' expression ')'  */
                                            {create_function(fMOD);}
     break;
 
-  case 245:
+  case 245: /* function: tRAN '(' expression ')'  */
                             {create_function(fRAN);}
     break;
 
-  case 246:
+  case 246: /* function: tRAN '(' ')'  */
                  {create_function(fRAN2);}
     break;
 
-  case 247:
+  case 247: /* function: tMIN '(' expression ',' expression ')'  */
                                            {create_function(fMIN);}
     break;
 
-  case 248:
+  case 248: /* function: tMAX '(' expression ',' expression ')'  */
                                            {create_function(fMAX);}
     break;
 
-  case 249:
+  case 249: /* function: tLEN '(' string_expression ')'  */
                                    {create_function(fLEN);}
     break;
 
-  case 250:
+  case 250: /* function: tVAL '(' string_expression ')'  */
                                    {create_function(fVAL);}
     break;
 
-  case 251:
+  case 251: /* function: tASC '(' string_expression ')'  */
                                    {create_function(fASC);}
     break;
 
-  case 252:
+  case 252: /* function: tDEC '(' string_expression ')'  */
                                    {create_function(fDEC);}
     break;
 
-  case 253:
+  case 253: /* function: tDEC '(' string_expression ',' expression ')'  */
                                                   {create_function(fDEC2);}
     break;
 
-  case 254:
+  case 254: /* function: tINSTR '(' string_expression ',' string_expression ')'  */
                                                            {if (check_compat) lyyerror(sWARNING,"instr() has changed in version 2.712"); create_function(fINSTR);}
     break;
 
-  case 255:
+  case 255: /* function: tINSTR '(' string_expression ',' string_expression ',' expression ')'  */
                                                                           {create_function(fINSTR2);}
     break;
 
-  case 256:
+  case 256: /* function: tRINSTR '(' string_expression ',' string_expression ')'  */
                                                             {create_function(fRINSTR);}
     break;
 
-  case 257:
+  case 257: /* function: tRINSTR '(' string_expression ',' string_expression ',' expression ')'  */
                                                                             {create_function(fRINSTR2);}
     break;
 
-  case 258:
+  case 258: /* function: tSYSTEM '(' string_expression ')'  */
                                       {create_function(fSYSTEM);}
     break;
 
-  case 259:
+  case 259: /* function: tFRNFN_CALL '(' call_list ')'  */
                                   {create_function(fFRNFN_CALL);}
     break;
 
-  case 260:
+  case 260: /* function: tFRNFN_SIZE '(' string_expression ')'  */
                                           {create_function(fFRNFN_SIZE);}
     break;
 
-  case 261:
+  case 261: /* function: tFRNBF_GET '(' string_expression ',' expression ',' string_expression ')'  */
                                                                               {create_function(fFRNBF_GET_NUMBER);}
     break;
 
-  case 262:
+  case 262: /* function: tFRNBF_SIZE '(' string_expression ')'  */
                                           {create_function(fFRNBF_SIZE);}
     break;
 
-  case 263:
+  case 263: /* function: tPEEK '(' hashed_number ')'  */
                                 {create_function(fPEEK4);}
     break;
 
-  case 264:
+  case 264: /* function: tPEEK '(' string_expression ')'  */
                                     {create_function(fPEEK);}
     break;
 
-  case 265:
+  case 265: /* function: tMOUSEX '(' string_expression ')'  */
                                       {create_function(fMOUSEX);}
     break;
 
-  case 266:
+  case 266: /* function: tMOUSEX  */
             {create_pushstr("");create_function(fMOUSEX);}
     break;
 
-  case 267:
+  case 267: /* function: tMOUSEX '(' ')'  */
                     {create_pushstr("");create_function(fMOUSEX);}
     break;
 
-  case 268:
+  case 268: /* function: tMOUSEY '(' string_expression ')'  */
                                       {create_function(fMOUSEY);}
     break;
 
-  case 269:
+  case 269: /* function: tMOUSEY  */
             {create_pushstr("");create_function(fMOUSEY);}
     break;
 
-  case 270:
+  case 270: /* function: tMOUSEY '(' ')'  */
                     {create_pushstr("");create_function(fMOUSEY);}
     break;
 
-  case 271:
+  case 271: /* function: tMOUSEB '(' string_expression ')'  */
                                       {create_function(fMOUSEB);}
     break;
 
-  case 272:
+  case 272: /* function: tMOUSEB  */
             {create_pushstr("");create_function(fMOUSEB);}
     break;
 
-  case 273:
+  case 273: /* function: tMOUSEB '(' ')'  */
                     {create_pushstr("");create_function(fMOUSEB);}
     break;
 
-  case 274:
+  case 274: /* function: tMOUSEMOD '(' string_expression ')'  */
                                         {create_function(fMOUSEMOD);}
     break;
 
-  case 275:
+  case 275: /* function: tMOUSEMOD  */
               {create_pushstr("");create_function(fMOUSEMOD);}
     break;
 
-  case 276:
+  case 276: /* function: tMOUSEMOD '(' ')'  */
                       {create_pushstr("");create_function(fMOUSEMOD);}
     break;
 
-  case 277:
+  case 277: /* function: tAND '(' expression ',' expression ')'  */
                                            {create_function(fAND);}
     break;
 
-  case 278:
+  case 278: /* function: tOR '(' expression ',' expression ')'  */
                                           {create_function(fOR);}
     break;
 
-  case 279:
+  case 279: /* function: tBITNOT '(' expression ')'  */
                                {create_function(fBITNOT);}
     break;
 
-  case 280:
+  case 280: /* function: tEOR '(' expression ',' expression ')'  */
                                            {create_function(fEOR);}
     break;
 
-  case 281:
+  case 281: /* function: tSHL '(' expression ',' expression ')'  */
                                            {create_function(fSHL);}
     break;
 
-  case 282:
+  case 282: /* function: tSHR '(' expression ',' expression ')'  */
                                            {create_function(fSHR);}
     break;
 
-  case 283:
+  case 283: /* function: tTELL '(' hashed_number ')'  */
                                 {create_function(fTELL);}
     break;
 
-  case 284:
+  case 284: /* function: tTOKEN '(' string_expression ',' string_arrayref ',' string_expression ')'  */
                                                                                {add_command(cTOKEN2);}
     break;
 
-  case 285:
+  case 285: /* function: tTOKEN '(' string_expression ',' string_arrayref ')'  */
                                                          {add_command(cTOKEN);}
     break;
 
-  case 286:
+  case 286: /* function: tSPLIT '(' string_expression ',' string_arrayref ',' string_expression ')'  */
                                                                                {add_command(cSPLIT2);}
     break;
 
-  case 287:
+  case 287: /* function: tSPLIT '(' string_expression ',' string_arrayref ')'  */
                                                          {add_command(cSPLIT);}
     break;
 
-  case 288:
+  case 288: /* function: tEXECUTE '(' call_list ')'  */
                                {create_execute(0);add_command(cSWAP);add_command(cPOP);}
     break;
 
-  case 289:
+  case 289: /* function: tOPEN '(' tPRINTER ')'  */
                            {create_myopen(OPEN_PRINTER);}
     break;
 
-  case 290:
+  case 290: /* function: tOPEN '(' string_expression ')'  */
                                     {create_myopen(0);}
     break;
 
-  case 291:
+  case 291: /* function: tOPEN '(' string_expression ',' string_expression ')'  */
                                                           {create_myopen(OPEN_HAS_MODE);}
     break;
 
-  case 292:
+  case 292: /* function: tOPEN '(' hashed_number ',' tPRINTER ')'  */
                                              {create_myopen(OPEN_PRINTER+OPEN_HAS_STREAM);}
     break;
 
-  case 293:
+  case 293: /* function: tOPEN '(' hashed_number ',' string_expression ')'  */
                                                       {create_myopen(OPEN_HAS_STREAM);}
     break;
 
-  case 294:
+  case 294: /* function: tOPEN '(' hashed_number ',' string_expression ',' string_expression ')'  */
                                                                             {create_myopen(OPEN_HAS_STREAM+OPEN_HAS_MODE);}
     break;
 
-  case 295:
+  case 295: /* function: tEVAL '(' string_expression ')'  */
                                     {create_eval(evNUMBER);}
     break;
 
-  case 296:
+  case 296: /* const: number  */
               {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
-  case 297:
+  case 297: /* const: '+' number  */
                {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
-  case 298:
+  case 298: /* const: '-' number  */
                {(yyval.fnum)=-(yyvsp[0].fnum);}
     break;
 
-  case 299:
+  case 299: /* number: tFNUM  */
               {(yyval.fnum)=(yyvsp[0].fnum);}
     break;
 
-  case 300:
+  case 300: /* number: tDIGITS  */
             {(yyval.fnum)=strtod((yyvsp[0].digits),NULL);}
     break;
 
-  case 301:
+  case 301: /* number: tHEXDIGITS  */
                {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,16);}
     break;
 
-  case 302:
+  case 302: /* number: tBINDIGITS  */
                {(yyval.fnum)=(double)strtoul((yyvsp[0].digits),NULL,2);}
     break;
 
-  case 303:
+  case 303: /* symbol_or_lineno: tDIGITS  */
                           {(yyval.symbol)=my_strdup(dotify((yyvsp[0].digits),FALSE));}
     break;
 
-  case 304:
+  case 304: /* symbol_or_lineno: tSYMBOL  */
             {(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
-  case 305:
+  case 305: /* dimlist: tSYMBOL '(' call_list ')'  */
                                    {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
     break;
 
-  case 306:
+  case 306: /* dimlist: dimlist ',' tSYMBOL '(' call_list ')'  */
                                           {create_dim(dotify((yyvsp[-3].symbol),FALSE),'D');}
     break;
 
-  case 307:
+  case 307: /* dimlist: tSTRSYM '(' call_list ')'  */
                               {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
     break;
 
-  case 308:
+  case 308: /* dimlist: dimlist ',' tSTRSYM '(' call_list ')'  */
                                           {create_dim(dotify((yyvsp[-3].symbol),FALSE),'S');}
     break;
 
-  case 309:
+  case 309: /* function_or_array: tSYMBOL '(' call_list ')'  */
                                              {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
     break;
 
-  case 310:
+  case 310: /* stringfunction_or_array: tSTRSYM '(' call_list ')'  */
                                                    {(yyval.symbol)=my_strdup(dotify((yyvsp[-3].symbol),FALSE));}
     break;
 
-  case 311:
+  case 311: /* $@10: %empty  */
            {add_command(cPUSHFREE);}
     break;
 
-  case 318:
+  case 318: /* $@11: %empty  */
                                  {missing_endsub++;missing_endsub_line=yylineno;pushlabel();report_if_missing("can not define a function in a loop or an if-statement",FALSE);if (function_type!=ftNONE) {lyyerror(sERROR,"nested functions not allowed");YYABORT;}}
     break;
 
-  case 319:
+  case 319: /* $@12: %empty  */
                       {if (exported) create_subr_link((yyvsp[0].symbol)); create_label((yyvsp[0].symbol),cUSER_FUNCTION);
 	               add_command(cPUSHSYMLIST);add_command(cCLEARSYMREFS);start_symref_chain();
 		       create_count_params();}
     break;
 
-  case 320:
+  case 320: /* $@13: %empty  */
                           {create_require(stFREE);add_command(cPOP);}
     break;
 
-  case 321:
+  case 321: /* function_definition: export tSUB $@11 function_name $@12 '(' paramlist ')' $@13 statement_list endsub  */
                {add_command(cCLEARSYMREFS);end_symref_chain();add_command(cPOPSYMLIST);create_check_return_value(ftNONE,function_type);function_type=ftNONE;add_command(cRETURN_FROM_CALL);create_endfunction();poplabel();}
     break;
 
-  case 322:
+  case 322: /* endsub: tEOPROG  */
                 {if (missing_endsub) {sprintf(string,"subroutine starting at line %d has seen no 'end sub' at end of program",missing_endsub_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 323:
+  case 323: /* endsub: tENDSUB  */
             {missing_endsub--;}
     break;
 
-  case 324:
+  case 324: /* function_name: tSYMBOL  */
                        {function_type=ftNUMBER;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
-  case 325:
+  case 325: /* function_name: tSTRSYM  */
             {function_type=ftSTRING;current_function=my_strdup(dotify((yyvsp[0].symbol),FALSE));(yyval.symbol)=my_strdup(dotify((yyvsp[0].symbol),FALSE));}
     break;
 
-  case 326:
+  case 326: /* export: %empty  */
                     {exported=FALSE;}
     break;
 
-  case 327:
+  case 327: /* export: tEXPORT  */
             {exported=TRUE;}
     break;
 
-  case 328:
+  case 328: /* export: tRUNTIME_CREATED_SUB  */
                          {exported=FALSE;}
     break;
 
-  case 329:
+  case 329: /* export: tRUNTIME_CREATED_SUB tEXPORT  */
                                  {exported=TRUE;}
     break;
 
-  case 332:
+  case 332: /* local_item: tSYMBOL  */
                     {create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);}
     break;
 
-  case 333:
+  case 333: /* local_item: tSTRSYM  */
             {create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);}
     break;
 
-  case 334:
+  case 334: /* local_item: tSYMBOL '(' call_list ')'  */
                               {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'d');}
     break;
 
-  case 335:
+  case 335: /* local_item: tSTRSYM '(' call_list ')'  */
                               {create_makelocal(dotify((yyvsp[-3].symbol),FALSE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),FALSE),'s');}
     break;
 
-  case 338:
+  case 338: /* static_item: tSYMBOL  */
                      {create_makestatic(dotify((yyvsp[0].symbol),TRUE),syNUMBER);}
     break;
 
-  case 339:
+  case 339: /* static_item: tSTRSYM  */
             {create_makestatic(dotify((yyvsp[0].symbol),TRUE),sySTRING);}
     break;
 
-  case 340:
+  case 340: /* static_item: tSYMBOL '(' call_list ')'  */
                               {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'D');}
     break;
 
-  case 341:
+  case 341: /* static_item: tSTRSYM '(' call_list ')'  */
                               {create_makestatic(dotify((yyvsp[-3].symbol),TRUE),syARRAY);create_dim(dotify((yyvsp[-3].symbol),TRUE),'S');}
     break;
 
-  case 345:
+  case 345: /* paramitem: tSYMBOL  */
                    {create_require(stNUMBER);create_makelocal(dotify((yyvsp[0].symbol),FALSE),syNUMBER);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 346:
+  case 346: /* paramitem: tSTRSYM  */
             {create_require(stSTRING);create_makelocal(dotify((yyvsp[0].symbol),FALSE),sySTRING);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 347:
+  case 347: /* paramitem: tSYMBOL '(' ')'  */
                     {create_require(stNUMBERARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stNUMBERARRAYREF);}
     break;
 
-  case 348:
+  case 348: /* paramitem: tSTRSYM '(' ')'  */
                     {create_require(stSTRINGARRAYREF);create_arraylink(dotify((yyvsp[-2].symbol),FALSE),stSTRINGARRAYREF);}
     break;
 
-  case 349:
+  case 349: /* $@14: %empty  */
                {loop_nesting++;add_command(cBEGIN_LOOP_MARK);missing_next++;missing_next_line=yylineno;}
     break;
 
-  case 350:
+  case 350: /* $@15: %empty  */
             {pushname(dotify((yyvsp[-1].symbol),FALSE)); /* will be used by next_symbol to check equality,NULL */
 	     add_command(cRESETSKIPONCE);
 	     add_command(cRESETSKIPONCE2);
 	     pushgoto();add_command_with_switch_state(cCONTINUE_HERE);}
     break;
 
-  case 351:
+  case 351: /* $@16: %empty  */
                     { /* pushes another expression */
 	     add_command(cSKIPONCE);
 	     pushlabel();
@@ -4776,395 +4641,395 @@ yyreduce:
              pushlabel();}
     break;
 
-  case 352:
+  case 352: /* $@17: %empty  */
                          {
              swap();popgoto();poplabel();}
     break;
 
-  case 353:
+  case 353: /* for_loop: tFOR $@14 tSYMBOL tEQU $@15 expression tTO expression step_part $@16 statement_list $@17 next next_symbol  */
                            {add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
-  case 354:
+  case 354: /* next: tEOPROG  */
               {if (missing_next) {sprintf(string,"for-loop starting at line %d has seen no 'next' at end of program",missing_next_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 355:
+  case 355: /* next: tNEXT  */
           {missing_next--;}
     break;
 
-  case 356:
+  case 356: /* next: tENDIF  */
            {report_conflicting_close("a closing next is expected before endif",'e');}
     break;
 
-  case 357:
+  case 357: /* next: tWEND  */
           {report_conflicting_close("a closing next is expected before wend",'w');}
     break;
 
-  case 358:
+  case 358: /* next: tUNTIL  */
            {report_conflicting_close("a closing next is expected before until",'l');}
     break;
 
-  case 359:
+  case 359: /* next: tLOOP  */
           {report_conflicting_close("a closing next is expected before loop",'l');}
     break;
 
-  case 360:
+  case 360: /* step_part: %empty  */
            {create_pushdbl(1);}
     break;
 
-  case 362:
+  case 362: /* next_symbol: %empty  */
               {pop(stSTRING);}
     break;
 
-  case 363:
+  case 363: /* next_symbol: tSYMBOL  */
             {if (strcmp(pop(stSTRING)->pointer,dotify((yyvsp[0].symbol),FALSE))) 
              {lyyerror(sERROR,"'for' and 'next' do not match"); YYABORT;}
            }
     break;
 
-  case 364:
+  case 364: /* $@18: %empty  */
                                  {push_switch_id();add_command(cBEGIN_SWITCH_MARK);}
     break;
 
-  case 365:
+  case 365: /* switch_number_or_string: tSWITCH $@18 number_or_string sep_list case_list default tSEND  */
                                                                   {add_command(cBREAK_HERE);add_command(cPOP);add_command(cEND_SWITCH_MARK);pop_switch_id();}
     break;
 
-  case 371:
+  case 371: /* $@19: %empty  */
       {add_command(cSWITCH_COMPARE);add_command(cDECIDE);add_command(cNEXT_CASE);}
     break;
 
-  case 372:
+  case 372: /* case_list: case_list tCASE number_or_string $@19 statement_list  */
                                                                                                   {add_command(cNEXT_CASE_HERE);}
     break;
 
-  case 374:
+  case 374: /* $@20: %empty  */
                   {add_command(cNEXT_CASE_HERE);}
     break;
 
-  case 376:
+  case 376: /* $@21: %empty  */
              {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_loop++;missing_loop_line=yylineno;pushgoto();}
     break;
 
-  case 378:
+  case 378: /* loop: tEOPROG  */
               {if (missing_loop) {sprintf(string,"do-loop starting at at line %d has seen no 'loop' at end of program",missing_loop_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 379:
+  case 379: /* loop: tLOOP  */
           {missing_loop--;popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
-  case 380:
+  case 380: /* loop: tENDIF  */
            {report_conflicting_close("a closing loop is expected before endif",'e');}
     break;
 
-  case 381:
+  case 381: /* loop: tWEND  */
           {report_conflicting_close("a closing loop is expected before wend",'w');}
     break;
 
-  case 382:
+  case 382: /* loop: tUNTIL  */
            {report_conflicting_close("a closing loop is expected before until",'l');}
     break;
 
-  case 383:
+  case 383: /* loop: tNEXT  */
           {report_conflicting_close("a closing loop is expected before next",'n');}
     break;
 
-  case 384:
+  case 384: /* $@22: %empty  */
                    {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_wend++;missing_wend_line=yylineno;pushgoto();}
     break;
 
-  case 385:
+  case 385: /* $@23: %empty  */
               {add_command(cDECIDE);
 	      pushlabel();}
     break;
 
-  case 387:
+  case 387: /* wend: tEOPROG  */
               {if (missing_wend) {sprintf(string,"while-loop starting at line %d has seen no 'wend' at end of program",missing_wend_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 388:
+  case 388: /* wend: tWEND  */
           {missing_wend--;swap();popgoto();poplabel();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
-  case 389:
+  case 389: /* $@24: %empty  */
                      {loop_nesting++;add_command(cBEGIN_LOOP_MARK);add_command_with_switch_state(cCONTINUE_HERE);missing_until++;missing_until_line=yylineno;pushgoto();}
     break;
 
-  case 391:
+  case 391: /* until: tEOPROG  */
                {if (missing_until) {sprintf(string,"repeat-loop starting at line %d has seen no 'until' at end of program",missing_until_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 392:
+  case 392: /* until: tUNTIL expression  */
                       {missing_until--;add_command(cDECIDE);popgoto();add_command(cBREAK_HERE);add_command(cEND_LOOP_MARK);loop_nesting--;}
     break;
 
-  case 393:
+  case 393: /* until: tENDIF  */
            {report_conflicting_close("a closing until is expected before endif",'e');}
     break;
 
-  case 394:
+  case 394: /* until: tWEND  */
           {report_conflicting_close("a closing until is expected before wend",'w');}
     break;
 
-  case 395:
+  case 395: /* until: tLOOP  */
           {report_conflicting_close("a closing until is expected before loop",'l');}
     break;
 
-  case 396:
+  case 396: /* until: tNEXT  */
           {report_conflicting_close("a closing until is expected before next",'n');}
     break;
 
-  case 397:
+  case 397: /* $@25: %empty  */
                           {add_command(cDECIDE);storelabel();pushlabel();}
     break;
 
-  case 398:
+  case 398: /* $@26: %empty  */
                  {missing_endif++;missing_endif_line=yylineno;}
     break;
 
-  case 399:
+  case 399: /* $@27: %empty  */
                                                                                {swap();matchgoto();swap();poplabel();}
     break;
 
-  case 400:
+  case 400: /* $@28: %empty  */
                      {poplabel();}
     break;
 
-  case 402:
+  case 402: /* endif: tEOPROG  */
                {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
-  case 403:
+  case 403: /* endif: tENDIF  */
            {missing_endif--;}
     break;
 
-  case 404:
+  case 404: /* endif: tWEND  */
           {report_conflicting_close("a closing endif is expected before wend",'w');}
     break;
 
-  case 405:
+  case 405: /* endif: tUNTIL  */
            {report_conflicting_close("a closing endif is expected before until",'l');}
     break;
 
-  case 406:
+  case 406: /* endif: tLOOP  */
           {report_conflicting_close("a closing endif is expected before loop",'l');}
     break;
 
-  case 407:
+  case 407: /* endif: tNEXT  */
           {report_conflicting_close("a closing endif is expected before next",'n');}
     break;
 
-  case 408:
-                          {in_short_if++;add_command(cDECIDE);pushlabel();}
+  case 408: /* $@29: %empty  */
+                         {token_count_start_of_short_if=token_count;in_short_if++;add_command(cDECIDE);pushlabel();}
     break;
 
-  case 410:
-                  {error(sERROR,"an if-statement without 'then' does not allow 'endif'");}
+  case 410: /* end_of_if: tENDIF  */
+                  {error(sERROR,"short if-statement (i.e. without 'then') does not allow 'endif'");}
     break;
 
-  case 411:
-                   {poplabel();}
+  case 411: /* end_of_if: tIMPLICITENDIF  */
+                   {printf("%d,%d\n", token_count_start_of_short_if, token_count);lyyerror(sERROR,"short if-statement (i.e. without 'then' and ended by newline) does not contain any statements");poplabel();}
     break;
 
-  case 415:
+  case 415: /* $@30: %empty  */
         {add_command(cDECIDE);pushlabel();}
     break;
 
-  case 416:
+  case 416: /* $@31: %empty  */
         {swap();matchgoto();swap();poplabel();}
     break;
 
-  case 421:
+  case 421: /* $@32: %empty  */
               {add_command(cCHKPROMPT);}
     break;
 
-  case 423:
+  case 423: /* input: tSYMBOL  */
                {create_myread('d',tileol);add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 424:
+  case 424: /* input: tSYMBOL '(' call_list ')'  */
         {create_myread('d',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNARRAY);}
     break;
 
-  case 425:
+  case 425: /* input: tSTRSYM  */
             {create_myread('s',tileol);add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 426:
+  case 426: /* input: tSTRSYM '(' call_list ')'  */
         {create_myread('s',tileol);create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNSTRINGARRAY);}
     break;
 
-  case 429:
+  case 429: /* readitem: tSYMBOL  */
                   {create_readdata('d');add_command_with_sym_and_diag(cPOPDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 430:
+  case 430: /* readitem: tSYMBOL '(' call_list ')'  */
     {create_readdata('d');create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNARRAY);}
     break;
 
-  case 431:
+  case 431: /* readitem: tSTRSYM  */
             {create_readdata('s');add_command_with_sym_and_diag(cPOPSTRSYM,dotify((yyvsp[0].symbol),FALSE),NULL);}
     break;
 
-  case 432:
+  case 432: /* readitem: tSTRSYM '(' call_list ')'  */
     {create_readdata('s');create_doarray(dotify((yyvsp[-3].symbol),FALSE),ASSIGNSTRINGARRAY);}
     break;
 
-  case 433:
+  case 433: /* datalist: tSTRING  */
                   {create_strdata((yyvsp[0].string));}
     break;
 
-  case 434:
+  case 434: /* datalist: const  */
           {create_dbldata((yyvsp[0].fnum));}
     break;
 
-  case 435:
+  case 435: /* datalist: datalist ',' tSTRING  */
                           {create_strdata((yyvsp[0].string));}
     break;
 
-  case 436:
+  case 436: /* datalist: datalist ',' const  */
                        {create_dbldata((yyvsp[0].fnum));}
     break;
 
-  case 440:
+  case 440: /* printlist: string_expression  */
                       {create_print('s');}
     break;
 
-  case 441:
+  case 441: /* printlist: printlist ',' string_expression  */
                                     {create_print('s');}
     break;
 
-  case 442:
+  case 442: /* using: %empty  */
        {create_print('d');}
     break;
 
-  case 443:
+  case 443: /* using: tUSING string_expression  */
                              {create_print('u');}
     break;
 
-  case 444:
+  case 444: /* using: tUSING '(' string_expression ',' string_expression ')'  */
                                                            {create_print('U');}
     break;
 
-  case 445:
+  case 445: /* $@33: %empty  */
                        {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,1);}
     break;
 
-  case 446:
+  case 446: /* inputbody: '#' tSYMBOL $@33 inputlist  */
                                                                                                                                {create_pps(cPOPSTREAM,0);}
     break;
 
-  case 447:
+  case 447: /* $@34: %empty  */
                 {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,1);}
     break;
 
-  case 448:
+  case 448: /* inputbody: '#' tDIGITS $@34 inputlist  */
                                                                                 {create_pps(cPOPSTREAM,0);}
     break;
 
-  case 449:
+  case 449: /* $@35: %empty  */
                            {create_pps(cPUSHSTREAM,1);}
     break;
 
-  case 450:
+  case 450: /* inputbody: '#' '(' expression ')' $@35 inputlist  */
                                                                   {create_pps(cPOPSTREAM,0);}
     break;
 
-  case 451:
+  case 451: /* $@36: %empty  */
                                           {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
     break;
 
-  case 452:
+  case 452: /* inputbody: tAT '(' expression ',' expression ')' $@36 prompt inputlist  */
                                                                                                                                         {create_pps(cPOPSTREAM,0);}
     break;
 
-  case 453:
+  case 453: /* $@37: %empty  */
     {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);}
     break;
 
-  case 454:
+  case 454: /* inputbody: $@37 prompt inputlist  */
                                                                                {create_pps(cPOPSTREAM,0);}
     break;
 
-  case 455:
+  case 455: /* prompt: %empty  */
                     {create_pushstr("?");create_print('s');}
     break;
 
-  case 456:
+  case 456: /* prompt: tSTRING  */
             {create_pushstr((yyvsp[0].string));create_print('s');}
     break;
 
-  case 457:
+  case 457: /* printintro: %empty  */
                                {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 458:
+  case 458: /* printintro: '#' tSYMBOL  */
                 {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify((yyvsp[0].symbol),FALSE),NULL);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 459:
+  case 459: /* printintro: '#' tDIGITS  */
                 {create_pushdbl(atoi((yyvsp[0].digits)));create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 460:
+  case 460: /* printintro: '#' '(' expression ')'  */
                            {create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 461:
+  case 461: /* printintro: tREVERSE  */
              {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 462:
+  case 462: /* printintro: tCOLOUR '(' string_expression ')'  */
                                       {create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 463:
+  case 463: /* printintro: tCOLOUR '(' string_expression ',' string_expression ')'  */
                                                             {create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 464:
+  case 464: /* printintro: tAT '(' expression ',' expression ')'  */
                                           {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 465:
+  case 465: /* printintro: tREVERSE tAT '(' expression ',' expression ')'  */
                                                    {add_command(cMOVE);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 466:
+  case 466: /* printintro: tCOLOUR '(' string_expression ')' tAT '(' expression ',' expression ')'  */
                                                                             {add_command(cMOVE);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 467:
+  case 467: /* printintro: tCOLOUR '(' string_expression ',' string_expression ')' tAT '(' expression ',' expression ')'  */
                                                                                                   {add_command(cMOVE);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 468:
+  case 468: /* printintro: tAT '(' expression ',' expression ')' tREVERSE  */
                                                    {create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);add_command(cMOVE);}
     break;
 
-  case 469:
+  case 469: /* printintro: tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ')'  */
                                                                             {create_colour(2);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 470:
+  case 470: /* printintro: tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ',' string_expression ')'  */
                                                                                                   {create_colour(3);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,0);}
     break;
 
-  case 473:
+  case 473: /* goto_list: symbol_or_lineno  */
                             {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
-  case 474:
+  case 474: /* goto_list: goto_list ',' symbol_or_lineno  */
                                    {create_goto((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
-  case 475:
+  case 475: /* gosub_list: symbol_or_lineno  */
                              {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
-  case 476:
+  case 476: /* gosub_list: gosub_list ',' symbol_or_lineno  */
                                     {create_gosub((function_type!=ftNONE)?dotify((yyvsp[0].symbol),TRUE):(yyvsp[0].symbol));add_command(cFINDNOP);}
     break;
 
@@ -5183,11 +5048,10 @@ yyreduce:
      case of YYERROR or YYBACKUP, subsequent parser actions might lead
      to an incorrect destructor call or verbose syntax error message
      before the lookahead is translated.  */
-  YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
+  YY_SYMBOL_PRINT ("-> $$ =", YY_CAST (yysymbol_kind_t, yyr1[yyn]), &yyval, &yyloc);
 
   YYPOPSTACK (yylen);
   yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
   *++yylsp = yyloc;
@@ -5212,50 +5076,15 @@ yyreduce:
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
-  yytoken = yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (yychar);
-
+  yytoken = yychar == YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
   /* If not already recovering from an error, report this error.  */
   if (!yyerrstatus)
     {
       ++yynerrs;
-#if ! YYERROR_VERBOSE
       yyerror (YY_("syntax error"));
-#else
-# define YYSYNTAX_ERROR yysyntax_error (&yymsg_alloc, &yymsg, \
-                                        yyssp, yytoken)
-      {
-        char const *yymsgp = YY_("syntax error");
-        int yysyntax_error_status;
-        yysyntax_error_status = YYSYNTAX_ERROR;
-        if (yysyntax_error_status == 0)
-          yymsgp = yymsg;
-        else if (yysyntax_error_status == 1)
-          {
-            if (yymsg != yymsgbuf)
-              YYSTACK_FREE (yymsg);
-            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
-            if (!yymsg)
-              {
-                yymsg = yymsgbuf;
-                yymsg_alloc = sizeof yymsgbuf;
-                yysyntax_error_status = 2;
-              }
-            else
-              {
-                yysyntax_error_status = YYSYNTAX_ERROR;
-                yymsgp = yymsg;
-              }
-          }
-        yyerror (yymsgp);
-        if (yysyntax_error_status == 2)
-          goto yyexhaustedlab;
-      }
-# undef YYSYNTAX_ERROR
-#endif
     }
 
   yyerror_range[1] = yylloc;
-
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
@@ -5304,13 +5133,14 @@ yyerrorlab:
 yyerrlab1:
   yyerrstatus = 3;      /* Each real token shifted decrements this.  */
 
+  /* Pop stack until we find a state that shifts the error token.  */
   for (;;)
     {
       yyn = yypact[yystate];
       if (!yypact_value_is_default (yyn))
         {
-          yyn += YYTERROR;
-          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
+          yyn += YYSYMBOL_YYerror;
+          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYSYMBOL_YYerror)
             {
               yyn = yytable[yyn];
               if (0 < yyn)
@@ -5324,7 +5154,7 @@ yyerrlab1:
 
       yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-                  yystos[yystate], yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (yystate), yyvsp, yylsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -5335,13 +5165,11 @@ yyerrlab1:
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
   yyerror_range[2] = yylloc;
-  /* Using YYLLOC is tempting, but would change the location of
-     the lookahead.  YYLOC is available though.  */
-  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
-  *++yylsp = yyloc;
+  ++yylsp;
+  YYLLOC_DEFAULT (*yylsp, yyerror_range, 2);
 
   /* Shift the error token.  */
-  YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
+  YY_SYMBOL_PRINT ("Shifting", YY_ACCESSING_SYMBOL (yyn), yyvsp, yylsp);
 
   yystate = yyn;
   goto yynewstate;
@@ -5363,20 +5191,20 @@ yyabortlab:
   goto yyreturn;
 
 
-#if !defined yyoverflow || YYERROR_VERBOSE
+#if !defined yyoverflow
 /*-------------------------------------------------.
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
 yyexhaustedlab:
   yyerror (YY_("memory exhausted"));
   yyresult = 2;
-  /* Fall through.  */
+  goto yyreturn;
 #endif
 
 
-/*-----------------------------------------------------.
-| yyreturn -- parsing is finished, return the result.  |
-`-----------------------------------------------------*/
+/*-------------------------------------------------------.
+| yyreturn -- parsing is finished, clean up and return.  |
+`-------------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
@@ -5393,16 +5221,14 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[+*yyssp], yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
   if (yyss != yyssa)
     YYSTACK_FREE (yyss);
 #endif
-#if YYERROR_VERBOSE
-  if (yymsg != yymsgbuf)
-    YYSTACK_FREE (yymsg);
-#endif
+
   return yyresult;
 }
+

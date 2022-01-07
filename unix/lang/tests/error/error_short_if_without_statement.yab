@@ -1,0 +1,6 @@
+#expect#---Error in error_short_if_without_statement.yab, line 7:
+#expect#---Error: syntax error
+#expect#   there should be at least one statement
+if (2>1)
+# this does not count
+x=1

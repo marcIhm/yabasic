@@ -2,7 +2,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2021
+    written by Marc Ihm 1995-2022
     more info at www.yabasic.de
 
     FLEX part
@@ -29,9 +29,10 @@ int library_chain_length=0; /* length of library_chain */
 struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
 struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
-int in_short_if=0; /* true, if within a short if */
+int in_short_if=0; /* greater than zero, if within a short if */
 int len_of_lineno=0; /* length of last line number */
 YY_BUFFER_STATE from_string_buffer; /* to read from string */
+int token_count=0; /* counting all tokens */
 
 /*
     Remark on yycolumn and yylineno:
@@ -77,6 +78,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 %%
 %{
+  token_count++;
   if (start_token != evNONE)
       {
         int t = start_token;
@@ -99,6 +101,7 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
     }
     report_if_missing("Premature end of file",TRUE);
     leave_lib();
+    yylval.nnl=0;
     return tSEP;
   }
 }
@@ -112,21 +115,21 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
   len_of_lineno=strlen(yytext);		 
   return tSYMBOL;
 }
-<PASTLNO>.* {yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
-<PASTLNO>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
+<PASTLNO>.* {yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);yylval.nnl=0;return tSEP;}
+<PASTLNO>\n {yycolumn=1;BEGIN(INITIAL);yylval.nnl=1;return tSEP;}
 
-\n\n {yycolumn=1;yydoublenl=TRUE; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
-\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
-: {if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
+\n\n {yycolumn=1;yydoublenl=TRUE;yylval.nnl=2; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+\n {yycolumn=1;yylval.nnl=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
+: {yylval.nnl=0;if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 
-REM{WS}+.* {return tSEP;}  /* comments span 'til end of line */
-\/\/.* {return tSEP;}  /* comments span 'til end of line */
-REM\n {yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
+REM{WS}+.* {yylval.nnl=0;return tSEP;}  /* comments span 'til end of line */
+\/\/.* {yylval.nnl=0;return tSEP;}  /* comments span 'til end of line */
+REM\n {yycolumn=1;yylval.nnl=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 REM {yymore();}
 
 IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMPORT;}
-<PASTIMPORT>.* {yycolumn=1;BEGIN(INITIAL);yyless(0);unput('\n');return tSEP;}
-<PASTIMPORT>\n {yycolumn=1;BEGIN(INITIAL);return tSEP;}
+<PASTIMPORT>.* {yycolumn=1;BEGIN(INITIAL);yyless(0);unput('\n');yylval.nnl=0;return tSEP;}
+<PASTIMPORT>\n {yycolumn=1;BEGIN(INITIAL);yylval.nnl=1;return tSEP;}
 
 ((DOCU|DOC|DOCUMENTATION)({WS}+.*)?) {
   char *where=strpbrk(yytext," \t\r\f\v");
@@ -134,8 +137,8 @@ IMPORT{WS}+{NAME} {BEGIN(PASTIMPORT);import_lib(my_strdup(yytext+7));return tIMP
   return tDOCU;
 }
 
-^#.*\n {yycolumn=1;return tSEP;} /* hash (#) as first character of a line may introduce comments too */
-^'.*\n {yycolumn=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
+^#.*\n {yycolumn=1;yylval.nnl=1;return tSEP;} /* hash (#) as first character of a line may introduce comments too */
+^'.*\n {yycolumn=1;yylval.nnl=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
 
 EXECUTE return tEXECUTE;
 "EXECUTE$" return tEXECUTE2;

@@ -1743,33 +1743,33 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[244] =
     {   0,
-      107,  109,  110,  116,  117,  119,  120,  121,  123,  124,
-      125,  126,  128,  129,  130,  132,  138,  139,  141,  142,
-      143,  144,  145,  146,  147,  148,  149,  150,  151,  152,
-      153,  154,  155,  156,  157,  158,  159,  160,  161,  162,
-      163,  164,  165,  166,  167,  168,  169,  170,  171,  172,
-      173,  174,  175,  176,  177,  178,  179,  180,  181,  182,
-      183,  184,  185,  186,  187,  188,  189,  190,  191,  192,
-      193,  194,  195,  196,  197,  198,  199,  200,  201,  202,
-      203,  204,  205,  206,  207,  208,  209,  210,  211,  212,
-      213,  214,  215,  216,  217,  218,  219,  220,  221,  222,
+      110,  112,  113,  119,  120,  122,  123,  124,  126,  127,
+      128,  129,  131,  132,  133,  135,  141,  142,  144,  145,
+      146,  147,  148,  149,  150,  151,  152,  153,  154,  155,
+      156,  157,  158,  159,  160,  161,  162,  163,  164,  165,
+      166,  167,  168,  169,  170,  171,  172,  173,  174,  175,
+      176,  177,  178,  179,  180,  181,  182,  183,  184,  185,
+      186,  187,  188,  189,  190,  191,  192,  193,  194,  195,
+      196,  197,  198,  199,  200,  201,  202,  203,  204,  205,
+      206,  207,  208,  209,  210,  211,  212,  213,  214,  215,
+      216,  217,  218,  219,  220,  221,  222,  223,  224,  225,
 
-      223,  224,  225,  226,  227,  228,  229,  230,  231,  232,
-      233,  234,  235,  236,  237,  238,  239,  240,  241,  242,
-      243,  244,  245,  246,  247,  248,  249,  250,  251,  252,
-      253,  254,  255,  257,  258,  259,  260,  261,  262,  263,
-      264,  265,  266,  267,  268,  269,  270,  271,  272,  273,
-      274,  275,  276,  277,  278,  279,  280,  281,  282,  283,
-      284,  285,  286,  287,  288,  289,  290,  291,  292,  293,
-      294,  295,  296,  297,  298,  299,  300,  301,  302,  303,
-      304,  305,  306,  307,  308,  309,  310,  311,  312,  313,
-      314,  315,  316,  317,  318,  319,  320,  321,  322,  323,
+      226,  227,  228,  229,  230,  231,  232,  233,  234,  235,
+      236,  237,  238,  239,  240,  241,  242,  243,  244,  245,
+      246,  247,  248,  249,  250,  251,  252,  253,  254,  255,
+      256,  257,  258,  260,  261,  262,  263,  264,  265,  266,
+      267,  268,  269,  270,  271,  272,  273,  274,  275,  276,
+      277,  278,  279,  280,  281,  282,  283,  284,  285,  286,
+      287,  288,  289,  290,  291,  292,  293,  294,  295,  296,
+      297,  298,  299,  300,  301,  302,  303,  304,  305,  306,
+      307,  308,  309,  310,  311,  312,  313,  314,  315,  316,
+      317,  318,  319,  320,  321,  322,  323,  324,  325,  326,
 
-      324,  325,  326,  327,  328,  329,  330,  331,  332,  333,
-      334,  335,  336,  337,  338,  339,  340,  341,  342,  343,
-      344,  345,  346,  348,  349,  350,  351,  352,  353,  354,
-      356,  358,  364,  370,  376,  385,  386,  387,  388,  390,
-      395,  400,  417
+      327,  328,  329,  330,  331,  332,  333,  334,  335,  336,
+      337,  338,  339,  340,  341,  342,  343,  344,  345,  346,
+      347,  348,  349,  351,  352,  353,  354,  355,  356,  357,
+      359,  361,  367,  373,  379,  388,  389,  390,  391,  393,
+      398,  403,  420
     } ;
 
 static yy_state_type *yy_state_buf=0, *yy_state_ptr=0;
@@ -1800,7 +1800,7 @@ char *yytext;
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2021
+    written by Marc Ihm 1995-2022
     more info at www.yabasic.de
 
     FLEX part
@@ -1827,9 +1827,10 @@ int library_chain_length=0; /* length of library_chain */
 struct library *library_chain[MAX_INCLUDE_NUMBER]; /* list of all library file names in order of appearance */
 struct library *currlib; /* current library as relevant to bison */
 int inlib; /* true, while in library */
-int in_short_if=0; /* true, if within a short if */
+int in_short_if=0; /* greater than zero, if within a short if */
 int len_of_lineno=0; /* length of last line number */
 YY_BUFFER_STATE from_string_buffer; /* to read from string */
+int token_count=0; /* counting all tokens */
 
 /*
     Remark on yycolumn and yylineno:
@@ -2154,6 +2155,7 @@ YY_DECL
 	{
 /* %% [7.0] user's declarations go here */
 
+  token_count++;
   if (start_token != evNONE)
       {
         int t = start_token;
@@ -2298,6 +2300,7 @@ case YY_STATE_EOF(EVAL_DIGITS):
     }
     report_if_missing("Premature end of file",TRUE);
     leave_lib();
+    yylval.nnl=0;
     return tSEP;
   }
 }
@@ -2321,39 +2324,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-{yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);return tSEP;}
+{yycolumn=len_of_lineno+1;BEGIN(INITIAL);yyless(0);yylval.nnl=0;return tSEP;}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;BEGIN(INITIAL);return tSEP;}
+{yycolumn=1;BEGIN(INITIAL);yylval.nnl=1;return tSEP;}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;yydoublenl=TRUE; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
+{yycolumn=1;yydoublenl=TRUE;yylval.nnl=2; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;} if (interactive && !inlib) {return tEOPROG;} else {return tSEP;}}
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-{yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
+{yycolumn=1;yylval.nnl=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-{if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
+{yylval.nnl=0;if (in_short_if && check_compat) error(sWARNING,"Short if has changed in version 2.71");return tSEP;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-{return tSEP;}  /* comments span 'til end of line */
+{yylval.nnl=0;return tSEP;}  /* comments span 'til end of line */
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-{return tSEP;}  /* comments span 'til end of line */
+{yylval.nnl=0;return tSEP;}  /* comments span 'til end of line */
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-{yycolumn=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
+{yycolumn=1;yylval.nnl=1; if (in_short_if) {in_short_if--;yyless(0);return tIMPLICITENDIF;};return tSEP;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -2365,12 +2368,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-{yycolumn=1;BEGIN(INITIAL);yyless(0);unput('\n');return tSEP;}
+{yycolumn=1;BEGIN(INITIAL);yyless(0);unput('\n');yylval.nnl=0;return tSEP;}
 	YY_BREAK
 case 15:
 /* rule 15 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;BEGIN(INITIAL);return tSEP;}
+{yycolumn=1;BEGIN(INITIAL);yylval.nnl=1;return tSEP;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
@@ -2383,12 +2386,12 @@ YY_RULE_SETUP
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;return tSEP;} /* hash (#) as first character of a line may introduce comments too */
+{yycolumn=1;yylval.nnl=1;return tSEP;} /* hash (#) as first character of a line may introduce comments too */
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-{yycolumn=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
+{yycolumn=1;yylval.nnl=1;return tSEP;} /* apostrophe (') as first character may introduce comments too */
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
