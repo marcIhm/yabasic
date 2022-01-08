@@ -1,9 +1,10 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
-Version 2.90.2 (January 6. 2022)
+Version 2.90.2 (January 6, 2022)
   - Fixed precision error for print using under windows
   - Better error-reporting for an edge case of short-if
+  - Allow '==' to check for equality and '!=' for inequality ('=' and '<>' still work)
 
 Version 2.90.1 (July 11, 2021)
   - Repaired the docu (especially yabasic.htm)

@@ -1,7 +1,7 @@
 /*
 
   Installer for yabasic
-  Copyright by Marc Ihm 1996-2019
+  Copyright by Marc Ihm 1996-2022
   
   This file is part of yabasic and may be copied under the terms of
   MIT License which can be found in the file LICENSE.

@@ -85,7 +85,7 @@ class News
     paras = File.read(fname).gsub(/^#.*$/,'').gsub(/\A(\s*\n)+/,'').split(/(?:^\s*\n)+/)
     all_versions = []
     paras.each { |para|
-      p = News_para.new(para)
+      p = News_para.new(para, fname)
       fail "Version #{p.version} has already been seen" if all_versions.include?(p.version)
       all_versions << p.version
       @paras << p
@@ -110,9 +110,9 @@ class News_para
   
   attr_reader :version
   
-  def initialize para
+  def initialize para, fname
     lines = para.lines
-    fail "Cannot parse version from line: '#{lines[0]}'" unless lines[0]=~/^Version (\d\.(?:\d+|\d+\.\d+))(?: \(([^,]+), (20\d+\d)\))?\s*$/;
+    fail "Cannot parse version from line: '#{lines[0]}' in #{fname}" unless lines[0]=~/^Version (\d\.(?:\d+|\d+\.\d+))(?: \(([^,]+), (20\d+\d)\))?\s*$/;
     @version = $1
     @month_day = $2
     @year = $3

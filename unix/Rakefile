@@ -155,7 +155,7 @@ end
 desc 'Collect Versions'
 task :versions => [:git,:html,:tests,'lang/Makefile','lang/configure',:news] do
   vs['yabasic']=%x( lang/yabasic -v 2>&1 ).match(/yabasic (\d\.\d+\.\d+)/ )[1]
-  vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+(\d\.\d+)/)[1]
+  vs['yabasic.htm']=File.new('lang/yabasic.htm').read.match(/This document applies to version\s+.*(\d\.\d+)/)[1]
   vs['NEWS']=news.version;
   pp vs
   fail "Mismatch between versions of 'yabasic' and 'yabasic.htm'" if (vs['yabasic'].to_f-vs['yabasic.htm'].to_f).abs >= 0.01

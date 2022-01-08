@@ -15,9 +15,9 @@
       <command>yabasic.exe</command> under Windows)
       as well as the language (which is, of course, a sort of <acronym>basic</acronym>) itself.
     </para>
-      <para>This document applies to version <%= version_short %> of <application>yabasic</application></para>
+      <para>This document applies to version <emphasis role="strong"><%= version_short %></emphasis> of <application>yabasic</application></para>
       <para>
-      However, this document does not contain the latest news about <application>yabasic</application> or a FAQ.
+      However, it does <emphasis>not</emphasis> contain the latest news about <application>yabasic</application> or a FAQ.
       As such information tends to change rapidly, it is presented online only 
       at <ulink url="http://www.yabasic.de">www.yabasic.de</ulink>.</para>
       <para>
@@ -506,6 +506,13 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_pow">** or ^</link></term>
 	  <listitem>
 	    <%= purpose['ref_pow'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_comparison">&lt; &lt;= &gt; &gt;= = == &lt;&gt; !=</link></term>
+	  <listitem>
+	    <%= purpose['ref_comparison'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1748,6 +1755,13 @@ if (not okay) error "Wrong, wrong !"
 </programlisting>
       </informalexample>
       <para>So conditions and expressions are really the same thing (at least as long as yabasic is concerned). Therefore the terms <wordasword>conditions</wordasword> and <wordasword>expression</wordasword> can really be used interchangeably, at least in theory. In reality the term <wordasword>condition</wordasword> is used in connection with <function>if</function> or <function>while</function> whereas the term <wordasword>expression</wordasword> tends to be used more often within arithmetic context.</para>
+    </sect1>
+
+    <sect1 id="ref_comparing_strings_or_numbers">
+      <title>Comparing strings or numbers</title>
+      <para><application>Yabasic</application>, of course, allows to compare strings with strings and numbers with numbers; <function>&lt;</function>, <function>&lt;=</function>, <function>&gt;</function> and <function>&gt;=</function> compare their left-hand side to their right-hand side as usual; nothing new here and examples can be found throughout this manual.</para>
+      <para>More interesting, the <emphasis>equality</emphasis>-operator (for numbers as well as for strings) can be written <emphasis>in two different ways</emphasis>: either as <function>=</function> (traditional) or as <function>==</function> (more modern). The second form has the advantage of beeing visually distinct from the <emphasis>assignment</emphasis>-operator, which is the single <function>=</function>. One may argue therefore, that using <function>==</function> results in code, that is easier to understand and read; This manual however sticks to tradition and mostly uses the single <function>=</function> for equality-check.</para>
+      <para>Finally, <emphasis>inequality</emphasis> can be checked with <function>&lt;&gt;</function> or <function>!=</function>; both operators behave identically and so it is only a matter of taste, which one to use.</para>
     </sect1>
 
     <sect1 id="ref_array_references">
@@ -10582,7 +10596,7 @@ print xor(7,4)
     </sect1>
 
     <sect1 id="ref_special_characters">
-      <title>Special characters</title>
+      <title>Symbols and Special characters</title>
 
       <refentry id="ref_hash">
 	<refmeta>
@@ -10785,6 +10799,20 @@ print 2**0.5
 	<refsect1>
 	  <title>See also</title>
 	  <para><function><link linkend="ref_sqrt">sqrt</link></function></para>
+	</refsect1>
+      </refentry>
+
+      <refentry id="ref_comparison">
+	<refmeta>
+	  <refentrytitle>&lt; &lt;= &gt; &gt;= = == &lt;&gt; !=</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>&lt; &lt;= &gt; &gt;= = == &lt;&gt; !=</refname>
+	  <refpurpose>Compare numbers or strings</refpurpose>
+	</refnamediv>
+	<refsect1>
+	  <title>See also</title>
+	  <para><function><link linkend="ref_comparing_strings_or_numbers">Comparing strings or numbers</link></function> for some background.</para>
 	</refsect1>
       </refentry>
     </sect1>

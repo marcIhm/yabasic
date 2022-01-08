@@ -42,7 +42,6 @@ int exported=FALSE; /* true, if function is exported */
 int yylex(void);
 extern struct library *current_library; /* defined in main.c: name of currently parsed library */
 extern int yylineno; /* defined in flex */
-extern int token_count; /* defined in flex */
 int missing_endif=0;
 int missing_endif_line=0;
 int missing_endsub=0;
@@ -57,7 +56,6 @@ int missing_loop=0;
 int missing_loop_line=0;
 int loop_nesting=0;
 int switch_nesting=0;
-int token_count_start_of_short_if=0;
 
 void report_if_missing(char *text,int eof) {
   if (missing_loop || missing_endif || missing_next || missing_until || missing_wend) {
@@ -133,7 +131,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %type <symbol> function_name
 %type <symbol> function_or_array
 %type <symbol> stringfunction_or_array
-%type <nnl> tSEP sep_list
+%type <nnl> tSEP
 
 %token <fnum> tFNUM
 %token <symbol> tSYMBOL
@@ -152,7 +150,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tPRINT tINPUT tRETURN tDIM tEND tEXIT tAT tSCREEN 
 %token tREVERSE tCOLOUR tBACKCOLOUR
 %token tAND tOR tNOT tBITNOT tEOR tSHL tSHR
-%token tNEQ tLEQ tGEQ tLTN tGTN tEQU tPOW
+%token tNEQ tLEQ tGEQ tLTN tGTN tEQU tEQU2 tPOW
 %token tREAD tDATA tRESTORE
 %token tOPEN tCLOSE tSEEK tTELL tAS tREADING tWRITING tORIGIN
 %token tWINDOW tDOT tLINE tCIRCLE tTRIANGLE tTEXT tCLEAR tFILL tPRINTER
@@ -182,6 +180,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %left tLTN
 %left tGTN
 %left tEQU
+%left tEQU2
 %left '-' '+'
 %left '*' '/'
 %nonassoc UMINUS
@@ -200,8 +199,7 @@ program: statement_list tEOPROG {YYACCEPT;}
   ;
 
 statement_list: statement
-  | statement_list {if (severity_so_far >= sERROR) {YYABORT;}} 
-  tSEP statement
+  | statement_list {if (severity_so_far >= sERROR) {YYABORT;}} tSEP {if (in_short_if > 0 && $3 > 0) lyyerror(sERROR,"short if-statement (i.e. without 'then' and ended by newline) does not contain any statements");} statement
   ;
 
 assignment: string_assignment 
@@ -414,6 +412,7 @@ expression: expression tOR {add_command(cORSHORT);pushlabel();} expression {popl
   | expression tAND {add_command(cANDSHORT);pushlabel();} expression {poplabel();create_boole('&');}
   | tNOT expression {create_boole('!');}
   | expression tEQU expression {create_dblrelop('=');}
+  | expression tEQU2 expression {create_dblrelop('=');}
   | expression tNEQ expression {create_dblrelop('!');}
   | expression tLTN expression {create_dblrelop('<');}
   | expression tLEQ expression {create_dblrelop('{');}
@@ -435,6 +434,7 @@ expression: expression tOR {add_command(cORSHORT);pushlabel();} expression {popl
   | expression tPOW expression {create_dblbin('^');}
   | '-' expression %prec UMINUS {add_command(cNEGATE);}
   | string_expression tEQU string_expression {create_strrelop('=');}
+  | string_expression tEQU2 string_expression {create_strrelop('=');}
   | string_expression tNEQ string_expression {create_strrelop('!');}
   | string_expression tLTN string_expression {create_strrelop('<');}
   | string_expression tLEQ string_expression {create_strrelop('{');}
@@ -742,13 +742,13 @@ endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %
   | tNEXT {report_conflicting_close("a closing endif is expected before next",'n');}
   ;
 
-short_if: tIF expression {token_count_start_of_short_if=token_count;in_short_if++;add_command(cDECIDE);pushlabel();}
+short_if: tIF expression {in_short_if++;add_command(cDECIDE);pushlabel();}
             statement_list
 	    end_of_if
   ;
 
 end_of_if: tENDIF {error(sERROR,"short if-statement (i.e. without 'then') does not allow 'endif'");}
-  | tIMPLICITENDIF {printf("%d,%d\n", token_count_start_of_short_if, token_count);lyyerror(sERROR,"short if-statement (i.e. without 'then' and ended by newline) does not contain any statements");poplabel();}
+  | tIMPLICITENDIF {poplabel();}
   ;
 
 else_part: /* can be omitted */

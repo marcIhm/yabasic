@@ -4,13 +4,15 @@ if (1<2) :
 
 x=0
 if (1<2) x=1
-if (x<>0) then
+if (x=0) then
+  print "Test 1 failed"
   exit 1
 endif
 
 x=0
 if (1=2) x=1:x=1:x=1
 if (x<>0) then
+  print "Test 2 failed"
   exit 1
 endif
 
@@ -18,12 +20,21 @@ x=0
 if (1=2) x=1:x=1:x=1
 x=2
 if (x<>2) then
+  print "Test 3 failed"
   exit 1
 endif
 
 x=0
 if (1<2) x=1:y=1:z=1
 if (x<>1) then
+  print "Test 4 failed"
+  exit 1
+endif
+
+x=0
+if (1=1) x=1:x=2:x=3
+if (x<>3) then
+  print "Test 5 failed"
   exit 1
 endif
 

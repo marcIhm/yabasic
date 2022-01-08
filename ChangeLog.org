@@ -1,9 +1,15 @@
-Version 2.90.1 (July 11, 20201)
+Version 2.90.2 (January 6, 2022)
+  - Fixed precision error for print using under windows
+  - Better error-reporting for an edge case of short-if
+  - Allow '==' to check for equality and '!=' for inequality ('=' and '<>' still work)
+
+
+Version 2.90.1 (July 11, 2021)
   - Repaired the docu (especially yabasic.htm)
   - Removed references to the old documentation (still available on github)
 
 
-Version 2.90.0 (July 10, 20201)
+Version 2.90.0 (July 10, 2021)
   - Fixed an error with local variables
   - Moved to a new building-environment (see github and there README.org for details)
 

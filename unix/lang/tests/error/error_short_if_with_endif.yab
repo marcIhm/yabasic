@@ -1,3 +1,7 @@
 #expect#---Error in error_short_if_with_endif.yab, line 7:
-#expect#---Error: syntax error
+#expect#---Error: short if-statement (i.e. without 'then') does not allow 'endif'
+#expect#   if (2>1) x=1:endif
+#expect#                ^~~~~
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
 if (2>1) x=1:endif

@@ -32,7 +32,6 @@ int inlib; /* true, while in library */
 int in_short_if=0; /* greater than zero, if within a short if */
 int len_of_lineno=0; /* length of last line number */
 YY_BUFFER_STATE from_string_buffer; /* to read from string */
-int token_count=0; /* counting all tokens */
 
 /*
     Remark on yycolumn and yylineno:
@@ -78,7 +77,6 @@ NAME ([a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*)|([a-z_][a-z0-9_]*)
 
 %%
 %{
-  token_count++;
   if (start_token != evNONE)
       {
         int t = start_token;
@@ -348,9 +346,11 @@ GLOB return tGLOB;
 "**" return tPOW;
 
 "<>" return tNEQ;
+"!=" return tNEQ;
 "<=" return tLEQ;
 ">=" return tGEQ;
 "=" return tEQU;
+"==" return tEQU2;
 "<" return tLTN;
 ">" return tGTN;
 "!" return tNOT;

@@ -1,0 +1,19 @@
+
+if 1=2 error "1"
+if 1==2 error "2"
+if 1<>1 error "3"
+if 1!=1 error "4"
+if 2<1 error "5"
+if 2<=1 error "6"
+if 1>2 error "7"
+if 1>=2 error "8"
+
+if "a"="b" error "9"
+if "a"=="b" error "10"
+if "a"<>"a" error "11"
+if "a"!="a" error "12"
+if "b"<"a" error "13"
+if "b"<="a" error "14"
+if "a">"b" error "15"
+if "a">="b" error "16"
+

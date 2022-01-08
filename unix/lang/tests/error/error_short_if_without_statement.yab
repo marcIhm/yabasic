@@ -1,6 +1,9 @@
 #expect#---Error in error_short_if_without_statement.yab, line 7:
-#expect#---Error: syntax error
-#expect#   there should be at least one statement
+#expect#---Error: short if-statement (i.e. without 'then' and ended by newline) does not contain any statements
+#expect#   if (2>1)
+#expect#           ^
+#expect#---Error: Couldn't parse program
+#expect#---Error: Program not executed
 if (2>1)
 # this does not count
 x=1
