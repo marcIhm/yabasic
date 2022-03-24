@@ -1457,6 +1457,8 @@ flex: yabasic.flex Makefile
 bison: yabasic.bison Makefile
 	bison $(bisonflags) --output-file bison.c yabasic.bison
 
+aclocal.m4:
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

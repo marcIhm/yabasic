@@ -1,4 +1,7 @@
 
+# Process this file (Makefile.am) with automake to generate Makefile.in
+# which in turn will be processed by configure to get Makefile
+
 bin_PROGRAMS = yabasic
 yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c foreign.c flow.c flex.c bison.c whereami.c yabasic.h bison.h whereami.h
 man_MANS = yabasic.1
@@ -22,3 +25,5 @@ bisonflags = -d -l -t -v
 
 bison: yabasic.bison Makefile
 	bison $(bisonflags) --output-file bison.c yabasic.bison
+
+aclocal.m4:
