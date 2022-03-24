@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 # Generated automatically by config.status (yabasic) 2.90.2
 # Libtool was configured on host LAPTOP-ICE9P8LF:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
@@ -57,7 +57,7 @@ fast_install=needless
 shared_archive_member_spec=
 
 # Shell to use when invoking shell scripts.
-SHELL="/bin/sh"
+SHELL="/bin/bash"
 
 # An echo program that protects backslashes.
 ECHO="printf %s\\n"

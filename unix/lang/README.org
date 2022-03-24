@@ -18,7 +18,11 @@ Some hints:
   - autoconf
   - If this doesn't help, try autoreconf -i
 
-- On first build after a fresh checkout from github
+- For first build after a fresh checkout from github
+
+  If you just want to build yabasic:
+  - ./configure
+
+  If you want to adjust the built-process, run these too:
   - aclocal
   - autoconf
-  - ./configure
