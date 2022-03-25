@@ -15,10 +15,9 @@ TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s -d
 
-# create scanner and remove include for unistd.h (needed for windows)
+# create scanner
 flex: yabasic.flex Makefile
 	flex $(flexflags) -t yabasic.flex >flex.c
-#	perl -i -n -e 'if (!/^\#include\s+<unistd.h>\s+$$/) {print if $$i;$$i++}' flex.c
 
 # flags for bison (-t -v for debugging)
 bisonflags = -d -l -t -v
@@ -26,4 +25,3 @@ bisonflags = -d -l -t -v
 bison: yabasic.bison Makefile
 	bison $(bisonflags) --output-file bison.c yabasic.bison
 
-aclocal.m4:

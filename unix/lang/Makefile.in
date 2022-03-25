@@ -14,6 +14,9 @@
 
 @SET_MAKE@
 
+# Process this file (Makefile.am) with automake to generate Makefile.in
+# which in turn will be processed by configure to get Makefile
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -556,7 +559,6 @@ TESTS = tests/break.yab tests/bugs.yab tests/grammar.yab tests/io.yab tests/long
 
 # flags for flex (-d for debugging)
 flexflags = -i -I -L -s -d
-#	perl -i -n -e 'if (!/^\#include\s+<unistd.h>\s+$$/) {print if $$i;$$i++}' flex.c
 
 # flags for bison (-t -v for debugging)
 bisonflags = -d -l -t -v
@@ -1450,14 +1452,12 @@ uninstall-man: uninstall-man1
 .PRECIOUS: Makefile
 
 
-# create scanner and remove include for unistd.h (needed for windows)
+# create scanner
 flex: yabasic.flex Makefile
 	flex $(flexflags) -t yabasic.flex >flex.c
 
 bison: yabasic.bison Makefile
 	bison $(bisonflags) --output-file bison.c yabasic.bison
-
-aclocal.m4:
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
