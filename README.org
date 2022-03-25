@@ -17,16 +17,18 @@
   A short overview on changing yabasic can be found at
   http://www.yabasic.de/changing.html.
 
-* Table of Content						      :TOC_2:
- - [[#the-three-top-level-directories][The three top-level directories]]
-   - [[#directory-unix][Directory 'unix']]
-   - [[#directory-windows][Directory 'windows']]
-   - [[#directory-web][Directory 'web']]
- - [[#building-yabasic][Building Yabasic]]
-   - [[#building-with-rake][Building with rake]]
-   - [[#building-under-unix][Building under Unix]]
-   - [[#building-under-windows][Building under Windows]]
-   - [[#a-typical-building-sequence][A typical building sequence]]
+* Table of Content						      :TOC_3:
+- [[#yabasic---a-simple-basic-interpreter-for-unix-and-windows][Yabasic - A simple Basic interpreter for Unix and Windows.]]
+- [[#the-three-top-level-directories][The three top-level directories]]
+  - [[#directory-unix][Directory 'unix']]
+  - [[#directory-windows][Directory 'windows']]
+  - [[#directory-web][Directory 'web']]
+- [[#building-yabasic][Building Yabasic]]
+  - [[#building-under-unix][Building under Unix]]
+    - [[#the-simple-and-most-common-case-building-yabasic-as-is][The simple and most common case: Building yabasic 'as is']]
+    - [[#the-complex-case-changing-yabasic-and-building-it][The complex case: Changing yabasic and building it]]
+  - [[#building-under-windows][Building under Windows]]
+  - [[#building-sequence-for-the-maintainer-of-yabasic][Building sequence for the maintainer of yabasic]]
 
 * The three top-level directories
 
@@ -116,8 +118,11 @@
    just need to invoke rake, which e.g. invokes the Visual Studio
    C-Compiler in turn.
    
-** The advanced and full building sequence for the maintainer of yabasic
-
+** Notes for the maintainer of yabasic
+   
+   To update the table of content for this file, invoke
+   'toc-org-insert-toc'.
+   
    To build yabasic both under Unix and Windows and to update the
    website www.yabasic.de, go through the steps below. The process is
    mostly automated, only asking for confirmation at certain
