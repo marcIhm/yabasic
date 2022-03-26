@@ -100,14 +100,28 @@
 
     Additional tools needed are: autoconf, automake, bison, flex, ruby.
 
-    All steps are automated with rake (ruby make); so typically you
-    just need to invoke rake, which e.g. invokes autoconf and make in
-    turn and runs all the tests.
+    As you probably have different versions of the Autotools than the
+    maintainer, you probably need to do this:
 
-    The last step of the building process moves the artefacts into the
-    folder /work/yabasic/prodcts. If you have a machine with both
-    linux and windows, this folder can be shared between both
-    operating systems.
+    - automake --add-missing 
+    - autoreconf 
+
+    After that you may do the usual
+
+    - ./configure
+    - make
+
+    This will create a binary named "yabasic"
+
+    If want to build rpms and and deb-packages and run additional tests
+    (which is scripted in a ruby Rakefile), you will need to
+
+    - install ruby  (if not already present on your system)
+    - rake
+
+    The invocation of rake also moves the artefacts into the folder
+    /work/yabasic/prodcts. If you have a machine with both linux and
+    windows, this folder can be shared between both operating systems.
 
 ** Building under Windows
    
