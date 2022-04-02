@@ -103,7 +103,7 @@
     As you probably have different versions of the Autotools than the
     maintainer, you probably need to do this:
 
-    - automake --add-missing 
+    - automake --add-missing    ##  may give errors, but never mind
     - autoreconf 
 
     After that you may do the usual
