@@ -727,6 +727,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_step">step</link></term>
+	  <listitem>
+	    <%= purpose['ref_step'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_switch">switch</link></term>
 	  <listitem>
 	    <%= purpose['ref_switch'] %>
@@ -1179,27 +1186,13 @@ yabasic*font: 9x15
     </sect1>
 
     <sect1 id="top_sub">
-      <title>Subroutines and libraries</title>
+      <title>Subroutines</title>
       <variablelist>
 
 	<varlistentry>
 	  <term><link linkend="ref_end_sub">end sub</link></term>
 	  <listitem>
 	    <%= purpose['ref_end_sub'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_export">export</link></term>
-	  <listitem>
-	    <%= purpose['ref_export'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_import">import</link></term>
-	  <listitem>
-	    <%= purpose['ref_import'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -1232,13 +1225,6 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_step">step</link></term>
-	  <listitem>
-	    <%= purpose['ref_step'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
 	  <term><link linkend="ref_sub">sub</link></term>
 	  <listitem>
 	    <%= purpose['ref_sub'] %>
@@ -1248,8 +1234,28 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
+    <sect1 id="top_lib">
+      <title>Libraries</title>
+      <variablelist>
+
+	<varlistentry>
+	  <term><link linkend="ref_export">export</link></term>
+	  <listitem>
+	    <%= purpose['ref_export'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_import">import</link></term>
+	  <listitem>
+	    <%= purpose['ref_import'] %>
+	  </listitem>
+	</varlistentry>	
+      </variablelist>
+    </sect1>
+
     <sect1 id="top_outside">
-      <title>Invoking functionality outside of yabasic</title>
+      <title>Invoking other program from within yabasic</title>
       <variablelist>
 	<varlistentry>
 	  <term><link linkend="ref_system">system()</link></term>
@@ -1268,8 +1274,9 @@ yabasic*font: 9x15
       </variablelist>
     </sect1>
 
+
     <sect1 id="top_add_code">
-      <title>Adding code during execution</title>
+      <title>Adding new code to a running program</title>
       <para>See also <link linkend="ref_add_code">adding code during execution</link>.</para>
       <variablelist>
 
@@ -1897,6 +1904,47 @@ CASE DOES NOT MATTER
      hexa-decimal number (and the hexadecimal string "12" corresponds to the decimal number 18).</para> 
     </sect1>
 
+
+    <sect1 id="ref_subroutines">
+      <title>Subroutines: Collecting your code for reuse in one program</title>
+      <sect2>
+	<title>Purpose</title>
+	<para>Nobody wants to repeat oneself and therefore <application>yabasic</application> allows to collect arbitrary code, into <emphasis>subroutines</emphasis>, so that you may call it from <emphasis>multiple</emphasis> locations within you program. To this goal, two things must be given:</para>
+	<orderedlist>
+	  <listitem>
+	    <para>The subroutine neeeds to know details about what to do; that's why subroutines have <emphasis>parameters</emphasis>. E.g. in the overly simple subroutine <code>sub add_numbers(a,b)</code>code> the parameters would be <varname>a</varname> and <varname>b</varname>, specifying, which numbers to add.</para>
+	    <para>In certain cases a subroutine may want to find out, with how many parameters it has been called, by querying the special vairable <varname><link linkend="ref_numparams">numparams</link></varname>.</para>
+	  </listitem>
+	  <listitem>
+	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are in addition to their primary function, also local variables.</para>
+	    <para>If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local<function>.</para>
+	  </listitem>
+	</orderedlist>
+	<para>As background you may notice, that other programming language may use other terms than <emphasis>subroutine</emphasis> for the same concept; <emphasis>function</emphasis> or <emphasis>procedure</emphasis> have been popular and the term <emphasis>method</emphasis> comes from object orientation. <application>yabasic</application> is not object oriented, and regardless if a piece of code produces a value or not, it can be encapsulated in a <emphasis>subroutine</emphasis>.</para>
+      </sect2>
+      <sect2>
+	<title>See also</title>
+	<para><function><link linkend="top_sub">All commands for subroutines</link></function></para>	      
+      </sect2>
+    </sect1>
+
+    
+    <sect1 id="ref_libraries">
+      <title>Libraries: Collecting your code for reuse in many programs</title>
+      <sect2>
+	<title>Purpose</title>
+	<para>As you know, you may write </para>
+      </sect2>
+      <sect2>
+	<title>Variables in libraries and the main program</title>
+	<para></para>
+      </sect2>
+      <sect2>
+	<title>See also</title>
+	<para><function><link linkend="ref_import">import</link></function>, <function><link linkend="ref_export">export</link></function>, <link linkend="ref_subroutines">subroutines</link></para>	      
+      </sect2>
+    </sect1>
+      
 
     <sect1 id="ref_add_code">
       <title>Adding code to a running program</title>
@@ -4669,7 +4717,7 @@ Calling subroutine baz (NOT okay) ...
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_sub">sub</link></function>, <function><link linkend="ref_import">import</link></function></para>
+	  <para><link linkend="top_libraries">Libraries</link>, <function><link linkend="ref_sub">sub</link></function>, <function><link linkend="ref_import">import</link></function></para>
 	</refsect1>
       </refentry>
     </sect1>
@@ -5791,10 +5839,10 @@ As you may see from the error message, <application>yabasic</application> is una
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_export">export</link></function>, <function><link linkend="ref_sub">sub</link></function></para>
+	  <para><link linkend="top_libraries">Libraries</link>, <function><link linkend="ref_export">export</link></function>, <function><link linkend="ref_sub">sub</link></function></para>
 	</refsect1>
       </refentry>
-
+      
       <refentry id="ref_inkey">
 	<refmeta>
 	  <refentrytitle>inkey$</refentrytitle>
@@ -6964,8 +7012,8 @@ end sub
 	</refsynopsisdiv>
 	<refsect1>
 	  <title>Description</title>
-	  <para>Within a subroutine the local variable <varname>numparam</varname> or <varname>numparams</varname> contains the number of parameters, that have been passed to the subroutine. This information can be useful, because the subroutine may have been called with fewer parameters than actually declared. The number of values that actually have been passed while calling the subroutine, can be found in <function>numparams</function>.</para>
-	  <para>Note, that arguments which are used in the definition of a subroutine but are left out during a call to it (thereby reducing the value of <function>numparams</function>) receive a value of <literal>0</literal> or <literal>""</literal> (empty string) respectively.</para>
+	  <para>Within a subroutine the local variable <varname>numparam</varname> or <varname>numparams</varname> contains the number of parameters, that have been passed to the subroutine. This information can be useful, because the subroutine may have been called with fewer parameters than actually declared. The number of values that actually have been passed while calling the subroutine, can be found in <varname>numparams</varname>.</para>
+	  <para>Note, that arguments which are used in the definition of a subroutine but are left out during a call to it (thereby reducing the value of <varname>numparams</varname>), receive a value of <literal>0</literal> or <literal>""</literal> (empty string) respectively.</para>
 	</refsect1>
 	<refsect1>
 	  <title>Example</title>
@@ -6983,7 +7031,7 @@ sub part$(a$,f,t)
   end if
 end sub
           </programlisting>
-	    <para>When you run this example, it will print <computeroutput>456789</computeroutput> and <computeroutput>34567</computeroutput>. Take a look at the subroutine <function>part$</function>, which returns part of the string which has been passed as an argument. If (besides the string) two numbers are passed, they define the starting and end position of the substring, that will be returned. However, if only one number is passed, the rest of the string, starting from this position will be returned. Each of these cases is recognized with the help of the <function>numparams</function> variable.</para>
+	    <para>When you run this example, it will print <computeroutput>456789</computeroutput> and <computeroutput>34567</computeroutput>. Take a look at the subroutine <function>part$</function>, which returns part of the string which has been passed as an argument. If (besides the string) two numbers are passed, they define the starting and end position of the substring, that will be returned. However, if only one number is passed, the rest of the string, starting from this position will be returned. Each of these cases is recognized with the help of the <varname>numparams</varname>-variable.</para>
 	  </informalexample>
 	</refsect1>
 	<refsect1>
@@ -7641,13 +7689,6 @@ a=peek(#1)
 	      <term><function>peek("isbound")</function></term>
 	      <listitem>
 		<para>Return <constant>true</constant>, if the executing <application>yabasic</application>-program is part of a standalone program; see the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek("version")</function></term>
-	      <listitem>
-		<para>Return the version number of yabasic (e.g. 2.72).</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -9640,7 +9681,7 @@ end sub
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><function><link linkend="ref_local">local</link></function>, <function><link linkend="ref_static">static</link></function>, <function><link linkend="ref_peek">peek</link></function></para>
+	  <para><link linkend="ref_subroutines">subroutines</link>, <function><link linkend="ref_local">local</link></function>, <function><link linkend="ref_static">static</link></function>, <function><link linkend="ref_peek">peek</link></function></para>
 	</refsect1>
       </refentry>
 
