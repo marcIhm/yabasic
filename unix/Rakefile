@@ -53,8 +53,9 @@ task :xml do
   purpose = DefinedHash.new
   
   doc = File.open("doc/yabasic.xml.erb") { |f| Nokogiri::XML(f) }
+  doc.remove_namespaces!
   doc.xpath('//refentry').each do |ele|
-    purpose[ele.xpath('@id').first.value] = ele.xpath('refnamediv/refpurpose').text
+    purpose[ele.at_xpath('@id').value] = ele.css('refnamediv refpurpose').text
   end
   
   File.open('doc/_yabasic.xml','w') do |file|
