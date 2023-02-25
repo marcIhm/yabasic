@@ -1917,14 +1917,39 @@ CASE DOES NOT MATTER
 	  </listitem>
 	  <listitem>
 	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are in addition to their primary function, also local variables.</para>
-	    <para>If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local<function>.</para>
+	    <para>If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local</function>function>.</para>
 	  </listitem>
 	</orderedlist>
-	<para>As background you may notice, that other programming language may use other terms than <emphasis>subroutine</emphasis> for the same concept; <emphasis>function</emphasis> or <emphasis>procedure</emphasis> have been popular and the term <emphasis>method</emphasis> comes from object orientation. <application>yabasic</application> is not object oriented, and regardless if a piece of code produces a value or not, it can be encapsulated in a <emphasis>subroutine</emphasis>.</para>
+	<para>To see these concepts explained more thoroughly (complete with examples), see the links at the end of this section.</para>
+	<remark>Remark: You may notice, that other programming language may use other terms than <emphasis>subroutine</emphasis> for the same concept; <emphasis>function</emphasis> or <emphasis>procedure</emphasis> have been popular for pieces of code, that either return a value or not, and recently <emphasis>def</emphasis> has been used to name both. And the term <emphasis>method</emphasis> is used in object-oriented languages. However <application>yabasic</application> is not object oriented, and regardless, if a piece of code produces a value or not, it can be encapsulated in a <emphasis>subroutine</emphasis>, so <application>yabasic</application> uses the keyword <function>sub</function> throughout.</remark>
+      </sect2>
+      <sect2>
+	<title>A simple example</title>
+	<para>The short program below does nothing more than to add two numbers; for this purpose, it even defines a subroutine; this admittedly is more overhead, than you would normally take.</para>
+	<programlisting>
+print "About to add two numbers."
+input "Please enter first number: " x
+input "Please enter second number: " y
+print "Their sum is: ", adder(x,y)
+
+sub adder(a,b)
+  return a+b
+end sub
+	</programlisting>
+	<para>If you run it, you would see:</para>
+	<screen>
+	  <computeroutput>
+About to add two numbers.
+Please enter first number: 2
+Please enter second number: 3
+Their sum is: 5
+	</computeroutput>
+	</screen>
+	<para>Again, see the link at the end of this section for more explanations and examples (e.g. on <function>local</function>function> or <function>static</function>function>, which have only been mentioned but not shown at work so far).</para>
       </sect2>
       <sect2>
 	<title>See also</title>
-	<para><function><link linkend="top_sub">All commands for subroutines</link></function></para>	      
+	<para><link linkend="top_sub">All commands for subroutines</link>, where you will find lots of links to the individual keywords related.</para>	     
       </sect2>
     </sect1>
 
@@ -1933,11 +1958,51 @@ CASE DOES NOT MATTER
       <title>Libraries: Collecting your code for reuse in many programs</title>
       <sect2>
 	<title>Purpose</title>
-	<para>As you know, you may write </para>
+	<para><emphasis>Libraries</emphasis> build upon <function><link linkend="ref_subroutines">subroutines</link></function> and take the concept of code-reuse one step further: They allow code to be shared between <emphasis>different</emphasis> programs (as compared to subroutines, which on their own allow code-reuse within a single program only). Moreover, it is possible and in fact common, that the author of a library and the author of a program using that library, are different persons, each writing their respective code on their own.</para>
       </sect2>
       <sect2>
-	<title>Variables in libraries and the main program</title>
-	<para></para>
+	<title>A simple example</title>
+	<para>Here is a program, that asks the user for two numbers and then uses a library <function>adder</function> to add those:</para>
+	<programlisting>
+import adder
+	  
+print "About to add two numbers."
+input "Please enter first number: " x
+input "Please enter second number: " y
+print "Their sum is: ", adder.add(x,y)
+	</programlisting>
+	<para>The statement <code>import adder</code> pulls in code from a very simple <emphasis>library</emphasis> <filename>adder.yab</filename>:</para>
+	<programlisting>
+sub add(a,b)
+  return a+b
+end sub
+	</programlisting>
+	<para>If you run it, you might see:</para>
+	<screen>
+	  <computeroutput>
+About to add two numbers.
+Please enter first number: 3
+Please enter second number: 4
+Their sum is: 7
+	  </computeroutput>
+	</screen>
+	<para>Compared with the very similar example for <link linkend="ref_subroutines">subroutines</link>, there are two differences:</para>
+	<orderedlist>
+	  <listitem>
+	    <para>The code of the subroutine <function>add</function> has been moved to its own file <filename>adder.yab</filename>.</para>
+	  </listitem>
+	  <listitem>
+	    <para>The subroutine <function>add</function> needs to be called as <function>adder.add</function>, which consists of <emphasis>filename</emphasis> (<filename>adder.yab</filename> but without the ending <filename>.yab</filename>) and the name of the subroutine (<function>add</function>) within that file.</para>
+	  </listitem>
+	</orderedlist>
+	<para>This is an exampe of <emphasis>namespaces</emphasis>.</para>
+      </sect2>
+      <sect2>
+	<title>Namespaces</title>
+	<para>
+	</para>
+	<para>When the executable code is devided between a <emphasis>main program file</emphasis> and (multiple) <emphasis>libraries</emphasis> it is important to keep their subroutines and variables seperate. To this end <application>yabasic</application> internally prefixes the subroutines and variables defined in a library with the shortened name of the library. E.g. in the example above, the subroutine <function>add</function> from the library <filename>adder.yab</filename> is prefixed by this library-name and ends up as beeing defined as <function>adder.add</function>.</para> 
+	<para>Subroutines and variables defined within the main program are prefixed with <function>main.</function>; normally, however, there is no need to use this prefix explicitly; it only helps <application>yabasic</application> to keep everything apart.</para>
       </sect2>
       <sect2>
 	<title>See also</title>
@@ -4717,7 +4782,7 @@ Calling subroutine baz (NOT okay) ...
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="top_libraries">Libraries</link>, <function><link linkend="ref_sub">sub</link></function>, <function><link linkend="ref_import">import</link></function></para>
+	  <para><link linkend="top_lib">Libraries</link>, <function><link linkend="ref_sub">sub</link></function>, <function><link linkend="ref_import">import</link></function></para>
 	</refsect1>
       </refentry>
     </sect1>
@@ -5792,7 +5857,7 @@ import foo
 	<refsect1>
 	  <title>Example</title>
 	  <informalexample>
-	    <para>Lets say you have a <application>yabasic</application>-program <computeroutput>foo.yab</computeroutput>, which imports a library <computeroutput>lib.yab</computeroutput>. <computeroutput>foo.yab</computeroutput>; this would read:</para>
+	    <para>Lets say you have a <application>yabasic</application>-program <computeroutput>foo.yab</computeroutput>, which imports a library <computeroutput>lib.yab</computeroutput>. <computeroutput>foo.yab</computeroutput> would read:</para>
 	    <programlisting>
 import lib
 
@@ -5808,7 +5873,7 @@ lib.y(2)
 rem  But this not !
 y(3)
           </programlisting>
-	    <para>Now the library <computeroutput>lib.yab</computeroutput> reads:</para>
+	    <para>Now the library <computeroutput>lib.yab</computeroutput>:</para>
 	    <programlisting>
 rem  Make the subroutine x easily available outside this library
 export sub x(a)
@@ -5839,7 +5904,7 @@ As you may see from the error message, <application>yabasic</application> is una
 	</refsect1>
 	<refsect1>
 	  <title>See also</title>
-	  <para><link linkend="top_libraries">Libraries</link>, <function><link linkend="ref_export">export</link></function>, <function><link linkend="ref_sub">sub</link></function></para>
+	  <para><link linkend="top_lib">Libraries</link>, <function><link linkend="ref_export">export</link></function>, <function><link linkend="ref_sub">sub</link></function></para>
 	</refsect1>
       </refentry>
       
