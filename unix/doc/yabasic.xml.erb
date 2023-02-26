@@ -1908,30 +1908,30 @@ CASE DOES NOT MATTER
       
       <section><info><title>Purpose</title></info>
 	
-	<para>Nobody wants to repeat oneself and therefore <application>yabasic</application> allows to collect arbitrary code, into <emphasis>subroutines</emphasis>, so that you may call it from <emphasis>multiple</emphasis> locations within you program. To this goal, two things must be given:</para>
+	<para>Nobody wants to repeat oneself and therefore <application>yabasic</application> allows to collect arbitrary code, into <emphasis>subroutines</emphasis>, so that you may call it from <emphasis>multiple</emphasis> locations within you program. To this end, two conditions must be fulfilled:</para>
 	<orderedlist inheritnum="ignore" continuation="restarts">
 	  <listitem>
-	    <para>The subroutine neeeds to know details about what to do; that's why subroutines have <emphasis>parameters</emphasis>. E.g. in the overly simple subroutine <code>sub add_numbers(a,b)</code>code&gt; the parameters would be <varname>a</varname> and <varname>b</varname>, specifying, which numbers to add.</para>
-	    <para>In certain cases a subroutine may want to find out, with how many parameters it has been called, by querying the special vairable <varname><link linkend="ref_numparams">numparams</link></varname>.</para>
+	    <para>The subroutine neeeds to know details about what to do; that's why subroutines have <emphasis>parameters</emphasis>. E.g. in the overly simple subroutine <code>sub add(a,b)</code> (see the example below) the parameters would be <varname>a</varname> and <varname>b</varname>, specifying, which numbers to add.</para>
+	    <remark>Remark: In certain cases a subroutine may want to find out, how many parameters it has been called with, by querying the special vairable <varname><link linkend="ref_numparams">numparams</link></varname>.</remark>
 	  </listitem>
 	  <listitem>
-	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are in addition to their primary function, also local variables.</para>
-	    <para>If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local</function>function&gt;.</para>
+	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are, in addition to their primary function, also local variables.</para>
+	    <remark>Remark: If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local</function>function&gt;.</remark>
 	  </listitem>
 	</orderedlist>
-	<para>To see these concepts explained more thoroughly (complete with examples), see the links at the end of this section.</para>
-	<remark>Remark: You may notice, that other programming language may use other terms than subroutine for the same concept; function or procedure have been popular for pieces of code, that either return a value or not, and recently def has been used to name both. And the term method is used in object-oriented languages. However yabasic is not object oriented, and regardless, if a piece of code produces a value or not, it can be encapsulated in a subroutine, so yabasic uses the keyword sub throughout.</remark>
+	<para>To see these concepts explained in more detail (complete with examples), follow the links at the end of this section.</para>
+	<remark>Remark: You may notice, that other programming language may use other terms than subroutine for the same concept: <function>function</function> or <function>procedure</function> have been popular for pieces of code, that either return a value or not, and in other languages <function>def</function> is used to name both. And the term <function>method</function> is used in object-oriented languages. However <application>yabasic</application> is not object oriented, and regardless, if a piece of code produces a value or not, it can be encapsulated in a subroutine, so yabasic uses the function <function>sub</function> throughout.</remark>
       </section>
       <section><info><title>A simple example</title></info>
 	
-	<para>The short program below does nothing more than to add two numbers; for this purpose, it even defines a subroutine; this admittedly is more overhead, than you would normally take.</para>
+	<para>The short program below does nothing more than to add two numbers; for this purpose, it even defines a subroutine. This admittedly is more overhead, than you would normally take.</para>
 	<programlisting>
 print "About to add two numbers."
 input "Please enter first number: " x
 input "Please enter second number: " y
-print "Their sum is: ", adder(x,y)
+print "Their sum is: ", add(x,y)
 
-sub adder(a,b)
+sub add(a,b)
   return a+b
 end sub
 	</programlisting>
@@ -1944,11 +1944,11 @@ Please enter second number: 3
 Their sum is: 5
 	</computeroutput>
 	</screen>
-	<para>Again, see the link at the end of this section for more explanations and examples (e.g. on <function>local</function>function&gt; or <function>static</function>function&gt;, which have only been mentioned but not shown at work so far).</para>
+	<para>Again, see the link at the end of this section for more explanations and examples (e.g. on <function>local</function> or <function>static</function>, which have only been mentioned but not shown at work so far).</para>
       </section>
       <section><info><title>See also</title></info>
 	
-	<para><link linkend="top_sub">All commands for subroutines</link>, where you will find lots of links to the individual keywords related.</para>	     
+	<para><link linkend="top_sub">All commands for subroutines</link>, where you will find links to the individual keywords related.</para>	     
       </section>
     </section>
 
@@ -1991,7 +1991,7 @@ Their sum is: 7
 	    <para>The code of the subroutine <function>add</function> has been moved to its own file <filename>adder.yab</filename>.</para>
 	  </listitem>
 	  <listitem>
-	    <para>The subroutine <function>add</function> needs to be called as <function>adder.add</function>, which consists of <emphasis>filename</emphasis> (<filename>adder.yab</filename> but without the ending <filename>.yab</filename>) and the name of the subroutine (<function>add</function>) within that file.</para>
+	    <para>The subroutine <function>add</function> needs to be called as <function>adder.add</function>, which consists of filename (<filename>adder.yab</filename> but without the ending <filename>.yab</filename>) and the name of the subroutine (<function>add</function>) within that file.</para>
 	  </listitem>
 	</orderedlist>
 	<para>This is an exampe of <emphasis>namespaces</emphasis>.</para>
@@ -2001,7 +2001,7 @@ Their sum is: 7
 	<para>
 	</para>
 	<para>When the executable code is devided between a <emphasis>main program file</emphasis> and (multiple) <emphasis>libraries</emphasis> it is important to keep their subroutines and variables seperate. To this end <application>yabasic</application> internally prefixes the subroutines and variables defined in a library with the shortened name of the library. E.g. in the example above, the subroutine <function>add</function> from the library <filename>adder.yab</filename> is prefixed by this library-name and ends up as beeing defined as <function>adder.add</function>.</para> 
-	<para>Subroutines and variables defined within the main program are prefixed with <function>main.</function>; normally, however, there is no need to use this prefix explicitly; it only helps <application>yabasic</application> to keep everything apart.</para>
+	<para>Subroutines and variables defined within the main program are prefixed with <function>main</function>; this prefix is fixed and not related to the actual filename of the main-program. Normally, however, there is no need to use this prefix explicitly; it only helps <application>yabasic</application> to keep everything apart.</para>
       </section>
       <section><info><title>See also</title></info>
 	
