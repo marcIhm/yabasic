@@ -1904,15 +1904,15 @@ CASE DOES NOT MATTER
     </section>
 
 
-    <section xml:id="ref_subroutines"><info><title>Subroutines: Collecting your code for reuse in one program</title></info>
+    <section xml:id="ref_subroutines"><info><title>Subroutines: Sharing code within one program</title></info>
       
       <section><info><title>Purpose</title></info>
 	
-	<para>Nobody wants to repeat oneself and therefore <application>yabasic</application> allows to collect arbitrary code, into <emphasis>subroutines</emphasis>, so that you may call it from <emphasis>multiple</emphasis> locations within you program. To this end, two conditions must be fulfilled:</para>
+	<para>Nobody wants to repeat oneself and therefore <application>yabasic</application> allows to collect arbitrary code into <emphasis>subroutines</emphasis>, so that you may call it from <emphasis>multiple</emphasis> locations within you program. To this end, two conditions must be fulfilled:</para>
 	<orderedlist inheritnum="ignore" continuation="restarts">
 	  <listitem>
 	    <para>The subroutine neeeds to know details about what to do; that's why subroutines have <emphasis>parameters</emphasis>. E.g. in the overly simple subroutine <code>sub add(a,b)</code> (see the example below) the parameters would be <varname>a</varname> and <varname>b</varname>, specifying, which numbers to add.</para>
-	    <remark>Remark: In certain cases a subroutine may want to find out, how many parameters it has been called with, by querying the special vairable <varname><link linkend="ref_numparams">numparams</link></varname>.</remark>
+	    <remark>Remark: In certain cases a subroutine may want to find out, how many parameters it has been called with, by querying the special variable <varname><link linkend="ref_numparams">numparams</link></varname>.</remark>
 	  </listitem>
 	  <listitem>
 	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are, in addition to their primary function, also local variables.</para>
@@ -1953,7 +1953,7 @@ Their sum is: 5
     </section>
 
     
-    <section xml:id="ref_libraries"><info><title>Libraries: Collecting your code for reuse in many programs</title></info>
+    <section xml:id="ref_libraries"><info><title>Libraries: Sharing code between many programs</title></info>
       
       <section><info><title>Purpose</title></info>
 	

@@ -103,6 +103,7 @@ task :copy => :templates do
   mkdir download
   %w( *.gz *.deb *.rpm *.exe *.zip ).each do |glob|
     Dir["../products/#{glob}"].each do |file|
+      puts file
       cp file, download
     end
   end
