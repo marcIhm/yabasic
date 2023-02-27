@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2022
+    written by Marc Ihm 1995-2023
     more info at www.yabasic.de
 
     symbol.c -- code for symbols, stack and library management, handling of arrays

@@ -66,7 +66,8 @@
 
 *** The simple and most common case: Building yabasic 'as is'
 
-    This builds from the tar-ball available at www.yabasic.de.
+    This builds from the tar-ball available at www.yabasic.de
+    or from https://github.com/marcIhm/yabasic
 
     If you just want to build yabasic from the sources, but do *not*
     want to modify yabasic (e.g. by adding new commands) the procedure

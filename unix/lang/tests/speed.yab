@@ -2,22 +2,28 @@ print "Simple speed check ..."
 
 REM  Measure system speed
 REM
-sng_out$=system$("stress-ng --cpu 2 --cpu-method matrixprod  --metrics-brief --perf -t 4 2>&1")
+sng_out$=system$("stress-ng --cpu 1 --cpu-method matrixprod  --metrics-brief --perf -t 4 2>&1")
+print sng_out$
 dim lines$(1),words$(1)
 numl=split(sng_out$,lines$(),"\n")
 numw=token(lines$(5),words$())
 bogo=val(words$(10))
-print "System speed is ",bogo," bogo ops per second"
 
 REM  The constant estimated_ops is the number of operations necessary for the two nested for-loops down below
-REM  its unit is 'time' as consumed by stress-ng (see above) and has been measured initially; in Theory this value
+REM  its unit is 'time' as consumed by stress-ng (see above) and has been measured initially; in theory this value
 REM  should not need to be corrected, even for other systems than mine.
 REM
-REM  Measurement 2018-10-28: 72.73 bogo ops per sec, 5155 duration
+REM  Measurement 2018-10-28 (2 cpus): 72.73 bogo ops per sec, 5155ms duration
+REM  Measurement 2023-02-26
+REM    stress-ng (1 cpu ): 1092.91 ops/s
+REM    duration for double for-loop below: 1014 msec
 REM
-estimated_ops=72.73*5155
-REM  Limit is chosen with 10% safe margin
-limit=estimated_ops*2/bogo
+REM Estimate of ops for the double-for-loop:
+estimated_ops=1092.91*1014
+REM Old estimate from 2018:
+REM estimated_ops=72.73*5155
+REM  Limit is chosen with 50% safe margin
+limit=estimated_ops*1.5/bogo
 print "Limit is therefore ",limit, " msec"
 
 REM  Measure duration of simple for-loops assuming this represents the speed of the whole yabasic-language
