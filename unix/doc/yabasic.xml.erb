@@ -1916,7 +1916,7 @@ CASE DOES NOT MATTER
 	  </listitem>
 	  <listitem>
 	    <para>The subroutine needs to run without messing up the state of the program, at the point where it has been called. That's why many subroutines use <function><link linkend="ref_local">local</link></function> variables, which are different and isolated from all other variables in your program, even if they happen to have the same name. <emphasis>parameters</emphasis> (as described above) are, in addition to their primary function, also local variables.</para>
-	    <remark>Remark: If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function>local</function>function&gt;.</remark>
+	    <remark>Remark: If a subroutine wants to remember some information between invocations, it may declare some of its variables as <function><link linkend="ref_static">static</link></function> instead of <function><link linkend="ref_local">local</link></function> function</remark>
 	  </listitem>
 	</orderedlist>
 	<para>To see these concepts explained in more detail (complete with examples), follow the links at the end of this section.</para>
@@ -1994,7 +1994,7 @@ Their sum is: 7
 	    <para>The subroutine <function>add</function> needs to be called as <function>adder.add</function>, which consists of filename (<filename>adder.yab</filename> but without the ending <filename>.yab</filename>) and the name of the subroutine (<function>add</function>) within that file.</para>
 	  </listitem>
 	</orderedlist>
-	<para>This is an exampe of <emphasis>namespaces</emphasis>.</para>
+	<para>This is an example of <emphasis>namespaces</emphasis>.</para>
       </section>
       <section><info><title>Namespaces</title></info>
 	
