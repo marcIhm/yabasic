@@ -155,15 +155,17 @@
    - In directory unix/lang:
      - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
-     - do rake; this does:
+     - type 'rake'; this does:
        - Run tests
        - Create tar, rpm and deb
    - In directory windows:
-     - do rake; this does:
+     - type 'rake'; this does:
        - Build windows executable
        - Create setup.exe and zip-files (which will ask for admin priveleges)
-   - In directory web: 
-     - do rake; this does:
+   - In directory web:
+     - if appropriate, add and commit all changes to git; otherwise no
+       new tag will be created below
+     - type 'rake'; this does:
        - Create new git tag and use the content of NEWS as the message
        - Upload everything to www.yabasic.de
    - Maybe submit new version to symantec and microsoft virus detection

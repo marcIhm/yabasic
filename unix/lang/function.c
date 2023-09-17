@@ -17,6 +17,9 @@
 #ifndef YABASIC_INCLUDED
 #include "yabasic.h"		/* all prototypes and structures */
 #endif
+#ifndef UINT64_MAX
+#include <stdint.h>
+#endif
 
 
 /* ------------- external references ---------------- */
@@ -1246,7 +1249,8 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
     int pre, post, len, nread, digit, commas, dots, i, cr;
     int neg = FALSE;
     double ipdbl, fp, round;
-    unsigned long ip;
+    /* type from stdint.h, because long int is 32 bits only on windows */
+    uint64_t ip;
     static char *digits = "0123456789";
 
     form = format;
@@ -1329,14 +1333,14 @@ myformat2 (char *dest, int max, double num, char *format, char *sep)	/* do the w
 
 	/* because we cast to long we cannot cope with numbers larger than its max */
 	/* not casting to long on the other hand leads to frequent arithmetic errors */
-        if (num > LONG_MAX) {
+        if (num > UINT64_MAX) {
             strcpy (dest, format);
             return 0;
         }
 
 	/* disassemble in integer and fractional part; both ip and fp will be consumed stepwise in the process */
 	fp = modf(num, &ipdbl);
-	ip = (unsigned long) ipdbl;
+	ip = (uint64_t) ipdbl;
 	
 	/* variable cr serves as our cursor running from right to left and marks the position to be written next */
 	

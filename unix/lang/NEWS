@@ -1,6 +1,10 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.90.4 (September 17, 2023)
+  - Fixed a bug related with 'print using' under windows
+    Thanx to Paul Shutler for reporting this !
+  
 Version 2.90.3 (February 26, 2023)
   - Introductory sections about subroutines and libraries
   - Updated the docu from docbook 4.5 to 5
