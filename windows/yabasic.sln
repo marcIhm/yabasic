@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lang", "lang\yabasic.vcxproj", "{CFAC79A2-4AC5-4411-90D5-E26DB83DD3A8}"
 EndProject
@@ -70,5 +70,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7E8FEED-89B9-4190-BF69-D45949CEFDDE}
 	EndGlobalSection
 EndGlobal

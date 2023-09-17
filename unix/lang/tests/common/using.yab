@@ -2,7 +2,16 @@ print "Check, that print using does not give spurious digits ..."
 seen$ = str$(1 + 1/64, "###.###########################")
 expected$ = "  1.015625000000000000000000000"
 if seen$ <> expected$ then
-  print "Formatting yields " + seen$ + ", but expecting " + expected$
+  print "Formatting a fractional number yields " + seen$ + ", but expecting " + expected$
+  exit 2
+endif
+
+print "Check, that print using can handle long numbers ..."
+x = 1073741824 * 8 * 8
+seen$ = str$(x, "#############################")
+expected$ = "                  68719476736"
+if seen$ <> expected$ then
+  print "Formatting a large number yields " + seen$ + ", but expecting " + expected$
   exit 2
 endif
 
