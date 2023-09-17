@@ -2,7 +2,7 @@
 # the first one will be added if necessary to the ChangeLog by rake
 
 Version 2.90.4 (September 17, 2023)
-  - Fixed a bug related with 'print using' under windows
+  - Fixed a bug related with 'print using' under windows.
     Thanx to Paul Shutler for reporting this !
   
 Version 2.90.3 (February 26, 2023)
