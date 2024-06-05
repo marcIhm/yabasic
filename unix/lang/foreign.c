@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2023
+    written by Marc Ihm 1995-2024
     more info at www.yabasic.de
 
     foreign.c -- code for calling foreign libraries

@@ -71,7 +71,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2023
+    written by Marc Ihm 1995-2024
     more info at www.yabasic.de
 
     BISON part
@@ -575,7 +575,7 @@ typedef short yytype_int16;
 
 /* Work around bug in HP-UX 11.23, which defines these macros
    incorrectly for preprocessor constants.  This workaround can likely
-   be removed in 2023, as HPE has promised support for HP-UX 11.23
+   be removed in 2024, as HPE has promised support for HP-UX 11.23
    (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
    <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
 #ifdef __hpux
