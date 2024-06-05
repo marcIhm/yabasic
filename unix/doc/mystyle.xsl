@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	        version='1.0'
                 xmlns="http://www.w3.org/TR/xhtml1/transitional"
@@ -7,10 +7,10 @@
   <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/xhtml/docbook.xsl"/>
   <xsl:output method="xml" indent="yes" encoding="US-ASCII"/>
   
-  <xsl:variable name="toc.section.depth">2</xsl:variable>
-  <xsl:variable name="toc.max.depth">2</xsl:variable>
-  <xsl:variable name="toc.reference.toc">1</xsl:variable>
-  <xsl:variable name="generate.section.toc.level">2</xsl:variable>
+  <xsl:variable name="toc.section.depth">3</xsl:variable>
+  <xsl:variable name="toc.max.depth">3</xsl:variable>
+  <xsl:variable name="toc.reference.toc">2</xsl:variable>
+  <xsl:variable name="generate.section.toc.level">3</xsl:variable>
 
 <xsl:param name="generate.toc">
  appendix  toc
