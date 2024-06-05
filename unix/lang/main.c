@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2023
+    written by Marc Ihm 1995-2024
     more info at www.yabasic.de
 
     main.c -- main() and auxilliary functions
@@ -23,7 +23,7 @@
 /* ------------- defines ---------------- */
 
 #define DONE {currcmd=currcmd->next;break;}	/* reduces type-work */
-#define COPYRIGHT "Copyright 1995-2023 by Marc Ihm, according to the MIT License"
+#define COPYRIGHT "Copyright 1995-2024 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the reproducible build */
 #define BANNER \
 "\nThis is yabasic version " VERSION ",\nconfigured for "\
@@ -2655,7 +2655,6 @@ mybind (char *bound)		/* bind a program to the interpreter and save it */
             sprintf (string, "could not open '%s' for reading: %s",
                      library_chain[i]->long_name, my_strerror (errno));
             error (sERROR, string);
-            fclose (flib);
             return 0;
         }
         sprintf (string, "\nimport %s\n", library_chain[i]->short_name);
