@@ -1,23 +1,19 @@
 * Yabasic - A simple Basic interpreter for Unix and Windows.
 
-  Yabasic is a traditional basic-interpreter. It comes with goto and
-  various loops and allows to define subroutines and libraries. It
-  does simple graphics and printing.  Yabasic can call out to
-  libraries written in C and allows to create standalone programs.
-  Yabasic runs under Unix and Windows and has a comprehensive
-  documentation; it is small, simple, open-source and free.
+  Yabasic is a traditional basic-interpreter. It comes with goto and various loops and
+  allows to define subroutines and libraries. It does simple graphics and printing.  Yabasic
+  can call out to libraries written in C and allows to create standalone programs.  Yabasic
+  runs under Unix and Windows and has a comprehensive documentation; it is small, simple,
+  open-source and free.
   
-  If you want to write programs for yabasic, see http://www.yabasic.de
-  for documentation.
+  If you want to write programs for yabasic, see http://www.yabasic.de for documentation.
 
-  If you want to modify yabasic itself and participate in its
-  development, read below.  The various files README.org in
-  subdirectories may contain some hints too.
+  If you want to modify yabasic itself and participate in its development, read below.  The
+  various files README.org in subdirectories may contain some hints too.
 
-  A short overview on changing yabasic can be found at
-  http://www.yabasic.de/changing.html.
+  A short overview on changing yabasic can be found at http://www.yabasic.de/changing.html.
 
-* Table of Content						      :TOC_3:
+* Table of Content :TOC_3:
 - [[#yabasic---a-simple-basic-interpreter-for-unix-and-windows][Yabasic - A simple Basic interpreter for Unix and Windows.]]
 - [[#the-three-top-level-directories][The three top-level directories]]
   - [[#directory-unix][Directory 'unix']]
@@ -32,33 +28,31 @@
 
 * The three top-level directories
 
-  Read below for an overview; some directories may contain their own
-  README.org with more details.
+  Read below for an overview; some directories may contain their own README.org with more
+  details.
 
-  An additional top-level directory 'products' is created for the
-  installable artifacts, which are created during the various build
-  steps.
+  An additional top-level directory 'products' is created for the installable artifacts,
+  which are created during the various build steps.
 
 ** Directory 'unix'
 
-   Here are most of the c-sources of yabasic as well as the input
-   files for flex and bison, which describe yabasics grammer. 
+   Here are most of the c-sources of yabasic as well as the input files for flex and bison,
+   which describe yabasics grammer.
    
-   Also find the documentation, which is written in docbook-xml and
-   transformed into html or man.
+   Also find the documentation, which is written in docbook-xml and transformed into html or
+   man.
    
 ** Directory 'windows'
 
-   The build process uses the c-sources from the unix-directory, so
-   here you will only find the sources for the windows-specific
-   setup-program.
+   The build process uses the c-sources from the unix-directory, so here you will only find
+   the sources for the windows-specific setup-program.
 
 ** Directory 'web'
 
    The html-Files and erb-templates for www.yabasic.de.
 
-   Building a new version of the website (by typing 'rake') is tested
-   under windows (wsl), but should be workable under unix too.
+   Building a new version of the website (by typing 'rake') is tested under windows (wsl),
+   but should be workable under unix too.
 
 * Building Yabasic
 
@@ -66,46 +60,42 @@
 
 *** The simple and most common case: Building yabasic 'as is'
 
-    This builds from the tar-ball available at www.yabasic.de
-    or from https://github.com/marcIhm/yabasic
+    This builds from the tar-ball available at www.yabasic.de or from
+    https://github.com/marcIhm/yabasic
 
-    If you just want to build yabasic from the sources, but do *not*
-    want to modify yabasic (e.g. by adding new commands) the procedure
-    is fairly simple: Just go to www.yabasic.de and download the
-    latest tar-file with sources, e.g. yabasic-2.90.2.tar.gz (as of
-    this writing) and follow the instructions given on the
-    download-page (essentially it is the usual configure and make).
+    If you just want to build yabasic from the sources, but do *not* want to modify yabasic
+    (e.g. by adding new commands) the procedure is fairly simple: Just go to www.yabasic.de
+    and download the latest tar-file with sources, e.g. yabasic-2.90.2.tar.gz (as of this
+    writing) and follow the instructions given on the download-page (essentially it is the
+    usual configure and make).
 
-    As tools you will need make, a c-compiler, various libraries and
-    header files (e.g. curses and x11, libffi is optional). Let the
-    configure-process be your guide; it will barf on anything missing.
+    As tools you will need make, a c-compiler, various libraries and header files
+    (e.g. curses and x11, libffi is optional). Let the configure-process be your guide; it
+    will barf on anything missing.
 
     Please note, that you *not* need are the Autotools (autoconf, automake).
     
-    Finally note, that this building process does *not* involve
-    cloning the github-repo (as you might have already done, when
-    reading this).
+    Finally note, that this building process does *not* involve cloning the github-repo (as
+    you might have already done, when reading this).
 
 *** The complex case: Changing yabasic and building it
 
     This builds from the repo available at https://github.com/marcIhm/yabasic
 
-    There are some reasons, for which you may want to *modify*
-    yabasic: E.g. change the grammar, add commands, build on exotic
-    platforms, change the documentation; see
+    There are some reasons, for which you may want to *modify* yabasic: E.g. change the
+    grammar, add commands, build on exotic platforms, change the documentation; see
     http://www.yabasic.de/changing.html for some more hints.
 
-    To build after such modifications, you will probably need more
-    tools and experience than in the simple case above (but still feel
-    free to contact me for any Problems).
+    To build after such modifications, you will probably need more tools and experience than
+    in the simple case above (but still feel free to contact me for any Problems).
 
     Additional tools needed are: autoconf, automake, bison, flex, ruby.
 
-    As you probably have different versions of the Autotools than the
-    maintainer, you probably need to do this:
+    As you probably have different versions of the Autotools than the maintainer, you
+    probably need to do this:
 
-    - automake --add-missing    ##  may give errors, but never mind
-    - autoreconf 
+    - automake --add-missing ## may give errors, but never mind
+    - autoreconf
 
     After that you may do the usual
 
@@ -114,44 +104,40 @@
 
     This will create a binary named "yabasic"
 
-    If want to build rpms and and deb-packages and run additional tests
-    (which is scripted in a ruby Rakefile), you will need to
+    If want to build rpms and and deb-packages and run additional tests (which is scripted
+    in a ruby Rakefile), you will need to
 
-    - install ruby  (if not already present on your system)
+    - install ruby (if not already present on your system)
     - rake
 
     The invocation of rake also moves the artefacts into the folder
-    /work/yabasic/prodcts. If you have a machine with both linux and
-    windows, this folder can be shared between both operating systems.
+    /work/yabasic/prodcts. If you have a machine with both linux and windows, this folder
+    can be shared between both operating systems.
 
 ** Building under Windows
    
-   Yabasic is be compiled with Visual Studio 2019, which can be
-   installed free of charge.
+   Yabasic is be compiled with Visual Studio 2019, which can be installed free of charge.
 
-   All steps are automated with rake (ruby make); so typically you
-   just need to invoke rake, which e.g. invokes the Visual Studio
-   C-Compiler in turn.
+   All steps are automated with rake (ruby make); so typically you just need to invoke rake,
+   which e.g. invokes the Visual Studio C-Compiler in turn.
    
 ** Notes for the maintainer of yabasic
    
-   To update the table of content for this file, invoke
-   'toc-org-insert-toc'.
+   To update the table of content for this file, invoke 'toc-org-insert-toc'.
    
-   To build yabasic both under Unix and Windows and to update the
-   website www.yabasic.de, go through the steps below. The process is
-   mostly automated, only asking for confirmation at certain
-   key-points.  Depending on your changes and desired products, you
-   may be able to skip certain steps.
+   To build yabasic both under Unix and Windows and to update the website www.yabasic.de, go
+   through the steps below. The process is mostly automated, only asking for confirmation at
+   certain key-points.  Depending on your changes and desired products, you may be able to
+   skip certain steps.
 
    (Type "rake h" to read this text again from within any directory)
 
-   All steps are done from within wsl (windows subsystem for linux),
-   only the directory changes.
+   All steps are done from within wsl (windows subsystem for linux), only the directory
+   changes.
 
-   - Implement some features, fix some bugs, write tests, improve the
-     docu; the files for nearly all of the features of yabasic can be
-     found in directory unix/lang.
+   - Implement some features, fix some bugs, write tests, improve the docu; the files for
+     nearly all of the features of yabasic can be found in directory unix/lang.
+   - No git-work yet (see below for that)
    - In directory unix/lang:
      - Edit configure.ac to increment the version of yabasic
      - Document changes in NEWS
@@ -163,8 +149,8 @@
        - Build windows executable
        - Create setup.exe and zip-files (which will ask for admin priveleges)
    - In directory web:
-     - if appropriate, add and commit all changes to git; otherwise no
-       new tag will be created below
+     - if appropriate, add and commit all changes to git; otherwise no new tag will be
+       created below
      - type 'rake'; this does:
        - Create new git tag and use the content of NEWS as the message
        - Upload everything to www.yabasic.de

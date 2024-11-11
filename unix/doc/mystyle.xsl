@@ -4,7 +4,7 @@
                 xmlns="http://www.w3.org/TR/xhtml1/transitional"
                 exclude-result-prefixes="#default">
 
-  <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/xhtml/docbook.xsl"/>
+  <xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml5/docbook.xsl"/>
   <xsl:output method="xml" indent="yes" encoding="US-ASCII"/>
   
   <xsl:variable name="toc.section.depth">3</xsl:variable>

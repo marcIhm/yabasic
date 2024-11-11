@@ -26,3 +26,5 @@ Some hints:
   If you want to adjust the built-process, run these too:
   - aclocal
   - autoconf
+
+- [2024-11-10 Sun] Trying to use clang-format for code-formatting

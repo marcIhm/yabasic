@@ -27,7 +27,7 @@ task :build => :git do
     vcxproj = {:lang => 'yabasic', :setup => 'setup', :wrapper => 'wrapper' }
     rm bin if File.exist?(bin)
     warnings = errors = -1
-    cmd = "\"/mnt/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe\" c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj /p:Configuration=Release"
+    cmd = "\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" c:/work/yabasic/windows/#{key.to_s}/#{vcxproj[key]}.vcxproj /p:Configuration=Release"
     puts cmd
     IO.popen(cmd) do |f|
       f.each_line do |l|

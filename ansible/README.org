@@ -1,4 +1,6 @@
 
+Playbooks to prepare a new machine for developing yabasic.
+
 First install some ansible-stuff:
   
   ansible-galaxy collection install community.general

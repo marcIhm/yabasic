@@ -91,7 +91,7 @@ end
 desc 'Copy content'
 task :copy => :templates do
   todir = '../products/web'
-  rm_rf todir if File.exists?(todir)
+  rm_rf todir if File.exist?(todir)
   cp_r '../web','../products'
   Dir["#{todir}/*.erb"].each do |file|
     rm file
@@ -99,7 +99,7 @@ task :copy => :templates do
   rm "#{todir}/Rakefile"
   rm "#{todir}/.gitignore"
   download = "#{todir}/download"
-  rm_rf download if File.exists?(download)
+  rm_rf download if File.exist?(download)
   mkdir download
   %w( *.gz *.deb *.rpm *.exe *.zip ).each do |glob|
     Dir["../products/#{glob}"].each do |file|

@@ -14,537 +14,503 @@
 /* ------------- includes ---------------- */
 
 #ifndef YABASIC_INCLUDED
-#include "yabasic.h"		/* all prototypes and structures */
+#include "yabasic.h" /* all prototypes and structures */
 #endif
-
 
 /* ------------- external references ---------------- */
 
-extern int mylineno;		/* current line number */
-extern int yyparse ();		/* call bison parser */
+extern int mylineno;  /* current line number */
+extern int yyparse(); /* call bison parser */
 extern int switch_nesting;
 
 /* ------------- local functions ---------------- */
 
-
-
 /* ------------- global variables ---------------- */
-static struct command *labelroot = NULL;	/* first label among commands */
-static struct command *labelhead = NULL;	/* last label seen so far */
+static struct command *labelroot = NULL; /* first label among commands */
+static struct command *labelhead = NULL; /* last label seen so far */
 int switch_id_stack[100];
-int max_switch_id=0;
-
+int max_switch_id = 0;
 
 /* ------------- subroutines ---------------- */
 
-void
-create_check_return_value (int is, int should)	/* create command 'cCHECK_RETURN_VALUE' */
+void create_check_return_value(
+    int is, int should) /* create command 'cCHECK_RETURN_VALUE' */
 {
-    struct command *cmd;
+  struct command *cmd;
 
-    cmd = add_command_with_sym_and_diag (cCHECK_RETURN_VALUE, NULL, NULL);
-    cmd->args = is;
-    cmd->tag = should;
+  cmd = add_command_with_sym_and_diag(cCHECK_RETURN_VALUE, NULL, NULL);
+  cmd->args = is;
+  cmd->tag = should;
 }
 
-
-void
-check_return_value (struct command *cmd)	/* check return value of function */
+void check_return_value(
+    struct command *cmd) /* check return value of function */
 {
-    int is, should;
-    struct stackentry *s;
+  int is, should;
+  struct stackentry *s;
 
-    is = cmd->args;
-    should = cmd->tag;
-    if (is == should) {
-        /* okay, function returns expected type */
-    } else if (is == ftNONE) {
-        /* no element on stack, create one */
-        s = push ();
-        if (should == ftNUMBER) {
-            s->type = stNUMBER;
-            s->value = 0.0;
-        } else {
-            s->type = stSTRING;
-            s->pointer = my_strdup ("");
-        }
+  is = cmd->args;
+  should = cmd->tag;
+  if (is == should) {
+    /* okay, function returns expected type */
+  } else if (is == ftNONE) {
+    /* no element on stack, create one */
+    s = push();
+    if (should == ftNUMBER) {
+      s->type = stNUMBER;
+      s->value = 0.0;
     } else {
-        sprintf (string, "subroutine returns %s but should return %s",
-                 (is == ftSTRING) ? "a string" : "a number",
-                 (should == ftSTRING) ? "a string" : "a number");
-        error (sERROR, string);
+      s->type = stSTRING;
+      s->pointer = my_strdup("");
     }
-    if (severity_threshold <= sDEBUG) {
-        s = stackhead->prev;
-        if (s->type == stNUMBER) {
-            sprintf (string, "subroutine returns number %g", s->value);
-        } else if (s->type == stSTRING) {
-            sprintf (string, "subroutine returns string '%s'",
-                     (char *) s->pointer);
-        } else {
-            sprintf (string, "subroutine returns something strange (%d)",
-                     s->type);
-	}
-        error (sDEBUG, string);
-    }
-}
-
-
-void
-reorder_stack_after_call (int keep_topmost) /* reorganize stack after function call: keep return value and remove switch value (if any) */
-{
-    struct stackentry *keep, *kept;
-    char *kept_string;
-    double kept_value;
-    int kept_type;
-
-    if (keep_topmost) {
-	keep = pop (stANY);
-	kept_type = keep->type;
-	if (keep->type==stSTRING) {
-	    kept_string=my_strdup((char *)keep->pointer);
-	} else if (keep->type==stNUMBER) {
-	    kept_value=keep->value;
-	} else {
-	    error (sFATAL, "expecting only string or number on stack");
-	}
-    }
-
-    while (stackhead->prev->type!=stRET_ADDR && stackhead->prev->type!=stRET_ADDR_CALL) { /* discard switch values */
-	pop (stANY);
-    }
-
-    /* push back kept value */
-    if (keep_topmost) {
-	kept=push();
-	if (kept_type==stSTRING) {
-	    kept->pointer = kept_string;
-	} else {
-	    kept->value = kept_value;
-	}
-	kept->type = kept_type;
-	swap (); /* move return address to top */
-    }
-}
-
-
-void
-reorder_stack_before_call (struct stackentry *ret)	/* reorganize stack before function call */
-{
-    struct stackentry *a, *b, *c;
-    struct stackentry *top, *bot;
-    struct stackentry *ttop, *bbot;
-    int args;
-
-
-    /* this is a function call; revert stack and shuffle return address to bottom */
-    /* push address below parameters */
-    args = 0;
-    top = a = ret->prev;
-    while (a->type != stFREE) {
-        a = a->prev;
-        args++;
-    }
-    bot = a->next;
-    b = a->prev;
-    /* remove ret */
-    ret->prev->next = ret->next;
-    ret->next->prev = ret->prev;
-    /* squeeze ret between a and b */
-    ret->next = a;
-    a->prev = ret;
-    b->next = ret;
-    ret->prev = b;
-    /* revert stack between top and bot */
-    if (args > 1) {
-        a = bot;
-        b = a->next;
-        bbot = bot->prev;
-        ttop = top->next;
-        for (; args > 1; args--) {
-            a->prev = b;
-            c = b->next;
-            b->next = a;
-            a = b;
-            b = c;
-        }
-        bot->next = ttop;
-        bot->next->prev = bot;
-        top->prev = bbot;
-        top->prev->next = top;
-    }
-}
-
-
-void
-myreturn (struct command *cmd)	/* return from gosub of function call */
-{
-    struct stackentry *address;
-
-    reorder_stack_after_call(cmd->type == cRETURN_FROM_CALL);
-    
-    address = pop (stANY);
-    if (cmd->type == cRETURN_FROM_CALL) {
-        if (address->type != stRET_ADDR_CALL) {
-            error (sFATAL, "RETURN from a subroutine without CALL");
-            return;
-        }
-    } else { /* cRETURN_FROM_GOSUB */
-        if (address->type != stRET_ADDR) {
-            error (sFATAL, "RETURN without GOSUB");
-            return;
-        }
-    }
-    currcmd = (struct command *) address->pointer;
-}
-
-
-void
-create_subr_link (char *label)	/* create link to subroutine */
-{
-    char global[NAMEBUFFLEN];
-    char *dot;
-    struct command *cmd;
-
-    if (!inlib) {
-	if (severity_threshold <= sDEBUG)
-	    error (sDEBUG, "not in library, will not create link to subroutine");
-        return;
-    }
-    dot = strchr (label, '.');
-    if (strlen (library_stack[include_depth-1]->short_name) + strlen (dot) >= NAMEBUFFLEN) {
-	error (sERROR, "Name of function too long");
-	return;
-    }
-    strcpy (global, library_stack[include_depth-1]->short_name);
-    strcat (global, dot);
-
-    /* check, if label is duplicate */
-    if (search_label (global, srmSUBR | srmLINK | srmLABEL)) {
-        sprintf (string, "duplicate subroutine '%s'", strip (global));
-        error (sERROR, string);
-        return;
-    }
-
-    cmd = add_command_with_sym_and_diag (cLINK_SUBR, NULL, label);
-    /* store label */
-    cmd->pointer = my_strdup (global);
-    link_label (cmd);
-}
-
-
-
-void
-create_endfunction (void)	/* create command cEND_FUNCTION */
-{
-    struct command *cmd;
-
-    cmd = add_command_with_sym_and_diag (cEND_FUNCTION, NULL, NULL);
-    link_label (cmd);
-}
-
-
-void
-function_or_array (struct command *cmd)	/* decide whether to perform function or array */
-{
-    struct command *fu;
-
-    fu = search_label (cmd->symname, srmSUBR | srmLINK);
-    if (fu) {
-        cmd->type = cCALL;
-        cmd->pointer = cmd->symname;
-        cmd->symname = NULL;
-	if (severity_threshold <= sDEBUG) {
-	    sprintf(estring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cFUNCTION]);
-	    error(sDEBUG, estring);
-	}
+  } else {
+    sprintf(string, "subroutine returns %s but should return %s",
+            (is == ftSTRING) ? "a string" : "a number",
+            (should == ftSTRING) ? "a string" : "a number");
+    error(sERROR, string);
+  }
+  if (severity_threshold <= sDEBUG) {
+    s = stackhead->prev;
+    if (s->type == stNUMBER) {
+      sprintf(string, "subroutine returns number %g", s->value);
+    } else if (s->type == stSTRING) {
+      sprintf(string, "subroutine returns string '%s'", (char *)s->pointer);
     } else {
-        if (cmd->type == cFUNCTION_OR_ARRAY) {
-            cmd->tag = CALLARRAY;
-        } else {
-            cmd->tag = CALLSTRINGARRAY;
-        }
-        cmd->type = cDOARRAY;
-        cmd->args = -1;
-	if ( severity_threshold <= sDEBUG) {
-	    sprintf(estring, "converting '%s' to '%s'",cexplanation[cFUNCTION_OR_ARRAY],cexplanation[cDOARRAY]);
-	    error(sDEBUG, estring);
-	}
+      sprintf(string, "subroutine returns something strange (%d)", s->type);
     }
+    error(sDEBUG, string);
+  }
 }
 
-
-void
-create_makelocal (char *name, int type)	/* create command 'cMAKELOCAL' */
+void reorder_stack_after_call(
+    int keep_topmost) /* reorganize stack after function call: keep return value
+                         and remove switch value (if any) */
 {
-    struct command *cmd;
+  struct stackentry *keep, *kept;
+  char *kept_string;
+  double kept_value;
+  int kept_type;
 
-    cmd = add_command_with_sym_and_diag (cMAKELOCAL, name, NULL);
-    cmd->args = type;
-}
-
-
-void
-makelocal (struct command *cmd)	/* makes symbol local */
-{
-    if (get_sym (cmd->symname, cmd->args, amSEARCH_VERY_LOCAL)) {
-        sprintf (string,
-                 "local variable '%s' already defined within this subroutine",
-                 strip (cmd->symname));
-        error (sERROR, string);
-        return;
+  if (keep_topmost) {
+    keep = pop(stANY);
+    kept_type = keep->type;
+    if (keep->type == stSTRING) {
+      kept_string = my_strdup((char *)keep->pointer);
+    } else if (keep->type == stNUMBER) {
+      kept_value = keep->value;
+    } else {
+      error(sFATAL, "expecting only string or number on stack");
     }
-    get_sym (cmd->symname, cmd->args, amADD_LOCAL);
-}
+  }
 
+  while (stackhead->prev->type != stRET_ADDR &&
+         stackhead->prev->type != stRET_ADDR_CALL) { /* discard switch values */
+    pop(stANY);
+  }
 
-void
-create_count_params (void)		/* create command 'cCOUNT_PARAMS' */
-{
-    struct command *cmd;
-
-    /* dotifying numparams at compiletime (as opposed to runtime) is essential,
-       because the function name is not known at runtime */
-    cmd = add_command_with_sym_and_diag (cCOUNT_PARAMS, dotify ("numparams", FALSE), NULL);
-}
-
-
-void
-count_params (struct command *cmd)	/* count number of function parameters */
-{
-    struct symbol *sym;
-
-    sym = get_sym (cmd->symname, syNUMBER, amADD_LOCAL);
-    sym->value = abs (count_args (FALSE));
-}
-
-
-void
-dump_sub (int short_dump)	/* dump the stack of subroutine calls */
-{
-    struct stackentry *st = stackhead;
-    struct command *cmd;
-    char dumpbuffer[INBUFFLEN];
-    int first = TRUE;
-    do {
-        if (st->type == stRET_ADDR_CALL) {
-            cmd = st->pointer;
-            if (cmd->type == cCALL || cmd->type == cQCALL) {
-                char *dot;
-                dot = strchr (cmd->pointer, '.');
-                if (first && !short_dump) {
-                    error_without_position (sDUMP, "Executing in:");
-                }
-                sprintf (dumpbuffer, "sub %s() called in %s,%d",
-                         dot ? (dot + 1) : (char *) cmd->pointer, cmd->lib->long_name,
-                         cmd->line);
-                error_without_position (sDUMP, dumpbuffer);
-                first = FALSE;
-            }
-        }
-        st = st->prev;
-    } while (st && st != stackroot);
-    if (first && !short_dump) {
-        if (!short_dump) {
-            error_without_position (sDUMP, "Executing in:");
-        }
+  /* push back kept value */
+  if (keep_topmost) {
+    kept = push();
+    if (kept_type == stSTRING) {
+      kept->pointer = kept_string;
+    } else {
+      kept->value = kept_value;
     }
-    if (!short_dump) {
-        error_without_position (sDUMP, "main program");
-    }
+    kept->type = kept_type;
+    swap(); /* move return address to top */
+  }
+}
 
+void reorder_stack_before_call(
+    struct stackentry *ret) /* reorganize stack before function call */
+{
+  struct stackentry *a, *b, *c;
+  struct stackentry *top, *bot;
+  struct stackentry *ttop, *bbot;
+  int args;
+
+  /* this is a function call; revert stack and shuffle return address to bottom
+   */
+  /* push address below parameters */
+  args = 0;
+  top = a = ret->prev;
+  while (a->type != stFREE) {
+    a = a->prev;
+    args++;
+  }
+  bot = a->next;
+  b = a->prev;
+  /* remove ret */
+  ret->prev->next = ret->next;
+  ret->next->prev = ret->prev;
+  /* squeeze ret between a and b */
+  ret->next = a;
+  a->prev = ret;
+  b->next = ret;
+  ret->prev = b;
+  /* revert stack between top and bot */
+  if (args > 1) {
+    a = bot;
+    b = a->next;
+    bbot = bot->prev;
+    ttop = top->next;
+    for (; args > 1; args--) {
+      a->prev = b;
+      c = b->next;
+      b->next = a;
+      a = b;
+      b = c;
+    }
+    bot->next = ttop;
+    bot->next->prev = bot;
+    top->prev = bbot;
+    top->prev->next = top;
+  }
+}
+
+void myreturn(struct command *cmd) /* return from gosub of function call */
+{
+  struct stackentry *address;
+
+  reorder_stack_after_call(cmd->type == cRETURN_FROM_CALL);
+
+  address = pop(stANY);
+  if (cmd->type == cRETURN_FROM_CALL) {
+    if (address->type != stRET_ADDR_CALL) {
+      error(sFATAL, "RETURN from a subroutine without CALL");
+      return;
+    }
+  } else { /* cRETURN_FROM_GOSUB */
+    if (address->type != stRET_ADDR) {
+      error(sFATAL, "RETURN without GOSUB");
+      return;
+    }
+  }
+  currcmd = (struct command *)address->pointer;
+}
+
+void create_subr_link(char *label) /* create link to subroutine */
+{
+  char global[NAMEBUFFLEN];
+  char *dot;
+  struct command *cmd;
+
+  if (!inlib) {
+    if (severity_threshold <= sDEBUG)
+      error(sDEBUG, "not in library, will not create link to subroutine");
     return;
+  }
+  dot = strchr(label, '.');
+  if (strlen(library_stack[include_depth - 1]->short_name) + strlen(dot) >=
+      NAMEBUFFLEN) {
+    error(sERROR, "Name of function too long");
+    return;
+  }
+  strcpy(global, library_stack[include_depth - 1]->short_name);
+  strcat(global, dot);
+
+  /* check, if label is duplicate */
+  if (search_label(global, srmSUBR | srmLINK | srmLABEL)) {
+    sprintf(string, "duplicate subroutine '%s'", strip(global));
+    error(sERROR, string);
+    return;
+  }
+
+  cmd = add_command_with_sym_and_diag(cLINK_SUBR, NULL, label);
+  /* store label */
+  cmd->pointer = my_strdup(global);
+  link_label(cmd);
 }
 
-
-void
-create_goto (char *label)	/* creates command goto */
+void create_endfunction(void) /* create command cEND_FUNCTION */
 {
-    struct command *cmd;
+  struct command *cmd;
 
-    cmd = add_command_with_sym_and_diag (cGOTO, NULL, label);
-    cmd->pointer = my_strdup (label);
-    add_switch_state(cmd);
+  cmd = add_command_with_sym_and_diag(cEND_FUNCTION, NULL, NULL);
+  link_label(cmd);
 }
 
-
-void
-create_gosub (char *label)	/* creates command gosub */
+void function_or_array(
+    struct command *cmd) /* decide whether to perform function or array */
 {
-    struct command *cmd;
+  struct command *fu;
 
-    cmd = add_command_with_sym_and_diag (cGOSUB, NULL, label);
-    /* specific info */
-    cmd->pointer = my_strdup (label);
-}
-
-
-void
-create_call (char *label)	/* creates command function call */
-{
-    struct command *cmd;
-
-    cmd = add_command_with_sym_and_diag (cCALL, NULL, label);
-    /* specific info */
-    cmd->pointer = my_strdup (label);
-}
-
-struct command *
-add_switch_state(struct command *cmd) /* add switch state to a newly created command */
-{
-    cmd->switch_state = my_malloc (sizeof (struct switch_state));
-    cmd->switch_state->id = switch_id_stack[switch_nesting];
-    cmd->switch_state->nesting = switch_nesting;
-    cmd->switch_state->pop_on_qgoto = 0;
-    return cmd;
-}
-
-
-void
-initialize_switch_id_stack(void) /* initialize stack of switch_ids */
-{
-    switch_id_stack[0]=max_switch_id;
-}
-    
-
-void
-push_switch_id(void)		/* generate a new switch id on top of stack */
-{
-    if (switch_nesting>=100) error(sFATAL, "more than 100 nested switch statements");
-
-    switch_nesting++;
-    max_switch_id++;
-    switch_id_stack[switch_nesting]=max_switch_id;
-}
-    
-
-void
-pop_switch_id (void)		/* pop last switch_id */
-{
-    if (switch_nesting<=0) error(sFATAL, "no more switch ids to pop");
-    
-    switch_nesting--;
-}
-
-
-void
-link_label (struct command *cmd)	/* link label into list of labels */
-{
-    if (!labelroot) {
-        labelroot = cmd;
+  fu = search_label(cmd->symname, srmSUBR | srmLINK);
+  if (fu) {
+    cmd->type = cCALL;
+    cmd->pointer = cmd->symname;
+    cmd->symname = NULL;
+    if (severity_threshold <= sDEBUG) {
+      sprintf(estring, "converting '%s' to '%s'",
+              cexplanation[cFUNCTION_OR_ARRAY], cexplanation[cFUNCTION]);
+      error(sDEBUG, estring);
+    }
+  } else {
+    if (cmd->type == cFUNCTION_OR_ARRAY) {
+      cmd->tag = CALLARRAY;
     } else {
-        labelhead->next_assoc = cmd;
+      cmd->tag = CALLSTRINGARRAY;
     }
-    labelhead = cmd;
+    cmd->type = cDOARRAY;
+    cmd->args = -1;
+    if (severity_threshold <= sDEBUG) {
+      sprintf(estring, "converting '%s' to '%s'",
+              cexplanation[cFUNCTION_OR_ARRAY], cexplanation[cDOARRAY]);
+      error(sDEBUG, estring);
+    }
+  }
 }
 
-
-struct command *
-search_label (char *name, int type)  	/* search label */
+void create_makelocal(char *name, int type) /* create command 'cMAKELOCAL' */
 {
-    struct command *curr;
-    char *at = NULL;
+  struct command *cmd;
 
-    curr = labelroot;
-    if (type & srmGLOBAL) {
-        at = strchr (name, '@');
-        if (at) *at = '\0';
-    }
-    while (curr) {
-        if ((type & srmSUBR) && curr->type == cUSER_FUNCTION
-                && !strcmp (curr->pointer, name)) {
-            if (at) *at = '@';
-            return curr;
-        }
-        if ((type & srmLINK) && curr->type == cLINK_SUBR
-                && !strcmp (curr->pointer, name)) {
-            if (at) *at = '@';
-            return curr->next;
-        }
-        if ((type & srmLABEL) && curr->type == cLABEL
-                && !strcmp (curr->pointer, name)) {
-            if (at) *at = '@';
-            return curr;
-        }
-        curr = curr->next_assoc;
-    }
-    return NULL;
+  cmd = add_command_with_sym_and_diag(cMAKELOCAL, name, NULL);
+  cmd->args = type;
 }
 
+void makelocal(struct command *cmd) /* makes symbol local */
+{
+  if (get_sym(cmd->symname, cmd->args, amSEARCH_VERY_LOCAL)) {
+    sprintf(string,
+            "local variable '%s' already defined within this subroutine",
+            strip(cmd->symname));
+    error(sERROR, string);
+    return;
+  }
+  get_sym(cmd->symname, cmd->args, amADD_LOCAL);
+}
 
-void
-jump (struct command *cmd)
+void create_count_params(void) /* create command 'cCOUNT_PARAMS' */
+{
+  struct command *cmd;
+
+  /* dotifying numparams at compiletime (as opposed to runtime) is essential,
+     because the function name is not known at runtime */
+  cmd = add_command_with_sym_and_diag(cCOUNT_PARAMS, dotify("numparams", FALSE),
+                                      NULL);
+}
+
+void count_params(struct command *cmd) /* count number of function parameters */
+{
+  struct symbol *sym;
+
+  sym = get_sym(cmd->symname, syNUMBER, amADD_LOCAL);
+  sym->value = abs(count_args(FALSE));
+}
+
+void dump_sub(int short_dump) /* dump the stack of subroutine calls */
+{
+  struct stackentry *st = stackhead;
+  struct command *cmd;
+  char dumpbuffer[INBUFFLEN];
+  int first = TRUE;
+  do {
+    if (st->type == stRET_ADDR_CALL) {
+      cmd = st->pointer;
+      if (cmd->type == cCALL || cmd->type == cQCALL) {
+        char *dot;
+        dot = strchr(cmd->pointer, '.');
+        if (first && !short_dump) {
+          error_without_position(sDUMP, "Executing in:");
+        }
+        sprintf(dumpbuffer, "sub %s() called in %s,%d",
+                dot ? (dot + 1) : (char *)cmd->pointer, cmd->lib->long_name,
+                cmd->line);
+        error_without_position(sDUMP, dumpbuffer);
+        first = FALSE;
+      }
+    }
+    st = st->prev;
+  } while (st && st != stackroot);
+  if (first && !short_dump) {
+    if (!short_dump) {
+      error_without_position(sDUMP, "Executing in:");
+    }
+  }
+  if (!short_dump) {
+    error_without_position(sDUMP, "main program");
+  }
+
+  return;
+}
+
+void create_goto(char *label) /* creates command goto */
+{
+  struct command *cmd;
+
+  cmd = add_command_with_sym_and_diag(cGOTO, NULL, label);
+  cmd->pointer = my_strdup(label);
+  add_switch_state(cmd);
+}
+
+void create_gosub(char *label) /* creates command gosub */
+{
+  struct command *cmd;
+
+  cmd = add_command_with_sym_and_diag(cGOSUB, NULL, label);
+  /* specific info */
+  cmd->pointer = my_strdup(label);
+}
+
+void create_call(char *label) /* creates command function call */
+{
+  struct command *cmd;
+
+  cmd = add_command_with_sym_and_diag(cCALL, NULL, label);
+  /* specific info */
+  cmd->pointer = my_strdup(label);
+}
+
+struct command *add_switch_state(
+    struct command *cmd) /* add switch state to a newly created command */
+{
+  cmd->switch_state = my_malloc(sizeof(struct switch_state));
+  cmd->switch_state->id = switch_id_stack[switch_nesting];
+  cmd->switch_state->nesting = switch_nesting;
+  cmd->switch_state->pop_on_qgoto = 0;
+  return cmd;
+}
+
+void initialize_switch_id_stack(void) /* initialize stack of switch_ids */
+{
+  switch_id_stack[0] = max_switch_id;
+}
+
+void push_switch_id(void) /* generate a new switch id on top of stack */
+{
+  if (switch_nesting >= 100)
+    error(sFATAL, "more than 100 nested switch statements");
+
+  switch_nesting++;
+  max_switch_id++;
+  switch_id_stack[switch_nesting] = max_switch_id;
+}
+
+void pop_switch_id(void) /* pop last switch_id */
+{
+  if (switch_nesting <= 0)
+    error(sFATAL, "no more switch ids to pop");
+
+  switch_nesting--;
+}
+
+void link_label(struct command *cmd) /* link label into list of labels */
+{
+  if (!labelroot) {
+    labelroot = cmd;
+  } else {
+    labelhead->next_assoc = cmd;
+  }
+  labelhead = cmd;
+}
+
+struct command *search_label(char *name, int type) /* search label */
+{
+  struct command *curr;
+  char *at = NULL;
+
+  curr = labelroot;
+  if (type & srmGLOBAL) {
+    at = strchr(name, '@');
+    if (at)
+      *at = '\0';
+  }
+  while (curr) {
+    if ((type & srmSUBR) && curr->type == cUSER_FUNCTION &&
+        !strcmp(curr->pointer, name)) {
+      if (at)
+        *at = '@';
+      return curr;
+    }
+    if ((type & srmLINK) && curr->type == cLINK_SUBR &&
+        !strcmp(curr->pointer, name)) {
+      if (at)
+        *at = '@';
+      return curr->next;
+    }
+    if ((type & srmLABEL) && curr->type == cLABEL &&
+        !strcmp(curr->pointer, name)) {
+      if (at)
+        *at = '@';
+      return curr;
+    }
+    curr = curr->next_assoc;
+  }
+  return NULL;
+}
+
+void jump(struct command *cmd)
 /* jump to specific Label; used as goto, gosub or function call */
 {
-    struct command *label;
-    struct stackentry *ret;
-    int type;
-    char *dot;
+  struct command *label;
+  struct stackentry *ret;
+  int type;
+  char *dot;
 
-    type = cmd->type;
-    if (type == cGOSUB || type == cQGOSUB || type == cCALL || type == cQCALL) {
-        /* leave return address for return */
-        ret = push ();
-        ret->pointer = currcmd;
-        if (type == cGOSUB || type == cQGOSUB) {
-            ret->type = stRET_ADDR;
-        } else {
-            ret->type = stRET_ADDR_CALL;
-            reorder_stack_before_call (ret);
-        }
-    }
-    
-    
-    if (type == cQGOSUB || type == cQGOTO || type == cQCALL) {
-        currcmd = (struct command *) cmd->jump;	/* use remembered address */
-	if (type == cQGOTO && cmd->switch_state && cmd->switch_state->pop_on_qgoto) { /* jump out of switch-statment ? */
-	    pop(stANY);
-	}
-        return;
-    }
-    label = search_label (cmd->pointer, srmSUBR | srmLINK | srmLABEL);
-    if (!label && type == cCALL && (dot = strchr (cmd->pointer, '.'))) {
-        strcpy (string, "main");
-        strcat (string, dot);
-        label = search_label (string, srmLINK);
-    }
-    if (label) {
-        /* found right label */
-        currcmd = label;		/* jump to new location */
-        /* use the address instead of the name next time */
-        cmd->jump = label;
-        switch (cmd->type) {
-        case cGOTO:
-            cmd->type = cQGOTO;
-	    cmd->switch_state->pop_on_qgoto = check_leave_switch (cmd, label);
-	    if (cmd->switch_state->pop_on_qgoto) {
-		pop(stANY);
-	    }
-            break;
-        case cGOSUB:
-            cmd->type = cQGOSUB;
-            break;
-        case cCALL:
-            cmd->type = cQCALL;
-            break;
-        }
+  type = cmd->type;
+  if (type == cGOSUB || type == cQGOSUB || type == cCALL || type == cQCALL) {
+    /* leave return address for return */
+    ret = push();
+    ret->pointer = currcmd;
+    if (type == cGOSUB || type == cQGOSUB) {
+      ret->type = stRET_ADDR;
     } else {
-        /* label not found */
-        sprintf (string, "can't find %s '%s'",
-                 (type == cCALL) ? "subroutine" : "label",
-                 strip ((char *) cmd->pointer));
-        if (strchr (cmd->pointer, '@')) {
-            strcat (string, " (not in this sub)");
-        }
-        error (sERROR, string);
+      ret->type = stRET_ADDR_CALL;
+      reorder_stack_before_call(ret);
     }
+  }
+
+  if (type == cQGOSUB || type == cQGOTO || type == cQCALL) {
+    currcmd = (struct command *)cmd->jump; /* use remembered address */
+    if (type == cQGOTO && cmd->switch_state &&
+        cmd->switch_state->pop_on_qgoto) { /* jump out of switch-statment ? */
+      pop(stANY);
+    }
+    return;
+  }
+  label = search_label(cmd->pointer, srmSUBR | srmLINK | srmLABEL);
+  if (!label && type == cCALL && (dot = strchr(cmd->pointer, '.'))) {
+    strcpy(string, "main");
+    strcat(string, dot);
+    label = search_label(string, srmLINK);
+  }
+  if (label) {
+    /* found right label */
+    currcmd = label; /* jump to new location */
+    /* use the address instead of the name next time */
+    cmd->jump = label;
+    switch (cmd->type) {
+    case cGOTO:
+      cmd->type = cQGOTO;
+      cmd->switch_state->pop_on_qgoto = check_leave_switch(cmd, label);
+      if (cmd->switch_state->pop_on_qgoto) {
+        pop(stANY);
+      }
+      break;
+    case cGOSUB:
+      cmd->type = cQGOSUB;
+      break;
+    case cCALL:
+      cmd->type = cQCALL;
+      break;
+    }
+  } else {
+    /* label not found */
+    sprintf(string, "can't find %s '%s'",
+            (type == cCALL) ? "subroutine" : "label",
+            strip((char *)cmd->pointer));
+    if (strchr(cmd->pointer, '@')) {
+      strcat(string, " (not in this sub)");
+    }
+    error(sERROR, string);
+  }
 }
 
-
 /*
-  
+
   Some background for the switch-statement (a note to self):
-  
+
   The switch-statement ist tricky, because it needs a switch-value on
   stack against which to compare the different cases; if the program
   leaves the switch-statement prematurely (e.g. by 'goto' some other
@@ -569,7 +535,7 @@ jump (struct command *cmd)
     from an inner one; in that case only one switch-value can be
     removed. The switch-values are removed in
     reorder_stack_after_call.
-  
+
   continue: Leave a loop; the destination is found by scanning the
     list of commands backward (so each command on the way can be
     examined for cBEGIN_SWITCH_MARK or cEND_SWITCH_MARK); during that
@@ -594,326 +560,319 @@ jump (struct command *cmd)
 
  */
 
-int
-check_leave_switch (struct command *from, struct command *to)   /* check, if goto or continue enters or leaves a switch_statement */
+int check_leave_switch(struct command *from,
+                       struct command *to) /* check, if goto or continue enters
+                                              or leaves a switch_statement */
 {
-    if (from->switch_state->id == to->switch_state->id) {
-	/* okay: move within a single switch statement or jump and land outside of any switch statement */
-    } else if (from->switch_state->nesting == 1 && to->switch_state->nesting == 0) {
-	/* okay: move out of single switch statement */
-	return 1;
-    } else if (from->switch_state->id == 0 && to->switch_state->id != 0) {
-	error (sERROR, "GOTO into a switch-statement");
-    } else if (from->switch_state->nesting != 0 && to->switch_state->nesting == 0) {
-	error (sERROR, "GOTO out of multiple switch-statements");
-    } else {
-	error (sERROR, "GOTO between switch-statements");
-    }
-    return 0;
+  if (from->switch_state->id == to->switch_state->id) {
+    /* okay: move within a single switch statement or jump and land outside of
+     * any switch statement */
+  } else if (from->switch_state->nesting == 1 &&
+             to->switch_state->nesting == 0) {
+    /* okay: move out of single switch statement */
+    return 1;
+  } else if (from->switch_state->id == 0 && to->switch_state->id != 0) {
+    error(sERROR, "GOTO into a switch-statement");
+  } else if (from->switch_state->nesting != 0 &&
+             to->switch_state->nesting == 0) {
+    error(sERROR, "GOTO out of multiple switch-statements");
+  } else {
+    error(sERROR, "GOTO between switch-statements");
+  }
+  return 0;
 }
 
-
-void
-create_label (char *label, int type)	/* creates command label */
+void create_label(char *label, int type) /* creates command label */
 {
-    struct command *cmd;
+  struct command *cmd;
 
-    /* check, if label is duplicate */
-    if (search_label (label, srmSUBR | srmLINK | srmLABEL)) {
-        sprintf (string, "duplicate %s '%s'",
-                 (type == cLABEL) ? "label" : "subroutine", strip (label));
-        error (sERROR, string);
-        return;
-    }
+  /* check, if label is duplicate */
+  if (search_label(label, srmSUBR | srmLINK | srmLABEL)) {
+    sprintf(string, "duplicate %s '%s'",
+            (type == cLABEL) ? "label" : "subroutine", strip(label));
+    error(sERROR, string);
+    return;
+  }
 
-    cmd = add_command_with_sym_and_diag (type, NULL, label);
-    cmd->pointer = my_strdup (label);
-    add_switch_state(cmd);
+  cmd = add_command_with_sym_and_diag(type, NULL, label);
+  cmd->pointer = my_strdup(label);
+  add_switch_state(cmd);
 
-    link_label (cmd);
+  link_label(cmd);
 }
 
-
-void
-decide()			/*  skips next command, if not 0 on stack */
+void decide() /*  skips next command, if not 0 on stack */
 {
-	if (pop(stNUMBER)->value != 0) {
-		currcmd = currcmd->next;    /* skip one command */
-		if (severity_threshold <= sDEBUG) std_diag("skipping", currcmd->type, currcmd->symname, currcmd->diag);
-	}
-	else {
-		if (severity_threshold <= sDEBUG) error(sDEBUG, "(no command skipped)");
-	}
+  if (pop(stNUMBER)->value != 0) {
+    currcmd = currcmd->next; /* skip one command */
+    if (severity_threshold <= sDEBUG)
+      std_diag("skipping", currcmd->type, currcmd->symname, currcmd->diag);
+  } else {
+    if (severity_threshold <= sDEBUG)
+      error(sDEBUG, "(no command skipped)");
+  }
 }
 
-
-void
-skipper ()
+void skipper()
 /* used for on_goto/gosub, skip specified number of commands */
 {
-    int i, len;
-    struct command *ahead;	/* command to follow */
+  int i, len;
+  struct command *ahead; /* command to follow */
 
-    len = (int) pop (stNUMBER)->value;
-    i = 1;
-    currcmd = currcmd->next;	/* advance to first goto/gosub */
-    for (i = 1; i < len; i++) {
-        ahead = currcmd->next->next;	/* skip interleaving findnop statement */
-        if (ahead->type == cNOP) {
-            break;
-        } else {
-            currcmd = ahead;
-        }
+  len = (int)pop(stNUMBER)->value;
+  i = 1;
+  currcmd = currcmd->next; /* advance to first goto/gosub */
+  for (i = 1; i < len; i++) {
+    ahead = currcmd->next->next; /* skip interleaving findnop statement */
+    if (ahead->type == cNOP) {
+      break;
+    } else {
+      currcmd = ahead;
     }
+  }
 }
 
-
-void
-skiponce (struct command *cmd)	/* skip next command exectly once */
+void skiponce(struct command *cmd) /* skip next command exectly once */
 {
+  if (cmd->tag) {
+    currcmd = currcmd->next;
+  }
+  if (severity_threshold <= sDEBUG) {
     if (cmd->tag) {
-        currcmd = currcmd->next;
+      error(sDEBUG, "skipping next command");
+    } else {
+      error(sDEBUG, "not Skipping next command");
     }
-    if (severity_threshold <= sDEBUG) {
-	if (cmd->tag) {
-	    error (sDEBUG, "skipping next command");
-	} else {
-	    error (sDEBUG, "not Skipping next command");
-	}
-    }
-    cmd->tag = 0;
+  }
+  cmd->tag = 0;
 }
 
-
-void
-resetskiponce (struct command *cmd, int n)	/* find and reset nth skip */
+void resetskiponce(struct command *cmd, int n) /* find and reset nth skip */
 {
-    struct command *c;
-    int i;
+  struct command *c;
+  int i;
 
-    c = cmd;
+  c = cmd;
 
-    for(i=0;i<n;i++) {
-	while (c->type != cSKIPONCE) {
-	    c = c->next;
-	}
-	if (i == 0 && n == 2) {
-	    c = c->next;
-	}
+  for (i = 0; i < n; i++) {
+    while (c->type != cSKIPONCE) {
+      c = c->next;
     }
-    c->tag = 1;
+    if (i == 0 && n == 2) {
+      c = c->next;
+    }
+  }
+  c->tag = 1;
 }
 
-void
-pop_multi (struct command *cmd) /* pop and discard multiple values from stack */
+void pop_multi(
+    struct command *cmd) /* pop and discard multiple values from stack */
 {
-    int to_pop = cmd->tag;
-    struct stackentry *popped;
+  int to_pop = cmd->tag;
+  struct stackentry *popped;
 
-    while (to_pop > 0) {
-	popped = pop(stSTRING_OR_NUMBER);
-	to_pop--;
-    }
+  while (to_pop > 0) {
+    popped = pop(stSTRING_OR_NUMBER);
+    to_pop--;
+  }
 }
 
-void load_pop_multi (struct command *cmd, int to_pop) /* put correct value into preceding pop_multi-statement */
+void load_pop_multi(
+    struct command *cmd,
+    int to_pop) /* put correct value into preceding pop_multi-statement */
 {
-    if (cmd->prev->type != cPOP_MULTI) {
-	sprintf(string, "while trying to load pop_multi; preceding command is rather '%s'", cexplanation[cmd->prev->type]);
-	error(sFATAL, string);
-    }
-    cmd->prev->tag = to_pop;
-    if (severity_threshold <= sDEBUG) {
-	sprintf(string, "loading previous pop_multi-command with %d", to_pop);
-	error(sDEBUG, string);
-    }
+  if (cmd->prev->type != cPOP_MULTI) {
+    sprintf(string,
+            "while trying to load pop_multi; preceding command is rather '%s'",
+            cexplanation[cmd->prev->type]);
+    error(sFATAL, string);
+  }
+  cmd->prev->tag = to_pop;
+  if (severity_threshold <= sDEBUG) {
+    sprintf(string, "loading previous pop_multi-command with %d", to_pop);
+    error(sDEBUG, string);
+  }
 
-    /* and execute it for the first time */
-    pop_multi(cmd->prev);
+  /* and execute it for the first time */
+  pop_multi(cmd->prev);
 }
 
-
-void
-create_mybreak(int depth) /* create command mybreak */
+void create_mybreak(int depth) /* create command mybreak */
 {
-    struct command *cmd;
+  struct command *cmd;
 
-    if (depth > 3 || depth < 1) {
-	sprintf(string, "invalid number of levels to break: %d; only 1,2 or 3 are allowed",depth);
-	error(sERROR,string);
-    }
+  if (depth > 3 || depth < 1) {
+    sprintf(string,
+            "invalid number of levels to break: %d; only 1,2 or 3 are allowed",
+            depth);
+    error(sERROR, string);
+  }
 
-    cmd = add_command (cBREAK_MULTI);
-    cmd->tag=depth;
+  cmd = add_command(cBREAK_MULTI);
+  cmd->tag = depth;
 }
 
-
-void
-mybreak (struct command *cmd)	/* find break_here statement */
+void mybreak(struct command *cmd) /* find break_here statement */
 {
-    struct command *curr;
-    int loop_nesting = 0;
-    int switch_nesting = 0;
-    int to_break;
-    int to_pop = 0;
+  struct command *curr;
+  int loop_nesting = 0;
+  int switch_nesting = 0;
+  int to_break;
+  int to_pop = 0;
 
-    to_break = cmd->tag;
-    curr = cmd;
-    while (curr->type != cBREAK_HERE || 1-loop_nesting-switch_nesting != to_break) {
-	if (curr->type == cBEGIN_LOOP_MARK) {
-	    loop_nesting++;
-	}
-	if (curr->type == cEND_LOOP_MARK) {
-	    loop_nesting--;
-	}
-	if (curr->type == cBEGIN_SWITCH_MARK) {
-	    switch_nesting++;
-	    to_pop--;
-	}
-	if (curr->type == cEND_SWITCH_MARK) {
-	    switch_nesting--;
-	    to_pop++;
-	}
-	curr = curr->next;
-	if (!curr) {
-	    curr = cmd;
-	    sprintf(estring,"break has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sERROR, estring);
-	}
+  to_break = cmd->tag;
+  curr = cmd;
+  while (curr->type != cBREAK_HERE ||
+         1 - loop_nesting - switch_nesting != to_break) {
+    if (curr->type == cBEGIN_LOOP_MARK) {
+      loop_nesting++;
     }
-    cmd->type = cQGOTO;
-    if (severity_threshold <= sDEBUG) {
-	sprintf(estring, "converting '%s' to '%s'",cexplanation[cBREAK_MULTI],cexplanation[cQGOTO]);
-        error (sDEBUG, estring);
+    if (curr->type == cEND_LOOP_MARK) {
+      loop_nesting--;
     }
-    load_pop_multi(cmd, to_pop);
-    cmd->jump = currcmd = curr;
+    if (curr->type == cBEGIN_SWITCH_MARK) {
+      switch_nesting++;
+      to_pop--;
+    }
+    if (curr->type == cEND_SWITCH_MARK) {
+      switch_nesting--;
+      to_pop++;
+    }
+    curr = curr->next;
+    if (!curr) {
+      curr = cmd;
+      sprintf(estring,
+              "break has left program (loop_nesting=%d, switch_nesting=%d)",
+              loop_nesting, switch_nesting);
+      error(sERROR, estring);
+    }
+  }
+  cmd->type = cQGOTO;
+  if (severity_threshold <= sDEBUG) {
+    sprintf(estring, "converting '%s' to '%s'", cexplanation[cBREAK_MULTI],
+            cexplanation[cQGOTO]);
+    error(sDEBUG, estring);
+  }
+  load_pop_multi(cmd, to_pop);
+  cmd->jump = currcmd = curr;
 }
 
-
-void
-mycontinue (struct command *cmd)	/* find continue_here statement */
+void mycontinue(struct command *cmd) /* find continue_here statement */
 {
-    struct command *curr;
-    int loop_nesting = 0;
-    int to_pop = 0;
+  struct command *curr;
+  int loop_nesting = 0;
+  int to_pop = 0;
 
-    curr = cmd;
+  curr = cmd;
 
-    while (curr->type != cCONTINUE_HERE || loop_nesting) {
-        if (curr->type == cBEGIN_LOOP_MARK) {
-            loop_nesting++;
-        }
-        if (curr->type == cEND_LOOP_MARK) {
-            loop_nesting--;
-        }
-	if (curr->type == cBEGIN_SWITCH_MARK) {
-	    to_pop++;
-	}
-	if (curr->type == cEND_SWITCH_MARK) {
-	    to_pop--;
-	}
-        curr = curr->prev;
-        if (!curr) {
-	    curr = cmd;
-            sprintf(string,"continue has left program (loop_nesting=%d)",loop_nesting);
-            error (sERROR, string);
-        }
+  while (curr->type != cCONTINUE_HERE || loop_nesting) {
+    if (curr->type == cBEGIN_LOOP_MARK) {
+      loop_nesting++;
     }
-    cmd->type = cQGOTO;
-    if (severity_threshold <= sDEBUG) {
-	sprintf( estring, "converting '%s' to '%s'",cexplanation[cCONTINUE],cexplanation[cQGOTO]);
-	error (sDEBUG, estring);
+    if (curr->type == cEND_LOOP_MARK) {
+      loop_nesting--;
     }
-    load_pop_multi(cmd, to_pop);
-    cmd->jump = currcmd = curr;
+    if (curr->type == cBEGIN_SWITCH_MARK) {
+      to_pop++;
+    }
+    if (curr->type == cEND_SWITCH_MARK) {
+      to_pop--;
+    }
+    curr = curr->prev;
+    if (!curr) {
+      curr = cmd;
+      sprintf(string, "continue has left program (loop_nesting=%d)",
+              loop_nesting);
+      error(sERROR, string);
+    }
+  }
+  cmd->type = cQGOTO;
+  if (severity_threshold <= sDEBUG) {
+    sprintf(estring, "converting '%s' to '%s'", cexplanation[cCONTINUE],
+            cexplanation[cQGOTO]);
+    error(sDEBUG, estring);
+  }
+  load_pop_multi(cmd, to_pop);
+  cmd->jump = currcmd = curr;
 }
 
-
-void
-next_case (struct command *cmd)	/* find next_case_here statement */
+void next_case(struct command *cmd) /* find next_case_here statement */
 {
-    struct command *curr;
-    int loop_nesting = 0;
-    int switch_nesting = 0;
+  struct command *curr;
+  int loop_nesting = 0;
+  int switch_nesting = 0;
 
-    curr = cmd;
-    while (curr->type != cNEXT_CASE_HERE || loop_nesting || switch_nesting) {
-        if (curr->type == cBEGIN_LOOP_MARK) {
-            loop_nesting++;
-        }
-        if (curr->type == cEND_LOOP_MARK) {
-            loop_nesting--;
-        }
-        if (curr->type == cBEGIN_SWITCH_MARK) {
-            switch_nesting++;
-        }
-        if (curr->type == cEND_SWITCH_MARK) {
-            switch_nesting--;
-        }
-        curr = curr->next;
-        if (!curr) {
-	    curr = cmd;
-	    sprintf(estring,"search for next case has left program (loop_nesting=%d, switch_nesting=%d)",loop_nesting,switch_nesting);
-	    error (sERROR, estring);
-        }
+  curr = cmd;
+  while (curr->type != cNEXT_CASE_HERE || loop_nesting || switch_nesting) {
+    if (curr->type == cBEGIN_LOOP_MARK) {
+      loop_nesting++;
     }
-    cmd->type = cQGOTO;
-    if (severity_threshold <= sDEBUG) {
-	sprintf(estring,"converting '%s' to '%s'",cexplanation[cNEXT_CASE],cexplanation[cQGOTO]);
-        error (sDEBUG, estring);
+    if (curr->type == cEND_LOOP_MARK) {
+      loop_nesting--;
     }
-    cmd->jump = currcmd = curr;
+    if (curr->type == cBEGIN_SWITCH_MARK) {
+      switch_nesting++;
+    }
+    if (curr->type == cEND_SWITCH_MARK) {
+      switch_nesting--;
+    }
+    curr = curr->next;
+    if (!curr) {
+      curr = cmd;
+      sprintf(estring,
+              "search for next case has left program (loop_nesting=%d, "
+              "switch_nesting=%d)",
+              loop_nesting, switch_nesting);
+      error(sERROR, estring);
+    }
+  }
+  cmd->type = cQGOTO;
+  if (severity_threshold <= sDEBUG) {
+    sprintf(estring, "converting '%s' to '%s'", cexplanation[cNEXT_CASE],
+            cexplanation[cQGOTO]);
+    error(sDEBUG, estring);
+  }
+  cmd->jump = currcmd = curr;
 }
 
-
-void
-findnop ()
+void findnop()
 /* used for on_gosub, find trailing nop command */
 {
-    while (currcmd->type != cNOP) {
-        currcmd = currcmd->next;	/* next label */
-    }
+  while (currcmd->type != cNOP) {
+    currcmd = currcmd->next; /* next label */
+  }
 }
 
-
-void
-forcheck (void)			/* check, if for-loop is done */
+void forcheck(void) /* check, if for-loop is done */
 {
-    double start, bound, step, val;
+  double start, bound, step, val;
 
-    val = pop (stNUMBER)->value;
-    step = pop (stNUMBER)->value;
-    bound = pop (stNUMBER)->value;
-    start = stackhead->prev->value;
-    if ((val <= bound && val >= start && step >= 0)
-            || (val <= start && val >= bound && step <= 0)) {
-        stackhead->prev->value = 1.;
-    } else {
-        stackhead->prev->value = 0.;
-    }
+  val = pop(stNUMBER)->value;
+  step = pop(stNUMBER)->value;
+  bound = pop(stNUMBER)->value;
+  start = stackhead->prev->value;
+  if ((val <= bound && val >= start && step >= 0) ||
+      (val <= start && val >= bound && step <= 0)) {
+    stackhead->prev->value = 1.;
+  } else {
+    stackhead->prev->value = 0.;
+  }
 }
 
-
-void
-forincrement (void)		/* increment value on stack */
+void forincrement(void) /* increment value on stack */
 {
-    /* expecting on stack: BOUND,STEP,VAL,stackhead
-      where for VAL=START to BOUND step STEP */
-    stackhead->prev->value += stackhead->prev->prev->value;
+  /* expecting on stack: BOUND,STEP,VAL,stackhead
+    where for VAL=START to BOUND step STEP */
+  stackhead->prev->value += stackhead->prev->prev->value;
 }
 
-
-void
-startfor (void)			/* compute initial value of for-variable */
+void startfor(void) /* compute initial value of for-variable */
 {
-    struct stackentry *p;
+  struct stackentry *p;
 
-    p = push ();
-    p->value = stackhead->prev->prev->prev->prev->value;
-    p->type = stNUMBER;
+  p = push();
+  p->value = stackhead->prev->prev->prev->prev->value;
+  p->type = stNUMBER;
 
-    return;
+  return;
 }
-
-

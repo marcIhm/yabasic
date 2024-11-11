@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Wed Jun  5 03:57:06 UTC 2024"
+#define BUILD_TIME "Sun Nov 10 15:38:42 UTC 2024"
 
 /* Define to 1 if using 'alloca.c'. */
 /* #undef C_ALLOCA */
@@ -25,7 +25,7 @@
 /* Define to 1 if you have the <ffi.h> header file. */
 #define HAVE_FFI_H 1
 
-/* Define to 1 if you have the `getnstr' function. */
+/* Define to 1 if you have the 'getnstr' function. */
 #define HAVE_GETNSTR 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
@@ -34,7 +34,7 @@
 /* Define to 1 if you have the <malloc.h> header file. */
 #define HAVE_MALLOC_H 1
 
-/* Define to 1 if you have the `mkstemp' function. */
+/* Define to 1 if you have the 'mkstemp' function. */
 #define HAVE_MKSTEMP 1
 
 /* Define to 1 if you have the <ncurses.h> header file. */
@@ -52,7 +52,7 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
 
-/* Define to 1 if you have the `strerror' function. */
+/* Define to 1 if you have the 'strerror' function. */
 #define HAVE_STRERROR 1
 
 /* Define to 1 if you have the <strings.h> header file. */
@@ -83,7 +83,7 @@
 #define PACKAGE_NAME "yabasic"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "yabasic 2.90.4"
+#define PACKAGE_STRING "yabasic 2.90.5"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "yabasic"
@@ -92,7 +92,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.90.4"
+#define PACKAGE_VERSION "2.90.5"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -102,7 +102,7 @@
 	STACK_DIRECTION = 0 => direction of growth unknown */
 /* #undef STACK_DIRECTION */
 
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #define STDC_HEADERS 1
@@ -114,10 +114,10 @@
 #define USE_DL_FFI 1
 
 /* Version number of package */
-#define VERSION "2.90.4"
+#define VERSION "2.90.5"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */
 
-/* Define to `unsigned int' if <sys/types.h> does not define. */
+/* Define as 'unsigned int' if <stddef.h> doesn't define. */
 /* #undef size_t */

@@ -1,5 +1,3 @@
-* Problems during the build-process
 
-  - [2018-01-21 So] 
-    - After cygwin update, needed to run rubyrebase.sh
-    - Start cygwin as Administrator to help iexpress
+- [2024-11-10 Sun] After reinstall of my Windows, switched from Visual
+  Studio 2019 to 2022, probably loosing XP-Compatibility
