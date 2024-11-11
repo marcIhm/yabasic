@@ -152,8 +152,9 @@
      - if appropriate, add and commit all changes to git; otherwise no new tag will be
        created below
      - type 'rake'; this does:
-       - Create new git tag and use the content of NEWS as the message
-       - Upload everything to www.yabasic.de
+       - create new git tag and use the content of NEWS as the message
+       - upload everything to www.yabasic.de
+   - Do 'git push' manually
    - Maybe submit new version to symantec and microsoft virus detection
      - https://submit.symantec.com/false_positive/standard/
           
