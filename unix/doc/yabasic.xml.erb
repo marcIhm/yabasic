@@ -1830,8 +1830,8 @@ CASE DOES NOT MATTER
 
     <section xml:id="ref_windows_filenames"><info><title>Specifying Filenames under Windows</title></info>
       
-      <para>As you probably know, windows uses the character '<literal>\</literal>' to separate the directories within a pathname; an example would be <literal>C:\yabasic\yabasic.exe</literal> (the usual location of the <application>yabasic</application> executable). However, the very same character '<literal>\</literal>' is used to construct <link linkend="ref_escape_sequences">escape sequences</link>, not only in <application>yabasic</application> but in most other programming languages.</para>
-      <para>Therefore the string <literal>"C:\t.dat"</literal> does <emphasis>not</emphasis> specify the file <literal>t.dat</literal> within the directory <literal>C:</literal>; this is because the sequence '<literal>\t</literal>' is translated into the tab-character. To specify this filename, you need to use the string <literal>"C:\\t.dat"</literal> (note the double slash '<literal>\\</literal>').</para>
+      <para>As you probably know, windows uses the character '<literal>\</literal>' to separate the directories within a pathname; an example would be <literal>C:\programs\yabasic\yabasic.exe</literal> (a possible location of the <application>yabasic</application> executable). However, the very same character '<literal>\</literal>' is used to construct <link linkend="ref_escape_sequences">escape sequences</link>, not only in <application>yabasic</application> but in most other programming languages.</para>
+      <para>Therefore e.g. the string <literal>"C:\t.dat"</literal> does <emphasis>not</emphasis> specify the file <literal>t.dat</literal> within the directory <literal>C:</literal>; this is because the sequence '<literal>\t</literal>' is translated into the tab-character (and thus giving a rather unusal filename containing a tab). To specify this filename, you need to use the string <literal>"C:\\t.dat"</literal> (note the double slash '<literal>\\</literal>').</para>
     </section>
 
 
@@ -7310,7 +7310,7 @@ if (open(a,"file","w")) …
 	    <varlistentry>
 	      <term>filename</term>
 	      <listitem>
-		<para>In the synopsis above this is <literal>"file"</literal>. This string specifies the name of the file to open (note the important <link linkend="ref_windows_filenames">caveat</link> on specifying these filenames).</para>
+		<para>In the synopsis above this is <literal>"file"</literal>. This string specifies the name of the file to open (note the important <link linkend="ref_windows_filenames">caveat</link> on specifying these filenames; in short: avoid using '<literal>\</literal>', rather use '<literal>/</literal>').</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>

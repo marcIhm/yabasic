@@ -1,3 +1,5 @@
 Version 2.90.5 (November 11, 2024)
   - Fixed a bug related with 'inkey$'.
+  - For Windows: needed to switch to a newer version of visual studio;
+    unfortunately, this probably breaks compatibility with xp
 
