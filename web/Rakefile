@@ -20,7 +20,7 @@ task :git do
   end
 end
 
-version = nil
+version = version_prev = nil
 html_with_latest_news = nil
 html_with_all_news = nil
 
@@ -31,6 +31,7 @@ task :version => :git do
   puts "Version #{version}"
   news_file = '../unix/lang/NEWS'
   news = News.new(news_file)
+  version_prev = news.version_prev
   fail "Versions from #{news_file} (#{news.version}) and #{version_file} (#{version}) do not match" if news.version != version
   html_with_latest_news = news.as_html_all(4)
   fragname = "fragment_log.html"

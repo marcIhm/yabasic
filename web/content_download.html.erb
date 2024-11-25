@@ -38,8 +38,10 @@ You will find an entry for deleting yabasic. </p>
   <li>Within the extracted folder yabasic-zip, double-click on setup.exe to start the installation of yabasic</li>
   <li>Remove the folder yabasic-zip, as it is no longer needed</li>
 </ul>
-<p>To <b>remove</b> yabasic, go to the control-panel and click on the software-icon: 
-You will find an entry for deleting yabasic. </p>
+
+<h1><a name="oldwin">Older Versions for Windows</a></h1>
+  <p>Starting from version 2.90.5 yabasic, is build with Visual Studio 2022, which unfortunately does no longer support creating binaries for <b>Windows XP</b>. If you still use this platform, you might be interested in trying <a href="download/yabasic-2.90.4.zip">yabasic-2.90.4.zip</a> or <a href="download/yabasic-2.90.4-setup.exe">yabasic-2.90.4-setup.exe</a>, which should still work with Windows XP.</p>
+  <p>If, at any time, you need the <b>previous version</b> of yabasic (currently this would be <%= version_prev %>), you may find it here: <a href="download/yabasic-<%= version_prev %>-setup.exe">yabasic-<%= version_prev %>-setup.exe</a> or <a href="download/yabasic-<%= version_prev %>.zip">yabasic-<%= version_prev %>.zip</a>. This might e.g. be helpful, if your virus-scanner does not trust the latest version yet. </p>
 
 <h1><a name="binlin">Binaries for Linux</a></h1>
 <p>This is how to download and install the binary linux-i586-package of yabasic for:
@@ -53,7 +55,7 @@ You will find an entry for deleting yabasic. </p>
     <li>Or read the html-Documentation under <strong>/usr/local/share/applications/yabasic/yabasic.htm</strong></li>
     <li>Try the demos under <strong>/usr/local/share/applications/yabasic/demo.yab</strong></li>
   </ul>
-<p>To remove yabasic type <strong>sudo rpm -e yabasic</strong> or <strong>sudo dpkg --remove yabasic</strong>.</p>
+<p>To <b>remove</b> yabasic type <strong>sudo rpm -e yabasic</strong> or <strong>sudo dpkg --remove yabasic</strong>.</p>
 <p>If you have any problems, please send me a mail:&nbsp;<a href="mailto:mail@yabasic.de">mail@yabasic.de</a>.</p>
 <h1><a name="sourceunix">Compile the sources for Unix</a></h1>
 <p>Compiling yabasic requires a C-Compiler (typically gcc) as well as the libraries and header-files for ncurses and x11 (typically named <strong>ncurses</strong>, <strong>ncurses-devel</strong> and <strong>xorg-x11-devel</strong>). To compile yabasic in your home-directory proceed like this:
