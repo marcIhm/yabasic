@@ -1,0 +1,7 @@
+
+This directory just contains some hints for visitors searching for the documentation (in the
+broader sense) of yabasic:
+
+- See the top-level directory "unix/doc" or the manual of yabasic. The file
+  "yabasic.xml.erb" (docbook) would be the file to edit, if you plan a pull-request.
+- See the directory "web" for all the content of the website www.yabasic.de

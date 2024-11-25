@@ -15,8 +15,8 @@
 
   Note, that this repository contains the sources of yabasic for Unix and Windows, as well
   as the sources for the windows-specific setup-programs. And even the website itself is
-  part of this repo. So almost any request regarding yabasic (language, setup, website) can
-  be handled (pull-request or issue) in this repo.
+  part of this repo. So almost any request regarding yabasic (language, documentation,
+  windows-setup, website) can be handled (as pull-request or issue) in this repo.
 
 * Table of Content :TOC_3:
 - [[#yabasic---a-simple-basic-interpreter-for-unix-and-windows][Yabasic - A simple Basic interpreter for Unix and Windows.]]
