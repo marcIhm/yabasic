@@ -13,6 +13,11 @@
 
   A short overview on changing yabasic can be found at http://www.yabasic.de/changing.html.
 
+  Note, that this repository contains the sources of yabasic for Unix and Windows, as well
+  as the sources for the windows-specific setup-programs. And even the website itself is
+  part of this repo. So almost any request regarding yabasic (language, setup, website) can
+  be handled (pull-request or issue) in this repo.
+
 * Table of Content :TOC_3:
 - [[#yabasic---a-simple-basic-interpreter-for-unix-and-windows][Yabasic - A simple Basic interpreter for Unix and Windows.]]
 - [[#the-three-top-level-directories][The three top-level directories]]
@@ -45,7 +50,7 @@
 ** Directory 'windows'
 
    The build process uses the c-sources from the unix-directory, so here you will only find
-   the sources for the windows-specific setup-program.
+   the sources for the windows-specific setup-programs.
 
 ** Directory 'web'
 
