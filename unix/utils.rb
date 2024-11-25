@@ -78,6 +78,8 @@ end
 class News
 
   attr_reader :version
+  attr_reader :version_prev
+  attr_reader :all_versions
   attr_accessor :paras
 
   def initialize fname
@@ -91,6 +93,8 @@ class News
       @paras << p
     }
     @version = @paras[0].version
+    @version_prev = @paras[1].version
+    @all_versions = all_versions
   end
 
   def as_text
