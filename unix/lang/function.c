@@ -1499,6 +1499,19 @@ void poke(struct command *cmd) /* poke into internals */
               !strcmp(string_arg, "subroutine") ||
               !strcmp(string_arg, "subroutines"))) {
     dump_sub(0);
+  } else if (!strcmp(dest, "debug_internal") && string_arg) {
+    if (!strcmp(string_arg, "x11_send_expose")) {
+      error(sERROR, "poke 'debug_internal' 'x11_send_expose' is not yet implemented");
+    } else if (!strcmp(string_arg, "x11_debug_on_receive_expose")) {
+      error(sERROR, "poke 'debug_internal' 'x11_debug_on_receive_expose' is not yet implemented");
+    } else {
+      sprintf(string, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
+	      "     x11_send_expose             :   send an artifical expose event to the open graphic window\n"
+	      "     x11_debug_on_receive_expose :   output debug message on receiving expose; infolevel must\n"
+	      "       be set accordingly; this needs to be used before opening a window", string_arg);
+      error(sERROR, string);
+    }
+     
   } else if (!strcmp(dest, "textalign") && string_arg) {
     if (!check_alignment(string_arg)) {
       return;
@@ -1525,7 +1538,8 @@ void poke(struct command *cmd) /* poke into internals */
       severity_threshold = sFATAL;
       break;
     default:
-      error(sERROR, "invalid infolevel");
+      sprintf(string, "invalid infolevel '%c'", c);
+      error(sERROR, string);
       return;
     }
     if (severity_threshold <= sDEBUG) {

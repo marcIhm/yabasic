@@ -1,0 +1,5 @@
+Use:
+
+   rake html
+
+to build the yabasic.html from yabasic.xml.erb

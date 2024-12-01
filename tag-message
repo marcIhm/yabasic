@@ -1,5 +1,6 @@
 Version 2.90.5 (November 11, 2024)
   - Fixed a bug related with 'inkey$'.
-  - For Windows: needed to switch to a newer version of visual studio;
-    unfortunately, this probably breaks compatibility with xp
+  - For Windows: Needed to switch to a new version of Visual Studio.
+    unfortunately, this breaks compatibility with Windows XP; however
+    older versions of yabasic are still provided for download.
 

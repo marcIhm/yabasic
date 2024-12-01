@@ -8015,6 +8015,18 @@ gets overwritten with the dump, please be careful.</para>
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><function>poke "debug_internal","which kind of internal debugging ?"</function></term>
+	      <listitem>
+		<para>Invoke one of various internal debugging facilities;
+		this is only useful for debugging the internals of <application>yabasic</application> itself.</para>
+		<para>The second argument (<literal>"which kind of internal debugging ?"</literal>
+in the example) can be one of several strings, which are not described here, because they
+tend to change quickly and are in general not useful for the programmer using <application>yabasic</application>.
+However, if you give an invalid argument, e.g. <function>poke "debug_internal","?"</function>, the error-message will list and explain the valid arguments briefly.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>poke "fontheight",12</function></term>
 	      <listitem>
 		<para>This <function>poke</function> changes the default fontheight. This can only have an effect, if the fonts given in the commands <function><link linkend="ref_text">text</link></function> or <function><link linkend="ref_open_window">open window</link></function> do not specify a fontheight on their own.</para>
