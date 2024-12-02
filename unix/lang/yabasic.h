@@ -98,7 +98,7 @@
 #define OPEN_PRINTER 8
 #define STDIO_STREAM 1234
 
-/* -------- variables needed in all files and defined in ... -------- */
+/* -------- variables and functions needed in all files and defined in ... -------- */
 
 /* main.c */
 extern struct command *currcmd;	        /* currently executed command */
@@ -107,6 +107,7 @@ extern struct command *cmd_head;	/* next command */
 extern struct command *last_cmd;	/* last command */
 extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
+extern int x11_note_on_receive_expose;  /* print a note when receiving this event */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
 extern char *cexplanation[];	/* explanations of commands */
@@ -154,6 +155,7 @@ extern char last_frnfn_call_error_text[]; /* last error message produced by fore
 extern int last_frnfn_call_okay;         /* true, if last foreign call has been okay */
 
 /* graphic.c */
+extern void x11_send_expose(void);  /* send expose event under unix */
 /* printing and plotting */
 extern int print_to_file;	/* print to file ? */
 #ifdef WINDOWS

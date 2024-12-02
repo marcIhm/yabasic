@@ -1501,14 +1501,15 @@ void poke(struct command *cmd) /* poke into internals */
     dump_sub(0);
   } else if (!strcmp(dest, "debug_internal") && string_arg) {
     if (!strcmp(string_arg, "x11_send_expose")) {
-      error(sERROR, "poke 'debug_internal' 'x11_send_expose' is not yet implemented");
-    } else if (!strcmp(string_arg, "x11_debug_on_receive_expose")) {
-      error(sERROR, "poke 'debug_internal' 'x11_debug_on_receive_expose' is not yet implemented");
+      x11_send_expose();
+    } else if (!strcmp(string_arg, "x11_note_on_receive_expose")) {
+      x11_note_on_receive_expose = TRUE;
     } else {
       sprintf(string, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
 	      "     x11_send_expose             :   send an artifical expose event to the open graphic window\n"
-	      "     x11_debug_on_receive_expose :   output debug message on receiving expose; infolevel must\n"
-	      "       be set accordingly; this needs to be used before opening a window", string_arg);
+	      "     x11_note_on_receive_expose  :   make the redraw-coprocess output a note on\n"
+	      "       receiving an x11 expose; infolevel must be set to note at least;\n"
+	      "       this needs to be used before opening a window", string_arg);
       error(sERROR, string);
     }
      

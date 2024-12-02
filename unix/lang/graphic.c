@@ -238,6 +238,7 @@ void openwin(struct command *cmd) {
 
   /* wait for exposure */
   XNextEvent(display, &event);
+  /* no more events from window in this process */
   XSelectInput(display, window, 0);
 
   calc_psscale();
@@ -245,7 +246,7 @@ void openwin(struct command *cmd) {
   /* create redraw pixmap */
   XGetWindowAttributes(display, window, &attributes);
   backbit =
-      XCreatePixmap(display, window, winwidth, winheight, attributes.depth);
+    XCreatePixmap(display, window, winwidth, winheight, attributes.depth);
   if (!backbit) {
     error(sERROR, "couldn't create backing pixmap");
     return;
@@ -260,12 +261,19 @@ void openwin(struct command *cmd) {
 #ifdef HAVE_PRCTL_H
     prctl(PR_SET_PDEATHSIG, SIGHUP);
 #endif
+    /* we (child-process) get our own display-connection, probably on purpose */
     display = XOpenDisplay(displayname);
     XSelectInput(display, window, ExposureMask);
     XGetGCValues(display, gc, GCPlaneMask, &vals);
     while (TRUE) {
+      if (severity_threshold <= sNOTE && x11_note_on_receive_expose) {
+	error(sNOTE, "Waiting for X11-event Expose");
+      }
       XNextEvent(display, &event);
       if (event.type == Expose) {
+	if (severity_threshold <= sNOTE && x11_note_on_receive_expose) {
+	  error(sNOTE, "Received X11-event Expose");
+	}
         rx = event.xexpose.x;
         ry = event.xexpose.y;
         rw = event.xexpose.width;
@@ -279,7 +287,7 @@ void openwin(struct command *cmd) {
       }
     }
   } else if (backpid == -1) {
-    error(sERROR, "couldn't fork child");
+    error(sERROR, "Couldn't fork child");
     return;
   }
 
@@ -665,8 +673,7 @@ static int grafinit(void) {
   static XGCValues xgcvalues;                /* Values for Graphics Context */
   static unsigned int w, h;                  /* width and height of window */
   int rbits_count, gbits_count, bbits_count; /* number of bits for r,g and b */
-  XColor exact_match,
-      best_match; /* exact and best matches for required color */
+  XColor exact_match, best_match; /* exact and best matches for required color */
   int height;
   int fontid;
 #else /*  */
@@ -677,7 +684,6 @@ static int grafinit(void) {
 #ifdef UNIX
 
   /* get display */
-  //  _Xdebug = 1;
   display = XOpenDisplay(displayname);
   if (display == NULL) {
     sprintf(string, "could not open display: %s", my_strerror(errno));
@@ -2801,3 +2807,29 @@ void gettermkey(char *keybuff) {
   }
 }
 #endif
+
+void x11_send_expose() {
+  /* send expose event under unix */
+#ifdef UNIX
+  XExposeEvent event;
+  if (!winopened) {
+    error(sERROR, "No window to send event to");
+    return;
+  }
+  memset(&event, 0, sizeof(XExposeEvent));
+  event.type = Expose;
+  display = XOpenDisplay(displayname);      
+  event.display = display;
+  event.window = window;
+  event.x = 0;
+  event.y = 0;
+  event.width = winwidth;
+  event.height = winheight;
+  XSendEvent(display, window, 1, ExposureMask, (XEvent *)&event);
+  XSync(display, 0);
+  error(sNOTE, "Sent X11-event Expose to my own window");
+#else
+  sprintf(string, "'debug_internal' '%s' is not available under windows", string_arg);
+  error(sERROR, string);
+#endif      
+}

@@ -1,0 +1,10 @@
+#
+# Investigate receiving of expose-event in redraw-process
+#
+poke "debug_internal", "x11_note_on_receive_expose"
+poke "infolevel", "note"
+open window 200,200
+circle 100,100,100
+sleep 1
+poke "debug_internal", "x11_send_expose"
+input a$
