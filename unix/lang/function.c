@@ -1508,8 +1508,8 @@ void poke(struct command *cmd) /* poke into internals */
       sprintf(string, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
 	      "     x11_send_expose             :   send an artifical expose event to the open graphic window\n"
 	      "     x11_note_on_receive_expose  :   make the redraw-coprocess output a note on\n"
-	      "       receiving an x11 expose; infolevel must be set to note at least;\n"
-	      "       this needs to be used before opening a window", string_arg);
+	      "       receiving an x11 expose; infolevel must be set to 'note' at minimum;\n"
+	      "       this needs to be issued before opening a window", string_arg);
       error(sERROR, string);
     }
      
@@ -1568,7 +1568,12 @@ void poke(struct command *cmd) /* poke into internals */
   } else if (dest[0] == '#') {
     error(sERROR, "don't use quotes when poking into file");
   } else {
-    sprintf(string, "invalid poke: '%s'", dest);
+    if (string_arg) {
+      sprintf(string, "invalid poke: '%s', '%s'", dest, string_arg);
+    } else {
+      sprintf(string, "invalid poke: '%s', %g", dest, double_arg);
+    }
+    strncat(string, "; either the first argument is totally unknown (see the documentation of 'poke') or it expects a different type of second argument (string/number) than given", INBUFFLEN - 1 - strlen(string));
     error(sERROR, string);
   }
   return;
@@ -1643,8 +1648,8 @@ static double peek(char *dest) /* peek into internals */
     error(sERROR, "don't use quotes when peeking into a file");
     return 0;
   }
-
-  error(sERROR, "invalid peek");
+  sprintf(string, "invalid peek: '%s'; see the documentation of 'peek' for accepted values", dest);
+  error(sERROR, string);
   return 0;
 }
 
@@ -1719,7 +1724,8 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
     }
     return my_strdup(s);
   } else {
-    error(sERROR, "invalid peek");
+    sprintf(string, "invalid peek: '%s'; see the documentation of 'peek$' for accepted values", dest);
+    error(sERROR, string);
   }
   return my_strdup("");
 }
