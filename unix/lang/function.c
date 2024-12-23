@@ -1513,13 +1513,13 @@ void poke(struct command *cmd) /* poke into internals */
       error(sERROR, estring);
     }
 
-  } else if (!strcmp(dest, "windows_console_color_mode")) {
+  } else if (!strcmp(dest, "console_color_mode")) {
     if (!strcmp(string_arg, "legacy")) {
-      win_ccm = wccmLEGACY;
+      cocomo = ccmLEGACY;
     } else if (!strcmp(string_arg, "bright")) {
-      win_ccm = wccmBRIGHT;
+      cocomo = ccmBRIGHT;
     } else if (!strcmp(string_arg, "dim")) {
-      win_ccm = wccmDIM;
+      cocomo = ccmDIM;
     }
   } else if (!strcmp(dest, "textalign") && string_arg) {
     if (!check_alignment(string_arg)) {
@@ -1731,15 +1731,15 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       s = "";
     }
     return my_strdup(s);
-  } else if (!strcmp(dest, "windows_console_color_mode")) {
-    if (win_ccm == wccmLEGACY) {
+  } else if (!strcmp(dest, "console_color_mode")) {
+    if (cocomo == ccmLEGACY) {
       return my_strdup("legacy");
-    } else if (win_ccm == wccmBRIGHT) {
+    } else if (cocomo == ccmBRIGHT) {
       return my_strdup("bright");
-    } else if (win_ccm == wccmDIM) {
+    } else if (cocomo == ccmDIM) {
       return my_strdup("dim");
     } else {
-      sprintf(estring, "Internal error: Invalid value for windows_console_color_mode: %d", win_ccm);
+      sprintf(estring, "Internal error: Invalid value for console_color_mode: %d", cocomo);
       error(sERROR, estring);
       return my_strdup("");
     }

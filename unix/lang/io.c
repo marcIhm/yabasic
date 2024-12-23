@@ -1463,7 +1463,7 @@ int yc2oc(int yc,
     return COLOR_MAGENTA;
   }
 #else
-  if (win_ccm == wccmLEGACY) {
+  if (cocomo == ccmLEGACY) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1515,7 +1515,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( win_ccm == wccmDIM ) {
+  } elsif ( cocomo == ccmDIM ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1567,7 +1567,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( win_ccm == wccmBRIGHT ) {
+  } elsif ( cocomo == ccmBRIGHT ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1620,7 +1620,7 @@ int yc2oc(int yc,
       }
     }
   } else {
-    sprintf(estring, "Unknown value for windows_console_color_mode: %d", win_ccm);
+    sprintf(estring, "Unknown value for console_color_mode: %d", cocomo);
     error(sERROR, estring);
   }
   

@@ -108,6 +108,7 @@ extern struct command *last_cmd;	/* last command */
 extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int x11_note_on_receive_expose;  /* print a note when receiving this event */
+extern int cocomo; /* bright colors on console by default */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
 extern char *cexplanation[];	/* explanations of commands */
@@ -411,6 +412,11 @@ enum yabkeys {
 enum search_modes {
     /* modes for searching labels */
     srmSUBR = 1, srmLINK = 2, srmLABEL = 4, srmGLOBAL = 8
+};
+
+enum console_color_modes {
+  /* the standard 7 colors can be bright or dim */
+  ccmLEGACY = 0, ccmDIM = 1, ccmBRIGHT = 2
 };
 
 /* ------------- global types ---------------- */

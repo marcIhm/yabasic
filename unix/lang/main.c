@@ -78,7 +78,7 @@ static int note_count;    /* number of notes */
 static int warning_count; /* number of warning messages */
 static int error_count;   /* number of error messages */
 int x11_note_on_receive_expose = FALSE;  /* print a note when receiving this event */
-int win_ccm = wccmBRIGHT; /* bright colors on windows console */
+int cocomo = ccmBRIGHT; /* bright colors on console by default */
 int interactive;          /* true, if commands come from stdin */
 int is_bound;             /* true, if this executable is bound */
 static char *to_bind = NULL; /* name bound program to be written */
