@@ -1505,14 +1505,22 @@ void poke(struct command *cmd) /* poke into internals */
     } else if (!strcmp(string_arg, "x11_note_on_receive_expose")) {
       x11_note_on_receive_expose = TRUE;
     } else {
-      sprintf(string, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
+      sprintf(estring, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
 	      "     x11_send_expose             :   send an artifical expose event to the open graphic window\n"
 	      "     x11_note_on_receive_expose  :   make the redraw-coprocess output a note on\n"
 	      "       receiving an x11 expose; infolevel must be set to 'note' at minimum;\n"
 	      "       this needs to be issued before opening a window", string_arg);
-      error(sERROR, string);
+      error(sERROR, estring);
     }
-     
+
+  } else if (!strcmp(dest, "windows_console_color_mode")) {
+    if (!strcmp(string_arg, "legacy")) {
+      win_ccm = wccmLEGACY;
+    } else if (!strcmp(string_arg, "bright")) {
+      win_ccm = wccmBRIGHT;
+    } else if (!strcmp(string_arg, "dim")) {
+      win_ccm = wccmDIM;
+    }
   } else if (!strcmp(dest, "textalign") && string_arg) {
     if (!check_alignment(string_arg)) {
       return;
@@ -1645,7 +1653,7 @@ static double peek(char *dest) /* peek into internals */
   } else if (!strcmp(dest, "millisrunning")) {
     return (double)(current_millis() - compilation_start);
   } else if (dest[0] == '#') {
-    error(sERROR, "don't use quotes when peeking into a file");
+      error(sERROR, "don't use quotes when peeking into a file");
     return 0;
   }
   sprintf(string, "invalid peek: '%s'; see the documentation of 'peek' for accepted values", dest);
@@ -1723,6 +1731,18 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       s = "";
     }
     return my_strdup(s);
+  } else if (!strcmp(dest, "windows_console_color_mode")) {
+    if (win_ccm == wccmLEGACY) {
+      return my_strdup("legacy");
+    } else if (win_ccm == wccmBRIGHT) {
+      return my_strdup("bright");
+    } else if (win_ccm == wccmDIM) {
+      return my_strdup("dim");
+    } else {
+      sprintf(estring, "Internal error: Invalid value for windows_console_color_mode: %d", win_ccm);
+      error(sERROR, estring);
+      return my_strdup("");
+    }
   } else {
     sprintf(string, "invalid peek: '%s'; see the documentation of 'peek$' for accepted values", dest);
     error(sERROR, string);

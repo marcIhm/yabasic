@@ -78,6 +78,7 @@ static int note_count;    /* number of notes */
 static int warning_count; /* number of warning messages */
 static int error_count;   /* number of error messages */
 int x11_note_on_receive_expose = FALSE;  /* print a note when receiving this event */
+int win_ccm = wccmBRIGHT; /* bright colors on windows console */
 int interactive;          /* true, if commands come from stdin */
 int is_bound;             /* true, if this executable is bound */
 static char *to_bind = NULL; /* name bound program to be written */
@@ -1044,7 +1045,7 @@ static void set_program_state(int state) {
       error(sERROR, estring);
       return;
     }
-    sprintf(estring, "switching to program state %s", txt);
+    sprintf(estring, "Switching to program state %s", txt);
     error(sDEBUG, estring);
   }
 

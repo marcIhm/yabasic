@@ -1370,6 +1370,7 @@ static void initcol(void) /* initialize curses colors */
     return;
   }
   start_color();
+  attron(A_STANDOUT);
   assume_default_colors(-1, -1);
 
   for (i = 0; i < 8; i++) {
@@ -1462,57 +1463,167 @@ int yc2oc(int yc,
     return COLOR_MAGENTA;
   }
 #else
-  if (fore) {
-    if (yc == YC_BLACK) {
-      return 0;
+  if (win_ccm == wccmLEGACY) {
+    if (fore) {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+      }
+      if (yc == YC_RED) {
+	return FOREGROUND_RED;
+      }
+      if (yc == YC_BLUE) {
+	return FOREGROUND_BLUE;
+      }
+      if (yc == YC_GREEN) {
+	return FOREGROUND_GREEN;
+      }
+      if (yc == YC_YELLOW) {
+	return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_CYAN) {
+	return FOREGROUND_GREEN | FOREGROUND_BLUE;
+      }
+      if (yc == YC_MAGENTA) {
+	return FOREGROUND_BLUE | FOREGROUND_RED;
+      }
+    } else {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+      }
+      if (yc == YC_RED) {
+	return BACKGROUND_RED;
+      }
+      if (yc == YC_BLUE) {
+	return BACKGROUND_BLUE;
+      }
+      if (yc == YC_GREEN) {
+	return BACKGROUND_GREEN;
+      }
+      if (yc == YC_YELLOW) {
+	return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_CYAN) {
+	return BACKGROUND_GREEN | BACKGROUND_BLUE;
+      }
+      if (yc == YC_MAGENTA) {
+	return BACKGROUND_BLUE | BACKGROUND_RED;
+      }
     }
-    if (yc == YC_WHITE) {
-      return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+  } elsif ( win_ccm == wccmDIM ) {
+    if (fore) {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+      }
+      if (yc == YC_RED) {
+	return FOREGROUND_RED;
+      }
+      if (yc == YC_BLUE) {
+	return FOREGROUND_BLUE;
+      }
+      if (yc == YC_GREEN) {
+	return FOREGROUND_GREEN;
+      }
+      if (yc == YC_YELLOW) {
+	return FOREGROUND_GREEN | FOREGROUND_RED;
+      }
+      if (yc == YC_CYAN) {
+	return FOREGROUND_GREEN | FOREGROUND_BLUE;
+      }
+      if (yc == YC_MAGENTA) {
+	return FOREGROUND_BLUE | FOREGROUND_RED;
+      }
+    } else {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+      }
+      if (yc == YC_RED) {
+	return BACKGROUND_RED;
+      }
+      if (yc == YC_BLUE) {
+	return BACKGROUND_BLUE;
+      }
+      if (yc == YC_GREEN) {
+	return BACKGROUND_GREEN;
+      }
+      if (yc == YC_YELLOW) {
+	return BACKGROUND_GREEN | BACKGROUND_RED;
+      }
+      if (yc == YC_CYAN) {
+	return BACKGROUND_GREEN | BACKGROUND_BLUE;
+      }
+      if (yc == YC_MAGENTA) {
+	return BACKGROUND_BLUE | BACKGROUND_RED;
+      }
     }
-    if (yc == YC_RED) {
-      return FOREGROUND_RED;
-    }
-    if (yc == YC_BLUE) {
-      return FOREGROUND_BLUE;
-    }
-    if (yc == YC_GREEN) {
-      return FOREGROUND_GREEN;
-    }
-    if (yc == YC_YELLOW) {
-      return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-    }
-    if (yc == YC_CYAN) {
-      return FOREGROUND_GREEN | FOREGROUND_BLUE;
-    }
-    if (yc == YC_MAGENTA) {
-      return FOREGROUND_BLUE | FOREGROUND_RED;
+  } elsif ( win_ccm == wccmBRIGHT ) {
+    if (fore) {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_RED) {
+	return FOREGROUND_RED | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_BLUE) {
+	return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_GREEN) {
+	return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_YELLOW) {
+	return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_CYAN) {
+	return FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+      }
+      if (yc == YC_MAGENTA) {
+	return FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY;
+      }
+    } else {
+      if (yc == YC_BLACK) {
+	return 0;
+      }
+      if (yc == YC_WHITE) {
+	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_RED) {
+	return BACKGROUND_RED | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_BLUE) {
+	return BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_GREEN) {
+	return BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_YELLOW) {
+	return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_CYAN) {
+	return BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+      }
+      if (yc == YC_MAGENTA) {
+	return BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_INTENSITY;
+      }
     }
   } else {
-    if (yc == YC_BLACK) {
-      return 0;
-    }
-    if (yc == YC_WHITE) {
-      return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
-    }
-    if (yc == YC_RED) {
-      return BACKGROUND_RED;
-    }
-    if (yc == YC_BLUE) {
-      return BACKGROUND_BLUE;
-    }
-    if (yc == YC_GREEN) {
-      return BACKGROUND_GREEN;
-    }
-    if (yc == YC_YELLOW) {
-      return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
-    }
-    if (yc == YC_CYAN) {
-      return BACKGROUND_GREEN | BACKGROUND_BLUE;
-    }
-    if (yc == YC_MAGENTA) {
-      return BACKGROUND_BLUE | BACKGROUND_RED;
-    }
+    sprintf(estring, "Unknown value for windows_console_color_mode: %d", win_ccm);
+    error(sERROR, estring);
   }
+  
 #endif
   return -1;
 }
@@ -1549,16 +1660,27 @@ int oc2yc(int oc) /* convert an operating system color to yabasic color */
     return YC_BLACK;
   }
   if (oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN) ||
-      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN)) {
+      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN) ||
+      oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY)) {
     return YC_WHITE;
   }
-  if (oc == (FOREGROUND_RED) || oc == (BACKGROUND_RED)) {
+  if (oc == (FOREGROUND_RED) ||
+      oc == (BACKGROUND_RED) ||
+      oc == (FOREGROUND_RED | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_RED | BACKGROUND_INTENSITY)) {
     return YC_RED;
   }
-  if (oc == (FOREGROUND_BLUE) || oc == (BACKGROUND_BLUE)) {
+  if (oc == (FOREGROUND_BLUE) ||
+      oc == (BACKGROUND_BLUE) ||
+      oc == (FOREGROUND_BLUE | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_BLUE | BACKGROUND_INTENSITY)) {
     return YC_BLUE;
   }
-  if (oc == (FOREGROUND_GREEN) || oc == (BACKGROUND_GREEN)) {
+  if (oc == (FOREGROUND_GREEN) ||
+      oc == (BACKGROUND_GREEN) ||
+      oc == (FOREGROUND_GREEN | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_GREEN | BACKGROUND_INTENSITY)) {
     return YC_GREEN;
   }
   if (oc == (FOREGROUND_RED | FOREGROUND_GREEN) ||
@@ -1568,11 +1690,15 @@ int oc2yc(int oc) /* convert an operating system color to yabasic color */
     return YC_YELLOW;
   }
   if (oc == (FOREGROUND_BLUE | FOREGROUND_GREEN) ||
-      oc == (BACKGROUND_BLUE | BACKGROUND_GREEN)) {
+      oc == (BACKGROUND_BLUE | BACKGROUND_GREEN) ||
+      oc == (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY)) {
     return YC_CYAN;
   }
   if (oc == (FOREGROUND_RED | FOREGROUND_BLUE) ||
-      oc == (BACKGROUND_RED | BACKGROUND_BLUE)) {
+      oc == (BACKGROUND_RED | BACKGROUND_BLUE) ||
+      oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_INTENSITY)) {
     return YC_MAGENTA;
   }
 #endif
