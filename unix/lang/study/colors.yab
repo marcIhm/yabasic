@@ -1,5 +1,6 @@
 clear screen
+error "foo"
 dim cols$(7)
 for i=0 to 7:read cols$(i):next i
-for i=0 to 7:for j=0 to 7:print color(cols$(i),cols$(j)) ">>> " + cols$(i) + cols$(j) + " <<<";:next j:next i
+for i=0 to 7:for j=0 to 7:print color(cols$(i),cols$(j)) ">>> fg=" + cols$(i) + ", bg=" + cols$(j) + " <<<";:next j:next i
 data "white","red", "blue", "green", "yellow", "cyan", "magenta", "black"

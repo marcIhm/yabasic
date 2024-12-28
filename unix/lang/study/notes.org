@@ -1,0 +1,30 @@
+All sorts of temporary notes related to studies in yabasic; not ment to be readable by
+themselves; might even be in german
+
+* [2024-12-28 Sat] Error messages after curinit() should switch of curses first
+
+  Code looks right, behaviour not.
+
+  Puzzling:
+
+  - Artifical error "thud" in initcol
+  - Some sleeps to make sequence of things easier visible 
+  - Should trigger printf in this sequence (according to code):
+    - foo0, foo1, foo2 in error_with_position
+    - qux0, qux1 in show_and_mark_line
+  - However the sequence on screen is:
+    - foo0 in curses
+    - qux0, qux1 out of curses
+    - foo1, foo2 out of curses
+  - Maybe threading-error ? Which threads ?
+
+
+  ./configure CFLAGS="-g -O0" && make
+
+  gdb setup:
+
+  break main.c:2055
+  break main.c:1961
+  tty /dev/pts/3
+  run study/colors.yab
+  

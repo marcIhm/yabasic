@@ -1,1 +1,1 @@
-Some (yabasic-) programs to investigate various issues.
+Some yabasic-programs to study new features and old issues.
