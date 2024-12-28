@@ -1003,6 +1003,7 @@ static void end_it(void) /* perform shutdown-operations */
 
 #ifdef UNIX
   if (curinized) {
+    intrflush(stdscr, FALSE);          
     endwin();
   }
 #else
@@ -1947,7 +1948,7 @@ void error(int severity, char *message)
 
 void error_with_position(int severity, char *message, char *filename,
                          int lineno, int first_column, int last_column)
-/* reports an basic error to the user and possibly exits */
+/* reports a yabasic-error to the user and possibly exits */
 {
   char *severity_text;
   static int printed_lineno = -1;
@@ -1957,10 +1958,12 @@ void error_with_position(int severity, char *message, char *filename,
   if (severity >= severity_threshold) {
 #ifdef UNIX
     if (curinized) {
-      reset_shell_mode();
+      endwin();
+      fflush(stdout);
+      fflush(stderr);
+      curinized = FALSE;
     }
 #endif
-
     switch (severity) {
     case sINFO:
       severity_text = "---Info";
@@ -2014,11 +2017,6 @@ void error_with_position(int severity, char *message, char *filename,
     fprintf(stderr, "---Immediate exit to system, due to a fatal error.\n");
     end_it();
   }
-#ifdef UNIX
-  if (curinized && severity >= severity_threshold) {
-    reset_prog_mode();
-  }
-#endif
 }
 
 void show_and_mark_line(
@@ -2046,14 +2044,14 @@ void show_and_mark_line(
 
   if (linebuffer[0] && lineno == 0) {
     linebuffer[strcspn(linebuffer, "\n")] = '\0';
-    fputs("   ", stderr);
-    fputs(linebuffer, stderr);
-    fputs("\n   ", stderr);
+    fprintf(stderr, "   ");
+    fprintf(stderr, "%s", linebuffer);
+    fprintf(stderr, "\n   ");
     for (i = 1; i <= last_column; i++) {
       fputc((i < first_column) ? ' ' : ((i == first_column) ? '^' : '~'),
             stderr);
     }
-    fputs("\n", stderr);
+    fprintf(stderr, "\n");
   }
 }
 
