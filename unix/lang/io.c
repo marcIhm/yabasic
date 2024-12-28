@@ -1340,9 +1340,9 @@ void colour(struct command *cmd) /* switch on colour */
     }
 #ifdef UNIX
     if (back) {
-      attrset(COLOR_PAIR(fc * 8 + bc));
+      attrset(COLOR_PAIR(fc + bc * 8 + 1));
     } else {
-      attrset(COLOR_PAIR(64 + fc));
+      attrset(COLOR_PAIR(65 + fc));
     }
 #else
     SetConsoleTextAttribute(
@@ -1370,24 +1370,24 @@ static void initcol(void) /* initialize curses colors */
     return;
   }
   start_color();
-  attron(A_STANDOUT);
   assume_default_colors(-1, -1);
-
-  for (i = 0; i < 8; i++) {
-    for (j = 0; j < 8; j++) {
-      if (!i && !j) {
-        continue;
-      }
-      init_pair(i * 8 + j, yc2oc(i, TRUE), yc2oc(j, FALSE));
+  /* 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
+  if (COLOR_PAIRS < 73) return;
+  
+  for (b = 0; b < 8; b++) {
+    for (f = 0; f < 8; f++) {
+      /* arguments are fore, back. Skip color pair 0 as it cannot be modified */
+      init_pair(f + b * 8 + 1, yc2oc(f, TRUE), yc2oc(b, FALSE));
     }
   }
 
-  for (i = 0; i < 8; i++) {
-    init_pair(64 + i, yc2oc(i, TRUE),
-              -1); /* allowed according to comments in ncurses sources */
+  for (f = 0; f < 8; f++) {
+    init_pair(65 + f, yc2oc(f, TRUE), -1);
   }
 
-  init_color(COLOR_YELLOW, 1000, 1000, 0);
+  if (cocomo == ccmLEGACY) {
+    init_color(COLOR_YELLOW, 1000, 1000, 0);
+  }
 
 #else
   GetConsoleScreenBufferInfo(ConsoleOutput, &csbi);
@@ -1772,7 +1772,7 @@ void putchars(void) /* put rect onto screen */
       }
 #ifdef UNIX
       if (has_colors()) {
-        attrset(COLOR_PAIR(f * 8 + b));
+        attrset(COLOR_PAIR(f + b * 8 + 1));
       }
       mvaddch(y, x, text);
 #else
@@ -1789,7 +1789,8 @@ void putchars(void) /* put rect onto screen */
   }
 #ifdef UNIX
   if (has_colors()) {
-    attrset(A_NORMAL | COLOR_PAIR(0));
+    attrset(A_NORMAL);
+    attron(COLOR_PAIR(0));
   } else {
     attrset(A_NORMAL);
   }
