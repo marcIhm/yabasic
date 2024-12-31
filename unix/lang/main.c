@@ -972,6 +972,7 @@ static void end_it(void) /* perform shutdown-operations */
   int status;
 
   if (backpid == 0) {
+    /* this is the background process */
     exit(1);
   }
   if (backpid > 0) {
@@ -983,12 +984,23 @@ static void end_it(void) /* perform shutdown-operations */
 #else
   if (!Commandline && endreason != rREQUEST) {
 #endif
+    /* we assume that user want to study grafical window or curses-output before we close
+       all this */
     mystream(STDIO_STREAM);
     onestring("---Program done, press RETURN---\n");
 #ifdef UNIX
     if (curinized) {
-      getnstr(l, INBUFFLEN);
+      int ch = 0;
+      raw();
+      cbreak();
+      noecho();
+      /* Consume chars until we see ctrl-c or return. On ctrl-c this behaves better than
+	 getnstr, because with this loop we get a chance to reset terminal quickly. */
+      while(ch != 3 && ch != 10 && ch != 13) {
+	ch=getch();
+      }
     } else {
+      /* avoid a compiler warning */
       (void)!fgets(l, INBUFFLEN, stdin);
     }
 #else
@@ -1003,8 +1015,8 @@ static void end_it(void) /* perform shutdown-operations */
 
 #ifdef UNIX
   if (curinized) {
-    intrflush(stdscr, FALSE);          
     endwin();
+    curinized = FALSE;
   }
 #else
   if (printerfont) {
@@ -1461,6 +1473,9 @@ static void initialize(void)
 }
 
 void signal_handler(int sig) /* handle signals */
+/* Will not be called under unix when curses is active,
+   because curses has its own signal handler.
+   So curses can not be cleaned up here */
 {
   signal(sig, SIG_DFL);
   if (program_state == spFINISHED) {
@@ -1473,9 +1488,6 @@ void signal_handler(int sig) /* handle signals */
     SuspendThread(mainthread);
     if (wthandle != INVALID_HANDLE_VALUE) {
       SuspendThread(wthandle);
-    }
-    if (kthandle != INVALID_HANDLE_VALUE) {
-      TerminateThread(kthandle, 0);
     }
   }
 #endif
@@ -1959,8 +1971,6 @@ void error_with_position(int severity, char *message, char *filename,
 #ifdef UNIX
     if (curinized) {
       endwin();
-      fflush(stdout);
-      fflush(stderr);
       curinized = FALSE;
     }
 #endif
