@@ -19,7 +19,7 @@ if seen$ <> expected$ then
   exit 2
 endif
 
-if (instr(seen$,"*") || instr(expected$,"*"))
+if (instr(seen$,"*") or instr(expected$,"*")) then
   print "Colors from screen could not be encoded"
   exit 2
 endif

@@ -3,7 +3,7 @@
 
 print
 label again
-input "Choose: bright, normal or legacy colors ? (b/n/l)" inten$
+input "Poke into console_foreground_intensity: bright, normal or legacy ? (b/n/l) " inten$
 if (inten$ != "b" and inten$ != "n" and inten$ != "l") print "invalid choice":goto again
 if (inten$ == "b") inten$ = "bright"
 if (inten$ == "n") inten$ = "normal"

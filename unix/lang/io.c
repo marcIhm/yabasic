@@ -1525,7 +1525,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( con_fore_inten == cciNORMAL ) {
+  } else if ( con_fore_inten == cciNORMAL ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1577,7 +1577,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( con_fore_inten == cciBRIGHT ) {
+  } else if ( con_fore_inten == cciBRIGHT ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;

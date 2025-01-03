@@ -2829,7 +2829,6 @@ void x11_send_expose() {
   XSync(display, 0);
   error(sNOTE, "Sent X11-event Expose to my own window");
 #else
-  sprintf(string, "'debug_internal' '%s' is not available under windows", string_arg);
-  error(sERROR, string);
+  error(sERROR, "'debug_internal' 'xee_send_expose' is not available under windows");
 #endif      
 }
