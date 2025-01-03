@@ -1401,11 +1401,11 @@ static void initcol(void) /* initialize curses colors */
 
 #else
   GetConsoleScreenBufferInfo(ConsoleOutput, &csbi);
-  stdfc =
-      csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-  stdbc =
-      csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
-
+  stdfc = csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+  stdbc = csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+  if (con_fore_inten == cciBRIGHT) {
+    stdfc |= FOREGROUND_INTENSITY;
+  }    
 #endif
 }
 
