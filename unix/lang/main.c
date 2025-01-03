@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2024
+    written by Marc Ihm 1995-2025
     more info at www.yabasic.de
 
     main.c -- main() and auxilliary functions
@@ -27,7 +27,7 @@
     break;                                                                     \
   } /* reduces type-work */
 #define COPYRIGHT                                                              \
-  "Copyright 1995-2024 by Marc Ihm, according to the MIT License"
+  "Copyright 1995-2025 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the
  * reproducible build */
 #define BANNER                                                                 \
@@ -78,7 +78,7 @@ static int note_count;    /* number of notes */
 static int warning_count; /* number of warning messages */
 static int error_count;   /* number of error messages */
 int x11_note_on_receive_expose = FALSE;  /* print a note when receiving this event */
-int cocomo = ccmBRIGHT; /* bright colors on console by default */
+int con_fore_inten = cciLEGACY; /* console foreground intensity */
 int interactive;          /* true, if commands come from stdin */
 int is_bound;             /* true, if this executable is bound */
 static char *to_bind = NULL; /* name bound program to be written */

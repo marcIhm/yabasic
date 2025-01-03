@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2024
+    written by Marc Ihm 1995-2025
     more info at www.yabasic.de
 
     io.c -- code for screen and file i/o
@@ -86,7 +86,6 @@ HANDLE gotwinkey = INVALID_HANDLE_VALUE;   /* mutex to signal key reception */
 char conkeybuff[100];                      /* Key received from console */
 char winkeybuff[100];                      /* Key received from window */
 HANDLE wthandle = INVALID_HANDLE_VALUE;    /* handle of win thread */
-HANDLE kthandle = INVALID_HANDLE_VALUE;    /* handle of inkey thread */
 DWORD ktid;                                /* id of inkey thread */
 int LINES = 0;                             /* number of lines on screen */
 int COLS = 0;                              /* number of columns on screen */
@@ -275,6 +274,9 @@ static void curinit(void) /* initialize curses */
   set_escdelay(10);
   curs_set(0);
   intrflush(stdscr, FALSE);
+  if (con_fore_inten == cciBRIGHT) {
+    attron(A_BOLD);
+  }
 #else
   GetConsoleScreenBufferInfo(ConsoleOutput, &coninfo);
   COLS = coninfo.srWindow.Right + 1;
@@ -1285,6 +1287,9 @@ void colour(struct command *cmd) /* switch on colour */
     }
 #ifdef UNIX
     attrset(A_NORMAL);
+    if (con_fore_inten == cciBRIGHT) {
+      attron(A_BOLD);
+    }
 #else
     SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));
     return;
@@ -1328,21 +1333,25 @@ void colour(struct command *cmd) /* switch on colour */
     }
     fc = name2yc(fore);
     if (fc < 0) {
-      sprintf(string, "unknown foreground colour: '%s'", fore);
-      error(sERROR, string);
+      sprintf(estring, "unknown foreground colour: '%s'", fore);
+      error(sERROR, estring);
     }
     if (back) {
       bc = name2yc(back);
       if (fc < 0) {
-        sprintf(string, "unknown background colour: '%s'", back);
-        error(sERROR, string);
+        sprintf(estring, "unknown background colour: '%s'", back);
+        error(sERROR, estring);
       }
     }
 #ifdef UNIX
     if (back) {
+      /* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */      
       attrset(COLOR_PAIR(fc + bc * 8 + 1));
     } else {
       attrset(COLOR_PAIR(65 + fc));
+    }
+    if (con_fore_inten == cciBRIGHT) {
+      attron(A_BOLD);
     }
 #else
     SetConsoleTextAttribute(
@@ -1371,12 +1380,13 @@ static void initcol(void) /* initialize curses colors */
   }
   start_color();
   assume_default_colors(-1, -1);
-  /* 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
+  /* 73 = 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
   if (COLOR_PAIRS < 73) return;
   
   for (b = 0; b < 8; b++) {
     for (f = 0; f < 8; f++) {
       /* arguments are fore, back. Skip color pair 0 as it cannot be modified */
+      /* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */
       init_pair(f + b * 8 + 1, yc2oc(f, TRUE), yc2oc(b, FALSE));
     }
   }
@@ -1385,7 +1395,7 @@ static void initcol(void) /* initialize curses colors */
     init_pair(65 + f, yc2oc(f, TRUE), -1);
   }
 
-  if (cocomo == ccmLEGACY) {
+  if (con_fore_inten == cciLEGACY) {
     init_color(COLOR_YELLOW, 1000, 1000, 0);
   }
 
@@ -1463,7 +1473,7 @@ int yc2oc(int yc,
     return COLOR_MAGENTA;
   }
 #else
-  if (cocomo == ccmLEGACY) {
+  if (con_fore_inten == cciLEGACY) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1515,7 +1525,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( cocomo == ccmDIM ) {
+  } elsif ( con_fore_inten == cciNORMAL ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1567,7 +1577,7 @@ int yc2oc(int yc,
 	return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } elsif ( cocomo == ccmBRIGHT ) {
+  } elsif ( con_fore_inten == cciBRIGHT ) {
     if (fore) {
       if (yc == YC_BLACK) {
 	return 0;
@@ -1620,7 +1630,7 @@ int yc2oc(int yc,
       }
     }
   } else {
-    sprintf(estring, "Unknown value for console_color_mode: %d", cocomo);
+    sprintf(estring, "Internal error: Invalid value for console_foreground_intensity: %d", con_fore_inten);
     error(sERROR, estring);
   }
   
@@ -1772,7 +1782,11 @@ void putchars(void) /* put rect onto screen */
       }
 #ifdef UNIX
       if (has_colors()) {
+	/* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */	
         attrset(COLOR_PAIR(f + b * 8 + 1));
+	if (con_fore_inten == cciBRIGHT) {
+	  attron(A_BOLD);
+	}	
       }
       mvaddch(y, x, text);
 #else
@@ -1856,9 +1870,18 @@ char *getchars(int xf, int yf, int xt, int yt) /* get rect from screen */
         if (!isprint(ct)) {
           ct = ' ';
         }
+	/* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */
         cc = PAIR_NUMBER(c & A_COLOR);
-        cb = cc & 7;
-        cf = (cc - cb) / 8;
+	if (cc == 0) {
+	  cf = YC_WHITE;
+	  cb = YC_BLACK;
+	} else if (cc >= 65) {
+	  cf = cc - 65;
+	  cb = YC_BLACK;
+	} else {
+	  cf = (cc - 1) & 7;
+	  cb = (cc - 1 - cf) / 8;
+	}
         if (has_colors()) {
           sprintf(cols, "%c:%s:%s,", ct, yc2short(cf), yc2short(cb));
         } else {
@@ -1892,6 +1915,7 @@ char *yc2short(int col) /* convert yabasic colours to short colour name */
   static char r1[4], r2[4];
   static char *pr = r1;
 
+  /* switch between two staic buffers for return value */
   if (pr == r1) {
     pr = r2;
   } else {
@@ -1899,6 +1923,7 @@ char *yc2short(int col) /* convert yabasic colours to short colour name */
   }
 
   strcpy(pr, "***");
+  
   if (col == YC_BLACK) {
     strcpy(pr, "Bla");
   }

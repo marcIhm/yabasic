@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2024
+    written by Marc Ihm 1995-2025
     more info at www.yabasic.de
 
     function.c -- code for functions
@@ -1513,13 +1513,22 @@ void poke(struct command *cmd) /* poke into internals */
       error(sERROR, estring);
     }
 
-  } else if (!strcmp(dest, "console_color_mode")) {
-    if (!strcmp(string_arg, "legacy")) {
-      cocomo = ccmLEGACY;
-    } else if (!strcmp(string_arg, "bright")) {
-      cocomo = ccmBRIGHT;
-    } else if (!strcmp(string_arg, "dim")) {
-      cocomo = ccmDIM;
+  } else if (!strcmp(dest, "console_foreground_intensity") || !strcmp(dest, "screen_foreground_intensity") || !strcmp(dest, "terminal_foreground_intensity")) {
+    if (curinized) {
+      /* Remark: it is tempting to loosen the below restriction. However, doing this would
+	 open a can of bugs and missing implementation-details. E.g. currently we have no
+	 intensity in the result of getscreen$(), but we would need this, if intensity could
+	 be changed. */
+      sprintf(estring, "console_foreground_intensity cannot be changed after 'clear screen' has been called");
+      error(sERROR, estring);
+    } else {
+      if (!strcmp(string_arg, "legacy")) {
+	con_fore_inten = cciLEGACY;
+      } else if (!strcmp(string_arg, "bright")) {
+	con_fore_inten = cciBRIGHT;
+      } else if (!strcmp(string_arg, "normal")) {
+	con_fore_inten = cciNORMAL;
+      }
     }
   } else if (!strcmp(dest, "textalign") && string_arg) {
     if (!check_alignment(string_arg)) {
@@ -1731,15 +1740,15 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       s = "";
     }
     return my_strdup(s);
-  } else if (!strcmp(dest, "console_color_mode")) {
-    if (cocomo == ccmLEGACY) {
+  } else if (!strcmp(dest, "console_color_mode") || !strcmp(dest, "screen_color_mode") || !strcmp(dest, "terminal_color_mode")) {
+    if (con_fore_inten == cciLEGACY) {
       return my_strdup("legacy");
-    } else if (cocomo == ccmBRIGHT) {
+    } else if (con_fore_inten == cciBRIGHT) {
       return my_strdup("bright");
-    } else if (cocomo == ccmDIM) {
-      return my_strdup("dim");
+    } else if (con_fore_inten == cciNORMAL) {
+      return my_strdup("standard");
     } else {
-      sprintf(estring, "Internal error: Invalid value for console_color_mode: %d", cocomo);
+      sprintf(estring, "Internal error: Invalid value for console_foreground_intensity: %d", con_fore_inten);
       error(sERROR, estring);
       return my_strdup("");
     }
