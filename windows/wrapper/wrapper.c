@@ -3,7 +3,7 @@
   Simple wrapper for setup.exe of yabasic, invoked from iexpress.
   This wrapper is needed because setup.exe requires admin privileges
   but iexpress refuses to start such a program.
-  Copyright by Marc Ihm 1996-2024
+  Copyright by Marc Ihm 1996-2025
 
   This file is part of yabasic and may be copied under the terms of
   MIT License which can be found in the file LICENSE.

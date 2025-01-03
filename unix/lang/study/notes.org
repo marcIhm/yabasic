@@ -27,4 +27,10 @@ themselves; might even be in german
   break main.c:1961
   tty /dev/pts/3
   run study/colors.yab
-  
+
+  War am Ende nur artefakt, weil ich die Fehlermeldung ausgerechnet innerhalb von curinit
+  ausgelöst hatte.
+
+* [2024-12-28 Sat] Schaltbarer console-color-mode (cocomo)
+
+  [2024-12-28 Sat 12:40] Aktuell nur für Windows implementiert

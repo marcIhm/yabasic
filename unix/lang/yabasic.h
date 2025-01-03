@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2022
+    written by Marc Ihm 1995-2025
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -108,7 +108,7 @@ extern struct command *last_cmd;	/* last command */
 extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int x11_note_on_receive_expose;  /* print a note when receiving this event */
-extern int cocomo; /* bright colors on console by default */
+extern int con_fore_inten; /* console foreground intensity */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
 extern char *cexplanation[];	/* explanations of commands */
@@ -140,7 +140,6 @@ extern HANDLE gotwinkey;		/* mutex to signal key reception */
 extern char conkeybuff[]; /* Key received from console */
 extern char winkeybuff[]; /* Key received from window */
 extern HANDLE wthandle;		/* handle of win thread */
-extern HANDLE kthandle;		/* handle of inkey thread */
 extern DWORD ktid;		/* id of inkey thread */
 extern int LINES;		/* number of lines on screen */
 extern int COLS;		/* number of columns on screen */
@@ -414,9 +413,9 @@ enum search_modes {
     srmSUBR = 1, srmLINK = 2, srmLABEL = 4, srmGLOBAL = 8
 };
 
-enum console_color_modes {
-  /* the standard 7 colors can be bright or dim */
-  ccmLEGACY = 0, ccmDIM = 1, ccmBRIGHT = 2
+enum console_color_intensities {
+  /* the standard 7 foreground colors can be bright or dim */
+  cciLEGACY = 0, cciNORMAL = 1, cciBRIGHT = 2
 };
 
 /* ------------- global types ---------------- */

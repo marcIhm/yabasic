@@ -1,30 +1,42 @@
 
-Some hints: 
+* Some hints
 
-- Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
+  - Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
 
-- To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
-  - Then run yabasic as normal: ./yabasic tests/common/speed-yab
-  - Run gprof: gprof ./yabasic
-  - Or run gcov: gcov main.c
-  - WARNING: adding "--coverage" to CFLAGS slows down yabasic by a factor of 3 or more
-  
-- To compile with address sanitizer:
-  - make sure that clang and llvm are installed
-  - ./configure CC=clang CFLAGS="-fsanitize=address -fno-omit-frame-pointer -g -O0"
-  - make
+  - To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
+    - Then run yabasic as normal: ./yabasic tests/common/speed-yab
+    - Run gprof: gprof ./yabasic
+    - Or run gcov: gcov main.c
+    - WARNING: adding "--coverage" to CFLAGS slows down yabasic by a factor of 3 or more
 
-- To apply changes in configure.ac
-  - autoconf
-  - If this doesn't help, try autoreconf -i
+  - To compile with address sanitizer:
+    - make sure that clang and llvm are installed
+    - ./configure CC=clang CFLAGS="-fsanitize=address -fno-omit-frame-pointer -g -O0"
+    - make
 
-- For first build after a fresh checkout from github
+  - To apply changes in configure.ac
+    - autoconf
+    - If this doesn't help, try autoreconf -i
 
-  If you just want to build yabasic:
-  - ./configure
+  - For first build after a fresh checkout from github
 
-  If you want to adjust the built-process, run these too:
-  - aclocal
-  - autoconf
+    If you just want to build yabasic:
+    - ./configure
 
-- [2024-11-10 Sun] Trying to use clang-format for code-formatting
+    If you want to adjust the built-process, run these too:
+    - aclocal
+    - autoconf
+
+  - [2024-11-10 Sun] Trying to use clang-format for code-formatting
+
+* On colors in the console/terminal/screen
+
+  For linux-compatibility yabasic adheres to the color-model used in ncurses under
+  linux. This applies to its console-output on any platform (even windows).
+
+  Details can be found at: https://www.linuxjournal.com/content/about-ncurses-colors-0
+
+  In short, yabasic has 8 foreground-colors (black, red, green, blue, yellow, cyan, magenta,
+  white) and 8 background colors.
+
+  https://en.wikipedia.org/wiki/List_of_monochrome_and_RGB_color_formats#4-bit_RGBI
