@@ -1,0 +1,29 @@
+print "Check, that getscreen$ and putscreen play well ..."
+clear screen
+dim cols$(8)
+for i=0 to 7:read cols$(i):next i
+
+for l=0 to 9
+  for c=0 to 39
+    print colour(cols$(int(ran(8))),cols$(int(ran(8)))) mid$("abcdefghijklmnopqrstuvwxyz",1+int(ran(26)),1);
+  next c
+  print
+next l
+
+expected$=getscreen$(0,0,9,9)
+putscreen expected$,0,0
+seen$=getscreen$(0,0,9,9)
+
+if seen$ <> expected$ then
+  print "Getting and putting the same screen area changes its content"
+  exit 2
+endif
+
+if (instr(seen$,"*") || instr(expected$,"*"))
+  print "Colors from screen could not be encoded"
+  exit 2
+endif
+
+exit 0
+
+data "white","red", "blue", "green", "yellow", "cyan", "magenta", "black"
