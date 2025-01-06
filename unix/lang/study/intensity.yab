@@ -1,5 +1,14 @@
 
-# help while implementing the new poke below
+# Help while implementing the new poke for console_foreground_intensity
+#
+# For Unix invoke:
+#
+#   $HOME/yabasic/unix/lang/yabasic ~/yabasic/unix/lang/study/colors.yab
+#
+# For Windows:
+#
+#   $HOME/yabasic/windows/lang/Release/yabasic.exe C:/work/yabasic/unix/lang/study/colors.yab
+#
 
 print
 label again
