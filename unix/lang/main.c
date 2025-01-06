@@ -1390,6 +1390,7 @@ static void initialize(void)
   fexplanation[fLTRIM] = "LTRIM";
   fexplanation[fRTRIM] = "RTRIM";
   fexplanation[fTRIM] = "TRIM";
+  fexplanation[fSTRING] = "STRING";
   fexplanation[fCHR] = "CHR";
   fexplanation[fBITNOT] = "BITNOT";
   fexplanation[fONEARGS] = "ONEARGS";

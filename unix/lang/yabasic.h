@@ -298,7 +298,7 @@ enum functions {
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
     fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fSHL, fSHR, fLOG2,
-    fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2,
+    fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2, fSTRING, 
     fTWOARGS,
     fMID, fINSTR2, fRINSTR2, fSTR3,
     fTHREEARGS,

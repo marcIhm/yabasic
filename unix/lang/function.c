@@ -374,7 +374,7 @@ void function(struct command *cmd) /* performs a function */
   char *pointer;
   double value;
   time_t datetime;
-  int type, result, len, start, i, max;
+  int type, result, len, start, i, j, k, max, cnt, sz;
   char *str, *str2;
 
   a3 = NULL;
@@ -630,8 +630,8 @@ void function(struct command *cmd) /* performs a function */
     pointer = my_malloc(2);
     i = (int)floor(a1->value);
     if (i > 255 || i < 0) {
-      sprintf(string, "can't convert %g to character", a1->value);
-      error(sERROR, string);
+      sprintf(estring, "can't convert %g to character", a1->value);
+      error(sERROR, estring);
       return;
     }
     pointer[1] = '\0';
@@ -707,6 +707,25 @@ void function(struct command *cmd) /* performs a function */
       str++;
     }
     pointer = my_strdup(str);
+    result = stSTRING;
+    break;
+  case fSTRING:
+    cnt = a1->value;
+    if (cnt < 0) {
+      sprintf(estring, "first argument to function 'string$' must be > 0, but found %d", cnt);
+      error(sERROR, estring);
+      return;
+    }
+    str = a2->pointer;
+    len = strlen(str);
+    pointer = my_malloc(cnt * strlen(str) * sizeof(char *) + 1);
+    k = 0;
+    for (i = 0; i < cnt; i++) {
+      for (j = 0; j < len; j++) {
+	pointer[k++] = str[j];
+      }
+    }
+    pointer[k] = '\0';
     result = stSTRING;
     break;
   case fINSTR:

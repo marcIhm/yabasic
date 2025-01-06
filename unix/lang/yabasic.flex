@@ -283,6 +283,7 @@ MAX return tMAX;
 "LTRIM$" return tLTRIM;
 "RTRIM$" return tRTRIM;
 "TRIM$" return tTRIM;
+"STRING$" return tSTRING2;
 INSTR return tINSTR;
 RINSTR return tRINSTR;
 "CHOMP$" return tCHOMP;

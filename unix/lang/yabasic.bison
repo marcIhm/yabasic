@@ -161,7 +161,7 @@ void collect_missing_clauses(char *string, char exclude) {
 %token tSQRT tSQR tMYEOF tABS tSIG
 %token tINT tCEIL tFLOOR tFRAC tROUND tMOD tRAN tVAL tLEFT tRIGHT tMID tLEN tMIN tMAX
 %token tSTR tINKEY tCHR tASC tHEX tDEC tBIN tUPPER tLOWER tMOUSEX tMOUSEY tMOUSEB tMOUSEMOD
-%token tTRIM tLTRIM tRTRIM tINSTR tRINSTR tCHOMP
+%token tTRIM tLTRIM tRTRIM tSTRING2 tINSTR tRINSTR tCHOMP
 %token tSYSTEM tSYSTEM2 tPEEK tPEEK2 tPOKE tFRNFN_CALL tFRNFN_CALL2 tFRNFN_SIZE
 %token tFRNBF_ALLOC tFRNBF_FREE tFRNBF_SIZE tFRNBF_DUMP tFRNBF_SET tFRNBF_GET tFRNBF_GET2
 %token tFRNBF_GET_BUFFER tFRNBF_SET_BUFFER
@@ -378,6 +378,7 @@ string_function: tLEFT '(' string_expression ',' expression ')' {create_function
   | tLTRIM '(' string_expression ')' {create_function(fLTRIM);}
   | tRTRIM '(' string_expression ')' {create_function(fRTRIM);}
   | tTRIM '(' string_expression ')' {create_function(fTRIM);}
+  | tSTRING2 '(' expression ',' string_expression ')' {create_function(fSTRING);}
   | tCHOMP '(' string_expression ')' {create_function(fCHOMP);}
   | tSYSTEM2 '(' string_expression ')' {create_function(fSYSTEM2);}
   | tFRNFN_CALL2 '(' call_list ')' {create_function(fFRNFN_CALL2);}
