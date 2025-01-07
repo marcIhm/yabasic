@@ -710,7 +710,7 @@ void function(struct command *cmd) /* performs a function */
     result = stSTRING;
     break;
   case fSTRING:
-    cnt = a1->value;
+    cnt = (int)a1->value;
     if (cnt < 0) {
       sprintf(estring, "first argument to function 'string$' must be > 0, but found %d", cnt);
       error(sERROR, estring);
