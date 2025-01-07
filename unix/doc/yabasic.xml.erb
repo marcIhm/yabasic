@@ -957,6 +957,13 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_string">string$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_string'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_token">token()</link></term>
 	  <listitem>
 	    <%= purpose['ref_token'] %>
@@ -8077,6 +8084,39 @@ However, if you give an invalid argument, e.g. <function>poke "debug_internal","
 	      </listitem>
 	    </varlistentry>
 
+	    <varlistentry>
+	      <term><function>poke "console_foreground_intensity","bright"</function></term>
+	      <listitem>
+		<para>This <function>poke</function> sets the intensity of the foreground colours used by <application>yabasic</application>. This needs to be done before calling <function>clear screen</function> and cannot be changed afterwards. Therefore your program still may use only the standard set of colors (<literal>"black"</literal>, <literal>"white"</literal>, <literal>"red"</literal>, <literal>"blue"</literal>, <literal>"green"</literal>, <literal>"yellow"</literal>, <literal>"cyan"</literal> or <literal>"magenta"</literal>) but, depending on this poke, they show up differently:</para>
+
+      <variablelist>
+	<varlistentry>
+	  <term><literal>"legacy"</literal></term>
+	  <listitem>
+	    <para>The color-intensity used in prior versions of <application>yabasic</application>. This is the default and looks similar to <literal>"normal"</literal> (see below) but with a brighter yellow.</para>
+	  </listitem>
+	</varlistentry>
+
+        <varlistentry>
+	  <term><literal>"normal"</literal></term>
+	  <listitem>
+	    <para>Normal colors, with low intensity.</para>
+	  </listitem>
+	</varlistentry>
+
+        <varlistentry>
+	  <term><literal>"bright"</literal></term>
+	  <listitem>
+	    <para>Bright colors, with high intensity; this makes the output of your program bright.</para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      <para>There are two synonyms for <literal>"console_foreground_intensity"</literal>: <literal>"screen_foreground_intensity"</literal> and <literal>"terminal_foreground_intensity"</literal>.</para>
+      <para>See also <function><link linkend="ref_print_color">print color</link></function> for how to print in color.</para>
+
+	      </listitem>
+	    </varlistentry>
+
 
 
 	  </variablelist>
@@ -8186,9 +8226,10 @@ print color("green","yellow") at(5,5) a$,b
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><literal>print color("red","blue") at(5,5) a$,b</literal></term>
+	      <term><literal>print color("red","blue") a$,b</literal></term>
 	      <listitem>
 		<para>Print with the specified fore- (<literal>"red"</literal>) and background (<literal>"blue"</literal>) color (or colour). The possible values are <literal>"black"</literal>, <literal>"white"</literal>, <literal>"red"</literal>, <literal>"blue"</literal>, <literal>"green"</literal>, <literal>"yellow"</literal>, <literal>"cyan"</literal> or <literal>"magenta"</literal>. Again, you need to call <literal>clear screen</literal> first and add a semicolon if you want to suppress the implicit newline.</para>
+		<para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal></para>
 	      </listitem>
 	    </varlistentry>
 
@@ -8200,7 +8241,7 @@ print color("green","yellow") at(5,5) a$,b
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><literal>print color("green","yellow") a$,b</literal></term>
+	      <term><literal>print color("green","yellow") at(5,5) a$,b</literal></term>
 	      <listitem>
 		<para>A color and a position (in this sequence, not the other way around) may be specified at once.</para>
 	      </listitem>
@@ -8253,6 +8294,7 @@ print color(fore$,back$) text$
 	  <para><function>color()</function> takes one or two string-arguments, specifying the color of the text and (optionally) the background.</para>
 	  <para>The one or two strings passed to <function>color()</function> can be one of these: <systemitem>"black"</systemitem>, <systemitem>"white"</systemitem>, <systemitem>"red"</systemitem>, <systemitem>"blue"</systemitem>, <systemitem>"green"</systemitem>, <systemitem>"yellow"</systemitem>, <systemitem>"cyan"</systemitem> and <systemitem>"magenta"</systemitem> (which can be abbreviated as <systemitem>"bla"</systemitem>, <systemitem>"whi"</systemitem>, <systemitem>"red"</systemitem>, <systemitem>"blu"</systemitem>, <systemitem>"gre"</systemitem>, <systemitem>"yel"</systemitem>, <systemitem>"cya"</systemitem> and <systemitem>"mag"</systemitem> respectively).</para>
 	  <para><function>color()</function> can only be used, if <function><link linkend="ref_clear_screen">clear scren</link></function> has been issued at least once.</para>
+         <para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal></para>	  
 	  <para>Note, that <function>color()</function> can be written as <function>colour()</function> too.</para>
 	</refsection>
 	<refsection><info><title>Example</title></info>
@@ -9588,6 +9630,7 @@ c$=str$(x,"%g")
 	  
 	  <para>The <function>str$</function>-function accepts a numeric argument and returns it as a string.</para>
 	  <para>Note: As a special and trivial case <function>str$</function> also accepts a single string-argument, which it just returns unchanged; this can be useful e.g. when used with <function><link linkend="ref_eval2">eval$</link></function>, see the example there for an application.</para>
+	  <para>Please note, that this function is not related with the similar named function <function><link linkend="ref_string">string$</link></function>.</para>	  
 	  <para>For the common case of converting a number to a string, the process can be controlled with an optional third argument (the <emphasis>format</emphasis> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <emphasis>C-style</emphasis> and <emphasis>basic-style</emphasis>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the <application>C</application> programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<literal>#</literal>'; groups of (usually three) digits may be separated with colons ('<literal>,</literal>'), the decimal dot must be marked by a literal dot ('<literal>.</literal>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</para>
 	  <para>Note, that for clarity, each space in the result has been replaced by the letter 'x', because it would be hard to figure out, how many spaces are produced <emphasis>exactly</emphasis> otherwise.</para>
 	  <table frame="all"><info><title>Examples for the format argument</title></info>
@@ -9691,6 +9734,84 @@ loop
 	<refsection><info><title>See also</title></info>
 	  
 	  <para><function><link linkend="ref_print">print</link></function>, <function><link linkend="ref_using">using</link></function></para>
+	</refsection>
+      </refentry>
+
+      <refentry xml:id="ref_string">
+	<refmeta>
+	  <refentrytitle>string$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>string$()</refname>
+	  <refpurpose>create a new string by repeating the given one a certain number of times</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis format="linespecific">
+print string$(21,"-")	    
+print string$(10,"-=")+"-"
+          </synopsis>
+	</refsynopsisdiv>
+	<refsection><info><title>Description</title></info>
+	  
+	  <para>The <function>string$</function>-function takes a numeric and a string argument and and returns a new string that repeats the given string the given number of times.</para>
+	  <para>Please note, that this function is not related with the similar named function <function><link linkend="ref_str">str$</link></function>.</para>
+	  <para>The function <function>string$</function> can be useful e.g. to build progress-bars. It can also help in formatting text e.g. two separate sections of text or to underline headings; see the example below. <function>string$</function> helps you to write shorter code, where otherwise a <function>for</function>-loop might be needed.</para>
+	</refsection>
+	<refsection><info><title>Example</title></info>
+	  <para>The example below uses <function>string$</function> to structure text, either with horizontal lines or with underlined headings.</para>
+	  <informalexample>
+	    <programlisting>
+heading(1, "section")
+print "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+heading(2, "subsection")
+print "Sed porttitor consequat pellentesque."
+print
+print string$(10," ") + string$(20,"~")
+print
+print "Etiam est leo, dictum id pharetra feugiat, volutpat id turpis."
+print
+
+sub heading(level, text$)
+  if (level = 1) then
+    print
+    print
+    print upper$(text$)
+    print string$(len(text$),"=")
+    print
+  else
+    print
+    print text$
+    print string$(len(text$),"-")
+    print    
+  endif
+end sub
+            </programlisting>
+	  <para>Its output is this:</para>
+	  <screen>
+
+
+SECTION
+=======
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+subsection
+----------
+
+Sed porttitor consequat pellentesque.
+
+          ~~~~~~~~~~~~~~~~~~~~
+
+Etiam est leo, dictum id pharetra feugiat, volutpat id turpis.
+
+</screen>
+
+	    <para>Note, that also multi-character strings can be multiplied like this.</para>
+	  </informalexample>
+	</refsection>
+	<refsection><info><title>See also</title></info>
+
+	  <para>Unrelated but with a similar name: <link linkend="ref_str"><function>str$</function></link></para>
 	</refsection>
       </refentry>
 
