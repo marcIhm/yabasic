@@ -4,7 +4,7 @@ dnl  Maybe run these two lines before:
 dnl    autoreconf --install
 dnl    automake --add-missing --copy
 
-AC_INIT([yabasic], [2.90.5])
+AC_INIT([yabasic], [2.91.0])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
 LT_INIT

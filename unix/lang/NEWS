@@ -1,6 +1,11 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.91.0 (January 7, 2025)
+  - New poke 'console_foreground_intensity' to change (once perrun)
+    the intensity of colored text printed with yabasic.
+  - New function string$ to multiply a string.
+  
 Version 2.90.5 (November 11, 2024)
   - Fixed a bug related with 'inkey$'.
   - For Windows: Needed to switch to a new version of Visual Studio.
