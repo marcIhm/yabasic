@@ -80,8 +80,8 @@ static char *currchar;             /* current char to read */
 #ifdef UNIX
 FILE *lineprinter = NULL; /* handle for line printer */
 #else
-static short stdfc; /* standard foreground color of window */
-static short stdbc; /* standard background color of window */
+static short stdfc; /* standard foreground color for console */
+static short stdbc; /* standard background color for console */
 HANDLE gotwinkey = INVALID_HANDLE_VALUE;   /* mutex to signal key reception */
 char conkeybuff[100];                      /* Key received from console */
 char winkeybuff[100];                      /* Key received from window */
@@ -256,11 +256,11 @@ static void curinit(void) /* initialize curses */
 
 #ifdef UNIX
   if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
-    sprintf(string, "could not get control of terminal: %s",
+    sprintf(estring, "could not get control of terminal: %s",
             my_strerror(errno));
-    error(sERROR, string);
+    error(sERROR, estring);
     return;
-  };
+  };  
   if (!initscr()) {
     error(sERROR, "could not initialize curses");
     return;
@@ -283,7 +283,7 @@ static void curinit(void) /* initialize curses */
   LINES = coninfo.srWindow.Bottom + 1;
   initcol();
 #endif
-  curinized = TRUE;
+  curinized = TRUE;  
 }
 
 char *inkey(double maxtime) /* get char from keyboard */

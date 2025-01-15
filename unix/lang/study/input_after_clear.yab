@@ -1,0 +1,14 @@
+# For Windows:
+#
+#   C:/work/yabasic/windows/lang/Release/yabasic.exe C:/work/yabasic/unix/lang/study/input_after_clear.yab
+#
+
+# A problem described on [2025-01-8 Wed]
+
+poke "console_foreground_intensity","bright"
+clear screen
+
+print color("yellow") "This is bright yellow on the default background"
+print
+input "But this input command changes the foreground and background to default values! (press ENTER) " ok$
+print "done"

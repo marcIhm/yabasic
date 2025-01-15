@@ -241,7 +241,6 @@ int main(int argc, char **argv) {
     }
     error(sDEBUG, string);
   }
-
   /* brush up library path */
   if (!library_path[0]) {
     strcpy(library_path, library_default);
@@ -1970,7 +1969,7 @@ void error_with_position(int severity, char *message, char *filename,
 
   if (severity >= severity_threshold) {
 #ifdef UNIX
-    if (curinized) {
+    if (curinized && severity >= sERROR) {
       endwin();
       curinized = FALSE;
     }
