@@ -1,0 +1,17 @@
+
+# Run like this:
+#
+# C:/work/yabasic/windows/lang/Release/yabasic.exe C:/work/yabasic/unix/lang/study/two_print.yab
+clear screen
+#
+#
+# Use either old Console-Host or new Windows-Terminal, both with a white foreground and a blue background:
+#
+# Console-Host: First line is yellow on black, second line is white on blue, rest of window is black
+# Windows-Terminal: First line is yellow on blue, second line is white on blue, rest of window is blue
+#
+# See https://github.com/marcIhm/yabasic/issues/66
+#
+
+print color("yellow") "This explicitly sets the foreground to bright yellow with the color-clause"
+print "This does not use the color-clause"

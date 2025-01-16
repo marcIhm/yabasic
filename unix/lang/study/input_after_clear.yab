@@ -9,6 +9,6 @@ poke "console_foreground_intensity","bright"
 clear screen
 
 print color("yellow") "This is bright yellow on the default background"
-print
+print "foo"
 input "But this input command changes the foreground and background to default values! (press ENTER) " ok$
 print "done"
