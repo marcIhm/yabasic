@@ -242,8 +242,7 @@ void clearscreen() /* clear entire screen */
   coord.Y = 0;
   FillConsoleOutputCharacter(ConsoleOutput, ' ', LINES * COLS, coord, &written);
   FillConsoleOutputAttribute(
-      ConsoleOutput, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
-      LINES * COLS, coord, &written);
+      ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
   SetConsoleCursorPosition(ConsoleOutput, coord);
 #endif
 }
@@ -1355,7 +1354,7 @@ void colour(struct command *cmd) /* switch on colour */
     }
 #else
     SetConsoleTextAttribute(
-        ConsoleOutput, (WORD)(yc2oc(fc, TRUE) | (back ? yc2oc(bc, FALSE) : 0)));
+        ConsoleOutput, (WORD)(yc2oc(fc, TRUE) | (back ? yc2oc(bc, FALSE) : stdbc)));
 #endif
   }
 }
