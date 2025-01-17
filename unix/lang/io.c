@@ -241,8 +241,8 @@ void clearscreen() /* clear entire screen */
   coord.X = 0;
   coord.Y = 0;
   FillConsoleOutputCharacter(ConsoleOutput, ' ', LINES * COLS, coord, &written);
-  FillConsoleOutputAttribute(
-      ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
+  /* This use of attributes needs to be consistent with the use in colour() */
+  FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
   SetConsoleCursorPosition(ConsoleOutput, coord);
 #endif
 }
@@ -1290,6 +1290,7 @@ void colour(struct command *cmd) /* switch on colour */
       attron(A_BOLD);
     }
 #else
+    /* This use of attributes needs to be consisten with the use in clearscreen() */
     SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));
     return;
 #endif
@@ -1298,8 +1299,7 @@ void colour(struct command *cmd) /* switch on colour */
     attrset(A_REVERSE);
     return;
 #else
-    SetConsoleTextAttribute(
-        ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), 0) | yc2oc(oc2yc(stdbc), 1)));
+    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), 0) | yc2oc(oc2yc(stdbc), 1)));
     return;
 #endif
   } else { /* decode colours */
