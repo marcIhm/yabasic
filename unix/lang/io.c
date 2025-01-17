@@ -52,8 +52,8 @@ extern int yyparse(); /* call bison parser */
 static int onechar(void);   /* read one char from currentinstream */
 static void backchar(int);  /* put char back into stream */
 static void readline(void); /* read one line from current stream */
-static void curinit(void);  /* initialize curses */
-static void initcol(void);  /* initialize curses colors */
+static void con_xcap_init(void);  /* initialize console extra capabilities */
+static void initcol(void);  /* initialize colors */
 int checkstream(void);      /* test if currst is still valid */
 #ifdef WINDOWS
 static DWORD keythread(LPWORD);          /* wait for key input from console */
@@ -75,7 +75,7 @@ static int currstr = STDIO_STREAM; /* currently switched stream */
 static FILE *cinstr;               /* current stream for input */
 static FILE *coutstr;              /* current stream for output */
 static char linebuffer[INBUFFLEN]; /* buffer for one line of input */
-int curinized = FALSE;             /* true, if curses has been initialized */
+int con_xcap_inized = FALSE;             /* true, if console extra capabilities have been initialized */
 static char *currchar;             /* current char to read */
 #ifdef UNIX
 FILE *lineprinter = NULL; /* handle for line printer */
@@ -125,7 +125,7 @@ void print(struct command *cmd) /* print on screen */
   }
   switch (type) {
   case 'n': /* print newline */
-    if (curinized && coutstr == stdout) {
+    if (con_xcap_inized && coutstr == stdout) {
 #ifdef WINDOWS
       onestring("\r\n");
       break;
@@ -211,7 +211,7 @@ void mymove() /* move to specific position on screen */
   if (x > COLS - 1) {
     x = COLS - 1;
   }
-  if (!curinized) {
+  if (!con_xcap_inized) {
     error(sERROR, "need to call 'clear screen' first");
     return;
   }
@@ -231,8 +231,8 @@ void clearscreen() /* clear entire screen */
   DWORD written; /* number of chars actually written */
   COORD coord;   /* coordinates to start writing */
 #endif
-  if (!curinized) {
-    curinit();
+  if (!con_xcap_inized) {
+    con_xcap_init();
   }
 #ifdef UNIX
   clear();
@@ -248,7 +248,7 @@ void clearscreen() /* clear entire screen */
 #endif
 }
 
-static void curinit(void) /* initialize curses */
+static void con_xcap_init(void) /* initialize console extra capabilities, e.g. curses */
 {
 #ifdef WINDOWS
   CONSOLE_SCREEN_BUFFER_INFO coninfo; /* receives console size */
@@ -283,7 +283,7 @@ static void curinit(void) /* initialize curses */
   LINES = coninfo.srWindow.Bottom + 1;
   initcol();
 #endif
-  curinized = TRUE;  
+  con_xcap_inized = TRUE;  
 }
 
 char *inkey(double maxtime) /* get char from keyboard */
@@ -311,7 +311,7 @@ char *inkey(double maxtime) /* get char from keyboard */
   if (maxtime >= 0.0 && maxtime < 0.01) {
     maxtime = 0.01;
   }
-  if (!curinized) {
+  if (!con_xcap_inized) {
     error(sERROR, "need to call 'clear screen' first");
     return my_strdup("");
   }
@@ -1138,7 +1138,7 @@ static void readline(void) /* read one line from current stream */
   }
   linebuffer[0] = '\0';
 #ifdef UNIX
-  if (curinized && cinstr == stdin) {
+  if (con_xcap_inized && cinstr == stdin) {
     curs_set(1);
     getyx(stdscr, y, x);
 #ifdef HAVE_GETNSTR
@@ -1157,7 +1157,7 @@ static void readline(void) /* read one line from current stream */
     refresh();
   }
 #else
-  if (curinized && cinstr == stdin) {
+  if (con_xcap_inized && cinstr == stdin) {
     FlushConsoleInputBuffer(ConsoleInput);
     ReadConsole(ConsoleInput, linebuffer, INBUFFLEN, &read, NULL);
     if (read >= 2) {
@@ -1240,7 +1240,7 @@ void onestring(char *s) /* write string to current file */
   if (!checkstream()) {
     return;
   }
-  if (curinized && abs(currstr) == STDIO_STREAM) {
+  if (con_xcap_inized && abs(currstr) == STDIO_STREAM) {
 #ifdef UNIX
     addstr(s);
     refresh();
@@ -1277,12 +1277,12 @@ void colour(struct command *cmd) /* switch on colour */
   char *fore = NULL, *back = NULL, *p;
   int fc, bc;
 
-  if (cmd->args && !curinized) {
+  if (cmd->args && !con_xcap_inized) {
     error(sERROR, "need to call 'clear screen' first");
     return;
   }
   if (cmd->args == 0) {
-    if (!curinized) {
+    if (!con_xcap_inized) {
       return;
     }
 #ifdef UNIX
@@ -1360,7 +1360,7 @@ void colour(struct command *cmd) /* switch on colour */
   }
 }
 
-static void initcol(void) /* initialize curses colors */
+static void initcol(void) /* initialize console colors */
 {
   static int first = TRUE;
 #ifdef UNIX

@@ -979,7 +979,7 @@ static void end_it(void) /* perform shutdown-operations */
     waitpid(backpid, &status, 0);
     backpid = -1;
   }
-  if ((curinized || winopened) && endreason != rREQUEST) {
+  if ((con_xcap_inized || winopened) && endreason != rREQUEST) {
 #else
   if (!Commandline && endreason != rREQUEST) {
 #endif
@@ -988,7 +988,7 @@ static void end_it(void) /* perform shutdown-operations */
     mystream(STDIO_STREAM);
     onestring("---Program done, press RETURN---\n");
 #ifdef UNIX
-    if (curinized) {
+    if (con_xcap_inized) {
       int ch = 0;
       raw();
       cbreak();
@@ -1013,9 +1013,9 @@ static void end_it(void) /* perform shutdown-operations */
   }
 
 #ifdef UNIX
-  if (curinized) {
+  if (con_xcap_inized) {
     endwin();
-    curinized = FALSE;
+    con_xcap_inized = FALSE;
   }
 #else
   if (printerfont) {
@@ -1969,9 +1969,9 @@ void error_with_position(int severity, char *message, char *filename,
 
   if (severity >= severity_threshold) {
 #ifdef UNIX
-    if (curinized && severity >= sERROR) {
+    if (con_xcap_inized && severity >= sERROR) {
       endwin();
-      curinized = FALSE;
+      con_xcap_inized = FALSE;
     }
 #endif
     switch (severity) {

@@ -917,12 +917,12 @@ static int do_system(
 {
 #ifdef UNIX
   int ret;
-  if (curinized) {
+  if (con_xcap_inized) {
     reset_shell_mode();
     putp(exit_ca_mode);
   }
   ret = system(cmd);
-  if (curinized) {
+  if (con_xcap_inized) {
     if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
       sprintf(string, "could not get control of terminal: %s",
               my_strerror(errno));
@@ -1533,7 +1533,7 @@ void poke(struct command *cmd) /* poke into internals */
     }
 
   } else if (!strcmp(dest, "console_foreground_intensity") || !strcmp(dest, "screen_foreground_intensity") || !strcmp(dest, "terminal_foreground_intensity")) {
-    if (curinized) {
+    if (con_xcap_inized) {
       /* Remark: it is tempting to loosen the below restriction. However, doing this would
 	 open a can of bugs and missing implementation-details. E.g. currently we have no
 	 intensity in the result of getscreen$(), but we would need this, if intensity could

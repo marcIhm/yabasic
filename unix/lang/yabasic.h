@@ -131,7 +131,7 @@ extern char *inter_path;	/* name of interpreter executing; i.e. ARGV[0] */
 extern FILE *streams[];		/* file streams */
 extern int read_controls;	/* TRUE, if input should read control characters */
 extern int stream_modes[];	/* modes for streams */
-extern int curinized;		/* true, if curses has been initialized */
+extern int con_xcap_inized;		/* true, if curses extra capabilities have been initialized */
 extern int badstream (int, int);	/* test for valid stream id */
 void myseek (struct command *);	/* reposition file pointer */
 void mystream (int);		/* switch to specified stream */
