@@ -109,6 +109,8 @@ extern int severity_threshold;  /* minimum severity the user wants to see */
 extern int severity_so_far;     /* maximum severity that has been printed until now */
 extern int x11_note_on_receive_expose;  /* print a note when receiving this event */
 extern int con_fore_inten; /* console foreground intensity */
+extern int con_fore_col; /* console foreground color */
+extern int con_back_col; /* console background color */
 extern int interactive;		/* true, if commands come from stdin */
 extern char *progname;		/* name of yabasic-program */
 extern char *cexplanation[];	/* explanations of commands */
@@ -135,6 +137,9 @@ extern int con_xcap_inized;		/* true, if curses extra capabilities have been ini
 extern int badstream (int, int);	/* test for valid stream id */
 void myseek (struct command *);	/* reposition file pointer */
 void mystream (int);		/* switch to specified stream */
+int name2yc(char *); /* convert a color name to an integer */
+char *yc2name(int); /* convert an integer to a color name */
+void con_xcap_deinit(void); /* bring console back to normal/inital state */
 #ifdef WINDOWS
 extern HANDLE gotwinkey;		/* mutex to signal key reception */
 extern char conkeybuff[]; /* Key received from console */

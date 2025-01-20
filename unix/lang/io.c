@@ -60,7 +60,6 @@ static DWORD keythread(LPWORD);          /* wait for key input from console */
 static int is_valid_key(INPUT_RECORD *); /* check if input rec is valid key */
 static void decode_key(int, char *);     /* decode keycode into string */
 #endif
-int name2yc(char *); /* convert a color name to an integer */
 int yc2oc(int, int); /* convert a yabasic color to operating system color */
 char *yc2short(int); /* convert yabasic colours to short colour name */
 int oc2yc(int);      /* convert an operating system color to yabasic color */
@@ -82,6 +81,8 @@ FILE *lineprinter = NULL; /* handle for line printer */
 #else
 static short stdfc; /* standard foreground color for console */
 static short stdbc; /* standard background color for console */
+static short stdfc_orig; /* initial standard foreground color for console */
+static short stdbc_orig; /* initial standard background color for console */
 HANDLE gotwinkey = INVALID_HANDLE_VALUE;   /* mutex to signal key reception */
 char conkeybuff[100];                      /* Key received from console */
 char winkeybuff[100];                      /* Key received from window */
@@ -243,6 +244,7 @@ void clearscreen() /* clear entire screen */
   FillConsoleOutputCharacter(ConsoleOutput, ' ', LINES * COLS, coord, &written);
   /* This use of attributes needs to be consistent with the use in colour() */
   FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
+  SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));  
   SetConsoleCursorPosition(ConsoleOutput, coord);
 #endif
 }
@@ -283,6 +285,19 @@ static void con_xcap_init(void) /* initialize console extra capabilities, e.g. c
   initcol();
 #endif
   con_xcap_inized = TRUE;  
+}
+
+void con_xcap_deinit(void) /* bring console back to normal/inital state */
+{
+  if (!con_xcap_inized) {
+    return;
+  }
+#ifdef UNIX
+  endwin();
+#else
+  SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc_orig | stdbc_orig));
+#end
+  con_xcap_inized = FALSE;    
 }
 
 char *inkey(double maxtime) /* get char from keyboard */
@@ -1285,6 +1300,7 @@ void colour(struct command *cmd) /* switch on colour */
       return;
     }
 #ifdef UNIX
+    /* turn of all attributes including color, probably bringing us back to COLOR_PAIR(0) */
     attrset(A_NORMAL);
     if (con_fore_inten == cciBRIGHT) {
       attron(A_BOLD);
@@ -1299,7 +1315,7 @@ void colour(struct command *cmd) /* switch on colour */
     attrset(A_REVERSE);
     return;
 #else
-    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), 0) | yc2oc(oc2yc(stdbc), 1)));
+    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), TRUE) | yc2oc(oc2yc(stdbc), FALSE)));
     return;
 #endif
   } else { /* decode colours */
@@ -1378,13 +1394,14 @@ static void initcol(void) /* initialize console colors */
     return;
   }
   start_color();
-  assume_default_colors(-1, -1);
+  /* this makes color pair 0 to consist of default fore- and background */
+  assume_default_colors(yc2oc(con_fore_col, true), yc2oc(con_back_col, false));
   /* 73 = 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
   if (COLOR_PAIRS < 73) return;
   
   for (b = 0; b < 8; b++) {
     for (f = 0; f < 8; f++) {
-      /* arguments are fore, back. Skip color pair 0 as it cannot be modified */
+      /* arguments are fore, back. Skip color pair 0 which has been set above */
       /* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */
       init_pair(f + b * 8 + 1, yc2oc(f, TRUE), yc2oc(b, FALSE));
     }
@@ -1400,8 +1417,18 @@ static void initcol(void) /* initialize console colors */
 
 #else
   GetConsoleScreenBufferInfo(ConsoleOutput, &csbi);
-  stdfc = csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
-  stdbc = csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+  stdfc_orig = csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+  if (con_fore_col == -1) {
+    stdfc = stdfc_orig
+  } else {
+    stdfc = yc2oc(con_fore_col, TRUE);
+  }
+  stdbc_orig = csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+  if (con_back_col == -1) {
+    stdbc = stdbc_orig
+  } else {
+    stdbc = yc2oc(con_back_col, FALSE);
+  }
   if (con_fore_inten == cciBRIGHT) {
     stdfc |= FOREGROUND_INTENSITY;
   }    
@@ -1442,11 +1469,40 @@ int name2yc(char *name) /* convert a color name to an integer */
   return -1;
 }
 
+char *yc2name(int yc) /* convert an integer to a color name */
+{
+  if (yc == YC_BLACK) {
+    return my_strdup("black");
+  }
+  if (yc == YC_WHITE) {
+    return my_strdup("white");    
+  }
+  if (yc == YC_RED) {
+    return my_strdup("red");    
+  }
+  if (yc == YC_BLUE) {
+    return my_strdup("blue");    
+  }
+  if (yc == YC_GREEN) {
+    return my_strdup("green");
+  }
+  if (yc == YC_YELLOW) {
+    return my_strdup("yellow");    
+  }
+  if (yc == YC_CYAN) {
+    return my_strdup("cyan");    
+  }
+  if (yc == YC_MAGENTA) {
+    return my_strdup("magenta");    
+  }
+  return my_strdup("invalid");
+}
+
 int yc2oc(int yc,
           int fore) /* convert a yabasic color to operating system color */
 {
 #ifdef UNIX
-  fore = 0; /* stop gcc from complaining */
+  fore = FALSE; /* stop gcc from complaining */
   if (yc == YC_BLACK) {
     return COLOR_BLACK;
   }

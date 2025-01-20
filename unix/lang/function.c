@@ -1537,7 +1537,7 @@ void poke(struct command *cmd) /* poke into internals */
       /* Remark: it is tempting to loosen the below restriction. However, doing this would
 	 open a can of bugs and missing implementation-details. E.g. currently we have no
 	 intensity in the result of getscreen$(), but we would need this, if intensity could
-	 be changed. */
+	 be changed multiple times during program run. */
       sprintf(estring, "console_foreground_intensity cannot be changed after 'clear screen' has been called");
       error(sERROR, estring);
     } else {
@@ -1548,6 +1548,28 @@ void poke(struct command *cmd) /* poke into internals */
       } else if (!strcmp(string_arg, "normal")) {
 	con_fore_inten = cciNORMAL;
       }
+    }
+  } else if (!strcmp(dest, "console_foreground_color") || !strcmp(dest, "screen_foreground_color") || !strcmp(dest, "terminal_foreground_color")) {
+    if (con_xcap_inized) {
+      /* Maybe see remark above for console_foreground_intensity */
+      sprintf(estring, "console_foreground_color cannot be changed after 'clear screen' has been called");
+      error(sERROR, estring);
+    }
+    con_fore_col = name2yc(string_arg);
+    if (con_fore_col < 0) {
+      sprintf(estring, "unknown foreground colour: '%s'", string_arg);
+      error(sERROR, estring);
+    }
+  } else if (!strcmp(dest, "console_background_color") || !strcmp(dest, "screen_background_color") || !strcmp(dest, "terminal_background_color")) {
+    if (con_xcap_inized) {
+      /* Maybe see remark above for console_foreground_intensity */
+      sprintf(estring, "console_background_color cannot be changed after 'clear screen' has been called");
+      error(sERROR, estring);
+    }
+    con_back_col = name2yc(string_arg);
+    if (con_back_col < 0) {
+      sprintf(estring, "unknown background colour: '%s'", string_arg);
+      error(sERROR, estring);
     }
   } else if (!strcmp(dest, "textalign") && string_arg) {
     if (!check_alignment(string_arg)) {
@@ -1722,6 +1744,29 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       return my_strdup("fatal");
     } else {
       return my_strdup("unknown");
+    }
+  } else if (!strcmp(dest, "console_foreground_intensity") || !strcmp(dest, "screen_foreground_intensity") || !strcmp(dest, "terminal_foreground_intensity")) {
+    if (con_fore_inten == cciLEGACY) {
+      return my_strdup("legacy");
+    } else if (con_fore_inten == cciBRIGHT) {
+      return my_strdup("bright");
+    } else if (con_fore_inten == cciNORMAL) {
+      return my_strdup("normal");
+    } else {
+      /* cannot happen, but anyway */
+      return my_strdup("unknown");
+    }
+  } else if (!strcmp(dest, "console_foreground_color") || !strcmp(dest, "screen_foreground_color") || !strcmp(dest, "terminal_foreground_color")) {
+    if (con_fore_col == -1) {
+      return my_strdup("unset");
+    } else {
+      return yc2name(con_fore_col);
+    }
+  } else if (!strcmp(dest, "console_background_color") || !strcmp(dest, "screen_background_color") || !strcmp(dest, "terminal_background_color")) {
+    if (con_back_col == -1) {
+      return my_strdup("unset");
+    } else {
+      return yc2name(con_back_col);
     }
   } else if (!strcmp(dest, "textalign")) {
     return my_strdup(text_align);

@@ -1,0 +1,31 @@
+# Help while implementing the new pokes for console_back/foreground_intensity
+#
+# For Unix invoke:
+#
+#   $HOME/yabasic/unix/lang/yabasic ~/yabasic/unix/lang/study/default_console_colors.yab
+#
+# For Windows:
+#
+#   C:/work/yabasic/windows/lang/Release/yabasic.exe C:/work/yabasic/unix/lang/study/default_console_colors.yab
+#
+
+#
+# Expected behaviour:
+#
+# - Before first "Press RETURN": colors should be standard of terminal/console
+# - After: Colors should be blue on yellow all over the screen
+# - After second "Press RETURN" but before end of yabasic: colors should be the same as above
+# - After end of yabasic: colours should be like initially
+#
+print peek$("console_foreground_color")
+print peek$("console_background_color")
+poke "console_foreground_color", "blue"
+poke "console_background_color", "yellow"
+input "Press RETURN to start " a$
+clear screen
+# This should appear yellow on blue
+print "Hello !"
+input "Press RETURN to continue " a$
+for i=1 to 100:print i:next i
+print peek$("console_foreground_color")
+print peek$("console_background_color")

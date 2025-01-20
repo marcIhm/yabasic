@@ -79,6 +79,8 @@ static int warning_count; /* number of warning messages */
 static int error_count;   /* number of error messages */
 int x11_note_on_receive_expose = FALSE;  /* print a note when receiving this event */
 int con_fore_inten = cciLEGACY; /* console foreground intensity */
+int con_fore_col = -1; /* console foreground color */
+int con_back_col = -1; /* console background color */
 int interactive;          /* true, if commands come from stdin */
 int is_bound;             /* true, if this executable is bound */
 static char *to_bind = NULL; /* name bound program to be written */
@@ -1012,12 +1014,8 @@ static void end_it(void) /* perform shutdown-operations */
 #endif
   }
 
-#ifdef UNIX
-  if (con_xcap_inized) {
-    endwin();
-    con_xcap_inized = FALSE;
-  }
-#else
+  con_xcap_deinit();  
+#ifdef WINDOWS
   if (printerfont) {
     DeleteObject(printerfont);
   }
@@ -1969,9 +1967,8 @@ void error_with_position(int severity, char *message, char *filename,
 
   if (severity >= severity_threshold) {
 #ifdef UNIX
-    if (con_xcap_inized && severity >= sERROR) {
-      endwin();
-      con_xcap_inized = FALSE;
+    if (severity >= sERROR) {
+      con_xcap_deinit();
     }
 #endif
     switch (severity) {
