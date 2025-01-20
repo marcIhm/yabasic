@@ -168,6 +168,13 @@ int main(int argc, char **argv) {
   ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
   GetConsoleMode(ConsoleInput, &InitialConsole);
 
+  /* This seems to make color-handling more robust, and brings windows console into a sane
+     state see, that cannot (?) be reached with ordinary win32-api-calls. Especially for
+     study/default_console_colors.yab; see also
+     https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c;
+     see also system("cls") in io.c */
+  system("color");
+  
   /* request processing of excape sequences */
   GetConsoleMode(ConsoleOutput, &consoleflags);
   SetConsoleMode(ConsoleOutput, consoleflags | ENABLE_PROCESSED_OUTPUT |

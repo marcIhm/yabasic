@@ -12,11 +12,18 @@
 #
 # Expected behaviour:
 #
-# - Before first "Press RETURN": colors should be standard of terminal/console
+# - Before first "Press RETURN": colors should be standard of terminal/console;
+#   open new terminal, if prior tries have messed it up
 # - After: Colors should be blue on yellow all over the screen
 # - After second "Press RETURN" but before end of yabasic: colors should be the same as above
 # - After end of yabasic: colours should be like initially
 #
+# This should be true for three cases:
+# - Linux in Windows-Terminal
+# - cmd in Windows-Terminal
+# - cmd in Windows-Console
+#
+
 print peek$("console_foreground_color")
 print peek$("console_background_color")
 poke "console_foreground_color", "blue"

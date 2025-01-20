@@ -243,9 +243,11 @@ void clearscreen() /* clear entire screen */
   coord.Y = 0;
   FillConsoleOutputCharacter(ConsoleOutput, ' ', LINES * COLS, coord, &written);
   /* This use of attributes needs to be consistent with the use in colour() */
-  FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
   SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));  
+  FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
   SetConsoleCursorPosition(ConsoleOutput, coord);
+  /* See the comments around system("color") in main.c for motivation */
+  system("cls");
 #endif
 }
 
@@ -296,7 +298,7 @@ void con_xcap_deinit(void) /* bring console back to normal/inital state */
   endwin();
 #else
   SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc_orig | stdbc_orig));
-#end
+#endif
   con_xcap_inized = FALSE;    
 }
 
@@ -1300,7 +1302,7 @@ void colour(struct command *cmd) /* switch on colour */
       return;
     }
 #ifdef UNIX
-    /* turn of all attributes including color, probably bringing us back to COLOR_PAIR(0) */
+    /* Turn of all attributes including color, probably bringing us back to COLOR_PAIR(0) */
     attrset(A_NORMAL);
     if (con_fore_inten == cciBRIGHT) {
       attron(A_BOLD);
@@ -1419,13 +1421,13 @@ static void initcol(void) /* initialize console colors */
   GetConsoleScreenBufferInfo(ConsoleOutput, &csbi);
   stdfc_orig = csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
   if (con_fore_col == -1) {
-    stdfc = stdfc_orig
+    stdfc = stdfc_orig;
   } else {
     stdfc = yc2oc(con_fore_col, TRUE);
   }
   stdbc_orig = csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
   if (con_back_col == -1) {
-    stdbc = stdbc_orig
+    stdbc = stdbc_orig;
   } else {
     stdbc = yc2oc(con_back_col, FALSE);
   }
