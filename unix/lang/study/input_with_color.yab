@@ -1,0 +1,17 @@
+# Study colored input
+#
+# For Unix invoke:
+#
+#   $HOME/yabasic/unix/lang/yabasic ~/yabasic/unix/lang/study/input_with_color.yab
+#
+# For Windows:
+#
+#   C:/work/yabasic/windows/lang/Release/yabasic.exe C:/work/yabasic/unix/lang/study/input_with_color.yab
+#
+
+poke "console_foreground_color", "yellow"
+poke "console_background_color", "green"
+clear screen
+input "yellow on green; press RETURN " a$
+input at(10,10) color("black") "black on green; press RETURN " a$
+input at(10,12) color("red","white") "red on white; press RETURN " a$

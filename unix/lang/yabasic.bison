@@ -814,7 +814,13 @@ inputbody: '#' tSYMBOL {add_command_with_sym_and_diag(cPUSHDBLSYM,dotify($2,FALS
   | '#' tDIGITS {create_pushdbl(atoi($2));create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
   | '#' '(' expression ')' {create_pps(cPUSHSTREAM,1);} inputlist {create_pps(cPOPSTREAM,0);}
   | tAT '(' expression ',' expression ')' {add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_pps(cPOPSTREAM,0);}
-  | {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_pps(cPOPSTREAM,0);}
+  | tREVERSE tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(1);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | tCOLOUR '(' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(2);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | tCOLOUR '(' string_expression  ',' string_expression ')' tAT '(' expression ',' expression ')' {add_command(cMOVE);create_colour(3);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | tAT '(' expression ',' expression ')' tREVERSE {create_colour(1);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression ')' {create_colour(2);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | tAT '(' expression ',' expression ')' tCOLOUR '(' string_expression  ',' string_expression ')' {create_colour(3);add_command(cMOVE);create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
+  | {create_pushdbl(STDIO_STREAM);create_pps(cPUSHSTREAM,1);} prompt inputlist {create_colour(0);create_pps(cPOPSTREAM,0);}
   ;
 
 prompt: /* empty */ {create_pushstr("?");create_print('s');} 

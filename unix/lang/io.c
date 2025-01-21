@@ -259,6 +259,16 @@ static void con_xcap_init(void) /* initialize console extra capabilities, e.g. c
   CONSOLE_SCREEN_BUFFER_INFO coninfo; /* receives console size */
 #endif
 
+  if (con_fore_col != -1 && con_back_col == -1) {
+    sprintf(estring, "only 'console_foreground_color' has been poked, but you need to poke 'console_background_color' too");
+    error(sERROR, estring);
+    return;
+  }
+  if (con_fore_col == -1 && con_back_col != -1) {
+    sprintf(estring, "only 'console_background_color' has been poked, but you need to poke 'console_foreground_color' too");
+    error(sERROR, estring);
+    return;
+  }
 #ifdef UNIX
   if (tcsetpgrp(STDIN_FILENO, getpgid(getpid()))) {
     sprintf(estring, "could not get control of terminal: %s",
@@ -1398,7 +1408,7 @@ static void initcol(void) /* initialize console colors */
     return;
   }
   start_color();
-  /* this makes color pair 0 to consist of default fore- and background */
+  /* This makes color pair 0 to consist of default fore- and background */
   assume_default_colors(yc2oc(con_fore_col, true), yc2oc(con_back_col, false));
   /* 73 = 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
   if (COLOR_PAIRS < 73) return;

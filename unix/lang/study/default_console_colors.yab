@@ -30,8 +30,10 @@ poke "console_foreground_color", "blue"
 poke "console_background_color", "yellow"
 input "Press RETURN to start " a$
 clear screen
-# This should appear yellow on blue
+# This should appear blue on yellow
 print "Hello !"
+print color("red") "red on default bg"
+print color("red","cyan") "red on cyan"
 input "Press RETURN to continue " a$
 for i=1 to 100:print i:next i
 print peek$("console_foreground_color")
