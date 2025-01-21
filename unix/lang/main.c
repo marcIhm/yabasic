@@ -167,12 +167,16 @@ int main(int argc, char **argv) {
   ConsoleInput = GetStdHandle(STD_INPUT_HANDLE);
   ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
   GetConsoleMode(ConsoleInput, &InitialConsole);
-
-  /* This seems to make color-handling more robust, and brings windows console into a sane
-     state see, that cannot (?) be reached with ordinary win32-api-calls. Especially for
-     study/default_console_colors.yab; see also
-     https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c;
-     see also system("cls") in io.c */
+  /* In theory, the system-call below does the same as the api-calls above. However, this
+     seems to make color-handling more robust, and brings windows console into a sane state,
+     that cannot (?) be reached with ordinary api-calls. This is needed especially for
+     study/default_console_colors.yab if it is started several times in the same window of
+     windows console-host (windows-terminal is okay); in that case traces of the yellow
+     color appear even before "clear screen" has been called; maybe those traces have
+     survived between yabasic-runs in the console-host and can only erased with "color" ...
+     See also
+     https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c.
+     And also system("cls") in io.c */
   system("color");
   
   /* request processing of excape sequences */

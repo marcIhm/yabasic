@@ -246,7 +246,9 @@ void clearscreen() /* clear entire screen */
   SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));  
   FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
   SetConsoleCursorPosition(ConsoleOutput, coord);
-  /* See the comments around system("color") in main.c for motivation */
+  /* In theory, this does nothing more, than already done with the api-calls above; however
+     to avoid coloring-problems this seems necessary nevertheless. See the comments around
+     system("color") in main.c for some more motivation */
   system("cls");
 #endif
 }
