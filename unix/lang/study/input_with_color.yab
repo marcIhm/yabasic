@@ -12,6 +12,8 @@
 poke "console_foreground_color", "yellow"
 poke "console_background_color", "green"
 clear screen
-input "yellow on green; press RETURN " a$
-input at(10,10) color("black") "black on green; press RETURN " a$
-input at(10,12) color("red","white") "red on white; press RETURN " a$
+print peek$("console_foreground_color"), peek$("console_background_color"), peek$("console_foreground_intensity")
+print "Check 1: Screen bg should be all green"
+input "Check 2: yellow on green; press RETURN " a$
+input at(10,10) color("black") "Check 3: black on green; press RETURN " a$
+input at(10,12) color("red","white") "Check 4: red on white; press RETURN " a$

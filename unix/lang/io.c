@@ -260,6 +260,7 @@ static void con_xcap_init(void) /* initialize console extra capabilities, e.g. c
 #endif
 
   if (con_fore_col != -1 && con_back_col == -1) {
+    /* lifting this restriction leads to problems under linux: Poking only background violates check 1 in input_with_color.yab */
     sprintf(estring, "only 'console_foreground_color' has been poked, but you need to poke 'console_background_color' too");
     error(sERROR, estring);
     return;
