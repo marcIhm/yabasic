@@ -1,6 +1,11 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.91.1 (January 24, 2025)
+  - New pokes 'console_foreground_color' and 'console_foreground_color'
+    to set the default fore- and background color for the console.
+  - The input-statement now supports the clauses at() and color()
+  
 Version 2.91.0 (January 7, 2025)
   - New poke 'console_foreground_intensity' to change (once perrun)
     the intensity of colored text printed with yabasic.
@@ -12,24 +17,3 @@ Version 2.90.5 (November 11, 2024)
     unfortunately, this breaks compatibility with Windows XP; however
     older versions of yabasic are still provided for download.
   
-Version 2.90.4 (September 17, 2023)
-  - Fixed a bug related with 'print using' under windows.
-    Thanx to Paul Shutler for reporting this !
-  
-Version 2.90.3 (February 26, 2023)
-  - Introductory sections about subroutines and libraries
-  - Updated the docu from docbook 4.5 to 5
-  
-Version 2.90.2 (January 6, 2022)
-  - Fixed precision error for print using under windows
-  - Better error-reporting for an edge case of short-if
-  - Allow '==' to check for equality and '!=' for inequality ('=' and '<>' still work)
-
-Version 2.90.1 (July 11, 2021)
-  - Repaired the docu (especially yabasic.htm)
-  - Removed references to the old documentation (still available on github)
-
-Version 2.90.0 (July 10, 2021)
-  - Fixed an error with local variables
-  - Moved to a new building-environment (see github and there README.org for details)
-
