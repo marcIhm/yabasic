@@ -172,7 +172,7 @@ yabasic*font: 9x15
 	<varlistentry>
 	  <term><literal>--infolevel <replaceable>INFOLEVEL</replaceable></literal></term>
 	  <listitem>
-	    <para>Change the <emphasis>infolevel</emphasis> of yabasic, where <replaceable>INFOLEVEL</replaceable> can be one of <literal>debug</literal>, <literal>note</literal>, <literal>warning</literal>, <literal>error</literal>, <literal>fatal</literal> and <literal>bison</literal> (the default is <literal>warning</literal>). This option changes the amount of debugging-information <application>yabasic</application> produces. However, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this.</para>
+	    <para>Change the <emphasis>infolevel</emphasis> of yabasic, where <replaceable>INFOLEVEL</replaceable> can be one of <literal>debug</literal>, <literal>note</literal>, <literal>warning</literal>, <literal>error</literal>, <literal>fatal</literal> and <literal>bison</literal> (the default is <literal>warning</literal>). This option changes the amount of debugging-information <application>yabasic</application> produces. However, normally only the author of <application>yabasic</application> would want to change this.</para>
 	  </listitem>
 	</varlistentry>
 	
@@ -2661,7 +2661,7 @@ print asin(0.5),asin(sin(pi))
 	</refmeta>
 	<refnamediv>
 	  <refname>at()</refname>
-	  <refpurpose>can be used in the <function>print</function>-command to place the output at a specified position</refpurpose>
+	  <refpurpose>can be used in the commands <link linkend="ref_print"><function>print</function></link> and <function><link linkend="ref_input">input</link></function> to place the output at a specified position</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
@@ -5993,7 +5993,7 @@ until a$="q"
 	</refmeta>
 	<refnamediv>
 	  <refname>input</refname>
-	  <refpurpose>read input from the user (or from a file) and assign it to a variable</refpurpose>
+	  <refpurpose>read input from user or  file and assign it to a variable</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
@@ -6002,13 +6002,16 @@ input a,b,c
 input a$
 input "Hello" a
 input #1 a$
+input at(10,10) "Your input: " a$
+input color("red") "Are you sure ?" a$
 </synopsis>
 	</refsynopsisdiv>
 	<refsection><info><title>Description</title></info>
 	  
 	  <para><function>input</function> reads the new contents of one or many (numeric- or string-) variables, either from the keyboard (i.e. from <emphasis>you</emphasis>) or from a file. An optional first string-argument specifies a prompt, which will be issued before reading any contents.</para>
 	  <para>If you want to read from an open file, you need to specify a hash ('#'), followed by the number, under which the file has been opened.</para>
-	  <para>Note, that the input is split at spaces, i.e. if you enter a whole line consisting of many space-separated word, the first <function>input</function>-statement will only return the first word; the other words will only be returned on subsequent calls to <function>input</function>; the same applies, if a single <function>input</function> reads multiple variables: The first variable gets only the first word, the second one the second word, and so on. If you don't like this behaviour, you may use <function>line input</function>, which returns a whole line (including embedded spaces) at once.</para>
+	  <para>Note, that the input is split at spaces, i.e. if you enter a whole line consisting of many space-separated word, the first <function>input</function>-statement will return the first word only; the other words will be returned on subsequent calls to <function>input</function>; the same applies, if a single <function>input</function> reads multiple variables: The first variable gets only the first word, the second one the second word, and so on. If you don't like this behaviour, you may use <function>line input</function>, which returns a whole line (including embedded spaces) at once.</para>
+	  <para>For more control, <function>input</function> supports the same two clauses <function><link linkend="ref_at">at</link></function> and <link linkend="ref_print_color"><function>color</function></link> just as the <link linkend="ref_print"><function>print</function></link>-statement does.</para>
 	</refsection>
 	<refsection><info><title>Example</title></info>
 	  
@@ -7582,7 +7585,7 @@ loop
 	</refmeta>
 	<refnamediv>
 	  <refname>peek</refname>
-	  <refpurpose>retrieve various internal information</refpurpose>
+	  <refpurpose>retrieve various internal informations (numeric)</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
@@ -7594,7 +7597,7 @@ a=peek(#1)
 	  
 	  <para>The <function>peek</function>-function has many different and mostly unrelated uses. It is a kind of grab-bag for retrieving all kinds of numerical information, internal to <application>yabasic</application>. The meaning of the numbers returned be the <function>peek</function>-function depends on the string or number passed as an argument.</para>
 	  <para><function>peek</function> always returns a number, however the closely related <function><link linkend="ref_peek2">peek$</link></function>-function exists, which may be used to retrieve string information from among the internals of <application>yabasic</application>. Finally note, that some of the values which are retrieved with <function>peek</function> may even be changed, using the <function><link linkend="ref_poke">poke</link></function>-function.</para>
-	  <para>There are two variants of the <function>peek</function>-function: One expects an integer, positive number and is described within the first entry of the list below. The other variant expects one of a well defined set of strings as described in the second and all the following entries of the list below.</para>
+	  <para>There are two variants of the <function>peek</function>-function: One expects an integer, positive number and is described within the first entry of the list below. The other variant expects one of a well defined set of strings as described in the second and all the following entries of the list below (in alphabetical order).</para>
 
 	  <variablelist>
 
@@ -7707,6 +7710,28 @@ a=peek(#1)
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><function>peek("isbound")</function></term>
+	      <listitem>
+		<para>Return <constant>true</constant>, if the executing <application>yabasic</application>-program is part of a standalone program; see the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek("last_foreign_function_call_okay")</function></term>
+	      <listitem>
+		<para>Check for error: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function>peek("last_foreign_function_call_okay")</function> to find out, if something went wrong and retrieve a description with <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function>.</para>
+		<para>This peek can be abbreviated as <function>peek("last_frnfn_call_okay")</function></para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek("millisrunning")</function></term>
+	      <listitem>
+		<para>Return the number of milliseconds, that have passed since the start of <application>yabasic</application>. There is also a related <literal>peek("secondsrunning")</literal> for lower precision.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>peek("screenheight")</function></term>
 	      <listitem>
 		<para>Return the height in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
@@ -7723,14 +7748,7 @@ a=peek(#1)
 	    <varlistentry>
 	      <term><function>peek("secondsrunning")</function></term>
 	      <listitem>
-		<para>Return the number of seconds that have passed since the start of <application>yabasic</application>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek("millisrunning")</function></term>
-	      <listitem>
-		<para>Return the number of milliseconds, that have passed since the start of <application>yabasic</application>.</para>
+		<para>Return the number of seconds that have passed since the start of <application>yabasic</application>. There is also a related <literal>peek("millisrunning")</literal> for higher precision.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -7752,21 +7770,6 @@ a=peek(#1)
 	      <term><function>peek("winwidth")</function></term>
 	      <listitem>
 		<para>Return the width of the graphic-window in pixels. If none is open, this <function>peek</function> will return the width of the last window opened or 100, if none has been opened yet.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek("isbound")</function></term>
-	      <listitem>
-		<para>Return <constant>true</constant>, if the executing <application>yabasic</application>-program is part of a standalone program; see the section about <link linkend="ref_standalone">creating a <emphasis>standalone</emphasis>-program</link> for details.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek("last_foreign_function_call_okay")</function></term>
-	      <listitem>
-		<para>Check for error: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function>peek("last_foreign_function_call_okay")</function> to find out, if something went wrong and retrieve a description with <function><link linkend="ref_peek2">peek$("last_foreign_function_call_error_text")</link></function>.</para>
-		<para>This peek can be abbreviated as <function>peek("last_frnfn_call_okay")</function></para>
 	      </listitem>
 	    </varlistentry>
 
@@ -7798,7 +7801,7 @@ wend
 	</refmeta>
 	<refnamediv>
 	  <refname>peek$</refname>
-	  <refpurpose>retrieve various internal string-information</refpurpose>
+	  <refpurpose>retrieve various internal informations (strings)</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
@@ -7809,43 +7812,45 @@ print peek$("foo")
 	  
 	  <para>The <function>peek$</function>-function has many different and unrelated uses. It is a kind of grab-bag for retrieving all kinds of string information, internal to <application>yabasic</application>; the exact nature of the strings returned be the <function>peek$</function>-function depends on the string passed as an argument.</para>
 	  <para><function>peek$</function> always returns a string, however the closely related <function><link linkend="ref_peek">peek</link></function>-function exists, which may be used to retrieve numerical information from among the internals of <application>yabasic</application>. Finally note, that some of the values which are retrieved with <function>peek$</function> may even be changed, using the <function><link linkend="ref_poke">poke</link></function>-function.</para>
-	  <para>The following list shows all possible arguments to <function>peek$</function>:</para>
+	  <para>The following list shows all possible arguments to <function>peek$</function> in alphabetical order:</para>
 
 	  <variablelist>
+	    
+	    <varlistentry>
+	      <term><function>peek$("argument")</function></term>
+	      <listitem>
+		<para>Return one of the arguments, that have been passed to <application>yabasic</application> at invocation time (the next call will return the the second argument, and so on). E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then the first call to <function>peek$("argument")</function> will return <literal>bar</literal>. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to this program, which are passed on the command line. The second call to <function>peek$("argument")</function> will return <literal>baz</literal>. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return the empty string.</para>
+		<para>Note, that <function>peek$("argument")</function> can be written as <function>peek$("arguments")</function>.</para>
+		<para>Probably you will want to check out the corresponding function <function><link linkend="ref_peek">peek("argument")</link></function>.</para>
+		<para>See further down <link linkend="peek2_argument">below</link> for an example of poking fore- and background color.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("env","<replaceable>NAME</replaceable>")</function></term>
+	      <listitem>
+		<para>Return the environment variable specified by <replaceable>NAME</replaceable> (which may be any string expression). Which kind of environment variables are available on your system depends, as well as their meaning, on your system; however typing <command>env</command> on the command line will produce a list (for Windows and Unix alike). Note, that <function>peek$("env",...)</function> can be written as <function>peek$("environment",...)</function> too.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("error")</function></term>
+	      <listitem>
+		<para>Return a string describing the nature of the last error in an <function>open</function>- or <function>seek</function>-statement. See the corresponding <function><link linkend="ref_peek">peek("error")</link></function> for a detailed description.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("font")</function></term>
+	      <listitem>
+		<para>Return the name of the font, which is used for text within the graphic window; this value can be specified as the third argument to the <function><link linkend="ref_open_window">open window</link></function>-command.</para>
+	      </listitem>
+	    </varlistentry>
 
 	    <varlistentry>
 	      <term><function>peek$("infolevel")</function></term>
 	      <listitem>
 		<para>Returns either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>, depending on the current infolevel. This value can be specified with an <link linkend="chapter_options">option</link> on the command line or changed during the execution of the program with the corresponding <function><link linkend="ref_poke">poke</link></function>; however, normally only the author of <application>yabasic</application> (<emphasis>me</emphasis> !) would want to change this from its default value <literal>"warning"</literal>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek$("textalign")</function></term>
-	      <listitem>
-		<para>Returns one of nine possible strings, specifying the default alignment of text within the graphics-window. The alignment-string returned by this <function>peek</function> describes, how the <function><link linkend="ref_text">text</link></function>-command aligns its string-argument with respect to the coordinates supplied. However, this value does <emphasis>not apply</emphasis>, if the <function>text</function>-command explicitly specifies an alignment. Each of these strings is two characters long. The first character specifies the horizontal alignment and can be either <literal>l</literal>, <literal>r</literal> or <literal>c</literal>, which stand for <wordasword>left</wordasword>, <wordasword>right</wordasword> or <wordasword>center</wordasword>. The second character specifies the vertical alignment and can be one of <literal>t</literal>, <literal>b</literal> or <literal>c</literal>, which stand for <wordasword>top</wordasword>, <wordasword>bottom</wordasword> or <wordasword>center</wordasword> respectively.</para>
-		<para>You may change this value with the corresponding command <function>poke "textalign",…</function>; the initial value is <literal>lb</literal>, which means the top of the left and the top edge if the text will be aligned with the coordinates, that are specified within the <function>text</function>-command.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek$("windoworigin")</function></term>
-	      <listitem>
-		<para>This <function>peek</function> returns a two character string, which specifies the position of the origin of the coordinate system of the window; this string might be changed with the corresponding command <function>poke "windoworigin",x,y</function> or specified as the argument of the <function><link linkend="ref_origin">origin</link></function> command; see there for a detailed description of the string, which might be returned by this <function>peek</function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek$("program_name")</function></term>
-	      <listitem>
-		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this <function>peek$</function> might return <filename>foo.yab</filename>. As a special case when <application>yabasic</application> has been invoked without the name of a program to be executed this peek will return the literal strings <literal>standard input</literal> or, when also the option <literal>-e</literal> has been specified, <literal>command line</literal>. See also <function>peek$("program_file_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>peek$("program_file_name")</function></term>
-	      <listitem>
-		<para>Returns the full file-name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, including any path-components. For the special case, that you have bound your <application>yabasic</application>-program with the interpreter to a single <link linkend="ref_standalone">standalone</link> executable, this <function>peek$</function> will return its name. See also <function>peek$("program_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -7858,9 +7863,10 @@ print peek$("foo")
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek$("error")</function></term>
+	      <term><function>peek$("last_foreign_function_call_error_text")</function></term>
 	      <listitem>
-		<para>Return a string describing the nature of the last error in an <function>open</function>- or <function>seek</function>-statement. See the corresponding <function><link linkend="ref_peek">peek("error")</link></function> for a detailed description.</para>
+		<para>Retrieve error text: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function><link linkend="ref_peek">peek("last_foreign_function_call_okay")</link></function> to find out, if something went wrong and retrieve a description with <function>peek$("last_foreign_function_call_error_text")</function>.</para>
+		<para>This peek can be abbreviated as <function>peek$("last_frnfn_call_error_text")</function></para>
 	      </listitem>
 	    </varlistentry>
 
@@ -7872,13 +7878,6 @@ print peek$("foo")
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek$("version")</function></term>
-	      <listitem>
-		<para>Version of <application>yabasic</application> as a string; e.g. <literal>2.77.1</literal>. See also the related <function><link linkend="ref_peek">peek("version")</link></function>, which returns nearly the same information (minus the patchlevel) as a number, e.g. <literal>2.77</literal>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
 	      <term><function>peek$("os")</function></term>
 	      <listitem>
 		<para>This <function>peek</function> returns the name of the operating system, where your program executes. This can be either <literal>windows</literal> or <literal>unix</literal>.</para>
@@ -7886,45 +7885,49 @@ print peek$("foo")
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek$("font")</function></term>
+	      <term><function>peek$("program_file_name")</function></term>
 	      <listitem>
-		<para>Return the name of the font, which is used for text within the graphic window; this value can be specified as the third argument to the <function><link linkend="ref_open_window">open window</link></function>-command.</para>
-	      </listitem>
-	    </varlistentry>
-
-
-	    <varlistentry>
-	      <term><function>peek$("env","<replaceable>NAME</replaceable>")</function></term>
-	      <listitem>
-		<para>Return the environment variable specified by <replaceable>NAME</replaceable> (which may be any string expression). Which kind of environment variables are available on your system depends, as well as their meaning, on your system; however typing <command>env</command> on the command line will produce a list (for Windows and Unix alike). Note, that <function>peek$("env",...)</function> can be written as <function>peek$("environment",...)</function> too.</para>
+		<para>Returns the full file-name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, including any path-components. For the special case, that you have bound your <application>yabasic</application>-program with the interpreter to a single <link linkend="ref_standalone">standalone</link> executable, this <function>peek$</function> will return its name. See also <function>peek$("program_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek$("argument")</function></term>
+	      <term><function>peek$("program_name")</function></term>
 	      <listitem>
-		<para>Return one of the arguments, that have been passed to <application>yabasic</application> at invocation time (the next call will return the the second argument, and so on). E.g. if <application>yabasic</application> has been called like this: <literal>yabasic foo.yab bar baz</literal>, then the first call to <function>peek$("argument")</function> will return <literal>bar</literal>. This is because <literal>foo.yab</literal> is treated as the name of the program to run, whereas <literal>bar</literal> and <literal>baz</literal> are considered arguments to this program, which are passed on the command line. The second call to <function>peek$("argument")</function> will return <literal>baz</literal>. <emphasis>Note</emphasis>, that for windows-users, who tend to click on the icon (as opposed to starting <application>yabasic</application> on the command line), this <function>peek</function>will mostly return the empty string.</para>
-		<para>Note, that <function>peek$("argument")</function> can be written as <function>peek$("arguments")</function>.</para>
-		<para>Finally you will want to check out the corresponding function <function><link linkend="ref_peek">peek("argument")</link></function>.</para>
-
+		<para>Returns the name of the <application>yabasic</application>-program that is currently executing; typically this is the name, that you have specified on the commandline, but without any path-components. So this <function>peek$</function> might return <filename>foo.yab</filename>. As a special case when <application>yabasic</application> has been invoked without the name of a program to be executed this peek will return the literal strings <literal>standard input</literal> or, when also the option <literal>-e</literal> has been specified, <literal>command line</literal>. See also <function>peek$("program_file_name")</function> and <function>peek$("interpreter_path")</function> for related information.</para>
 	      </listitem>
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><function>peek$("last_foreign_function_call_error_text")</function></term>
+	      <term><function>peek$("textalign")</function></term>
 	      <listitem>
-		<para>Retrieve error text: If passing <literal>"no_error"</literal> to <function><link linkend="ref_foreign_function_call">foreign_function_call</link></function>, any error (e.g. failure to load the specified library), will <emphasis>not</emphasis> terminate your <application>yabasic</application>-program but rather store a descriptive error message away for later retrieval. Later on you may then check <function><link linkend="ref_peek">peek("last_foreign_function_call_okay")</link></function> to find out, if something went wrong and retrieve a description with <function>peek$("last_foreign_function_call_error_text")</function>.</para>
-		<para>This peek can be abbreviated as <function>peek$("last_frnfn_call_error_text")</function></para>
+		<para>Returns one of nine possible strings, specifying the default alignment of text within the graphics-window. The alignment-string returned by this <function>peek</function> describes, how the <function><link linkend="ref_text">text</link></function>-command aligns its string-argument with respect to the coordinates supplied. However, this value does <emphasis>not apply</emphasis>, if the <function>text</function>-command explicitly specifies an alignment. Each of these strings is two characters long. The first character specifies the horizontal alignment and can be either <literal>l</literal>, <literal>r</literal> or <literal>c</literal>, which stand for <wordasword>left</wordasword>, <wordasword>right</wordasword> or <wordasword>center</wordasword>. The second character specifies the vertical alignment and can be one of <literal>t</literal>, <literal>b</literal> or <literal>c</literal>, which stand for <wordasword>top</wordasword>, <wordasword>bottom</wordasword> or <wordasword>center</wordasword> respectively.</para>
+		<para>You may change this value with the corresponding command <function>poke "textalign",…</function>; the initial value is <literal>lb</literal>, which means the top of the left and the top edge if the text will be aligned with the coordinates, that are specified within the <function>text</function>-command.</para>
 	      </listitem>
 	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("version")</function></term>
+	      <listitem>
+		<para>Version of <application>yabasic</application> as a string; e.g. <literal>2.77.1</literal>. See also the related <function><link linkend="ref_peek">peek("version")</link></function>, which returns nearly the same information (minus the patchlevel) as a number, e.g. <literal>2.77</literal>.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek$("windoworigin")</function></term>
+	      <listitem>
+		<para>This <function>peek</function> returns a two character string, which specifies the position of the origin of the coordinate system of the window; this string might be changed with the corresponding command <function>poke "windoworigin",x,y</function> or specified as the argument of the <function><link linkend="ref_origin">origin</link></function> command; see there for a detailed description of the string, which might be returned by this <function>peek</function>.</para>
+	      </listitem>
+	    </varlistentry>
+
 
 	  </variablelist>
 
 
 	</refsection>
-	<refsection><info><title>Example</title></info>
-	  
-	  <informalexample>
+	<refsection><info><title>Example</title></info>	  
+	<example xml:id="peek2_argument">
+	  <title>Retrieving program-arguments</title>
 	    <programlisting>
 print "You have supplied these arguments: "
 while peek("argument")
@@ -7937,7 +7940,7 @@ wend
 2b
 1c
 </screen>
-	  </informalexample>
+	  </example>
 	</refsection>
 	<refsection><info><title>See also</title></info>
 	  
@@ -7998,7 +8001,7 @@ poke #a,baz
 	<refsection><info><title>Description</title></info>
 	  
 	  <para>The <function>poke</function>-command may be used to change details of <application>yabasic</application>'s behaviour. Like the related function <function>peek</function>, <function>poke</function> does many different things, depending on the arguments supplied.</para>
-	  <para>Here are the different things you can do with <function>poke</function>:</para>
+	  <para>Here are the different things you can do with <function>poke</function> (alphabetical order):</para>
 	  <variablelist>
 
 	    <varlistentry>
@@ -8006,81 +8009,6 @@ poke #a,baz
 	      <listitem>
 		<para>Write the given byte (<literal>a</literal> in the example above) to the specified stream (<literal>5#a</literal> in the example).</para>
 		<para>See also the related function function <function><link linkend="ref_peek">peek(1)</link></function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "dump","filename.dump"</function></term>
-	      <listitem>
-		<para>Dump the internal form of your
-<acronym>basic</acronym>-program to the named file; this is only useful for
-debugging the internals of <application>yabasic</application> itself.</para>
-		<para>The second argument (<literal>"filename.dump"</literal>
-in the example) should be the name of a file, that
-gets overwritten with the dump, please be careful.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "debug_internal","which kind of internal debugging ?"</function></term>
-	      <listitem>
-		<para>Invoke one of various internal debugging facilities;
-		this is only useful for debugging the internals of <application>yabasic</application> itself.</para>
-		<para>The second argument (<literal>"which kind of internal debugging ?"</literal>
-in the example) can be one of several strings, which are not described here, because they
-tend to change quickly and are in general not useful for the programmer using <application>yabasic</application>.
-However, if you give an invalid argument, e.g. <function>poke "debug_internal","?"</function>, the error-message will list and explain the valid arguments briefly.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "fontheight",12</function></term>
-	      <listitem>
-		<para>This <function>poke</function> changes the default fontheight. This can only have an effect, if the fonts given in the commands <function><link linkend="ref_text">text</link></function> or <function><link linkend="ref_open_window">open window</link></function> do not specify a fontheight on their own.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "font","fontname"</function></term>
-	      <listitem>
-		<para>This <function>poke</function> specifies the default font. This can only have an effect, if you do not supply a fontname with the commands <function><link linkend="ref_text">text</link></function> or <function><link linkend="ref_open_window">open window</link></function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "infolevel","debug"</function></term>
-	      <listitem>
-		<para>Change the amount of internal information, that <application>yabasic</application> outputs during execution.</para>
-		<para>The second argument can be either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>. However, normally you will not want to change this from its default value <literal>"warning"</literal>.</para>
-		<para>See also the related <function><link linkend="ref_peek2">peek$("infolevel")</link></function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "random_seed",42</function></term>
-	      <listitem>
-		<para>Set the seed for the random number generator; if you do this, the <function><link linkend="ref_ran">ran</link></function>-function will return the same sequence of numbers every time the program is started.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "stdout","some text"</function></term>
-	      <listitem>
-		<para>Send the given text to standard output. Normally one would use <function><link linkend="ref_print">print</link></function> for this purpose; however, sending e.g. control characters to your terminal is easier with this <function>poke</function>.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "textalign","cc"</function></term>
-	      <listitem>
-		<para>This <function>poke</function> changes the <emphasis>default</emphasis> alignment of text with respect to the coordinates supplied within the <function>text</function>-command. However, this value does <emphasis>not apply</emphasis>, if the <function>text</function>-command explicitly specifies an alignment. The second argument (<literal>"cc"</literal> in the example) must always be two characters long; the first character can be one of <literal>l</literal> (<wordasword>left</wordasword>), <literal>r</literal> (<wordasword>right</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); the second character can be either <literal>t</literal> (<wordasword>top</wordasword>), <literal>b</literal> (<wordasword>bottom</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); see the corresponding <function><link linkend="ref_peek2">peek$("textalign")</link></function> for a detailed description of this argument.</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><function>poke "windoworigin","lt"</function></term>
-	      <listitem>
-		<para>This <function>poke</function> moves the origin of the coordinate system of the window to the specified position. The second argument (<literal>"lt"</literal> in the example) must always be two characters long; the first character can be one of <literal>l</literal> (<wordasword>left</wordasword>), <literal>r</literal> (<wordasword>right</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); the second character can be either <literal>t</literal> (<wordasword>top</wordasword>), <literal>b</literal> (<wordasword>bottom</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>). Together those two characters specify the new position of the coordinate-origin. See the corresponding <function><link linkend="ref_peek2">peek$("windoworigin")</link></function> for a more in depth description of this argument.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -8113,32 +8041,142 @@ However, if you give an invalid argument, e.g. <function>poke "debug_internal","
       </variablelist>
       <para>There are two synonyms for <literal>"console_foreground_intensity"</literal>: <literal>"screen_foreground_intensity"</literal> and <literal>"terminal_foreground_intensity"</literal>.</para>
       <para>See also <function><link linkend="ref_print_color">print color</link></function> for how to print in color.</para>
-
 	      </listitem>
 	    </varlistentry>
 
+	    <varlistentry>
+	      <term><function>poke "console_foreground_color","red"</function></term>
+	      <listitem>
+		<para>Use this <function>poke</function> to set the <emphasis>default</emphasis> forground color used for <link linkend="ref_print"><function>print</function></link> and <link linkend="ref_input"><function>input</function></link> statements, that do not specify a color themselves. Use this in conjunction with the <function>poke "console_background_color"</function> and issue it before calling <link linkend="ref_clear_screen"><function>clear screen</function></link>. After this the console-window of <application>yabasic</application> will change its background color and all text will come out in the given color with no need to use an explicit <function><link linkend="ref_print_color">color</link></function> clause (which of course is still possible to get different colors).</para>
+		<para>The second argument <literal>"red"</literal> in the example above is one of the 8 colours known to <application>yabasic</application>. For completeness, there are also matching types of <link linkend="ref_peek2">peek$</link> to retrieve these values. Finally note, that this can be done only once within you program, as it is only possible before <link linkend="ref_clear_screen"><function>clear screen</function></link>.</para>
+		<para>See further down <link linkend="poke_color">below</link> for an example of poking fore- and background color.</para>
+	      </listitem>
+	    </varlistentry>
 
+	    <varlistentry>
+	      <term><function>poke "console_background_color","green"</function></term>
+	      <listitem>
+		<para>Use this <function>poke</function> to set the <emphasis>default</emphasis> forground color used for <link linkend="ref_print"><function>print</function></link> and <link linkend="ref_input"><function>input</function></link> statements, that do not specify a color themselves. Use this in conjunction with the <function>poke "console_foreground_color"</function>; see there for more details.</para>
+		<para>See further down <link linkend="poke_color">below</link> for an example of poking fore- and background color.</para>
+	      </listitem>
+	    </varlistentry>
 
-	  </variablelist>
+	    <varlistentry>
+	      <term><function>poke "debug_internal","which kind of internal debugging ?"</function></term>
+	      <listitem>
+		<para>Invoke one of various internal debugging facilities;
+		this is only useful for debugging the internals of <application>yabasic</application> itself.</para>
+		<para>The second argument (<literal>"which kind of internal debugging ?"</literal>
+in the example) can be one of several strings, which are not described here, because they
+tend to change quickly and are in general not useful for the programmer using <application>yabasic</application>.
+However, if you give an invalid argument, e.g. <function>poke "debug_internal","?"</function>, the error-message will list and explain the valid arguments briefly.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "dump","filename.dump"</function></term>
+	      <listitem>
+		<para>Dump the internal form of your
+<acronym>basic</acronym>-program to the named file; this is only useful for
+debugging the internals of <application>yabasic</application> itself.</para>
+		<para>The second argument (<literal>"filename.dump"</literal>
+in the example) should be the name of a file, that
+gets overwritten with the dump, please be careful.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "font","fontname"</function></term>
+	      <listitem>
+		<para>This <function>poke</function> specifies the default font. This can only have an effect, if you do not supply a fontname with the commands <function><link linkend="ref_text">text</link></function> or <function><link linkend="ref_open_window">open window</link></function>.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "fontheight",12</function></term>
+	      <listitem>
+		<para>This <function>poke</function> changes the default fontheight. This can only have an effect, if the fonts given in the commands <function><link linkend="ref_text">text</link></function> or <function><link linkend="ref_open_window">open window</link></function> do not specify a fontheight on their own.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "infolevel","debug"</function></term>
+	      <listitem>
+		<para>Change the amount of internal information, that <application>yabasic</application> outputs during execution.</para>
+		<para>The second argument can be either <literal>"debug"</literal>, <literal>"note"</literal>, <literal>"warning"</literal>, <literal>"error"</literal> or <literal>"fatal"</literal>. However, normally you will not want to change this from its default value <literal>"warning"</literal>.</para>
+		<para>See also the related <function><link linkend="ref_peek2">peek$("infolevel")</link></function>.</para>
+		<para>See further down <link linkend="poke_infolevel">below</link> for an example of poking the infolevel.</para>		
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "random_seed",42</function></term>
+	      <listitem>
+		<para>Set the seed for the random number generator; if you do this, the <function><link linkend="ref_ran">ran</link></function>-function will return the same sequence of numbers every time the program is started.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "stdout","some text"</function></term>
+	      <listitem>
+		<para>Send the given text to standard output. Normally one would use <function><link linkend="ref_print">print</link></function> for this purpose; however, sending e.g. control characters to your terminal is easier with this <function>poke</function>.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "textalign","cc"</function></term>
+	      <listitem>
+		<para>This <function>poke</function> changes the <emphasis>default</emphasis> alignment of text with respect to the coordinates supplied within the <function>text</function>-command. However, this value does <emphasis>not apply</emphasis>, if the <function>text</function>-command explicitly specifies an alignment. The second argument (<literal>"cc"</literal> in the example) must always be two characters long; the first character can be one of <literal>l</literal> (<wordasword>left</wordasword>), <literal>r</literal> (<wordasword>right</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); the second character can be either <literal>t</literal> (<wordasword>top</wordasword>), <literal>b</literal> (<wordasword>bottom</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); see the corresponding <function><link linkend="ref_peek2">peek$("textalign")</link></function> for a detailed description of this argument.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>poke "windoworigin","lt"</function></term>
+	      <listitem>
+		<para>This <function>poke</function> moves the origin of the coordinate system of the window to the specified position. The second argument (<literal>"lt"</literal> in the example) must always be two characters long; the first character can be one of <literal>l</literal> (<wordasword>left</wordasword>), <literal>r</literal> (<wordasword>right</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>); the second character can be either <literal>t</literal> (<wordasword>top</wordasword>), <literal>b</literal> (<wordasword>bottom</wordasword>) or <literal>c</literal> (<wordasword>center</wordasword>). Together those two characters specify the new position of the coordinate-origin. See the corresponding <function><link linkend="ref_peek2">peek$("windoworigin")</link></function> for a more in depth description of this argument.</para>
+	      </listitem>
+	    </varlistentry>
+
+	  </variablelist>	  
 	</refsection>
-	<refsection><info><title>Example</title></info>
-	  
-	  <informalexample>
-	    <programlisting>
+	<refsection><info><title>Examples</title></info>
+
+
+<example xml:id="poke_color">
+<title>Poking fore- and background color</title>
+<programlisting>
+poke "console_foreground_color", "yellow"
+poke "console_background_color", "green"
+clear screen
+print "Screen background should be all green with yellow text by default."
+print color("black") "Black on green"
+input color("red","white") "Red on white; press RETURN " a$
+</programlisting>
+<para>See the code above for the colors expected from each of the statements.</para>
+</example>
+
+
+<example xml:id="poke_infolevel">
+<title>Poking the infolevel</title>
+<programlisting>
 print "Hello, now you will see, how much work"
 print "a simple for-loop involves ..."
 input "Please press return " a$
 poke "infolevel","debug"
 for a=1 to 10:next a
-          </programlisting>
-	    <para>This example only demonstrates one of the many <function>poke</function>s, which are described above: The program switches the infolevel to <literal>debug</literal>, which makes <application>yabasic</application> produce a lot of debug-messages during the subsequent <function>for</function>-loop.</para>
-	  </informalexample>
+  </programlisting>
+<para>The above code will produces lots of output detailing the many elementary operations in a for-loop.</para>
+</example>
+
+	
 	</refsection>
+
+
 	<refsection><info><title>See also</title></info>
 	  
-	  <para><function><link linkend="ref_peek">peek</link></function>, <function><link linkend="ref_peek2">peek$</link></function></para>
+	  <para><function><link linkend="ref_peek2">peek$</link></function></para>
 	</refsection>
-      </refentry>
+	</refentry>
 
       <refentry xml:id="ref_print">
 	<refmeta>
@@ -8229,7 +8267,7 @@ print color("green","yellow") at(5,5) a$,b
 	      <term><literal>print color("red","blue") a$,b</literal></term>
 	      <listitem>
 		<para>Print with the specified fore- (<literal>"red"</literal>) and background (<literal>"blue"</literal>) color (or colour). The possible values are <literal>"black"</literal>, <literal>"white"</literal>, <literal>"red"</literal>, <literal>"blue"</literal>, <literal>"green"</literal>, <literal>"yellow"</literal>, <literal>"cyan"</literal> or <literal>"magenta"</literal>. Again, you need to call <literal>clear screen</literal> first and add a semicolon if you want to suppress the implicit newline.</para>
-		<para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal></para>
+		<para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal>. And if you want to choose a pair or fore- and background colors for the whole program-run, you may <function><link linkend="ref_poke">poke</link></function> them into <literal>"console_foreground_color"</literal> and <literal>"console_background_color"</literal>; this needs to be done before calling <function><link linkend="ref_clear_screen">clear screen</link></function>; see <link linkend="poke_color">here</link> for an example.</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -8270,31 +8308,32 @@ next a
 	</refsection>
 	<refsection><info><title>See also</title></info>
 	  
-	  <para><function><link linkend="ref_at">at</link></function><function>, <function><link linkend="ref_print_color">print color</link></function>, <link linkend="ref_input">input</link></function>, <function><link linkend="ref_clear_screen">clear screen</link></function>, <function><link linkend="ref_using">using</link></function>, <function><link linkend="ref_semicolon">;</link></function></para>
+	  <para><function><link linkend="ref_at">at</link></function>, <function><link linkend="ref_print_color">print color</link></function>, <link linkend="ref_input">input</link>, <function><link linkend="ref_clear_screen">clear screen</link></function>, <function><link linkend="ref_using">using</link></function>, <function><link linkend="ref_semicolon">;</link></function></para>
 	</refsection>
       </refentry>
 
       <refentry xml:id="ref_print_color">
 	<refmeta>
-	  <refentrytitle>print color</refentrytitle>
+	  <refentrytitle>print or input with color</refentrytitle>
 	</refmeta>
 	<refnamediv>
 	  <refname>print color</refname>
-	  <refpurpose>print with color</refpurpose>
+	  <refpurpose>print or input-prompt with color</refpurpose>
 	</refnamediv>
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
 print color(fore$) text$
 print color(fore$,back$) text$
+input color("green") "Press RETURN" t$
 </synopsis>
 	</refsynopsisdiv>
 	<refsection><info><title>Description</title></info>
 	  
-	  <para>Not a separate command, but part of the <function>print</function>-command; may be included just after <function>print</function> and can only be issued after <function>clear screen</function> has been executed.</para>
+	  <para>Not a separate command, but part of the commands <link linkend="ref_print"><function>print</function></link> or <function><link linkend="ref_input">input</link></function>; may be included just after <function>print</function> and can only be issued after <function>clear screen</function> has been executed.</para>
 	  <para><function>color()</function> takes one or two string-arguments, specifying the color of the text and (optionally) the background.</para>
 	  <para>The one or two strings passed to <function>color()</function> can be one of these: <systemitem>"black"</systemitem>, <systemitem>"white"</systemitem>, <systemitem>"red"</systemitem>, <systemitem>"blue"</systemitem>, <systemitem>"green"</systemitem>, <systemitem>"yellow"</systemitem>, <systemitem>"cyan"</systemitem> and <systemitem>"magenta"</systemitem> (which can be abbreviated as <systemitem>"bla"</systemitem>, <systemitem>"whi"</systemitem>, <systemitem>"red"</systemitem>, <systemitem>"blu"</systemitem>, <systemitem>"gre"</systemitem>, <systemitem>"yel"</systemitem>, <systemitem>"cya"</systemitem> and <systemitem>"mag"</systemitem> respectively).</para>
 	  <para><function>color()</function> can only be used, if <function><link linkend="ref_clear_screen">clear scren</link></function> has been issued at least once.</para>
-         <para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal></para>	  
+	  <para>Please note, that your program may choose to use these colours in <emphasis>bright</emphasis>, <emphasis>normal</emphasis> or <emphasis>legacy</emphasis> variants, depending on the <function><link linkend="ref_poke">poke</link></function> <literal>"console_foreground_intensity"</literal>. And if you want to choose a pair or fore- and background colors for the whole program-run, you may <function><link linkend="ref_poke">poke</link></function> them into <literal>"console_foreground_color"</literal> and <literal>"console_background_color"</literal>; this needs to be done before calling <function><link linkend="ref_clear_screen">clear screen</link></function>; see <link linkend="poke_color">here</link> for an example.</para>
 	  <para>Note, that <function>color()</function> can be written as <function>colour()</function> too.</para>
 	</refsection>
 	<refsection><info><title>Example</title></info>
