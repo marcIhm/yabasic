@@ -2668,6 +2668,7 @@ print asin(0.5),asin(sin(pi))
 clear screen
 …
 print at(a,b)
+input at(a,b) "Your input: " a$
 print @(a,b)
 </synopsis>
 	</refsynopsisdiv>
@@ -8048,7 +8049,7 @@ poke #a,baz
 	      <term><function>poke "console_foreground_color","red"</function></term>
 	      <listitem>
 		<para>Use this <function>poke</function> to set the <emphasis>default</emphasis> forground color used for <link linkend="ref_print"><function>print</function></link> and <link linkend="ref_input"><function>input</function></link> statements, that do not specify a color themselves. Use this in conjunction with the <function>poke "console_background_color"</function> and issue it before calling <link linkend="ref_clear_screen"><function>clear screen</function></link>. After this the console-window of <application>yabasic</application> will change its background color and all text will come out in the given color with no need to use an explicit <function><link linkend="ref_print_color">color</link></function> clause (which of course is still possible to get different colors).</para>
-		<para>The second argument <literal>"red"</literal> in the example above is one of the 8 colours known to <application>yabasic</application>. For completeness, there are also matching types of <link linkend="ref_peek2">peek$</link> to retrieve these values. Finally note, that this can be done only once within you program, as it is only possible before <link linkend="ref_clear_screen"><function>clear screen</function></link>.</para>
+		<para>The second argument (<literal>"red"</literal> in the example above) is one of the 8 colours known to <application>yabasic</application>. For completeness, there are also matching types of <link linkend="ref_peek2">peek$</link> to retrieve these values. Finally note, that this can be done only once within your program, as it is only possible before <link linkend="ref_clear_screen"><function>clear screen</function></link>.</para>
 		<para>See further down <link linkend="poke_color">below</link> for an example of poking fore- and background color.</para>
 	      </listitem>
 	    </varlistentry>
@@ -8323,8 +8324,8 @@ next a
 	<refsynopsisdiv>
 	  <synopsis format="linespecific">
 print color(fore$) text$
-print color(fore$,back$) text$
 input color("green") "Press RETURN" t$
+print color(fore$,back$) text$
 </synopsis>
 	</refsynopsisdiv>
 	<refsection><info><title>Description</title></info>
@@ -8352,9 +8353,8 @@ data "green","yellow","cyan","magenta"
 	    <para>This prints the word <systemitem>" Hallo "</systemitem> in all colors across your screen.</para>
 	  </informalexample>
 	</refsection>
-	<refsection><info><title>See also</title></info>
-	  
-	  <para><function><link linkend="ref_print">print</link></function>, <function><link linkend="ref_clear_screen">clear screen</link></function>, <function><link linkend="ref_at">at</link></function></para>
+	<refsection><info><title>See also</title></info>	  
+	  <para><function><link linkend="ref_print">print</link></function>, <function><link linkend="ref_clear_screen">clear screen</link></function>, <function><link linkend="ref_at">at</link></function>, <function><link linkend="ref_poke">poke</link></function></para>
 	</refsection>
       </refentry>
 
