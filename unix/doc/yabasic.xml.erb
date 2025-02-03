@@ -7315,7 +7315,7 @@ if (open(a,"file","w")) …
 	    <varlistentry>
 	      <term>filenumber</term>
 	      <listitem>
-		<para>In the synopsis this is <literal>a</literal> or <literal>#a</literal>. In <application>yabasic</application> each file is associated with a number between 1 and a maximum value, which depends on the operating system. For historical reasons the filenumber can be preceded by a hash ('<literal>#</literal>'). Note, that specifying a filenumber is optional; if it is omitted, the <function>open</function>-function will return a filenumber, which should then be stored in a variable for later reference. This filenumber can be a simple number or an arbitrary complex arithmetic expression, in which case braces might be necessary to save <application>yabasic</application> from getting confused.</para>
+		<para>In the synopsis this is <literal>a</literal> or <literal>#a</literal>. In <application>yabasic</application> each file is associated with a number between 1 and a maximum value, which depends on the operating system. For historical reasons the filenumber can be preceded by a hash ('<literal>#</literal>'). Note, that specifying a filenumber is optional; if it is omitted, the <function>open</function>-function will return a filenumber, which should then be stored in a variable for later reference. This filenumber can be a simple number or any arithmetic expression, in which case braces might be necessary to save <application>yabasic</application> from getting confused.</para>
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
@@ -7377,8 +7377,20 @@ while not eof(1)
   print a$
 wend
           </programlisting>
-	    <para>This example simply opens the file <literal>foo.bar</literal>, writes a single line, reopens it and reads its contents again.</para>
+	    <para>This example simply opens the file <literal>foo.bar</literal>, writes a single line, reopens it and finally reads and prints its contents again.</para>
 	  </informalexample>
+	  <informalexample>
+	    <para>Please note, that the file-number (<constant>1</constant> in the example above) need not be a constant but can rather be a variable (in fact any arithmetic expression); this is demonstrated by the example below:</para>	  
+<programlisting>
+for j=1 to 10
+  open "test-"+str$(j)+".dat" for writing as #j
+  print #j "this is a test: " + str$(j)
+next j
+for j=1 to 10:close #j:next j
+</programlisting>
+  <para>The example opens (and keeps open) 10 files in a loop with the variable <literal>j</literal> as the file-number. Once a line has been written into each, they are closed (again in a loop).</para>
+</informalexample>
+
 	</refsection>
 	<refsection><info><title>See also</title></info>
 	  
