@@ -810,14 +810,14 @@ static void parse_arguments(int cargc, char *cargv[])
         }
         fontname = my_strdup(argv[ar]);
       } else if (!print_docu &&
-                 (!strcmp("-doc", option) || !strncmp("-doc_", option, 5) ||
-                  !strcmp("-docu", option) || !strncmp("-docu_", option, 6))) {
+                 (!strcmp("--doc", option) || !strncmp("--doc_", option, 5) ||
+                  !strcmp("--docu", option) || !strncmp("--docu_", option, 6))) {
         print_docu = TRUE;
-        if (!strncmp("-doc_", option, 5)) {
+        if (!strncmp("--doc_", option, 6)) {
           ar--;
           hold_docu = TRUE;
           main_file_name = my_strdup(option + 5);
-        } else if (!strncmp("-docu_", option, 6)) {
+        } else if (!strncmp("--docu_", option, 7)) {
           ar--;
           hold_docu = TRUE;
           main_file_name = my_strdup(option + 6);

@@ -2,6 +2,7 @@
 * Some hints
 
   - Every build is a debug build, typically like: ./configure CFLAGS="-g -O2" && make
+    - Try CFLAGS="-g -O0" to avoid optimizations, that can be confusing in debug
 
   - To compile with profiling information: export CFLAGS="-pg --coverage" ; ./configure ; make
     - Then run yabasic as normal: ./yabasic tests/common/speed-yab

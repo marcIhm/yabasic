@@ -1,0 +1,4 @@
+Files *.yab will be run automatically during 'rake tests'
+
+Files *.sh need to be added manually to Makefile.am do be run during 'make check' which is
+part of 'rake tests'

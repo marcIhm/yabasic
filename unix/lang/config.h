@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Fri Jan 24 16:00:01 UTC 2025"
+#define BUILD_TIME "Sat Mar 22 15:56:40 UTC 2025"
 
 /* Define to 1 if using 'alloca.c'. */
 /* #undef C_ALLOCA */
