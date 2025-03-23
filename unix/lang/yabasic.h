@@ -176,6 +176,8 @@ extern double yinc;		/* inclination for y-mapping */
 extern int winopened;		/* flag if window is open already */
 extern char *winorigin;		/* e.g. "lt","rc"; defines origin of grafic window */
 extern int winwidth, winheight;	/* size of window */
+extern int screenwidth, screenheight;  /* size of screen (display) */
+extern void determine_screen_size(); /* determine size of graphics screen and store within global vars */
 /* mouse, console and keyboard */
 extern int mousex, mousey, mouseb, mousemod;	/* last know mouse coordinates */
 extern char *ykey[];		/* keys returned by inkey */

@@ -84,6 +84,8 @@ HFONT myfont; /* handle of font for screen */
 int winopened = FALSE;   /* flag if window is open already */
 char *winorigin;         /* e.g. "lt","rc"; defines origin of grafic window */
 int winwidth, winheight; /* size of window */
+int screenwidth = 0;     /* width of screen (display) */
+int screenheight = 0;    /* height of screen (display) */
 static int winx, winy;   /* position of window */
 
 /* mouse and keyboard */
@@ -110,7 +112,7 @@ char *displayname = NULL;
 char *fontname = NULL;
 #ifdef UNIX
 static unsigned long forepixel, backpixel; /* colors */
-Display *display;                          /* X-Display */
+Display *display = NULL;                   /* X-Display */
 static Window root;                        /* ID of root window */
 static Window window;                      /* ID of grafic window */
 static GC gc;                              /* GC for drawing */
@@ -262,7 +264,7 @@ void openwin(struct command *cmd) {
     prctl(PR_SET_PDEATHSIG, SIGHUP);
 #endif
     /* we (child-process) get our own display-connection, probably on purpose */
-    display = XOpenDisplay(displayname);
+    if (!display) display = XOpenDisplay(displayname);
     XSelectInput(display, window, ExposureMask);
     XGetGCValues(display, gc, GCPlaneMask, &vals);
     while (TRUE) {
@@ -2818,7 +2820,7 @@ void x11_send_expose() {
   }
   memset(&event, 0, sizeof(XExposeEvent));
   event.type = Expose;
-  display = XOpenDisplay(displayname);      
+  if (!display) display = XOpenDisplay(displayname);      
   event.display = display;
   event.window = window;
   event.x = 0;
@@ -2829,6 +2831,20 @@ void x11_send_expose() {
   XSync(display, 0);
   error(sNOTE, "Sent X11-event Expose to my own window");
 #else
-  error(sERROR, "'debug_internal' 'xee_send_expose' is not available under windows");
+  error(sERROR, "'debug_internal' 'x11_send_expose' is not available under windows");
 #endif      
+}
+
+
+void determine_screen_size() {
+  /* determine size of graphics screen and store within global vars */
+#ifdef UNIX
+  int num;
+  if (!display) display = XOpenDisplay(displayname);
+  num = DefaultScreen(display);
+  screenwidth = DisplayWidth(display, num);
+  screenheight = DisplayHeight(display, num);
+#else
+  error(sERROR, "getting screen size not yet implemented for windows");
+#endif
 }
