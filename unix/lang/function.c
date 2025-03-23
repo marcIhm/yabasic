@@ -1687,14 +1687,12 @@ static double peek(char *dest) /* peek into internals */
     return LINES;
   } else if (!strcmp(dest, "screenwidth")) {
     return COLS;
-  } else if (!strcmp(dest, "displaywidth") || !strcmp(dest, "displayx") ||
-	     !strcmp(dest, "screenwidth") || !strcmp(dest, "screenx")) {
-    if (screenwidth == 0) determine_screen_size();
-    return screenwidth;
-  } else if (!strcmp(dest, "displayheight") || !strcmp(dest, "displayy") ||
-	     !strcmp(dest, "screenheight") || !strcmp(dest, "screeny")) {
-    if (screenheight == 0) determine_screen_size();
-    return screenheight;
+  } else if (!strcmp(dest, "displaywidth")) {
+    if (displaywidth == 0) determine_display_size();
+    return displaywidth;
+  } else if (!strcmp(dest, "displayheight")) {
+    if (displayheight == 0) determine_display_size();
+    return displayheight;
   } else if (!strcmp(dest, "argument") || !strcmp(dest, "arguments")) {
     return yabargc;
   } else if (!strcmp(dest, "version")) {

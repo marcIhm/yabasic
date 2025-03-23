@@ -84,8 +84,8 @@ HFONT myfont; /* handle of font for screen */
 int winopened = FALSE;   /* flag if window is open already */
 char *winorigin;         /* e.g. "lt","rc"; defines origin of grafic window */
 int winwidth, winheight; /* size of window */
-int screenwidth = 0;     /* width of screen (display) */
-int screenheight = 0;    /* height of screen (display) */
+int displaywidth = 0;     /* width of display */
+int displayheight = 0;    /* height of display */
 static int winx, winy;   /* position of window */
 
 /* mouse and keyboard */
@@ -2836,15 +2836,28 @@ void x11_send_expose() {
 }
 
 
-void determine_screen_size() {
-  /* determine size of graphics screen and store within global vars */
+void determine_display_size() {
+  /* determine size of display and store within global vars */
+  static int succeeded = FALSE;
 #ifdef UNIX
+  static int failed = FALSE;
   int num;
+
+  if (succeeded) return;
+  if (failed) return;
   if (!display) display = XOpenDisplay(displayname);
+  if (!display) {
+    failed = TRUE;
+    return;
+  }
   num = DefaultScreen(display);
-  screenwidth = DisplayWidth(display, num);
-  screenheight = DisplayHeight(display, num);
+  displaywidth = DisplayWidth(display, num);
+  displayheight = DisplayHeight(display, num);
 #else
-  error(sERROR, "getting screen size not yet implemented for windows");
+  if (succeeded) return;
+  /* if screen scaling is active (e.g. scaling factor of 150%), this returns 1280 instead of 1920 */
+  displaywidth = GetSystemMetrics(SM_CXSCREEN);
+  displayheight = GetSystemMetrics(SM_CYSCREEN);
 #endif
+  succeeded = TRUE;
 }

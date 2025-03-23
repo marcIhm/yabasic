@@ -1,6 +1,6 @@
 #! /bin/bash
 # Generated automatically by config.status (yabasic) 2.91.1
-# Libtool was configured on host thinkpad:
+# Libtool was configured on host notebook-marc:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
