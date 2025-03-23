@@ -44,7 +44,8 @@ task :build => :git do
       fail "Did not find number of errors" if errors == -1
       fail "Found #{errors} errors" if errors > 0
     end
-    fail "File '#{bin}' has not been build" if !File.exist?(bin) || File.mtime(bin) < start_time
+    fail "File '#{bin}' has not been build" if !File.exist?(bin)
+    fail "File '#{bin}' is older (#{ File.mtime(bin)}) than program start time (#{start_time})" if File.mtime(bin) < start_time
   end
 end
 

@@ -1,19 +1,18 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.91.2 (March 23, 2025)
+  - New peeks 'displayheight' and 'displaywidth'
+    to get the resolution of your monitor.
+  - Fix for option '--docu'
+  
 Version 2.91.1 (January 24, 2025)
   - New pokes 'console_foreground_color' and 'console_background_color'
     to set the default fore- and background color for the console.
-  - The input-statement now supports the clauses at() and color()
+  - The input-statement now supports the clauses at() and color().
   
 Version 2.91.0 (January 7, 2025)
   - New poke 'console_foreground_intensity' to change (once perrun)
     the intensity of colored text printed with yabasic.
   - New function string$ to multiply a string.
-  
-Version 2.90.5 (November 11, 2024)
-  - Fixed a bug related with 'inkey$'.
-  - For Windows: Needed to switch to a new version of Visual Studio.
-    unfortunately, this breaks compatibility with Windows XP; however
-    older versions of yabasic are still provided for download.
   

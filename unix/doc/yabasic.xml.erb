@@ -7631,6 +7631,24 @@ a=peek(#1)
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><function>peek("displayheight")</function></term>
+	      <listitem>
+		<para>Return the height of the display-device (synonyms: monitor or screen) in pixel. The operating system (Windows or Unix) often calls this <systemitem>screen resolution</systemitem>; a typical value would be 1080 for a screen with resolution 1920x1080 (<quote>Full HD</quote>).</para>
+		<para>This value can serve as an upper bound for the size of the graphic window, so that it may still fit on screen; note however, that you will need to subtract some pixels for window-decoration or task-bar.</para>
+		<para>Please note, that there is a similar-sounding <function>peek("screenheight")</function>, that however relates to the text-window (console), where <application>yabasic</application> runs.</para>
+		<para>See also <function>peek("displaywidth")</function> below.</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek("displaywidth")</function></term>
+	      <listitem>
+		<para>Return the width of the display-device in pixel.</para>
+		<para>See also <function>peek("displayheight")</function> above.</para>		
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>peek("error")</function></term>
 	      <listitem>
 		<para>Return a number specifying the nature of the last error in an <function>open</function>- or <function>seek</function>-statement. Normally an error within an <function>open</function>-statement immediately terminates your program with an appropriate error-message, so there is no chance and no need to learn more about the nature of the error. However, if you use <function>open</function> as a condition (e.g. <literal>if (open(#1,"foo")) …</literal>) the outcome (success or failure) of the <function>open</function>-operation will determine, if the condition evaluates to <constant>true</constant> or <constant>false</constant>. If now such an operation fails, your program will not be terminated and you might want to learn the reason for failure. This reason will be returned by <function>peek("error")</function> (as a number) or by <function>peek$("error")</function> (as a string)</para>
@@ -7747,6 +7765,8 @@ a=peek(#1)
 	      <term><function>peek("screenheight")</function></term>
 	      <listitem>
 		<para>Return the height in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
+                <para>Please note, that there is a similar-sounding <function>peek("displayheight")</function>, that however relates to the graphics window thay you may have opened.</para>
+		<para>See also <function>peek("screenwidth")</function> below.</para>		
 	      </listitem>
 	    </varlistentry>
 
@@ -7754,6 +7774,7 @@ a=peek(#1)
 	      <term><function>peek("screenwidth")</function></term>
 	      <listitem>
 		<para>Return the width in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
+		<para>See also <function>peek("screenheight")</function> above.</para>		
 	      </listitem>
 	    </varlistentry>
 

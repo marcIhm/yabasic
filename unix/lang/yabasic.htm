@@ -6080,11 +6080,19 @@ a=peek(#1)
 		<p>Return the number of arguments, that have been passed to <span class="application">yabasic</span> at invocation time. E.g. if <span class="application">yabasic</span> has been called like this: <code class="literal">yabasic foo.yab bar baz</code>, then <code class="function">peek("argument")</code> will return 2. This is because <code class="literal">foo.yab</code> is treated as the name of the program to run, whereas <code class="literal">bar</code> and <code class="literal">baz</code> are considered arguments to the program, which are passed on the command line. <span class="emphasis"><em>Note</em></span>, that for windows-users, who tend to click on the icon (as opposed to starting <span class="application">yabasic</span> on the command line), this <code class="function">peek</code>will mostly return 0.</p>
 		<p>The function <code class="function">peek("argument")</code> can be written as <code class="function">peek("arguments")</code> too.</p>
 		<p>You will want to check out the corresponding function <code class="function"><a class="link" href="#ref_peek2" title="peek$">peek$("argument")</a></code> to actually <span class="emphasis"><em>retrieve</em></span> the arguments. <span class="emphasis"><em>Note</em></span>, that each call to <code class="function">peek$("argument")</code> reduces the number returned by <code class="function">peek("argument")</code>.</p>
+	      </dd><dt><span class="term"><code class="function">peek("displayheight")</code></span></dt><dd>
+		<p>Return the height of the display-device (synonyms: monitor or screen) in pixel. The operating system (Windows or Unix) often calls this <code class="systemitem">screen resolution</code>; a typical value would be 1080 for a screen with resolution 1920x1080 (<span class="quote">&#8220;<span class="quote">Full HD</span>&#8221;</span>).</p>
+		<p>This value can serve as an upper bound for the size of the graphic window, so that it may still fit on screen; note however, that you will need to subtract some pixels for window-decoration or task-bar.</p>
+		<p>Please note, that there is a similar-sounding <code class="function">peek("screenheight")</code>, that however relates to the text-window (console), where <span class="application">yabasic</span> runs.</p>
+		<p>See also <code class="function">peek("displaywidth")</code> below.</p>
+	      </dd><dt><span class="term"><code class="function">peek("displaywidth")</code></span></dt><dd>
+		<p>Return the width of the display-device in pixel.</p>
+		<p>See also <code class="function">peek("displayheight")</code> above.</p>		
 	      </dd><dt><span class="term"><code class="function">peek("error")</code></span></dt><dd>
 		<p>Return a number specifying the nature of the last error in an <code class="function">open</code>- or <code class="function">seek</code>-statement. Normally an error within an <code class="function">open</code>-statement immediately terminates your program with an appropriate error-message, so there is no chance and no need to learn more about the nature of the error. However, if you use <code class="function">open</code> as a condition (e.g. <code class="literal">if (open(#1,"foo")) &#8230;</code>) the outcome (success or failure) of the <code class="function">open</code>-operation will determine, if the condition evaluates to <code class="constant">true</code> or <code class="constant">false</code>. If now such an operation fails, your program will not be terminated and you might want to learn the reason for failure. This reason will be returned by <code class="function">peek("error")</code> (as a number) or by <code class="function">peek$("error")</code> (as a string)</p>
 		<p>The table below shows the various error codes; the value returned by <code class="function">peek$("error")</code> explains the nature of the error. Note, that the codes 10,11 and 12 refer to the <code class="function">seek</code>-command.</p>
 		
-		<div class="table" id="id8461"><div class="table-title">Table&#160;7.1.&#160;Error codes</div><div class="table-contents">
+		<div class="table" id="id8481"><div class="table-title">Table&#160;7.1.&#160;Error codes</div><div class="table-contents">
 		  
 		  <table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="function">peek("error")</code></th><th style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="function">peek$("error")</code></th><th style="border-bottom: 1px solid ; ">Explanation</th></tr></thead><tbody><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">2</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">Stream already in use</code></td><td style="border-bottom: 1px solid ; ">Do not try to open one and the same filenumber twice; rather <code class="function"><a class="link" href="#ref_close" title="close">close</a></code> it first.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">3</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">'x' is not a valid filemode</code></td><td style="border-bottom: 1px solid ; ">The optional <span class="emphasis"><em>filemode</em></span> argument, which may be passed to the <code class="function"><a class="link" href="#ref_open" title="open">open</a></code>-function, has an invalid value</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">4</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">could not open 'foo'</code></td><td style="border-bottom: 1px solid ; ">The <code class="function">open</code>-call did not work, no further explanation is available.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">5</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">reached maximum number of open files</code></td><td style="border-bottom: 1px solid ; ">You have opened more files than your operating system permits.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">6</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">cannot open printer: already printing graphics</code></td><td style="border-bottom: 1px solid ; ">The commands <code class="function"><a class="link" href="#ref_open_printer" title="open printer">open printer</a></code> and <code class="function"><a class="link" href="#ref_open" title="open">open #1,printer</a></code> both open a printer (refer to their description for the difference). However, only one can be active at a time; if you try to do both at the same time, you will receive this error.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">7</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">could not open line printer</code></td><td style="border-bottom: 1px solid ; ">Well, it simply did not work.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">9</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">invalid stream number</code></td><td style="border-bottom: 1px solid ; ">An attempt to use an invalid (e.g. negative) stream number; example: <code class="literal">open(-1,"foo")</code></td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">10</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">could not position stream x to byte y</code></td><td style="border-bottom: 1px solid ; "><code class="function"><a class="link" href="#ref_seek" title="seek()">seek</a></code> did not work.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">11</td><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="computeroutput">stream x not open</code></td><td style="border-bottom: 1px solid ; ">You have tried to <code class="function"><a class="link" href="#ref_seek" title="seek()">seek</a></code> within a stream, that has not been opened yet.</td></tr><tr><td style="text-align: center; border-right: 1px solid ; ">12</td><td style="border-right: 1px solid ; "><code class="computeroutput">seek mode 'x' is none of begin,end,here</code></td><td>The argument, which has been passed to <code class="function"><a class="link" href="#ref_seek" title="seek()">seek</a></code> is invalid.</td></tr></tbody></table>
 		</div></div><br class="table-break"/>
@@ -6099,8 +6107,11 @@ a=peek(#1)
 		<p>Return the number of milliseconds, that have passed since the start of <span class="application">yabasic</span>. There is also a related <code class="literal">peek("secondsrunning")</code> for lower precision.</p>
 	      </dd><dt><span class="term"><code class="function">peek("screenheight")</code></span></dt><dd>
 		<p>Return the height in characters of the window, wherein yabasic runs. If you have not called <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code> yet, this <code class="function">peek</code>will return 0, regardless of the size of your terminal.</p>
+                <p>Please note, that there is a similar-sounding <code class="function">peek("displayheight")</code>, that however relates to the graphics window thay you may have opened.</p>
+		<p>See also <code class="function">peek("screenwidth")</code> below.</p>		
 	      </dd><dt><span class="term"><code class="function">peek("screenwidth")</code></span></dt><dd>
 		<p>Return the width in characters of the window, wherein yabasic runs. If you have not called <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code> yet, this <code class="function">peek</code>will return 0, regardless of the size of your terminal.</p>
+		<p>See also <code class="function">peek("screenheight")</code> above.</p>		
 	      </dd><dt><span class="term"><code class="function">peek("secondsrunning")</code></span></dt><dd>
 		<p>Return the number of seconds that have passed since the start of <span class="application">yabasic</span>. There is also a related <code class="literal">peek("millisrunning")</code> for higher precision.</p>
 	      </dd><dt><span class="term"><code class="function">peek("version")</code></span></dt><dd>
@@ -6111,7 +6122,7 @@ a=peek(#1)
 		<p>Return the width of the graphic-window in pixels. If none is open, this <code class="function">peek</code> will return the width of the last window opened or 100, if none has been opened yet.</p>
 	      </dd></dl></div>
 	</div>
-	<div class="refsection" id="id8622"><h2>Example</h2>
+	<div class="refsection" id="id8648"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6125,7 +6136,7 @@ wend
 	    <p>Note, that each <code class="function">peek</code> does something entirely different, and only one has been demonstrated above. Therefore you need to make up examples yourself for all the other <code class="function">peek</code>s.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id8634"><h2>See also</h2>
+	<div class="refsection" id="id8660"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_peek2" title="peek$">peek$</a></code>, <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code>, <code class="function"><a class="link" href="#ref_open" title="open">open</a></code></p>
 	</div>
@@ -6142,7 +6153,7 @@ wend
 print peek$("foo")
 </pre>
 	</div>
-	<div class="refsection" id="id8653"><h2>Description</h2>
+	<div class="refsection" id="id8679"><h2>Description</h2>
 	  
 	  <p>The <code class="function">peek$</code>-function has many different and unrelated uses. It is a kind of grab-bag for retrieving all kinds of string information, internal to <span class="application">yabasic</span>; the exact nature of the strings returned be the <code class="function">peek$</code>-function depends on the string passed as an argument.</p>
 	  <p><code class="function">peek$</code> always returns a string, however the closely related <code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code>-function exists, which may be used to retrieve numerical information from among the internals of <span class="application">yabasic</span>. Finally note, that some of the values which are retrieved with <code class="function">peek$</code> may even be changed, using the <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code>-function.</p>
@@ -6186,7 +6197,7 @@ print peek$("foo")
 
 
 	</div>
-	<div class="refsection" id="id8860"><h2>Example</h2>	  
+	<div class="refsection" id="id8886"><h2>Example</h2>	  
 	<div class="example" id="peek2_argument"><div class="example-title">Example&#160;7.1.&#160;Retrieving program-arguments</div><div class="example-contents">
 	  
 	    <pre class="programlisting">
@@ -6203,7 +6214,7 @@ wend
 </pre>
 	  </div></div><br class="example-break"/>
 	</div>
-	<div class="refsection" id="id8871"><h2>See also</h2>
+	<div class="refsection" id="id8897"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code>, <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code>, <code class="function"><a class="link" href="#ref_open" title="open">open</a></code></p>
 	</div>
@@ -6220,11 +6231,11 @@ wend
 print pi
 </pre>
 	</div>
-	<div class="refsection" id="id8891"><h2>Description</h2>
+	<div class="refsection" id="id8917"><h2>Description</h2>
 	  
 	  <p><code class="function">pi</code> is <code class="literal">3.14159265359</code> (well at least for <span class="application">yabasic</span>); do not try to assign to pi (e.g. <code class="literal">pi=22/7</code>) this would not only be mathematically dubious, but would also result in a syntax error.</p>
 	</div>
-	<div class="refsection" id="id8900"><h2>Example</h2>
+	<div class="refsection" id="id8926"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6235,7 +6246,7 @@ next a
 	    <p>This program uses <code class="function">pi</code> to transform an angle from degrees into radians.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id8908"><h2>See also</h2>
+	<div class="refsection" id="id8934"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_euler" title="euler">euler</a></code></p>
 	</div>
@@ -6255,7 +6266,7 @@ poke #a,"bar"
 poke #a,baz
 </pre>
 	</div>
-	<div class="refsection" id="id8924"><h2>Description</h2>
+	<div class="refsection" id="id8950"><h2>Description</h2>
 	  
 	  <p>The <code class="function">poke</code>-command may be used to change details of <span class="application">yabasic</span>'s behaviour. Like the related function <code class="function">peek</code>, <code class="function">poke</code> does many different things, depending on the arguments supplied.</p>
 	  <p>Here are the different things you can do with <code class="function">poke</code> (alphabetical order):</p>
@@ -6314,7 +6325,7 @@ gets overwritten with the dump, please be careful.</p>
 		<p>This <code class="function">poke</code> moves the origin of the coordinate system of the window to the specified position. The second argument (<code class="literal">"lt"</code> in the example) must always be two characters long; the first character can be one of <code class="literal">l</code> (<em class="wordasword">left</em>), <code class="literal">r</code> (<em class="wordasword">right</em>) or <code class="literal">c</code> (<em class="wordasword">center</em>); the second character can be either <code class="literal">t</code> (<em class="wordasword">top</em>), <code class="literal">b</code> (<em class="wordasword">bottom</em>) or <code class="literal">c</code> (<em class="wordasword">center</em>). Together those two characters specify the new position of the coordinate-origin. See the corresponding <code class="function"><a class="link" href="#ref_peek2" title="peek$">peek$("windoworigin")</a></code> for a more in depth description of this argument.</p>
 	      </dd></dl></div>	  
 	</div>
-	<div class="refsection" id="id9144"><h2>Examples</h2>
+	<div class="refsection" id="id9170"><h2>Examples</h2>
 
 
 <div class="example" id="poke_color"><div class="example-title">Example&#160;7.2.&#160;Poking fore- and background color</div><div class="example-contents">
@@ -6347,7 +6358,7 @@ for a=1 to 10:next a
 	</div>
 
 
-	<div class="refsection" id="id9156"><h2>See also</h2>
+	<div class="refsection" id="id9182"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_peek2" title="peek$">peek$</a></code></p>
 	</div>
@@ -6374,7 +6385,7 @@ print color("magenta") a$,b
 print color("green","yellow") at(5,5) a$,b
 </pre>
 	</div>
-	<div class="refsection" id="id9171"><h2>Description</h2>
+	<div class="refsection" id="id9197"><h2>Description</h2>
 	  
 	  <p>The <code class="function">print</code>-statement outputs strings or characters, either to your terminal (also known as <em class="wordasword">console</em>) or to an open file.</p>
 	  <p>To understand all those uses of the <code class="function">print</code>-statement, let's go through the various lines in the synopsis above:</p>
@@ -6403,7 +6414,7 @@ print color("green","yellow") at(5,5) a$,b
 		<p>A color and a position (in this sequence, not the other way around) may be specified at once.</p>
 	      </dd></dl></div>
 	</div>
-	<div class="refsection" id="id9295"><h2>Example</h2>
+	<div class="refsection" id="id9321"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6422,7 +6433,7 @@ next a
 	    <p>This example draws a colored ellipse within the text window.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9302"><h2>See also</h2>
+	<div class="refsection" id="id9328"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_at" title="at()">at</a></code>, <code class="function"><a class="link" href="#ref_print_color" title="print or input with color">print color</a></code>, <a class="link" href="#ref_input" title="input">input</a>, <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code>, <code class="function"><a class="link" href="#ref_using" title="using">using</a></code>, <code class="function"><a class="link" href="#ref_semicolon" title=";">;</a></code></p>
 	</div>
@@ -6441,7 +6452,7 @@ input color("green") "Press RETURN" t$
 print color(fore$,back$) text$
 </pre>
 	</div>
-	<div class="refsection" id="id9326"><h2>Description</h2>
+	<div class="refsection" id="id9352"><h2>Description</h2>
 	  
 	  <p>Not a separate command, but part of the commands <a class="link" href="#ref_print" title="print"><code class="function">print</code></a> or <code class="function"><a class="link" href="#ref_input" title="input">input</a></code>; may be included just after <code class="function">print</code> and can only be issued after <code class="function">clear screen</code> has been executed.</p>
 	  <p><code class="function">color()</code> takes one or two string-arguments, specifying the color of the text and (optionally) the background.</p>
@@ -6450,7 +6461,7 @@ print color(fore$,back$) text$
 	  <p>Please note, that your program may choose to use these colours in <span class="emphasis"><em>bright</em></span>, <span class="emphasis"><em>normal</em></span> or <span class="emphasis"><em>legacy</em></span> variants, depending on the <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code> <code class="literal">"console_foreground_intensity"</code>. And if you want to choose a pair or fore- and background colors for the whole program-run, you may <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code> them into <code class="literal">"console_foreground_color"</code> and <code class="literal">"console_background_color"</code>; this needs to be done before calling <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code>; see <a class="link" href="#poke_color" title="Example&#160;7.2.&#160;Poking fore- and background color">here</a> for an example.</p>
 	  <p>Note, that <code class="function">color()</code> can be written as <code class="function">colour()</code> too.</p>
 	</div>
-	<div class="refsection" id="id9378"><h2>Example</h2>
+	<div class="refsection" id="id9404"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6466,7 +6477,7 @@ data "green","yellow","cyan","magenta"
 	    <p>This prints the word <code class="systemitem">" Hallo "</code> in all colors across your screen.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9386"><h2>See also</h2>	  
+	<div class="refsection" id="id9412"><h2>See also</h2>	  
 	  <p><code class="function"><a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code>, <code class="function"><a class="link" href="#ref_at" title="at()">at</a></code>, <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code></p>
 	</div>
       </div>
@@ -6483,7 +6494,7 @@ print colour(fore$) text$
 print colour(fore$,back$) text$
 </pre>
 	</div>
-	<div class="refsection" id="id9408"><h2>See also</h2>
+	<div class="refsection" id="id9434"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_print_color" title="print or input with color">color</a></code></p>
 	</div>
@@ -6506,12 +6517,12 @@ putbit a$ to 30,30
 putbit a$,30,30,"or"
 </pre>
 	</div>
-	<div class="refsection" id="id9423"><h2>Description</h2>
+	<div class="refsection" id="id9449"><h2>Description</h2>
 	  
 	  <p>The <code class="function">putbit</code>-command is the counterpart of the <code class="function"><a class="link" href="#ref_getbit" title="getbit$()">getbit$</a></code>-function. <code class="function">putbit</code> requires a string as returned by the <code class="function"><a class="link" href="#ref_getbit" title="getbit$()">getbit</a></code>-function. Such a string contains a rectangle from the graphic window; the <code class="function">putbit</code>-function puts such a rectangular region back into the graphic-window.</p>
 	  <p>Note, that the <code class="function">putbit</code>-command currently accepts a fourth argument. However only the string value <code class="literal">"or"</code> is supported here. The effect is, that only those pixel, which are set in the string will be set in the graphic window. Those pixels, which are not set in the string, will not change in the window (as opposed to being cleared).</p>
 	</div>
-	<div class="refsection" id="id9438"><h2>Example</h2>
+	<div class="refsection" id="id9464"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6579,7 +6590,7 @@ data ""
 	  <p>If you omit this argument, the default <code class="literal">transparent</code> applies.</p>
 
 	</div>
-	<div class="refsection" id="id9465"><h2>See also</h2>
+	<div class="refsection" id="id9491"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_getbit" title="getbit$()">getbit$</a></code>, <code class="function"><a class="link" href="#ref_open_window" title="open window">open window</a></code></p>
 	</div>
@@ -6600,12 +6611,12 @@ a$=getscreen$(5,5,10,10)
 putscreen a$,7,7
 </pre>
 	</div>
-	<div class="refsection" id="id9482"><h2>Description</h2>
+	<div class="refsection" id="id9508"><h2>Description</h2>
 	  
 	  <p>The <code class="function">putscreen</code>-command is the counterpart of the <code class="function"><a class="link" href="#ref_getscreen" title="getscreen$()">getscreen$</a></code>-function. <code class="function">putscreen</code> requires a string as returned by the <code class="function"><a class="link" href="#ref_getscreen" title="getscreen$()">getscreen</a></code>-function. Such a string contains a rectangular detail from the terminal; the <code class="function">putscreen</code>-function puts such a region back into the terminal-window.</p>
 	  <p>Note, that <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code> must have been called before.</p>
 	</div>
-	<div class="refsection" id="id9497"><h2>Example</h2>
+	<div class="refsection" id="id9523"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6623,7 +6634,7 @@ next x
 	    <p>This example prints the string <code class="literal">"Hallo !Welt !"</code> all over the screen and then moves a rectangle from one side to the other.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9505"><h2>See also</h2>
+	<div class="refsection" id="id9531"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_getscreen" title="getscreen$()">getscreen$</a></code>, <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code></p>
 	</div>
@@ -6646,13 +6657,13 @@ print ran()
 x=ran(y)
 </pre>
 	</div>
-	<div class="refsection" id="id9526"><h2>Description</h2>
+	<div class="refsection" id="id9552"><h2>Description</h2>
 	  
 	  <p>The <code class="function">ran</code>-function returns a random number. If no argument is given, the number returned is in the range from 0 to 1; where only 0 is a possible value; 1 will never be returned. If an argument is supplied, the number returned will be in the range from 0 up to this argument, whereas this argument itself is not a possible return value. Regardless of the range, <code class="function">ran</code> is guaranteed to have exactly 2**30 different return values.</p>
 
 	  <p>If you call <code class="function">ran</code> multiple times during your program, the sequence of random numbers will be different each time you invoke your program; however, if, e.g. for testing you prefer to always have the same sequence of random numbers you may issue <code class="function"><a class="link" href="#ref_poke" title="poke">poke "random_seed",123</a></code>.</p>
 	</div>
-	<div class="refsection" id="id9537"><h2>Example</h2>
+	<div class="refsection" id="id9563"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6674,7 +6685,7 @@ loop
 	    <p>This example will print a colored bell-curve.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9544"><h2>See also</h2>
+	<div class="refsection" id="id9570"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_int" title="int()">int</a></code></p>
 	</div>
@@ -6693,11 +6704,11 @@ read a$,a
 data "Hello !",7
 </pre>
 	</div>
-	<div class="refsection" id="id9560"><h2>Description</h2>
+	<div class="refsection" id="id9586"><h2>Description</h2>
 	  
 	  <p>The <code class="function">read</code>-statement retrieves literal data, which is stored within <code class="function">data</code>-statements elsewhere in your program.</p>
 	</div>
-	<div class="refsection" id="id9567"><h2>Example</h2>
+	<div class="refsection" id="id9593"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6716,7 +6727,7 @@ data "green","yellow","cyan","magenta"
 	    <p>This program prints the names of the colors known to <span class="application">yabasic</span> in those very colors.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9575"><h2>See also</h2>
+	<div class="refsection" id="id9601"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_data" title="data">data</a>, <code class="function"><a class="link" href="#ref_restore" title="restore">restore</a></code></code></p>
 	</div>
@@ -6740,11 +6751,11 @@ fill rectangle 40,40,60,60
 clear fill rectangle 60,60,40,40
 </pre>
 	</div>
-	<div class="refsection" id="id9592"><h2>Description</h2>
+	<div class="refsection" id="id9618"><h2>Description</h2>
 	  
 	  <p>The <code class="function">rectangle</code>-command (also known as <code class="function">box</code> or <code class="function">rect</code>, for short) draws a rectangle; it accepts four parameters: The x- and y-coordinates of two facing corners of the rectangle. With the optional clauses <code class="function">clear</code> and <code class="function">fill</code> (which may appear together and in any sequence) the rectangle can be cleared and filled respectively.</p>
 	</div>
-	<div class="refsection" id="id9602"><h2>Example</h2>
+	<div class="refsection" id="id9628"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6765,7 +6776,7 @@ loop
 	    <p>This example draws a nice animated pattern; watch it for a couple of hours, to see how it develops.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9609"><h2>See also</h2>
+	<div class="refsection" id="id9635"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_open_window" title="open window">open window</a></code>, <code class="function"><a class="link" href="#ref_open_printer" title="open printer">open printer</a></code>, <code class="function"><a class="link" href="#ref_line" title="line">line</a></code>, <code class="function"><a class="link" href="#ref_circle" title="circle">circle</a></code>, <code class="function"><a class="link" href="#ref_triangle" title="triangle">triangle</a></code></p>
 	</div>
@@ -6782,7 +6793,7 @@ loop
 See the <code class="function"><a class="link" href="#ref_dim" title="dim">dim</a></code>-command.
 </pre>
 	</div>
-	<div class="refsection" id="id9635"><h2>Description</h2>
+	<div class="refsection" id="id9661"><h2>Description</h2>
 	  
 	  <p>The <code class="function">redim</code>-command does exactly the same as the <code class="function"><a class="link" href="#ref_dim" title="dim">dim</a></code>-command; it is just a <span class="emphasis"><em>synonym</em></span>. <code class="function">redim</code> has been around in older versions of <abbr class="acronym">basic</abbr> (not even <span class="application">yabasic</span>) for many years; therefore it is supported in <span class="application">yabasic</span> for compatibility reasons.</p>
 	  <p>Please refer to the entry for the <code class="function"><a class="link" href="#ref_dim" title="dim">dim</a></code>-command for further information.</p>
@@ -6807,7 +6818,7 @@ print "Not a comment" //   even this.
 print "Not a comment" rem  and this !
 </pre>
 	</div>
-	<div class="refsection" id="id9659"><h2>Description</h2>
+	<div class="refsection" id="id9685"><h2>Description</h2>
 	  
 	  <p><code class="function">rem</code> introduces a comment (like <code class="literal">#</code> or <code class="literal">//</code>), that extends up to the end of the line.</p>
 	  <p>Those comments do not even need a colon
@@ -6815,7 +6826,7 @@ print "Not a comment" rem  and this !
 	  <p>Note, that <code class="function">rem</code> is an abbreviation for <span class="emphasis"><em>remark</em></span>. <code class="function">remark</code> however is <span class="emphasis"><em>not</em></span> a valid command in <span class="application">yabasic</span>.</p>
 	  <p>Finally note, that a comment introduced with '<code class="literal">#</code>' may have a special meaning under unix; see the entry for <a class="link" href="#ref_hash" title="#">#</a> for details.</p>
 	</div>
-	<div class="refsection" id="id9685"><h2>Example</h2>
+	<div class="refsection" id="id9711"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6828,7 +6839,7 @@ rem
 	    <p>This program does nothing, but in a splendid and well commented way.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9692"><h2>See also</h2>
+	<div class="refsection" id="id9718"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_hash" title="#">#</a></code>, <code class="function"><a class="link" href="#ref_double_slash" title="//">//</a></code></p>
 	</div>
@@ -6847,11 +6858,11 @@ repeat
 until &#8230;
 </pre>
 	</div>
-	<div class="refsection" id="id9710"><h2>Description</h2>
+	<div class="refsection" id="id9736"><h2>Description</h2>
 	  
 	  <p>The <code class="function">repeat</code>-loop executes all the statements up to the final <code class="function">until</code>-keyword over and over. The loop is executed as long as the condition, which is specified with the <code class="function">until</code>-clause, becomes true. By construction, the statements within the loop are executed at least once.</p>
 	</div>
-	<div class="refsection" id="id9718"><h2>Example</h2>
+	<div class="refsection" id="id9744"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6868,7 +6879,7 @@ until x=10
 	    <p>This program is pretty much useless, but self-explanatory.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9725"><h2>See also</h2>
+	<div class="refsection" id="id9751"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_until" title="until">until</a></code>, <code class="function"><a class="link" href="#ref_break" title="break">break</a></code>, <code class="function"><a class="link" href="#ref_while" title="while">while</a></code>, <code class="function"><a class="link" href="#ref_do" title="do">do</a></code></p>
 	</div>
@@ -6891,12 +6902,12 @@ label foo
 data 4,5,6
 </pre>
 	</div>
-	<div class="refsection" id="id9747"><h2>Description</h2>
+	<div class="refsection" id="id9773"><h2>Description</h2>
 	  
 	  <p>The <code class="function">restore</code>-command may be used to <span class="emphasis"><em>reset</em></span> the reading of <code class="function">data</code>-statements, so that the next <code class="function">read</code>-statement will read data from the first <code class="function">data</code>-statement.</p>
 	  <p>You may specify a <a class="link" href="#ref_label" title="label">label</a> with the <code class="function">restore</code>-command; in that case, the next <code class="function">read</code>-statement will read data starting at the given label. If the label is omitted, reading data will begin with the first <code class="function">data</code>-statement within your program.</p>
 	</div>
-	<div class="refsection" id="id9762"><h2>Example</h2>
+	<div class="refsection" id="id9788"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6920,7 +6931,7 @@ data 1,"eins",2,"zwei",3,"drei"
 	    <p>This program asks to select one of those languages known to me (i.e. english or german) and then prints the numbers 1,2 and 3 and their textual equivalents in the chosen language.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9769"><h2>See also</h2>
+	<div class="refsection" id="id9795"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_read" title="read">read</a></code>, <code class="function"><a class="link" href="#ref_data" title="data">data</a></code>, <code class="function"><a class="link" href="#ref_label" title="label">label</a></code></p>
 	</div>
@@ -6946,13 +6957,13 @@ sub bar(baz)
 end sub
 </pre>
 	</div>
-	<div class="refsection" id="id9788"><h2>Description</h2>
+	<div class="refsection" id="id9814"><h2>Description</h2>
 	  
 	  <p>The <code class="function">return</code>-statement serves two different (albeit somewhat related) purposes. The probably more important use of <code class="function">return</code> is to return control from within a subroutine to the place in your program, where the subroutine has been called. If the subroutine is declared to return a value, the <code class="function">return</code>-statement might be accompanied by a string or number, which constitutes the <span class="emphasis"><em>return value</em></span> of the subroutine.</p>
 	  <p>However, even if the subroutine should return a value, the <code class="function">return</code>-statement need not carry a value; in that case the subroutine will return 0 or the empty string (depending on the type of the subroutine). Moreover, feel free to place multiple <code class="function">return</code>-statements within your subroutine; it's a nice way of controlling the flow of execution.</p>
 	  <p>The second (but historically first) use of <code class="function">return</code> is to return to the position, where a prior <code class="function"><a class="link" href="#ref_gosub" title="gosub">gosub</a></code> has left off. In that case <code class="function">return</code> may <span class="emphasis"><em>not</em></span> carry a value.</p>
 	</div>
-	<div class="refsection" id="id9806"><h2>Example</h2>
+	<div class="refsection" id="id9832"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -6977,7 +6988,7 @@ end sub
 	    <p>The example above demonstrates <code class="function">return</code> within subroutines; please see <a class="link" href="#ref_gosub" title="gosub"><code class="function">gosub</code></a> for an example of how to use <code class="function">return</code> in this context.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9821"><h2>See also</h2>
+	<div class="refsection" id="id9847"><h2>See also</h2>
 	  
 	  <p><a class="link" href="#ref_sub" title="sub"><code class="function">sub</code></a>, <a class="link" href="#ref_gosub" title="gosub"><code class="function">gosub</code></a></p>
 	</div>
@@ -6996,11 +7007,11 @@ clear screen
 print reverse "foo"
 </pre>
 	</div>
-	<div class="refsection" id="id9838"><h2>Description</h2>
+	<div class="refsection" id="id9864"><h2>Description</h2>
 	  
 	  <p><code class="function">reverse</code> may be used to <code class="function">print</code> text in reverse. <code class="function">reverse</code> is not a separate command, but part of the <code class="function">print</code>-command; it may be included just after the <code class="function">print</code> and can only be issued once that <code class="function">clear screen</code> has been issued.</p>
 	</div>
-	<div class="refsection" id="id9849"><h2>Example</h2>
+	<div class="refsection" id="id9875"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7029,7 +7040,7 @@ loop
 	    <p>This program prints numbers from 1 on and marks each prime number in reverse.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9856"><h2>See also</h2>
+	<div class="refsection" id="id9882"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_at" title="at()">at</a></code><code class="function">, <code class="function"><a class="link" href="#ref_print_color" title="print or input with color">print color</a></code>, <a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code></p>
 	</div>
@@ -7047,12 +7058,12 @@ print right$(a$,2)
 right$(b$,2)="baz"
 </pre>
 	</div>
-	<div class="refsection" id="id9878"><h2>Description</h2>
+	<div class="refsection" id="id9904"><h2>Description</h2>
 	  
 	  <p>The <code class="function">right$</code>-function requires two arguments (a string and a number) and returns the part from the right end of the string, whose length is specified by its second argument. So, <code class="function">right$</code> simply returns the requested number of chars from the right end of the given string.</p>
 	  <p>Note, that the <code class="function">right$</code>-function can be assigned to, i.e. it may appear on the left hand side of an assignment. In this way it is possible to change a part of the variable used within the <code class="function">right$</code>-function. Note, that that way the <span class="emphasis"><em>length</em></span> of the string cannot be changed, i.e. characters might be overwritten, but not added. For an example see below.</p>
 	</div>
-	<div class="refsection" id="id9889"><h2>Example</h2>
+	<div class="refsection" id="id9915"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7077,7 +7088,7 @@ print a$
 </pre>
 	  </div>
 	</div>
-	<div class="refsection" id="id9900"><h2>See also</h2>
+	<div class="refsection" id="id9926"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_right" title="right$()">right$</a></code> and <code class="function"><a class="link" href="#ref_mid" title="mid$()">mid$</a></code></p>
 	</div>
@@ -7095,12 +7106,12 @@ pos=rinstr("Thequickbrownfox","equi")
 pos=rinstr(a$,b$,x)
 </pre>
 	</div>
-	<div class="refsection" id="id9917"><h2>Description</h2>
+	<div class="refsection" id="id9943"><h2>Description</h2>
 	  
 	  <p>The <code class="function">rinstr</code>-function accepts two string-arguments and tries to find the second within the first. However, unlike the <code class="function"><a class="link" href="#ref_instr" title="instr()">instr</a></code>, the <code class="function">rinstr</code>-function finds the <span class="emphasis"><em>rightmost</em></span> (or last) occurrence of the string; whereas the <code class="function">instr</code>-function finds the <span class="emphasis"><em>leftmost</em></span> (or first) occurrence. In any case however, the position is counted from the left.</p>
 	  <p>If you supply a third, numeric argument to the <code class="function">rinstr</code>-function, it will be used as a starting point for the search. Therefore <code class="function">rinstr("abcdeabcdeabcde","e",8)</code> will return 5, because the search for an "<code class="literal">e</code>" starts at position 8 and finds the first one at position 5.</p>
 	</div>
-	<div class="refsection" id="id9933"><h2>Example</h2>
+	<div class="refsection" id="id9959"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7115,7 +7126,7 @@ print instr("foofoofoobar","foo")
 	    <p>would have printed <code class="computeroutput">1</code>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9947"><h2>See also</h2>
+	<div class="refsection" id="id9973"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_instr" title="instr()">instr</a></code></p>
 	</div>
@@ -7132,11 +7143,11 @@ print instr("foofoofoobar","foo")
 print round(x)
 </pre>
 	</div>
-	<div class="refsection" id="id9962"><h2>Description</h2>
+	<div class="refsection" id="id9988"><h2>Description</h2>
 	  
 	  <p>The <code class="function">found</code>-function returns the nearest integer (e.g. <code class="computeroutput">3.0</code> for an argument of <code class="computeroutput">2.6</code>). An argument with a fractional part of <code class="computeroutput">0.5</code> (e.g. <code class="computeroutput">2.5</code>) represents an edge case, as such an argument has the same distance to two numbers, <code class="computeroutput">3.0</code> and <code class="computeroutput">2.0</code> in the example; this ambiguity is resolved by rounding away from zero and returning <code class="computeroutput">3.0</code>. By the same rule <code class="function">round(-2.5)</code> returns <code class="computeroutput">-3.0</code>; so you see, that <code class="literal">round(x)</code> always equals <code class="literal">round(-x)</code>.</p>
 	</div>
-	<div class="refsection" id="id9979"><h2>Example</h2>
+	<div class="refsection" id="id10005"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7147,7 +7158,7 @@ print int(-2.3),round(-2.5), round(-2.7)
 	    <p>These examples return in order <code class="computeroutput">2 3 3</code>, then <code class="computeroutput">2 -2</code> and finally <code class="computeroutput">2 -3 -3</code>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id9989"><h2>See also</h2>
+	<div class="refsection" id="id10015"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_ceil" title="ceil()">ceil</a></code>, <code class="function"><a class="link" href="#ref_floor" title="floor()">floor</a></code>, <code class="function"><a class="link" href="#ref_int" title="int()">int</a></code>, <code class="function"><a class="link" href="#ref_frac" title="frac()">frac</a></code></p>
 	</div>
@@ -7164,11 +7175,11 @@ print int(-2.3),round(-2.5), round(-2.7)
 a$=rtrim$(b$)
 </pre>
 	</div>
-	<div class="refsection" id="id10010"><h2>Description</h2>
+	<div class="refsection" id="id10036"><h2>Description</h2>
 	  
 	  <p>The <code class="function">rtrim$</code>-function removes all whitespace from the right end of a string and returns the result.</p>
 	</div>
-	<div class="refsection" id="id10016"><h2>Example</h2>
+	<div class="refsection" id="id10042"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7191,7 +7202,7 @@ print "Read ",l," lines"
 	    <p>This example reads the file <code class="filename">foo</code> allowing for <span class="emphasis"><em>continuation lines</em></span>, which are marked by a <code class="literal">\</code>, which appears as the last character on a line. For convenience whitespace at the right end of a line is trimmed with <code class="function">rtrim</code>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10027"><h2>See also</h2>
+	<div class="refsection" id="id10053"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_ltrim" title="ltrim$()">ltrim$</a></code>, <code class="function"><a class="link" href="#ref_trim" title="trim$()">trim$</a></code></p>
 	</div>
@@ -7213,11 +7224,11 @@ print "Read ",l," lines"
 clear screen
 </pre>
 	</div>
-	<div class="refsection" id="id10049"><h2>Description</h2>
+	<div class="refsection" id="id10075"><h2>Description</h2>
 	  
 	  <p>The keyword <code class="function">screen</code> appears only within the sequence <code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code>; please see there for a description.</p>
 	</div>
-	<div class="refsection" id="id10057"><h2>See also</h2>
+	<div class="refsection" id="id10083"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_clear_screen" title="clear screen">clear screen</a></code></p>
 	</div>
@@ -7238,7 +7249,7 @@ seek #1,y,"end"
 seek #1,z,"here"
 </pre>
 	</div>
-	<div class="refsection" id="id10072"><h2>Description</h2>
+	<div class="refsection" id="id10098"><h2>Description</h2>
 	  
 	  <p>The <code class="function">seek</code>-command changes the position, where the next <code class="function">input</code> (or <code class="function">peek</code>) statement will read from an open file. Usually files are read from the beginning to the end sequentially; however sometimes you may want to depart from this simple scheme. This can be done with the <code class="function">seek</code>-command, allowing you to change the position, where the next piece of data will be read from the file.</p>
 	  <p><code class="function">seek</code> accepts two or three arguments: The first one is the number of an already open file. The second one is the position where the next read from the file will start. The third argument is optional and specifies the the point from where the position (the second argument) will count. It can be one of:</p>
@@ -7250,7 +7261,7 @@ seek #1,z,"here"
 		<p>Count from the current position within the file.</p>
 	      </dd></dl></div>
 	</div>
-	<div class="refsection" id="id10099"><h2>Example</h2>
+	<div class="refsection" id="id10125"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7274,7 +7285,7 @@ loop
 	    <p>This example increments randomly one of ten counters (in the array <code class="literal">count()</code>); however, the result is always kept and updated within the file <code class="filename">count.dat</code>, so even in case of an unexpected interrupt, the result will not be lost.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10108"><h2>See also</h2>
+	<div class="refsection" id="id10134"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_tell" title="tell">tell</a></code>, <code class="function"><a class="link" href="#ref_open" title="open">open</a></code>, <code class="function"><a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code></p>
 	</div>
@@ -7291,11 +7302,11 @@ loop
 a=sig(b)
 </pre>
 	</div>
-	<div class="refsection" id="id10129"><h2>Description</h2>
+	<div class="refsection" id="id10155"><h2>Description</h2>
 	  
 	  <p>Return <code class="literal">+1</code>, <code class="literal">-1</code> or <code class="literal">0</code>, if the single argument is positive, negative or zero.</p>
 	</div>
-	<div class="refsection" id="id10137"><h2>Example</h2>
+	<div class="refsection" id="id10163"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7309,7 +7320,7 @@ loop
 	    <p>This program prints an infinite sequence of random number; positive numbers are printed in green, negative numbers are printed red (an exact zero would be printed white). (With a little extra work, this program could be easily extended into a brokerage system)</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10144"><h2>See also</h2>
+	<div class="refsection" id="id10170"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_abs" title="abs()">abs</a></code>, <code class="function"><a class="link" href="#ref_int" title="int()">int</a></code>, <code class="function"><a class="link" href="#ref_frac" title="frac()">frac</a></code></p>
 	</div>
@@ -7326,11 +7337,11 @@ loop
 y=sin(angle)
 </pre>
 	</div>
-	<div class="refsection" id="id10163"><h2>Description</h2>
+	<div class="refsection" id="id10189"><h2>Description</h2>
 	  
 	  <p>The <code class="function">sin</code>-function expects an angle (in radians, <span class="emphasis"><em>not</em></span> degrees) and returns its sine.</p>
 	</div>
-	<div class="refsection" id="id10170"><h2>Example</h2>
+	<div class="refsection" id="id10196"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7344,7 +7355,7 @@ close curve
 	    <p>This program draws a circle (ignoring the existence of the <code class="function"><a class="link" href="#ref_circle" title="circle">circle</a></code>-command).</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10179"><h2>See also</h2>
+	<div class="refsection" id="id10205"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_asin" title="asin()">asin</a></code>, <code class="function"><a class="link" href="#ref_cos" title="cos()">cos</a></code></p>
 	</div>
@@ -7361,12 +7372,12 @@ close curve
 print shl(0b11001,8)	    
 </pre>
 	</div>
-	<div class="refsection" id="id10196"><h2>Description</h2>
+	<div class="refsection" id="id10222"><h2>Description</h2>
 	  
 	  <p>The <code class="function">shl</code>-function (<code class="literal">shl</code> stands for <span class="emphasis"><em>shift left</em></span>) treats its first argument as a binary number and shifts it to the left as specified by its second argument, filling up the gaps with zeroes. So <code class="literal">bin$(shl(0b11011,4))</code> returns <code class="literal">110110000</code> (the example uses <code class="function"><a class="link" href="#ref_bin" title="bin$()">bin$</a></code> and a <a class="link" href="#top_numbers_with_base_2_or_16" title="Numbers with base 2 or 16">number with base 2</a>).</p>
 	  <p>Please note: as the argument of the function is converted to a 32-bit integer, all results are also confined to this range.</p>
 	</div>
-	<div class="refsection" id="id10210"><h2>Example</h2>
+	<div class="refsection" id="id10236"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7378,7 +7389,7 @@ next i
 	    <p>This will print the powers of two from 1 to 32, because the left-shift operation is equivalent to a multiplication with two.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10217"><h2>See also</h2>
+	<div class="refsection" id="id10243"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_bitwise_and" title="and()">and</a></code>, <a class="link" href="#ref_bitwise_or" title="or()"><code class="function">or</code></a>, <a class="link" href="#ref_eor" title="eor()"><code class="function">eor</code></a>, <a class="link" href="#ref_bitnot" title="bitnot()"><code class="function">bitnot</code></a>, <a class="link" href="#ref_shr" title="shr()"><code class="function">shr</code></a></p>
 	</div>
@@ -7395,12 +7406,12 @@ next i
 print shr(0b110010000,4)	    
 </pre>
 	</div>
-	<div class="refsection" id="id10240"><h2>Description</h2>
+	<div class="refsection" id="id10266"><h2>Description</h2>
 	  
 	  <p>The <code class="function">shr</code>-function (<code class="literal">shr</code> stands for <span class="emphasis"><em>shift right</em></span>) treats its first argument as a binary number and shifts it to the right as specified by its second argument; the rightmost binary digits are discarded during this operation. So <code class="literal">bin$(shr(0b1101100,2))</code> returns <code class="literal">11011</code> (the example uses <code class="function"><a class="link" href="#ref_bin" title="bin$()">bin$</a></code> and a <a class="link" href="#top_numbers_with_base_2_or_16" title="Numbers with base 2 or 16">number with base 2</a>).</p>
 	  <p>Please note: as the argument of the function is converted to a 32-bit integer, all results are also confined to this range.</p>
 	</div>
-	<div class="refsection" id="id10254"><h2>Example</h2>
+	<div class="refsection" id="id10280"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7412,7 +7423,7 @@ next i
 	    <p>This will print the powers of two from 32 downto 1, because the right-shift operation is equivalent to a division by two (discarding any fractional part).</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10261"><h2>See also</h2>
+	<div class="refsection" id="id10287"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_bitwise_and" title="and()">and</a></code>, <a class="link" href="#ref_bitwise_or" title="or()"><code class="function">or</code></a>, <a class="link" href="#ref_eor" title="eor()"><code class="function">eor</code></a>, <a class="link" href="#ref_bitnot" title="bitnot()"><code class="function">bitnot</code></a>, <a class="link" href="#ref_shl" title="shl()"><code class="function">shl</code></a></p>
 	</div>
@@ -7429,7 +7440,7 @@ next i
 sleep 4
 </pre>
 	</div>
-	<div class="refsection" id="id10284"><h2>Description</h2>
+	<div class="refsection" id="id10310"><h2>Description</h2>
 	  
 	  <p>The <code class="function">sleep</code>-command has many different names: You may write <code class="function">pause</code>, <code class="function">sleep</code> or <code class="function">wait</code> interchangeably; whatever you write, <span class="application">yabasic</span> will always do exactly the same.</p>
 	  <p>Therefore you should refer to the entry for the <code class="function"><a class="link" href="#ref_pause" title="pause">pause</a></code>-function for further information.</p>
@@ -7450,7 +7461,7 @@ num=split(a$,w$())
 num=split(a$,w$(),s$)
 </pre>
 	</div>
-	<div class="refsection" id="id10305"><h2>Description</h2>
+	<div class="refsection" id="id10331"><h2>Description</h2>
 	  
 	  <p>The <code class="function">split</code>-function requires a string (containing the text to be split), a <a class="link" href="#ref_array_references" title="References on arrays">reference</a> to a string-array (which will receive the resulting strings, i.e. the <span class="emphasis"><em>tokens</em></span>) and an optional string (with a set of characters, at which to split, i.e. the <span class="emphasis"><em>delimiters</em></span>).</p>
 	  <p>The <code class="function">split</code>-function regards its first argument (a string) as a list of <span class="emphasis"><em>tokens</em></span> separated by <span class="emphasis"><em>delimiters</em></span> and it will store the list of tokens within the array-reference you have supplied. Note, that the array, which is passed as a reference (<code class="literal">w$()</code> in the synopsis), will be resized accordingly, so that you don't have to figure out the number of tokens in advance. The element at position zero (i.e. <code class="literal">w$(0)</code>) will not be used.</p>
@@ -7461,7 +7472,7 @@ num=split(a$,w$(),s$)
 	  <p>The first argument finally contains the text, that will be split into tokens. The <code class="function">split</code>-function returns the number of tokens that have been found.</p>
 	  <p>Please see the examples below for some hints on the exact behaviour of the <code class="function">split</code>-function and how it differs from the <code class="function">token</code>-function:</p>
 	</div>
-	<div class="refsection" id="id10340"><h2>Example</h2>
+	<div class="refsection" id="id10366"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7524,7 +7535,7 @@ Please enter a line: -a==b-c==
 </p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10349"><h2>See also</h2>
+	<div class="refsection" id="id10375"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_token" title="token()">token</a></code></p>
 	</div>
@@ -7541,12 +7552,12 @@ Please enter a line: -a==b-c==
 a=sqr(b)
 </pre>
 	</div>
-	<div class="refsection" id="id10364"><h2>Description</h2>
+	<div class="refsection" id="id10390"><h2>Description</h2>
 	  
 	  <p>The <code class="function">sqr</code>-function computes the square of its numerical argument (i.e. it multiplies its argument with itself).</p>
 	  <p>Please note, that other dialects of <abbr class="acronym">basic</abbr> use <code class="function">sqr</code> as the <span class="emphasis"><em>square root</em></span>, rather than the <span class="emphasis"><em>square</em></span>; this needs to be checked especially when porting programs from other Versions of <abbr class="acronym">basic</abbr>.</p>
 	</div>
-	<div class="refsection" id="id10376"><h2>Example</h2>
+	<div class="refsection" id="id10402"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7557,7 +7568,7 @@ next a
 	    <p>As you may see from the output, <code class="function">sqr</code> can be written as <code class="function">**2</code> (or <code class="function">^2</code>) too.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10386"><h2>See also</h2>
+	<div class="refsection" id="id10412"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_sqrt" title="sqrt()">sqrt</a></code>, <code class="function"><a class="link" href="#ref_pow" title="** or ^">**</a></code>, <code class="function"><a class="link" href="#ref_pow" title="** or ^">^</a></code></p>
 	</div>
@@ -7572,11 +7583,11 @@ next a
 	<div class="refsynopsisdiv"><h2>Synopsis</h2>
 	  <pre class="synopsis">to be written</pre>
 	</div>
-	<div class="refsection" id="id10405"><h2>Description</h2>
+	<div class="refsection" id="id10431"><h2>Description</h2>
 	  
 	  <p>The <code class="function">sqrt</code>-function computes the square root of its numerical argument.</p>
 	</div>
-	<div class="refsection" id="id10411"><h2>Example</h2>
+	<div class="refsection" id="id10437"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7587,7 +7598,7 @@ next a
 	    <p>As you may see from the output, <code class="function">sqrt</code> can be written as <code class="function">**(1/2)</code> (or <code class="function">^(1/2)</code>) too.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10421"><h2>See also</h2>
+	<div class="refsection" id="id10447"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_sqr" title="sqr()">sqr</a></code>, <code class="function"><a class="link" href="#ref_pow" title="** or ^">**</a></code>, <code class="function"><a class="link" href="#ref_pow" title="** or ^">^</a></code></p>
 	</div>
@@ -7610,11 +7621,11 @@ sub foo()
 end sub 
 </pre>
 	</div>
-	<div class="refsection" id="id10440"><h2>Description</h2>
+	<div class="refsection" id="id10466"><h2>Description</h2>
 	  
 	  <p>The <code class="function">static</code> keyword can be used within subroutines to mark variables as <span class="emphasis"><em>static</em></span>. This has two effects: First, the variable is <span class="emphasis"><em>local</em></span> to the subroutine, i.e. its value is not know outside the subroutine (this is the effect of the <code class="function"><a class="link" href="#ref_local" title="local">local</a></code> keyword). Second, the <code class="function">static</code>-keyword arranges things, so that the variable keeps its value between invocations of the subroutine (this is different from the <code class="function">local</code>-keyword).</p>
 	</div>
-	<div class="refsection" id="id10452"><h2>Example</h2>
+	<div class="refsection" id="id10478"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7640,7 +7651,7 @@ end sub
 	    <p>The output shows, that the <code class="function">static</code> variable <code class="varname">a</code> keeps its value between subroutine calls, whereas <code class="varname">b</code> is initialized with the value 0 at every call to the subroutine <code class="function">foo</code>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10468"><h2>See also</h2>
+	<div class="refsection" id="id10494"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_sub" title="sub">sub</a></code>, <code class="function"><a class="link" href="#ref_local" title="local">local</a></code></p>
 	</div>
@@ -7659,12 +7670,12 @@ for a=1 to 10 step 3
 next a
 </pre>
 	</div>
-	<div class="refsection" id="id10485"><h2>Description</h2>
+	<div class="refsection" id="id10511"><h2>Description</h2>
 	  
 	  <p>Specify, by which amount the loop-variable of a <code class="function"><a class="link" href="#ref_for" title="for">for</a></code>-loop will be incremented at each step.</p>
 	  <p>The <code class="function">step</code> (as well as the lower and upper bound) are computed anew in each step; this is not common, but possible, as the example below demonstrates.</p>
 	</div>
-	<div class="refsection" id="id10494"><h2>Example</h2>
+	<div class="refsection" id="id10520"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7677,7 +7688,7 @@ print
 	    <p>This program computes the fibonacci numbers between 1 and 1000.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10501"><h2>See also</h2>
+	<div class="refsection" id="id10527"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_for" title="for">for</a></code></p>
 	</div>
@@ -7697,19 +7708,19 @@ b$=str$(x,"###,###.##","_.")
 c$=str$(x,"%g")
 </pre>
 	</div>
-	<div class="refsection" id="id10516"><h2>Description</h2>
+	<div class="refsection" id="id10542"><h2>Description</h2>
 	  
 	  <p>The <code class="function">str$</code>-function accepts a numeric argument and returns it as a string.</p>
 	  <p>Note: As a special and trivial case <code class="function">str$</code> also accepts a single string-argument, which it just returns unchanged; this can be useful e.g. when used with <code class="function"><a class="link" href="#ref_eval2" title="eval$()">eval$</a></code>, see the example there for an application.</p>
 	  <p>Please note, that this function is not related with the similar named function <code class="function"><a class="link" href="#ref_string" title="string$()">string$</a></code>.</p>	  
 	  <p>For the common case of converting a number to a string, the process can be controlled with an optional third argument (the <span class="emphasis"><em>format</em></span> argument). See the following table of examples to learn about valid values of this argument. Note, that those examples fall in one of two categories: <span class="emphasis"><em>C-style</em></span> and <span class="emphasis"><em>basic-style</em></span>; the first 4 examples in the table below are C-style, the rest of the examples are basic-style. For more information on the C-style formats, you may refer to your favorite documentation on the <span class="application">C</span> programming language. The basic-style formats are much simpler, they just depict the desired output, marking digits with '<code class="literal">#</code>'; groups of (usually three) digits may be separated with colons ('<code class="literal">,</code>'), the decimal dot must be marked by a literal dot ('<code class="literal">.</code>'). Moreover these characters (colons and dot) may be replaced by other characters to satisfy the needs of non-english (e.g. german) languages; see the examples below.</p>
 	  <p>Note, that for clarity, each space in the result has been replaced by the letter 'x', because it would be hard to figure out, how many spaces are produced <span class="emphasis"><em>exactly</em></span> otherwise.</p>
-	  <div class="table" id="id10539"><div class="table-title">Table&#160;7.2.&#160;Examples for the format argument</div><div class="table-contents">
+	  <div class="table" id="id10565"><div class="table-title">Table&#160;7.2.&#160;Examples for the format argument</div><div class="table-contents">
 	    
 	    <table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="function">Example string</code></th><th style="border-bottom: 1px solid ; "><code class="function">Result for converting 1000*<code class="constant">pi</code></code></th><th style="border-bottom: 1px solid ; "><code class="function">Description</code></th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">%g</code></td><td style="border-bottom: 1px solid ; "><code class="literal">3141.59</code></td><td style="border-bottom: 1px solid ; ">Internally <span class="application">yabasic</span> uses double precision, so its numbers can be formatted with the <code class="literal">%g</code> format specifier.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">%2.5f</code></td><td style="border-bottom: 1px solid ; "><code class="literal">3141.59265</code></td><td style="border-bottom: 1px solid ; ">The '<code class="literal">2</code>' determines the minimum length of the output; but if needed (as in the example) the output can be longer. The '<code class="literal">5</code>' is the number of digits after the decimal point.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">%12.5f</code></td><td style="border-bottom: 1px solid ; "><code class="literal">xx3141.59265</code></td><td style="border-bottom: 1px solid ; ">Two spaces (which appear as '<code class="literal">x</code>') are added to pad the output to the requested length of 12 characters.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">%012.5g</code></td><td style="border-bottom: 1px solid ; "><code class="literal">0000003141.6</code></td><td style="border-bottom: 1px solid ; ">The '<code class="literal">g</code>' requests, that the precision ('<code class="literal">5</code>') specifies the <span class="emphasis"><em>overall</em></span> number of digits (before and after the decimal point).</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">%-12.5f</code></td><td style="border-bottom: 1px solid ; "><code class="literal">3141.59265xx</code></td><td style="border-bottom: 1px solid ; ">The '<code class="literal">-</code>' requests the output to be left-centered (therefore the filling space appears at the right).</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">#####.##</code></td><td style="border-bottom: 1px solid ; "><code class="literal">x3141.59</code></td><td style="border-bottom: 1px solid ; ">Each '<code class="literal">#</code>' specifies a digit (either before or after the dot), the '<code class="literal">.</code>' specifies the position of the dot. As 1000*<code class="constant">pi</code> does not have enough digits, the 5 requested digits before the dot are filled up with a space (which shows up as an '<code class="literal">x</code>').</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">##,###.##</code></td><td style="border-bottom: 1px solid ; "><code class="literal">x3,141.59</code></td><td style="border-bottom: 1px solid ; ">Nearly the same as above, but the colon from the format shows up within the result.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">##,###.##</code> and an <span class="emphasis"><em>additional</em></span> argument of <code class="literal">".,"</code></td><td style="border-bottom: 1px solid ; "><code class="literal">x3.141,59</code></td><td style="border-bottom: 1px solid ; ">Similar to the example above, but colon and dot are replaced with dot and colon respectively.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">##,###.##</code> and an <span class="emphasis"><em>additional</em></span> argument of <code class="literal">"_,"</code></td><td style="border-bottom: 1px solid ; "><code class="literal">x3_141,59</code></td><td style="border-bottom: 1px solid ; ">Similar to the example above, but colon and dot are replaced with underscore and colon respectively.</td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><code class="literal">#####</code></td><td style="border-bottom: 1px solid ; "><code class="literal">x3142</code></td><td style="border-bottom: 1px solid ; ">The format string does not contain a dot, and therefore the result does not have any fractional digits.</td></tr><tr><td style="border-right: 1px solid ; "><code class="literal">##.###</code></td><td><code class="literal">##.###</code></td><td>As 1000*<code class="constant">pi</code> has 4 digits in front of the decimal dot and the format only specifies 2, <span class="application">yabasic</span> does not know what to do; therefore it chooses just to reproduce the format string.</td></tr></tbody></table>
 	  </div></div><br class="table-break"/>
 	</div>
-	<div class="refsection" id="id10639"><h2>Example</h2>
+	<div class="refsection" id="id10665"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7725,7 +7736,7 @@ loop
 	    <p>This is the program, that has been used to get the results shown in the table above.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10646"><h2>See also</h2>
+	<div class="refsection" id="id10672"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_using" title="using">using</a></code></p>
 	</div>
@@ -7743,13 +7754,13 @@ print string$(21,"-")
 print string$(10,"-=")+"-"
           </pre>
 	</div>
-	<div class="refsection" id="id10663"><h2>Description</h2>
+	<div class="refsection" id="id10689"><h2>Description</h2>
 	  
 	  <p>The <code class="function">string$</code>-function takes a numeric and a string argument and and returns a new string that repeats the given string the given number of times.</p>
 	  <p>Please note, that this function is not related with the similar named function <code class="function"><a class="link" href="#ref_str" title="str$()">str$</a></code>.</p>
 	  <p>The function <code class="function">string$</code> can be useful e.g. to build progress-bars. It can also help in formatting text e.g. two separate sections of text or to underline headings; see the example below. <code class="function">string$</code> helps you to write shorter code, where otherwise a <code class="function">for</code>-loop might be needed.</p>
 	</div>
-	<div class="refsection" id="id10676"><h2>Example</h2>
+	<div class="refsection" id="id10702"><h2>Example</h2>
 	  <p>The example below uses <code class="function">string$</code> to structure text, either with horizontal lines or with underlined headings.</p>
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7801,7 +7812,7 @@ Etiam est leo, dictum id pharetra feugiat, volutpat id turpis.
 	    <p>Note, that also multi-character strings can be multiplied like this.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10687"><h2>See also</h2>
+	<div class="refsection" id="id10713"><h2>See also</h2>
 
 	  <p>Unrelated but with a similar name: <a class="link" href="#ref_str" title="str$()"><code class="function">str$</code></a></p>
 	</div>
@@ -7826,7 +7837,7 @@ sub foo(bar,baz$)
 end sub
 </pre>
 	</div>
-	<div class="refsection" id="id10702"><h2>Description</h2>
+	<div class="refsection" id="id10728"><h2>Description</h2>
 	  
 	  <p>The <code class="function">sub</code>-keyword starts the definition of a <span class="emphasis"><em>user defined subroutine</em></span>. With user defined subroutines you are able to somewhat extend <span class="application">yabasic</span> with your own commands or functions. A subroutine accepts arguments (numbers or strings) and returns a number or a string (however, you are not required to assign the value returned to a variable).</p>
 	  <p>The name of the subroutine follows after the keyword <code class="function">sub</code>. If the name (in the synopsis: <code class="function">foo</code>) ends on a '<code class="literal">$</code>', the subroutine should return a string (with the <code class="function"><a class="link" href="#ref_return" title="return">return</a></code>-statement), otherwise a number.</p>
@@ -7844,7 +7855,7 @@ the special variable <code class="varname"><a class="link" href="#ref_numparams"
 	    <p>As <span class="emphasis"><em>braces</em></span> have two uses in <span class="application">yabasic</span> (i.e. for supplying arguments to a subroutine as well as to list the indices of an array). <span class="application">yabasic</span> can not tell apart an array from a subroutine with the same name. Therefore you <span class="emphasis"><em>cannot</em></span> define a subroutine with the same name as an array !</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10738"><h2>Example</h2>
+	<div class="refsection" id="id10764"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7865,7 +7876,7 @@ end sub
 	    <p>This example is not the recommended way to compute prime numbers. However it gives a nice demonstration of using a subroutine.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10745"><h2>See also</h2>
+	<div class="refsection" id="id10771"><h2>See also</h2>
 	  
 	  <p><a class="link" href="#ref_subroutines" title="Subroutines: Sharing code within one program">subroutines</a>, <code class="function"><a class="link" href="#ref_local" title="local">local</a></code>, <code class="function"><a class="link" href="#ref_static" title="static">static</a></code>, <code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code></p>
 	</div>
@@ -7893,13 +7904,13 @@ switch a$
 end switch
 </pre>
 	</div>
-	<div class="refsection" id="id10765"><h2>Description</h2>
+	<div class="refsection" id="id10791"><h2>Description</h2>
 	  
 	  <p>The <code class="function">switch</code>-statement selects one of many codepaths depending on a numerical or string expression. I.e. it takes an expression (either numeric or string) and compares it with a series of values, each wrapped within a <code class="function"><a class="link" href="#ref_case" title="case">case</a></code>-clause. If the expression equals the value given in a <code class="function">case</code>-clause, the subsequent statements are executed.</p>
 	  <p>The <code class="function"><a class="link" href="#ref_default" title="default">default</a></code>-clause allows one to specify commands, which should be executed, if none of <code class="function">case</code>-clauses matches.</p> 
 	  <p>Note, that many <code class="function">case</code>-clauses might be clustered (e.g. <code class="literal">case "a":case "b":case "c"</code>). Or put another way: You need a <code class="function">break</code>-statement at the end of a <code class="function">case</code>-branch, if you do not want to run into the next <code class="function">case</code>.</p>
 	</div>
-	<div class="refsection" id="id10784"><h2>Example</h2>
+	<div class="refsection" id="id10810"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7918,7 +7929,7 @@ end switch
 	    <p>This example translates a single digit into a string; note, how the cases 5 to 7 are clustered.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10791"><h2>See also</h2>
+	<div class="refsection" id="id10817"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_switch" title="switch">switch</a></code>, <code class="function"><a class="link" href="#ref_case" title="case">case</a></code>, <code class="function"><a class="link" href="#ref_break" title="break">break</a></code></p>
 	</div>
@@ -7936,11 +7947,11 @@ ret=system("foo")
 system("bar")
 </pre>
 	</div>
-	<div class="refsection" id="id10810"><h2>Description</h2>
+	<div class="refsection" id="id10836"><h2>Description</h2>
 	  
 	  <p>The <code class="function">system</code>-command accepts a single string argument, which specifies a command to be executed. The function will return the exitcode of the command; its output (if any) will be lost.</p>
 	</div>
-	<div class="refsection" id="id10816"><h2>Example</h2>
+	<div class="refsection" id="id10842"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7955,7 +7966,7 @@ endif
 	    <p>This program is Unix-specific: It uses the Unix-command <code class="function">rm</code> to remove a file.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10824"><h2>See also</h2>
+	<div class="refsection" id="id10850"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_system2" title="system$()">system$</a></code></p>
 	</div>
@@ -7972,11 +7983,11 @@ endif
 print system$("dir")
 </pre>
 	</div>
-	<div class="refsection" id="id10839"><h2>Description</h2>
+	<div class="refsection" id="id10865"><h2>Description</h2>
 	  
 	  <p>The <code class="function">system$</code>-command accepts a single string argument, specifying a command, that can be found and executed by your operating system. It returns the output of this command as one big string.</p>
 	</div>
-	<div class="refsection" id="id10845"><h2>Example</h2>
+	<div class="refsection" id="id10871"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -7988,7 +7999,7 @@ print system$("dir "+d$)
 	    <p>This example lists the contents of a directory, employing the <span class="application">dir</span>-command  (which is about the only program, that is known under Unix as well as Windows).</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10853"><h2>See also</h2>
+	<div class="refsection" id="id10879"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_system" title="system()">system</a></code>, <code class="function"><a class="link" href="#ref_chomp" title="chomp$()">chomp</a></code></p>
 	</div>
@@ -8010,11 +8021,11 @@ print system$("dir "+d$)
 foo=tan(bar)
 </pre>
 	</div>
-	<div class="refsection" id="id10874"><h2>Description</h2>
+	<div class="refsection" id="id10900"><h2>Description</h2>
 	  
 	  <p>The <code class="function">tan</code>-function computes the tangent of its arguments (which should be specified in radians).</p>
 	</div>
-	<div class="refsection" id="id10880"><h2>Example</h2>
+	<div class="refsection" id="id10906"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8025,7 +8036,7 @@ next a
 	    <p>This example simply prints the tangent of all angles between 0 and 45 degrees.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10887"><h2>See also</h2>
+	<div class="refsection" id="id10913"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_atan" title="atan()">atan</a></code>, <code class="function"><a class="link" href="#ref_sin" title="sin()">sin</a></code></p>
 	</div>
@@ -8044,11 +8055,11 @@ open #1,"foo"
 position=tell(#1)
 </pre>
 	</div>
-	<div class="refsection" id="id10904"><h2>Description</h2>
+	<div class="refsection" id="id10930"><h2>Description</h2>
 	  
 	  <p>The <code class="function">tell</code>-function requires the number of an open file as an argument. It returns the position (counted in bytes, starting from the beginning of the file) where the next read will start.</p>
 	</div>
-	<div class="refsection" id="id10910"><h2>Example</h2>
+	<div class="refsection" id="id10936"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8064,7 +8075,7 @@ close 1
 	    <p>This example (mis)uses <code class="function">tell</code> to get the size of the file. The <code class="function">seek</code> positions the file pointer at the end of the file, therefore the call to <code class="function">tell</code> returns the total length of the file.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10920"><h2>See also</h2>
+	<div class="refsection" id="id10946"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_tell" title="tell">tell</a></code>, <code class="function"><a class="link" href="#ref_open" title="open">open</a></code></p>
 	</div>
@@ -8084,12 +8095,12 @@ text x,y,"foo","cc","font"
 text x,y,"foo","font","rt"
 </pre>
 	</div>
-	<div class="refsection" id="id10937"><h2>Description</h2>
+	<div class="refsection" id="id10963"><h2>Description</h2>
 	  
 	  <p>The <code class="function">text</code>-commands displays a text-string (the third argument) at the given position (the first two arguments) within an already <code class="function"><a class="link" href="#ref_open_window" title="open window">open</a></code>ed <code class="function"><a class="link" href="#ref_open_window" title="open window">window</a></code>. The font to be used can be optionally specified as either the fourth or fifth argument (<code class="literal">"font"</code> in the example above). A font specified this way will also be used for any subsequent <code class="function">text</code>-commands, as long as they do not specify a font themselves.</p>
 	  <p>The fourth or fifth optional argument (<code class="literal">"lb"</code> in the example above) can be used to specify the alignment of the text with respect to the specified position. This argument is always two characters long: The first character specifies the horizontal alignment and can be either <code class="literal">l</code>, <code class="literal">r</code> or <code class="literal">c</code>, which stand for <em class="wordasword">left</em>, <em class="wordasword">right</em> or <em class="wordasword">center</em>. The second character specifies the vertical alignment and can be one of <code class="literal">t</code>, <code class="literal">b</code> or <code class="literal">c</code>, which stand for <em class="wordasword">top</em>, <em class="wordasword">bottom</em> or <em class="wordasword">center</em> respectively. If you omit this alignment argument, the default <code class="literal">"lb"</code> applies; however this default may be changed with <code class="function"><a class="link" href="#ref_poke" title="poke">poke "textalign","xx"</a></code></p>
 	</div>
-	<div class="refsection" id="id10966"><h2>Example</h2>
+	<div class="refsection" id="id10992"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8108,7 +8119,7 @@ next a
 	    <p>This program draws nine crosses and writes the same text at each; however it goes through all possible nine alignment strings, showing their effect.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id10973"><h2>See also</h2>
+	<div class="refsection" id="id10999"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_open_window" title="open window">open window</a></code>, <code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code>, <code class="function"><a class="link" href="#ref_poke" title="poke">poke</a></code></p>
 	</div>
@@ -8127,11 +8138,11 @@ if (a&lt;b) then
 endif
 </pre>
 	</div>
-	<div class="refsection" id="id10993"><h2>Description</h2>
+	<div class="refsection" id="id11019"><h2>Description</h2>
 	  
 	  <p>The keyword <code class="function">then</code> is part of the <code class="function"><a class="link" href="#ref_if" title="if">if</a></code>-statement; please see there for further explanations. However, not every <code class="function">if</code>-statement requires the keyword <code class="function">then</code>: If the keyword <code class="function">then</code> is present, the <code class="function">if</code>-clause may extend over more than one line, and the keyword <code class="function">endif</code> is required to end it. If the keyword <code class="function">then</code> is <span class="emphasis"><em>not</em></span> present, the <code class="function">if</code>-statement extends up to the end of the line, and any <code class="function">endif</code> would be an error.</p>
 	</div>
-	<div class="refsection" id="id11010"><h2>Example</h2>
+	<div class="refsection" id="id11036"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8146,7 +8157,7 @@ if (2&lt;1)
 	    <p>This example prints <code class="literal">Hello world</code>. Note, that no exclamation mark (<code class="literal">!</code>) is printed, which might come as a surprise and may be changed in future versions of <span class="application">yabasic</span>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11020"><h2>See also</h2>
+	<div class="refsection" id="id11046"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_if" title="if">if</a></code></p>
 	</div>
@@ -8164,7 +8175,7 @@ print time$
 print time$()
 </pre>
 	</div>
-	<div class="refsection" id="id11035"><h2>Description</h2>
+	<div class="refsection" id="id11061"><h2>Description</h2>
 	  
 	  <p>The <code class="function">time$</code> function returns the current time in four fields separated by hyphens '<code class="literal">-</code>'. The fields are:</p>
 	  <p>
@@ -8180,7 +8191,7 @@ print time$()
 </p>
 	  <p>At the time of writing this documentation, <code class="function">time$</code> returns <code class="computeroutput">22-58-53-0</code>. Note, that the first three of the four fields returned by <code class="function">time$</code> have a fixed width; therefore it is easy to extract some fields with the usual string-functions <code class="function"><a class="link" href="#ref_mid" title="mid$()">mid$</a></code> (and others).</p>
 	</div>
-	<div class="refsection" id="id11060"><h2>Example</h2>
+	<div class="refsection" id="id11086"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8193,7 +8204,7 @@ print peek("secondsrunning")," seconds have passed."
 	    <p>This program benchmarks the <code class="function">for</code>-loop; however, it does not use the fourth field of the string returned by <code class="function">time$</code>, because that string wraps around every 60 seconds; rather the <a class="link" href="#ref_peek" title="peek"><code class="function">peek</code></a> <code class="literal">"secondsrunning"</code> is queried.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11072"><h2>See also</h2>
+	<div class="refsection" id="id11098"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_date" title="date$">date</a></code></p>
 	</div>
@@ -8214,7 +8225,7 @@ next a
 line x,y to a,b
 </pre>
 	</div>
-	<div class="refsection" id="id11087"><h2>Description</h2>
+	<div class="refsection" id="id11113"><h2>Description</h2>
 	  
 	  <p>The <code class="function">to</code>-keyword serves two purposes (which are not related at all):</p>
 	  <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
@@ -8223,11 +8234,11 @@ line x,y to a,b
 	      <p>Within any graphical command (e.g. <code class="function">line</code>), that requires two points (i.e. four numbers) as arguments, a comma '<code class="literal">,</code>' might be replaced with the keyword <code class="literal">to</code>. I.e. instead of <code class="literal">100,100,200,200</code> you may write <code class="literal">100,100 to 200,200</code> in such commands.</p>
 	    </li></ul></div>
 	</div>
-	<div class="refsection" id="id11105"><h2>Example</h2>
+	<div class="refsection" id="id11131"><h2>Example</h2>
 	  
 	  <p>Please see the command listed under "See also" for examples.</p>
 	</div>
-	<div class="refsection" id="id11110"><h2>See also</h2>
+	<div class="refsection" id="id11136"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_for" title="for">for</a></code>, <code class="function"><a class="link" href="#ref_line" title="line">line</a></code>, <code class="function"><a class="link" href="#ref_rectangle" title="rectangle">rectangle</a></code></p>
 	</div>
@@ -8247,7 +8258,7 @@ num=token(a$,w$())
 num=token(a$,w$(),s$)
 </pre>
 	</div>
-	<div class="refsection" id="id11129"><h2>Description</h2>
+	<div class="refsection" id="id11155"><h2>Description</h2>
 	  
 	  <p>The <code class="function">token</code>-function accepts a string (containing the text to be split), a <a class="link" href="#ref_array_references" title="References on arrays">reference</a> to a string-array (which will receive the resulting strings, i.e. the <span class="emphasis"><em>tokens</em></span>) and an optional string (with a set of characters, at which to split, i.e. the <span class="emphasis"><em>delimiters</em></span>).</p>
 	  <p>The <code class="function">token</code>-function regards its first argument as a list of <span class="emphasis"><em>tokens</em></span> separated by <span class="emphasis"><em>delimiters</em></span> and it will store the list of tokens within the array-reference that has been supplied. Note, that the array, which is passed as a reference (<code class="literal">w$()</code> in the synopsis), will be resized accordingly, so that you don't have to figure out the number of tokens in advance. The element at position zero (i.e. <code class="literal">w$(0)</code>) will not be used.</p>
@@ -8257,7 +8268,7 @@ num=token(a$,w$(),s$)
 	  <p>The first argument finally contains the text, that will be split into tokens. The <code class="function">token</code>-function returns the number of tokens, that have been found.</p>
 	  <p>Please see the examples below for some hints on the exact behaviour of the <code class="function">token</code>-function and how it differs from the <code class="function">split</code>-function:</p>
 	</div>
-	<div class="refsection" id="id11164"><h2>Example</h2>
+	<div class="refsection" id="id11190"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8320,7 +8331,7 @@ Please enter a line: -a==b-c==
 </p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11172"><h2>See also</h2>
+	<div class="refsection" id="id11198"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_split" title="split()">split</a></code></p>
 	</div>
@@ -8340,11 +8351,11 @@ fill triangle 50,100,100,50,200,200
 clear fill triangle 20,20,10,10,200,200
 </pre>
 	</div>
-	<div class="refsection" id="id11187"><h2>Description</h2>
+	<div class="refsection" id="id11213"><h2>Description</h2>
 	  
 	  <p>The <code class="function">triangle</code>-command draws a triangle; it requires 6 parameters: The x- and y-coordinates of the three points making up the triangle. With the optional keywords <code class="function">clear</code> and <code class="function">fill</code> (which may appear both and in any sequence) the triangle can be cleared and filled respectively.</p>
 	</div>
-	<div class="refsection" id="id11195"><h2>Example</h2>
+	<div class="refsection" id="id11221"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8361,7 +8372,7 @@ loop
 	    <p>This example draws a colored triangles until you get exhausted.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11202"><h2>See also</h2>
+	<div class="refsection" id="id11228"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_open_window" title="open window">open window</a></code>, <code class="function"><a class="link" href="#ref_open_printer" title="open printer">open printer</a></code>, <code class="function"><a class="link" href="#ref_line" title="line">line</a></code>, <code class="function"><a class="link" href="#ref_circle" title="circle">circle</a></code><code class="function">, <a class="link" href="#ref_rectangle" title="rectangle">rectangle</a></code></p>
 	</div>
@@ -8378,11 +8389,11 @@ loop
 a$=trim$(b$)
 </pre>
 	</div>
-	<div class="refsection" id="id11225"><h2>Description</h2>
+	<div class="refsection" id="id11251"><h2>Description</h2>
 	  
 	  <p>The <code class="function">trim$</code>-function removes all whitespace from the left and from the right end of a string and returns the result. Calling <code class="function">trim$</code> is equivalent to calling <code class="function">rtrim$(ltrim$())</code>.</p>
 	</div>
-	<div class="refsection" id="id11233"><h2>Example</h2>
+	<div class="refsection" id="id11259"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8395,7 +8406,7 @@ loop
 	    <p>This example asks for an answer (<code class="literal">yes</code> or <code class="literal">no</code>) and removes spaces with <code class="function">trim$</code> to make the comparison with the string <code class="literal">"no"</code> more bulletproof.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11244"><h2>See also</h2>
+	<div class="refsection" id="id11270"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_ltrim" title="ltrim$()">ltrim$</a></code>, <code class="function"><a class="link" href="#ref_rtrim" title="rtrim$()">rtrim$</a></code></p>
 	</div>
@@ -8412,12 +8423,12 @@ loop
 okay=true
 </pre>
 	</div>
-	<div class="refsection" id="id11261"><h2>Description</h2>
+	<div class="refsection" id="id11287"><h2>Description</h2>
 	  
 	  <p>The constant <code class="function">true</code> can be assigned to variables which will later appear in conditions (e.g. an <code class="function">if</code>-statement.</p>
 	  <p><code class="function">true</code> may also be written as <code class="function">TRUE</code> or even <code class="function">TrUe</code>.</p>
 	</div>
-	<div class="refsection" id="id11272"><h2>Example</h2>
+	<div class="refsection" id="id11298"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8431,7 +8442,7 @@ end sub
           </pre>
 	  </div>
 	</div>
-	<div class="refsection" id="id11278"><h2>See also</h2>
+	<div class="refsection" id="id11304"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_false" title="false">false</a></code></p>
 	</div>
@@ -8455,11 +8466,11 @@ repeat
 until &#8230;
 </pre>
 	</div>
-	<div class="refsection" id="id11298"><h2>Description</h2>
+	<div class="refsection" id="id11324"><h2>Description</h2>
 	  
 	  <p>The <code class="function">until</code>-keyword ends a loop, which has been introduced by the <code class="function"><a class="link" href="#ref_repeat" title="repeat">repeat</a></code>-keyword. <code class="function">until</code> requires an expression (see <a class="link" href="#ref_conditions_and_expressions" title="Conditions and expressions">here</a> for details) as an argument; the loop will continue <span class="emphasis"><em>until</em></span> this condition evaluates to true.</p>
 	</div>
-	<div class="refsection" id="id11309"><h2>Example</h2>
+	<div class="refsection" id="id11335"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8475,7 +8486,7 @@ until abs(l-c)&lt;0.000001
 	    <p>This program calculates the sequence 1/1-1/2+1/3-1/4+1/5-1/6+1/7-1/8+ &#8230; ; please let me know, if you know against which value this converges.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11316"><h2>See also</h2>
+	<div class="refsection" id="id11342"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_repeat" title="repeat">repeat</a></code></p>
 	</div>
@@ -8492,11 +8503,11 @@ until abs(l-c)&lt;0.000001
 u$=upper$(a$)
 </pre>
 	</div>
-	<div class="refsection" id="id11331"><h2>Description</h2>
+	<div class="refsection" id="id11357"><h2>Description</h2>
 	  
 	  <p>The <code class="function">upper$</code>-function accepts a single string argument and converts it to all upper case.</p>
 	</div>
-	<div class="refsection" id="id11337"><h2>Example</h2>
+	<div class="refsection" id="id11363"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8514,7 +8525,7 @@ endif
 	    <p>This program asks for a sentence and marks the first (if any) occurrence of the letter 'e' by converting it to upper case (in contrast to the rest of the sentence, which is converted to lower case).</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11344"><h2>See also</h2>
+	<div class="refsection" id="id11370"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_lower" title="lower$()">lower$</a></code></p>
 	</div>
@@ -8532,12 +8543,12 @@ print a using "##.###"
 print a using("##.###",",.")
 </pre>
 	</div>
-	<div class="refsection" id="id11359"><h2>Description</h2>
+	<div class="refsection" id="id11385"><h2>Description</h2>
 	  
 	  <p>The <code class="function">using</code>-keyword may appear as part of the <code class="function">print</code>-statement and specifies the format (e.g. the number of digits before and after the decimal dot), which should be used to print the number.</p>
 	  <p>The possible values for the format argument (<code class="literal">"##.###"</code> in the synopsis above) are described within the entry for the <code class="function"><a class="link" href="#ref_str" title="str$()">str$</a></code>-function; especially the second line in the synopsis (<code class="literal">print a using("##.###",",.")</code>) will become clear after referring to <code class="function">str$</code>. In fact the <code class="function">using</code> clause is closely related to the <code class="function">str$</code>-function; the former can always be rewritten using the latter; i.e. <code class="literal">print foo using bar$</code> is always equivalent to <code class="literal">print str$(foo,bar$)</code>. Therefore you should check out <code class="function"><a class="link" href="#ref_str" title="str$()">str$</a></code> to learn more.</p>
 	</div>
-	<div class="refsection" id="id11378"><h2>Example</h2>
+	<div class="refsection" id="id11404"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8548,7 +8559,7 @@ next a
 	    <p>This example prints a column of square roots of random number, nicely aligned at the decimal dot.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11385"><h2>See also</h2>
+	<div class="refsection" id="id11411"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_str" title="str$()">str$</a></code></p>
 	</div>
@@ -8570,13 +8581,13 @@ next a
 x=val(x$)
 </pre>
 	</div>
-	<div class="refsection" id="id11406"><h2>Description</h2>
+	<div class="refsection" id="id11432"><h2>Description</h2>
 	  
 	  <p>The <code class="function">val</code>-function checks, if the start of
 its string argument forms a floating point number and then returns this
 number. The string therefore has to start with digits (only whitespace in front is allowed), otherwise the <code class="function">val</code>-function returns zero.</p>
 	</div>
-	<div class="refsection" id="id11413"><h2>Example</h2>
+	<div class="refsection" id="id11439"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8590,7 +8601,7 @@ print "You have entered ",l,"cm."
 	    <p>This example queries for a length and checks, if it has been specified in inches or centimeters. The length is then converted to centimeters.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11420"><h2>See also</h2>
+	<div class="refsection" id="id11446"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_str" title="str$()">str$</a></code></p>
 	</div>
@@ -8612,7 +8623,7 @@ print "You have entered ",l,"cm."
 wait 4
 </pre>
 	</div>
-	<div class="refsection" id="id11439"><h2>Description</h2>
+	<div class="refsection" id="id11465"><h2>Description</h2>
 	  
 	  <p>The <code class="function">wait</code>-command has many different names: You may write <code class="function">pause</code>, <code class="function">sleep</code> or <code class="function">wait</code> interchangeably; whatever you write, <span class="application">yabasic</span> will always do exactly the same.</p>
 	  <p>Therefore you should refer to the entry for the <code class="function"><a class="link" href="#ref_pause" title="pause">pause</a></code>-function for further information.</p>
@@ -8632,12 +8643,12 @@ while a&lt;b
 wend
 </pre>
 	</div>
-	<div class="refsection" id="id11462"><h2>Description</h2>
+	<div class="refsection" id="id11488"><h2>Description</h2>
 	  
 	  <p>The <code class="function">wend</code>-keyword marks the end of a <code class="function"><a class="link" href="#ref_while" title="while">while</a></code>-loop. Please see the <code class="function"><a class="link" href="#ref_while" title="while">while</a></code>-keyword for more details.</p>
 	  <p><code class="function">wend</code> can be written as <code class="function">end while</code> or even <code class="function">end-while</code>.</p>
 	</div>
-	<div class="refsection" id="id11476"><h2>Example</h2>
+	<div class="refsection" id="id11502"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8652,7 +8663,7 @@ print a$
 	    <p>This example reads a sentence and converts every occurrence of the letter <code class="literal">e</code> into uppercase (<code class="literal">E</code>).</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11485"><h2>See also</h2>
+	<div class="refsection" id="id11511"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_while" title="while">while</a></code> (which is just the following entry).</p>
 	</div>
@@ -8671,13 +8682,13 @@ while &#8230;
 wend
 </pre>
 	</div>
-	<div class="refsection" id="id11501"><h2>Description</h2>
+	<div class="refsection" id="id11527"><h2>Description</h2>
 	  
 	  <p>The <code class="function">while</code>-keyword starts a <code class="function">while</code>-loop, i.e. a loop that is executed as long as the condition (which is specified after the keyword <code class="function">while</code>) evaluates to <code class="constant">true</code>.</p>
 	  <p>Note, that the body of such a <code class="function">while</code>-loop will not be executed at all, if the condition following the <code class="function">while</code>-keyword is not true initially.</p>
 	  <p>If you want to leave the loop prematurely, you may use the <code class="function"><a class="link" href="#ref_break" title="break">break</a></code>-statement.</p>
 	</div>
-	<div class="refsection" id="id11516"><h2>Example</h2>
+	<div class="refsection" id="id11542"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8690,7 +8701,7 @@ wend
 	    <p>This program reads the file <code class="literal">foo</code> and prints it line by line.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11524"><h2>See also</h2>
+	<div class="refsection" id="id11550"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_until" title="until">until</a></code>, <code class="function"><a class="link" href="#ref_break" title="break">break</a></code>, <code class="function"><a class="link" href="#ref_wend" title="wend">wend</a></code>, <code class="function"><a class="link" href="#ref_do" title="do">do</a></code></p>
 	</div>
@@ -8708,12 +8719,12 @@ open window 200,200
 origin "cc"
 </pre>
 	</div>
-	<div class="refsection" id="id11545"><h2>Description</h2>
+	<div class="refsection" id="id11571"><h2>Description</h2>
 	  
 	  <p>The <code class="function">origin</code>-command applies to graphic windows and moves the origin of the coordinate system to one of nine point within the window. The normal position of the origin is in the upper left corner of the window; however in some cases this is inconvenient and moving the origin may save you from subtracting a constant offset from all of your coordinates.</p>
 	  <p>However, you may not move the origin to an arbitrary position; in horizontal position there are only three positions: left, center and right, which are decoded by the letters <code class="literal">l</code>, <code class="literal">c</code> and <code class="literal">r</code>. In vertical position the allowed positions are top, center and bottom; encoded by the letters <code class="literal">t</code>, <code class="literal">c</code> and <code class="literal">b</code>. Taking the letters together, you arrive at a string, which might be passed as an argument to the command; e.g. <code class="literal">"cc"</code> or <code class="literal">"rt"</code>.</p>
 	</div>
-	<div class="refsection" id="id11560"><h2>Example</h2>
+	<div class="refsection" id="id11586"><h2>Example</h2>
 	  100,100
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8724,7 +8735,7 @@ circle 0,0,60
 	    <p>This example draws a circle, centered at the center of the window.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11567"><h2>See also</h2>
+	<div class="refsection" id="id11593"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_open_window" title="open window">open window</a></code></p>
 	</div>
@@ -8746,12 +8757,12 @@ circle 0,0,60
 x=xor(a,b)
 </pre>
 	</div>
-	<div class="refsection" id="id11586"><h2>Description</h2>
+	<div class="refsection" id="id11612"><h2>Description</h2>
 	  
 	  <p>The <code class="function">xor</code>-function computes the bitwise <span class="emphasis"><em>exclusive or</em></span> of its two numeric arguments. To understand the result, both arguments should be viewed as binary numbers (i.e. a sequence of digits 0 and 1); a bit of the result will then be 1, if exactly one argument has a 1 and the other has a 0 at this position in their binary representation.</p>
 	  <p>Note, that both arguments are silently converted to integer values and that negative numbers have their own binary representation and may lead to unexpected results when passed to <code class="function">and</code>.</p>
 	</div>
-	<div class="refsection" id="id11595"><h2>Example</h2>
+	<div class="refsection" id="id11621"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8762,7 +8773,7 @@ print xor(7,4)
 
 	  </div>
 	</div>
-	<div class="refsection" id="id11608"><h2>See also</h2>
+	<div class="refsection" id="id11634"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_bitwise_and" title="and()">and</a></code>, <a class="link" href="#ref_bitwise_or" title="or()"><code class="function">or</code></a>, <a class="link" href="#ref_eor" title="eor()"><code class="function">eor</code></a>, <a class="link" href="#ref_bitnot" title="bitnot()"><code class="function">bitnot</code></a></p>
 	</div>
@@ -8785,7 +8796,7 @@ print xor(7,4)
 open #1,"foo"
 </pre>
 	</div>
-	<div class="refsection" id="id11633"><h2>Description</h2>
+	<div class="refsection" id="id11659"><h2>Description</h2>
 	  
 	  <p>The hash ('<code class="literal">#</code>') has two totally unrelated uses:</p>
 	  <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
@@ -8795,7 +8806,7 @@ open #1,"foo"
 	    </li></ul></div>
 	  <p> '<code class="literal">#</code>' as a comment is common in most scripting languages and has a special use under Unix: If the <span class="emphasis"><em>very first line</em></span> of any Unix-program begins with the character sequence '<code class="literal">#!</code>' ("she-bang", no spaces allowed), the rest of the line is taken as the program that should be used to execute the script. I.e. if your <span class="application">yabasic</span>-program starts with '<code class="literal">#!/usr/local/bin/yabasic</code>', the program <code class="filename">/usr/local/bin/yabasic</code> will be invoked to execute the rest of the program. As a remark for windows-users: This mechanism ensures, that <span class="application">yabasic</span> will be invoked to execute your program; the ending of the file (e.g. <code class="literal">.yab</code>) will be ignored by Unix.</p>
 	</div>
-	<div class="refsection" id="id11665"><h2>Example</h2>
+	<div class="refsection" id="id11691"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8806,7 +8817,7 @@ print "World!" : # the hash is not the first character !
 	    <p>Note, that this example will produce a syntax error and is <span class="emphasis"><em>not</em></span> a valid program !</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11673"><h2>See also</h2>
+	<div class="refsection" id="id11699"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_input" title="input">input</a></code>, <code class="function"><a class="link" href="#ref_print" title="print">print</a></code>, <code class="function"><a class="link" href="#ref_peek" title="peek">peek</a></code> or <code class="function"><a class="link" href="#ref_eof" title="eof">eof</a></code>, <code class="function"><a class="link" href="#ref_double_slash" title="//">//</a></code>, <code class="function"><a class="link" href="#ref_rem" title="rem">rem</a></code></p>
 	</div>
@@ -8823,11 +8834,11 @@ print "World!" : # the hash is not the first character !
 //  This is a comment !
 </pre>
 	</div>
-	<div class="refsection" id="id11698"><h2>Description</h2>
+	<div class="refsection" id="id11724"><h2>Description</h2>
 	  
 	  <p>The double-slash ('<code class="literal">//</code>') is (besides <code class="literal">REM</code> and '<code class="literal">#</code>') the third way to start a comment. '<code class="literal">//</code>' is the latest and greatest in the field of commenting and allows <span class="application">yabasic</span> to catch up with such cool languages like C++ and Java.</p>
 	</div>
-	<div class="refsection" id="id11708"><h2>Example</h2>
+	<div class="refsection" id="id11734"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8837,7 +8848,7 @@ print "Hello world !" // Another comment
 	    <p>Unlike the example given for '<code class="literal"><a class="link" href="#ref_hash" title="#">#</a></code>' this example is syntactically correct and will not produce an error.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11717"><h2>See also</h2>
+	<div class="refsection" id="id11743"><h2>See also</h2>
 	  
 	  <p> <code class="function"><a class="link" href="#ref_hash" title="#">#</a></code>, <code class="function"><a class="link" href="#ref_rem" title="rem">rem</a></code></p>
 	</div>
@@ -8856,11 +8867,11 @@ clear screen
 print @(a,b)
 </pre>
 	</div>
-	<div class="refsection" id="id11736"><h2>Description</h2>
+	<div class="refsection" id="id11762"><h2>Description</h2>
 	  
 	  <p>As '<code class="literal">@</code>' is simply a synonym for <code class="literal">at</code>, please see <code class="function"><a class="link" href="#ref_at" title="at()">at</a></code> for further information.</p>
 	</div>
-	<div class="refsection" id="id11745"><h2>See also</h2>
+	<div class="refsection" id="id11771"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_at" title="at()">at</a></code></p>
 	</div>
@@ -8877,12 +8888,12 @@ print @(a,b)
 print "Hello ":print "World"
 </pre>
 	</div>
-	<div class="refsection" id="id11760"><h2>Description</h2>
+	<div class="refsection" id="id11786"><h2>Description</h2>
 	  
 	  <p>The <span class="emphasis"><em>colon</em></span> ('<code class="literal">:</code>') separates multiple commands on a single line.</p>
 	  <p>The <span class="emphasis"><em>colon</em></span> and the <span class="emphasis"><em>newline</em></span>-character have mostly the same effect, only that the latter, well, starts a new line too. The only other difference is their effect within the (so-called) <span class="emphasis"><em>short</em></span> <code class="function">if</code>, which is an <code class="function">if</code>-statement without the keyword <code class="function">then</code>. Please see the entry for <code class="function"><a class="link" href="#ref_if" title="if">if</a></code> for more details.</p>
 	</div>
-	<div class="refsection" id="id11776"><h2>Example</h2>
+	<div class="refsection" id="id11802"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8891,7 +8902,7 @@ if (a&lt;10) print "Hello ":print "World !"
 	    <p>This example demonstrates the difference between colon and newline as described above.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11783"><h2>See also</h2>
+	<div class="refsection" id="id11809"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_if" title="if">if</a></code></p>
 	</div>
@@ -8908,12 +8919,12 @@ if (a&lt;10) print "Hello ":print "World !"
 print "foo",bar;
 </pre>
 	</div>
-	<div class="refsection" id="id11800"><h2>Description</h2>
+	<div class="refsection" id="id11826"><h2>Description</h2>
 	  
 	  <p>The semicolon ('<code class="literal">;</code>') may only appear at the last position within a <code class="function"><a class="link" href="#ref_print" title="print">print</a></code>-statement. It suppresses the implicit newline, which <span class="application">yabasic</span> normally adds after each <code class="function">print</code>-statement.</p>
 	  <p>Put another way: Normally the output of each <code class="function">print</code>-statement appears on a line by itself. If you rather want the output of many <code class="function">print</code>-statements to appear on a single line, you should end the <code class="function">print</code>-statement with a semicolon.</p>
 	</div>
-	<div class="refsection" id="id11814"><h2>Example</h2>
+	<div class="refsection" id="id11840"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8922,7 +8933,7 @@ print "Hello ";:print "World !"
 	    <p>This example prints <code class="computeroutput">Hello World !</code> <span class="emphasis"><em>in a single line</em></span>.</p>
 	  </div>
 	</div>
-	<div class="refsection" id="id11823"><h2>See also</h2>
+	<div class="refsection" id="id11849"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_print" title="print">print</a></code></p>
 	</div>
@@ -8940,7 +8951,7 @@ print 2**b
 print 3^4
 </pre>
 	</div>
-	<div class="refsection" id="id11838"><h2>Description</h2>
+	<div class="refsection" id="id11864"><h2>Description</h2>
 	  
 	  <p><code class="function">**</code> (or <code class="function">^</code>, which is an
 exact synonym), is the arithmetic operator of exponentiation; it requires one
@@ -8948,7 +8959,7 @@ number to its left and a second one to its right; <code class="function">**</cod
 raises the first argument to the power of the second and returns the
 result. The result will only be computed if it yields a <span class="emphasis"><em>real</em></span> number (as opposed to a <span class="emphasis"><em>complex</em></span> number); this means, that the power can <span class="emphasis"><em>not</em></span> be computed, if the first argument is negative and the second one is fractional. On the other hand, the second argument can be fractional, if the first one ist positive; this means, that <code class="function">**</code> may be used to compute arbitrary roots: e.g. <code class="function">x**0.5</code> computes the square root of <code class="function">x</code>.</p>
 	</div>
-	<div class="refsection" id="id11852"><h2>Example</h2>
+	<div class="refsection" id="id11878"><h2>Example</h2>
 	  
 	  <div class="informalexample">
 	    <pre class="programlisting">
@@ -8956,7 +8967,7 @@ print 2**0.5
           </pre>
 	  </div>
 	</div>
-	<div class="refsection" id="id11858"><h2>See also</h2>
+	<div class="refsection" id="id11884"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_sqrt" title="sqrt()">sqrt</a></code></p>
 	</div>
@@ -8968,7 +8979,7 @@ print 2**0.5
 	  &lt; &lt;= &gt; &gt;= = == &lt;&gt; !=
 	   &#8212; Compare numbers or strings
 	</p></div>
-	<div class="refsection" id="id11871"><h2>See also</h2>
+	<div class="refsection" id="id11897"><h2>See also</h2>
 	  
 	  <p><code class="function"><a class="link" href="#ref_comparing_strings_or_numbers" title="Comparing strings or numbers">Comparing strings or numbers</a></code> for some background.</p>
 	</div>
