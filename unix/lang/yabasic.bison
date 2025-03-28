@@ -735,7 +735,7 @@ if_clause: tIF expression {add_command(cDECIDE);storelabel();pushlabel();}
            endif
   ;
 
-endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
+endif: tEOPROG {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'endif' (or 'fi') at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
   | tENDIF {missing_endif--;}
   | tWEND {report_conflicting_close("a closing endif is expected before wend",'w');}
   | tUNTIL {report_conflicting_close("a closing endif is expected before until",'l');}
