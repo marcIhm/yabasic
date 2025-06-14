@@ -4957,7 +4957,7 @@ yyreduce:
     break;
 
   case 406: /* endif: tEOPROG  */
-               {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'fi' at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
+               {if (missing_endif) {sprintf(string,"if-clause starting at line %d has seen no 'endif' (or 'fi') at end of program",missing_endif_line);error_without_position(sERROR,string);} YYABORT;}
     break;
 
   case 407: /* endif: tENDIF  */

@@ -1311,11 +1311,12 @@ void colour(struct command *cmd) /* switch on colour */
     return;
   }
   if (cmd->args == 0) {
+    /* colour clause */
     if (!con_xcap_inized) {
       return;
     }
 #ifdef UNIX
-    /* Turn of all attributes including color, probably bringing us back to COLOR_PAIR(0) */
+    /* Turn off all attributes including color, probably bringing us back to COLOR_PAIR(0) */
     attrset(A_NORMAL);
     if (con_fore_inten == cciBRIGHT) {
       attron(A_BOLD);
@@ -1326,14 +1327,16 @@ void colour(struct command *cmd) /* switch on colour */
     return;
 #endif
   } else if (cmd->args == 1) {
+    /* reverse */
 #ifdef UNIX
     attrset(A_REVERSE);
     return;
 #else
-    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), TRUE) | yc2oc(oc2yc(stdbc), FALSE)));
+    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), FALSE) | yc2oc(oc2yc(stdbc), TRUE)));
     return;
 #endif
-  } else { /* decode colours */
+  } else {
+    /* decode extended colour-clause */
 #ifdef UNIX
     if (!has_colors()) {
       pop(stSTRING);

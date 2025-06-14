@@ -153,9 +153,10 @@
      - type 'rake'; this does:
        - Build windows executable
        - Create setup.exe and zip-files (which will ask for admin priveleges)
-   - In directory web:
+   - In toplevel directory:
      - if appropriate, add and commit all changes to git; otherwise no new tag will be
        created below
+   - In directory web:
      - type 'rake'; this does:
        - create new git tag and use the content of NEWS as the message
        - upload everything to www.yabasic.de

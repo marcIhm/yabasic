@@ -1,6 +1,10 @@
 # Keep here any number and selection of paragraphs with news;
 # the first one will be added if necessary to the ChangeLog by rake
 
+Version 2.91.3 (June 14, 2025)
+  - Fixed a bug with 'print reverse' under windows.
+  - Documentation
+  
 Version 2.91.2 (March 23, 2025)
   - New peeks 'displayheight' and 'displaywidth'
     to get the resolution of your monitor.

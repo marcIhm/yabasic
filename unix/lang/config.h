@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* build-time, that will be displayed in banner */
-#define BUILD_TIME "Sun Mar 23 17:11:02 UTC 2025"
+#define BUILD_TIME "Sat Jun 14 04:11:59 UTC 2025"
 
 /* Define to 1 if using 'alloca.c'. */
 /* #undef C_ALLOCA */
@@ -83,7 +83,7 @@
 #define PACKAGE_NAME "yabasic"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "yabasic 2.91.2"
+#define PACKAGE_STRING "yabasic 2.91.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "yabasic"
@@ -92,7 +92,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.91.2"
+#define PACKAGE_VERSION "2.91.3"
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -114,7 +114,7 @@
 #define USE_DL_FFI 1
 
 /* Version number of package */
-#define VERSION "2.91.2"
+#define VERSION "2.91.3"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */
