@@ -370,14 +370,13 @@ void create_function(int type) /* create command 'function' */
 
 void function(struct command *cmd) /* performs a function */
 {
-  struct stackentry *stack, *a1, *a2, *a3, *a4;
+  struct stackentry *stack, *a1 = NULL, *a2 = NULL, *a3 = NULL, *a4 = NULL;
   char *pointer;
   double value;
   time_t datetime;
-  int type, result, len, start, i, j, k, max, cnt, sz;
+  int type, result, len, start, i, j, k, max, cnt;
   char *str, *str2;
 
-  a3 = NULL;
   type = cmd->args;
   if (type > fTHREEARGS) {
     a4 = pop(stSTRING_OR_NUMBER);
@@ -1487,7 +1486,7 @@ void poke(struct command *cmd) /* poke into internals */
 {
   char *dest, *s, c;
   char *string_arg = NULL;
-  double double_arg;
+  double double_arg = 0;
   struct stackentry *stack;
   int count;
 
@@ -1639,14 +1638,14 @@ void poke(struct command *cmd) /* poke into internals */
 
 void pokefile(struct command *cmd) /* poke into file */
 {
-  char *sarg = NULL;
-  double darg;
+  char *string_arg = NULL;
+  double double_arg = 0;
   int stream;
 
   if (cmd->tag == 'S') {
-    sarg = pop(stSTRING)->pointer;
+    string_arg = pop(stSTRING)->pointer;
   } else {
-    darg = pop(stNUMBER)->value;
+    double_arg = pop(stNUMBER)->value;
   }
   stream = (int)(pop(stNUMBER)->value);
 
@@ -1659,14 +1658,14 @@ void pokefile(struct command *cmd) /* poke into file */
     error(sERROR, string);
     return;
   }
-  if (sarg) {
-    fputs(sarg, streams[stream]);
+  if (string_arg) {
+    fputs(string_arg, streams[stream]);
   } else {
-    if (darg < 0 || darg > 255) {
+    if (double_arg < 0 || double_arg > 255) {
       error(sERROR, "stream poke out of byte range (0..255)");
       return;
     }
-    fputc((int)darg, streams[stream]);
+    fputc((int)double_arg, streams[stream]);
   }
 }
 
@@ -2028,6 +2027,10 @@ void create_dblrelop(char c) /* create command dblrelop */
   case '}':
     type = cGE;
     break;
+  default:
+    sprintf(string, "unknown dblrelop char: '%c'", c);
+    error(sERROR, string);
+    type = 0;
   }
   add_command(type);
 }
@@ -2058,6 +2061,9 @@ void dblrelop(struct command *cmd) /* compare topmost double-values */
   case cGT:
     c = (a > b);
     break;
+  default:
+    /* this is an error, but handled already in create_dblrelop; code below only to silence compiler */
+    c = 0;
   }
   result = push();
   result->value = c;
@@ -2087,6 +2093,10 @@ void create_strrelop(char c) /* create command strrelop */
   case '}':
     type = cSTRGE;
     break;
+  default:
+    sprintf(string, "unknown strrelop char: '%c'", c);
+    error(sERROR, string);
+    type = 0;
   }
   add_command(type);
 }
@@ -2118,6 +2128,9 @@ void strrelop(struct command *cmd) /* compare topmost string-values */
   case cSTRGE:
     c = (strcmp(a, b) >= 0);
     break;
+  default:
+    /* this is an error, but handled already in create_strrelop; code below only to silence compiler */
+    c = 0;
   }
   result = push();
   result->value = c;
@@ -2197,6 +2210,10 @@ void create_boole(char c) /* create command boole */
   case '!':
     type = cNOT;
     break;
+  default:
+    sprintf(string, "unknown boole char: '%c'", c);
+    error(sERROR, string);
+    type = 0;
   }
   add_command(type);
 }

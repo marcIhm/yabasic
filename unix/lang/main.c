@@ -2008,6 +2008,8 @@ void error_with_position(int severity, char *message, char *filename,
     case sFATAL:
       severity_text = "---Fatal";
       break;
+    default:
+      severity_text = "---Unknown Severity:";
     }
     if (filename &&
         (printed_filename != filename || printed_lineno != lineno)) {
@@ -2085,7 +2087,7 @@ char *my_strndup(char *arg, int len) /* own version of strndup */
 
   copy = my_malloc(len + 1);
 
-  strncpy(copy, arg, len);
+  memcpy(copy, arg, len);
   copy[len] = '\0';
 
   return copy;
@@ -2185,11 +2187,11 @@ char *dotify(char *name,
 {
   static char buff[NAMEBUFFLEN];
   if (!strchr(name, '.')) {
-    strncpy(buff, currlib->short_name, NAMEBUFFLEN);
+    strncpy(buff, currlib->short_name, NAMEBUFFLEN - 1);
     strncat(buff, ".", NAMEBUFFLEN - 1 - strlen(buff));
     strncat(buff, name, NAMEBUFFLEN - 1 - strlen(buff));
   } else {
-    strncpy(buff, name, NAMEBUFFLEN);
+    strncpy(buff, name, NAMEBUFFLEN - 1);
   }
   if (addfun && !strchr(name, '@')) {
     strncat(buff, "@", NAMEBUFFLEN - 1 - strlen(buff));
@@ -2208,9 +2210,9 @@ char *strip(char *name) /* strip down to minimal name */
   }
   dot = strchr(name, '.');
   if (dot) {
-    strncpy(buff, dot + 1, NAMEBUFFLEN);
+    strncpy(buff, dot + 1, NAMEBUFFLEN - 1);
   } else {
-    strncpy(buff, name, NAMEBUFFLEN);
+    strncpy(buff, name, NAMEBUFFLEN - 1);
   }
   at = strchr(buff, '@');
   if (at) {
@@ -2504,6 +2506,9 @@ int isbound(void) /* check if this interpreter is bound to a program */
     infolevel_text = "DEBUG+BISON";
     yydebug = 1;
     severity_threshold = sDEBUG;
+    break;
+  default:
+    infolevel_text = "UNKNOWN_INFOLEVEL";
     break;
   };
   sprintf(estring, "Set infolevel to %s", infolevel_text);

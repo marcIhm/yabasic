@@ -195,7 +195,6 @@ struct symbol *get_sym(char *name, int type, int add)
 {
   struct symstack *currstack;
   struct symbol **currsym;
-  struct symbol *prelink;
   struct symbol *new;
   int stackcount = 0;
   int symbolcount = 0;
@@ -213,7 +212,6 @@ struct symbol *get_sym(char *name, int type, int add)
     stackcount++;
     currsym = &(currstack->next_in_list);
     while (*currsym) {
-      prelink = *currsym;
       symbolcount++;
       if ((*currsym)->type == type && !strcmp(name, (*currsym)->name)) {
         /* do the types and names match ? */
@@ -807,6 +805,7 @@ void dblbin(struct command *cmd) /* compute with two numbers from stack */
 
   b = pop(stNUMBER)->value;
   a = pop(stNUMBER)->value;
+  c = 0;
   d = push();
   switch (cmd->type) {
   case (cDBLADD):
@@ -928,7 +927,7 @@ void dim(struct command *cmd) /* get room for array */
 {
   struct array *nar, *oar;
   char *nul;
-  int ntotal, ototal, esize, i, j;
+  int ntotal, ototal = 0, esize, i, j;
   int ind[10], nbounds[10], larger;
   struct symbol *s;
   int local;
@@ -1092,7 +1091,7 @@ off_to_ind(int off, int *bound,
 
 void query_array(struct command *cmd) /* get value from array */
 {
-  int index;
+  int index = 0;
   struct stackentry *s;
   struct array *ar;
   struct symbol *sym;
@@ -1143,7 +1142,7 @@ void create_doarray(char *symbol, int command) /* creates array-commands */
 void doarray(struct command *cmd) /* call an array */
 {
   struct array *ar;
-  struct stackentry *stack;
+  struct stackentry *stack = NULL;
   struct symbol *sym;
   void *p;
   char **str;

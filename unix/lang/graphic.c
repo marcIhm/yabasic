@@ -174,8 +174,6 @@ void openwin(struct command *cmd) {
   XGCValues vals; /* values of gc context */
   XImage *patch;
   XWindowAttributes attributes;
-  XColor colour;
-  int r, g, b;
 #endif
 
   if (winopened) {
@@ -671,13 +669,10 @@ static int grafinit(void) {
   /* initialize grafics (either X or Windows) */
 #ifdef UNIX
   static int screen;                         /* Number of Screen on Display */
-  static XColor asked, got;                  /* color is complex ... */
   static XGCValues xgcvalues;                /* Values for Graphics Context */
   static unsigned int w, h;                  /* width and height of window */
   int rbits_count, gbits_count, bbits_count; /* number of bits for r,g and b */
   XColor exact_match, best_match; /* exact and best matches for required color */
-  int height;
-  int fontid;
 #else /*  */
   int r, g, b;
 #endif
@@ -1179,8 +1174,6 @@ void change_colour(struct command *cmd) {
   int r, g, b;
 #ifdef UNIX
   int pixel;
-  int ret;
-  char xerr[NAMEBUFFLEN];
 #else
 #endif
 
@@ -1731,6 +1724,9 @@ static void transform(double *x, double *y) {
     xz = winwidth;
     xd = -1.0;
     break;
+  default:
+    /* avoid compiler warning */
+    xd = xz = 0;
   }
   switch (winorigin[1]) {
   case 't':
@@ -1745,6 +1741,9 @@ static void transform(double *x, double *y) {
     yz = winheight;
     yd = -1.0;
     break;
+  default:
+    /* avoid compiler warning */
+    yd = yz = 0;
   }
   *x = xz + (*x) * xd;
   *y = yz + (*y) * yd;
@@ -1777,6 +1776,9 @@ static void rtransform(double *x, double *y) {
     xz = winwidth;
     xd = -1.0;
     break;
+  default:
+    /* avoid compiler warning */
+    xd = xz = 0;
   }
   switch (winorigin[1]) {
   case 't':
@@ -1791,6 +1793,9 @@ static void rtransform(double *x, double *y) {
     yz = winheight;
     yd = -1.0;
     break;
+  default:
+    /* avoid compiler warning */
+    yd = yz = 0;
   }
   /* this is the inverse of transform, as long as xd * xd == 1 holds true */
   *x = ((*x) - xz) * xd;
@@ -1947,6 +1952,7 @@ void putbit(void) {
             "allowed",
             mode);
     error(sERROR, string);
+    return;
   }
   ydest = (int)pop(stNUMBER)->value;
   xdest = (int)pop(stNUMBER)->value;

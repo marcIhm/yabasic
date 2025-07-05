@@ -12,6 +12,8 @@
 
 */
 
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"  
+
 #include <string.h>
 
 #include "bison.h"       /* get tokens from BISON */
@@ -61,6 +63,8 @@ YY_BUFFER_STATE from_string_buffer; /* to read from string */
 int yycolumn=1;
 int yydoublenl;
 #define YY_USER_ACTION yydoublenl=FALSE;yylloc.first_line=yylloc.last_line=yylineno; yylloc.first_column=yycolumn; yylloc.last_column=yycolumn+yyleng-1;yycolumn+=yyleng;
+#define YY_NO_UNISTD_H
+#define YY_NO_INPUT
 
 int start_token;
 %}
@@ -541,6 +545,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
 
   for(p=name;strchr(" \"'`",*p);p++) if (!*p) break;
   strncpy(unquoted,p,NAMEBUFFLEN);
+  unquoted[NAMEBUFFLEN - 1] = '\0';
   for(;!strchr(" \"'`",*p);p++) if (!*p) break;
   if (*p) unquoted[p-name-2]='\0';
   name=unquoted;
@@ -558,6 +563,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   /* search in current working dir */
   if (fullreturn) *fullreturn=full_wdir;
   strncpy(full_wdir,name,NAMEBUFFLEN);
+  full_wdir[NAMEBUFFLEN - 1] = '\0';  
   strcat(full_wdir,".yab");
   lib=fopen(full_wdir,"r");
   if (lib) return lib;
@@ -565,7 +571,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   /* search in dir of main file */
   if (fullreturn) *fullreturn=full_main;
   if (strchr(main_file_name,'/') || strchr(main_file_name,'\\')) {
-    strncpy(full_main,main_file_name,NAMEBUFFLEN);
+    strncpy(full_main,main_file_name,NAMEBUFFLEN - 1);
   } else {
     full_main[0]='\0';
   }
@@ -587,7 +593,7 @@ FILE *open_library(char *name,char **fullreturn) /* search and open a library */
   
   /* search in global directory */
   if (fullreturn) *fullreturn=full_global;
-  strncpy(full_global,library_path,NAMEBUFFLEN);
+  strncpy(full_global,library_path,NAMEBUFFLEN - 1);
   if (full_global[0] && !strchr("\\/",full_global[strlen(full_global)-1])) {
 #ifdef UNIX
     strcat(full_global,"/");

@@ -130,7 +130,6 @@ static int frnfn_parse_stack();
 static void frn_cast_to_ffi_type(union FFI_VAL *, ffi_type *, double);
 static double frn_cast_from_ffi_type(union FFI_VAL *, ffi_type *);
 static void frnfn_cleanup();
-static int frn_check_type_and_action(char, int, char *);
 static int frnbf_parse_handle(char *, int *, void **);
 static int frnbf_verify_not_null(int);
 

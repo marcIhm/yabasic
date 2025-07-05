@@ -116,7 +116,10 @@ void print(struct command *cmd) /* print on screen */
   long int n;
   double d;
 #ifdef UNIX
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
   int x, y;
+#pragma GCC diagnostic pop
 #endif
 
   r = NULL;
@@ -332,9 +335,7 @@ char *inkey(double maxtime) /* get char from keyboard */
   struct timeval tv;
   int maxfd;
   int winfd, termfd;
-  int status, ret;
-  int pending;
-  static int cnt = 0;
+  int ret;
 #endif
 
   if (maxtime >= 0.0 && maxtime < 0.01) {
@@ -1157,7 +1158,10 @@ static void readline(void) /* read one line from current stream */
 {
 #ifdef UNIX
   char *nl; /* position of newline */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
   int x, y;
+#pragma GCC diagnostic pop
 #else
   int read;
 #endif
@@ -1397,7 +1401,6 @@ static void initcol(void) /* initialize console colors */
 {
   static int first = TRUE;
 #ifdef UNIX
-  int i, j;
   short f, b;
 #else
   CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -1793,7 +1796,10 @@ void putchars(void) /* put rect onto screen */
   char *ch, text, fore[4], back[4];
   int n, sx, sy, x, y, f, b;
   int tox, toy;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
   int oldx, oldy;
+#pragma GCC diagnostic pop
 #ifdef WINDOWS
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   COORD cp;

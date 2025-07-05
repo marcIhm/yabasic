@@ -87,9 +87,9 @@ void reorder_stack_after_call(
                          and remove switch value (if any) */
 {
   struct stackentry *keep, *kept;
-  char *kept_string;
-  double kept_value;
-  int kept_type;
+  char *kept_string = NULL;
+  double kept_value = 0;
+  int kept_type = 0;
 
   if (keep_topmost) {
     keep = pop(stANY);
@@ -283,12 +283,10 @@ void makelocal(struct command *cmd) /* makes symbol local */
 
 void create_count_params(void) /* create command 'cCOUNT_PARAMS' */
 {
-  struct command *cmd;
-
   /* dotifying numparams at compiletime (as opposed to runtime) is essential,
      because the function name is not known at runtime */
-  cmd = add_command_with_sym_and_diag(cCOUNT_PARAMS, dotify("numparams", FALSE),
-                                      NULL);
+  add_command_with_sym_and_diag(cCOUNT_PARAMS, dotify("numparams", FALSE),
+				NULL);
 }
 
 void count_params(struct command *cmd) /* count number of function parameters */
@@ -665,14 +663,12 @@ void resetskiponce(struct command *cmd, int n) /* find and reset nth skip */
   c->tag = 1;
 }
 
-void pop_multi(
-    struct command *cmd) /* pop and discard multiple values from stack */
+void pop_multi(struct command *cmd) /* pop and discard multiple values from stack */
 {
   int to_pop = cmd->tag;
-  struct stackentry *popped;
 
   while (to_pop > 0) {
-    popped = pop(stSTRING_OR_NUMBER);
+    pop(stSTRING_OR_NUMBER);
     to_pop--;
   }
 }

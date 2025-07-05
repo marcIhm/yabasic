@@ -7,7 +7,7 @@ yabasic_SOURCES = main.c function.c io.c graphic.c symbol.c foreign.c flow.c fle
 man_MANS = yabasic.1
 LDADD = @X_PRE_LIBS@ -lm @LIBS@ -lX11 @X_LIBS@ @X_EXTRA_LIBS@ $(FFI_LDFLAGS)
 # For profiling add option -pg in each of the next two lines
-AM_CPPFLAGS = -DUNIX $(X_CFLAGS) $(FFI_CFLAGS) 
+AM_CPPFLAGS = -DUNIX $(X_CFLAGS) $(FFI_CFLAGS) $(CCOPTIONS)
 AM_LDFLAGS = 
 EXTRA_DIST = runme yabasic.htm yabasic.flex yabasic.bison tests configure.ac LICENSE demo.yab $(man_MANS)
 AUTOMAKE_OPTIONS = check-news subdir-objects

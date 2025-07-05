@@ -43,7 +43,6 @@
 #include <io.h>
 #include <Winspool.h>
 #define ARCHITECTURE "windows"
-#define YY_NO_UNISTD_H
 #ifdef __LCC__			/* fix for lccwin32 */
 #include <winspool.h>
 #endif
