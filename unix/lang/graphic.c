@@ -84,8 +84,8 @@ HFONT myfont; /* handle of font for screen */
 int winopened = FALSE;   /* flag if window is open already */
 char *winorigin;         /* e.g. "lt","rc"; defines origin of grafic window */
 int winwidth, winheight; /* size of window */
-int displaywidth = 0;     /* width of display */
-int displayheight = 0;    /* height of display */
+int displaywidth = 0;    /* width of display */
+int displayheight = 0;   /* height of display */
 static int winx, winy;   /* position of window */
 
 /* mouse and keyboard */
@@ -246,7 +246,7 @@ void openwin(struct command *cmd) {
   /* create redraw pixmap */
   XGetWindowAttributes(display, window, &attributes);
   backbit =
-    XCreatePixmap(display, window, winwidth, winheight, attributes.depth);
+      XCreatePixmap(display, window, winwidth, winheight, attributes.depth);
   if (!backbit) {
     error(sERROR, "couldn't create backing pixmap");
     return;
@@ -262,18 +262,19 @@ void openwin(struct command *cmd) {
     prctl(PR_SET_PDEATHSIG, SIGHUP);
 #endif
     /* we (child-process) get our own display-connection, probably on purpose */
-    if (!display) display = XOpenDisplay(displayname);
+    if (!display)
+      display = XOpenDisplay(displayname);
     XSelectInput(display, window, ExposureMask);
     XGetGCValues(display, gc, GCPlaneMask, &vals);
     while (TRUE) {
       if (severity_threshold <= sNOTE && x11_note_on_receive_expose) {
-	error(sNOTE, "Waiting for X11-event Expose");
+        error(sNOTE, "Waiting for X11-event Expose");
       }
       XNextEvent(display, &event);
       if (event.type == Expose) {
-	if (severity_threshold <= sNOTE && x11_note_on_receive_expose) {
-	  error(sNOTE, "Received X11-event Expose");
-	}
+        if (severity_threshold <= sNOTE && x11_note_on_receive_expose) {
+          error(sNOTE, "Received X11-event Expose");
+        }
         rx = event.xexpose.x;
         ry = event.xexpose.y;
         rw = event.xexpose.width;
@@ -672,8 +673,9 @@ static int grafinit(void) {
   static XGCValues xgcvalues;                /* Values for Graphics Context */
   static unsigned int w, h;                  /* width and height of window */
   int rbits_count, gbits_count, bbits_count; /* number of bits for r,g and b */
-  XColor exact_match, best_match; /* exact and best matches for required color */
-#else /*  */
+  XColor exact_match,
+      best_match; /* exact and best matches for required color */
+#else             /*  */
   int r, g, b;
 #endif
   char *fname = fontname;
@@ -2826,7 +2828,8 @@ void x11_send_expose() {
   }
   memset(&event, 0, sizeof(XExposeEvent));
   event.type = Expose;
-  if (!display) display = XOpenDisplay(displayname);      
+  if (!display)
+    display = XOpenDisplay(displayname);
   event.display = display;
   event.window = window;
   event.x = 0;
@@ -2837,10 +2840,10 @@ void x11_send_expose() {
   XSync(display, 0);
   error(sNOTE, "Sent X11-event Expose to my own window");
 #else
-  error(sERROR, "'debug_internal' 'x11_send_expose' is not available under windows");
-#endif      
+  error(sERROR,
+        "'debug_internal' 'x11_send_expose' is not available under windows");
+#endif
 }
-
 
 void determine_display_size() {
   /* determine size of display and store within global vars */
@@ -2849,9 +2852,12 @@ void determine_display_size() {
   static int failed = FALSE;
   int num;
 
-  if (succeeded) return;
-  if (failed) return;
-  if (!display) display = XOpenDisplay(displayname);
+  if (succeeded)
+    return;
+  if (failed)
+    return;
+  if (!display)
+    display = XOpenDisplay(displayname);
   if (!display) {
     failed = TRUE;
     return;
@@ -2860,8 +2866,10 @@ void determine_display_size() {
   displaywidth = DisplayWidth(display, num);
   displayheight = DisplayHeight(display, num);
 #else
-  if (succeeded) return;
-  /* if screen scaling is active (e.g. scaling factor of 150%), this returns 1280 instead of 1920 */
+  if (succeeded)
+    return;
+  /* if screen scaling is active (e.g. scaling factor of 150%), this returns
+   * 1280 instead of 1920 */
   displaywidth = GetSystemMetrics(SM_CXSCREEN);
   displayheight = GetSystemMetrics(SM_CYSCREEN);
 #endif

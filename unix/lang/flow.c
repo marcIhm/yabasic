@@ -286,7 +286,7 @@ void create_count_params(void) /* create command 'cCOUNT_PARAMS' */
   /* dotifying numparams at compiletime (as opposed to runtime) is essential,
      because the function name is not known at runtime */
   add_command_with_sym_and_diag(cCOUNT_PARAMS, dotify("numparams", FALSE),
-				NULL);
+                                NULL);
 }
 
 void count_params(struct command *cmd) /* count number of function parameters */
@@ -663,7 +663,8 @@ void resetskiponce(struct command *cmd, int n) /* find and reset nth skip */
   c->tag = 1;
 }
 
-void pop_multi(struct command *cmd) /* pop and discard multiple values from stack */
+void pop_multi(
+    struct command *cmd) /* pop and discard multiple values from stack */
 {
   int to_pop = cmd->tag;
 

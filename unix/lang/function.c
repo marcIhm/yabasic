@@ -711,7 +711,9 @@ void function(struct command *cmd) /* performs a function */
   case fSTRING:
     cnt = (int)a1->value;
     if (cnt < 0) {
-      sprintf(estring, "first argument to function 'string$' must be > 0, but found %d", cnt);
+      sprintf(estring,
+              "first argument to function 'string$' must be > 0, but found %d",
+              cnt);
       error(sERROR, estring);
       return;
     }
@@ -721,7 +723,7 @@ void function(struct command *cmd) /* performs a function */
     k = 0;
     for (i = 0; i < cnt; i++) {
       for (j = 0; j < len; j++) {
-	pointer[k++] = str[j];
+        pointer[k++] = str[j];
       }
     }
     pointer[k] = '\0';
@@ -1523,35 +1525,48 @@ void poke(struct command *cmd) /* poke into internals */
     } else if (!strcmp(string_arg, "x11_note_on_receive_expose")) {
       x11_note_on_receive_expose = TRUE;
     } else {
-      sprintf(estring, "invalid argument for poke 'debug_internal': '%s' ; allowed values are:\n"
-	      "     x11_send_expose             :   send an artifical expose event to the open graphic window\n"
-	      "     x11_note_on_receive_expose  :   make the redraw-coprocess output a note on\n"
-	      "       receiving an x11 expose; infolevel must be set to 'note' at minimum;\n"
-	      "       this needs to be issued before opening a window", string_arg);
+      sprintf(estring,
+              "invalid argument for poke 'debug_internal': '%s' ; allowed "
+              "values are:\n"
+              "     x11_send_expose             :   send an artifical expose "
+              "event to the open graphic window\n"
+              "     x11_note_on_receive_expose  :   make the redraw-coprocess "
+              "output a note on\n"
+              "       receiving an x11 expose; infolevel must be set to 'note' "
+              "at minimum;\n"
+              "       this needs to be issued before opening a window",
+              string_arg);
       error(sERROR, estring);
     }
 
-  } else if (!strcmp(dest, "console_foreground_intensity") || !strcmp(dest, "screen_foreground_intensity") || !strcmp(dest, "terminal_foreground_intensity")) {
+  } else if (!strcmp(dest, "console_foreground_intensity") ||
+             !strcmp(dest, "screen_foreground_intensity") ||
+             !strcmp(dest, "terminal_foreground_intensity")) {
     if (con_xcap_inized) {
-      /* Remark: it is tempting to loosen the below restriction. However, doing this would
-	 open a can of bugs and missing implementation-details. E.g. currently we have no
-	 intensity in the result of getscreen$(), but we would need this, if intensity could
-	 be changed multiple times during program run. */
-      sprintf(estring, "console_foreground_intensity cannot be changed after 'clear screen' has been called");
+      /* Remark: it is tempting to loosen the below restriction. However, doing
+         this would open a can of bugs and missing implementation-details. E.g.
+         currently we have no intensity in the result of getscreen$(), but we
+         would need this, if intensity could be changed multiple times during
+         program run. */
+      sprintf(estring, "console_foreground_intensity cannot be changed after "
+                       "'clear screen' has been called");
       error(sERROR, estring);
     } else {
       if (!strcmp(string_arg, "legacy")) {
-	con_fore_inten = cciLEGACY;
+        con_fore_inten = cciLEGACY;
       } else if (!strcmp(string_arg, "bright")) {
-	con_fore_inten = cciBRIGHT;
+        con_fore_inten = cciBRIGHT;
       } else if (!strcmp(string_arg, "normal")) {
-	con_fore_inten = cciNORMAL;
+        con_fore_inten = cciNORMAL;
       }
     }
-  } else if (!strcmp(dest, "console_foreground_color") || !strcmp(dest, "screen_foreground_color") || !strcmp(dest, "terminal_foreground_color")) {
+  } else if (!strcmp(dest, "console_foreground_color") ||
+             !strcmp(dest, "screen_foreground_color") ||
+             !strcmp(dest, "terminal_foreground_color")) {
     if (con_xcap_inized) {
       /* Maybe see remark above for console_foreground_intensity */
-      sprintf(estring, "console_foreground_color cannot be changed after 'clear screen' has been called");
+      sprintf(estring, "console_foreground_color cannot be changed after "
+                       "'clear screen' has been called");
       error(sERROR, estring);
     }
     con_fore_col = name2yc(string_arg);
@@ -1559,10 +1574,13 @@ void poke(struct command *cmd) /* poke into internals */
       sprintf(estring, "unknown foreground colour: '%s'", string_arg);
       error(sERROR, estring);
     }
-  } else if (!strcmp(dest, "console_background_color") || !strcmp(dest, "screen_background_color") || !strcmp(dest, "terminal_background_color")) {
+  } else if (!strcmp(dest, "console_background_color") ||
+             !strcmp(dest, "screen_background_color") ||
+             !strcmp(dest, "terminal_background_color")) {
     if (con_xcap_inized) {
       /* Maybe see remark above for console_foreground_intensity */
-      sprintf(estring, "console_background_color cannot be changed after 'clear screen' has been called");
+      sprintf(estring, "console_background_color cannot be changed after "
+                       "'clear screen' has been called");
       error(sERROR, estring);
     }
     con_back_col = name2yc(string_arg);
@@ -1630,7 +1648,11 @@ void poke(struct command *cmd) /* poke into internals */
     } else {
       sprintf(string, "invalid poke: '%s', %g", dest, double_arg);
     }
-    strncat(string, "; either the first argument is totally unknown (see the documentation of 'poke') or it expects a different type of second argument (string/number) than given", INBUFFLEN - 1 - strlen(string));
+    strncat(string,
+            "; either the first argument is totally unknown (see the "
+            "documentation of 'poke') or it expects a different type of second "
+            "argument (string/number) than given",
+            INBUFFLEN - 1 - strlen(string));
     error(sERROR, string);
   }
   return;
@@ -1687,10 +1709,12 @@ static double peek(char *dest) /* peek into internals */
   } else if (!strcmp(dest, "screenwidth")) {
     return COLS;
   } else if (!strcmp(dest, "displaywidth")) {
-    if (displaywidth == 0) determine_display_size();
+    if (displaywidth == 0)
+      determine_display_size();
     return displaywidth;
   } else if (!strcmp(dest, "displayheight")) {
-    if (displayheight == 0) determine_display_size();
+    if (displayheight == 0)
+      determine_display_size();
     return displayheight;
   } else if (!strcmp(dest, "argument") || !strcmp(dest, "arguments")) {
     return yabargc;
@@ -1708,10 +1732,13 @@ static double peek(char *dest) /* peek into internals */
   } else if (!strcmp(dest, "millisrunning")) {
     return (double)(current_millis() - compilation_start);
   } else if (dest[0] == '#') {
-      error(sERROR, "don't use quotes when peeking into a file");
+    error(sERROR, "don't use quotes when peeking into a file");
     return 0;
   }
-  sprintf(string, "invalid peek: '%s'; see the documentation of 'peek' for accepted values", dest);
+  sprintf(
+      string,
+      "invalid peek: '%s'; see the documentation of 'peek' for accepted values",
+      dest);
   error(sERROR, string);
   return 0;
 }
@@ -1750,7 +1777,9 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
     } else {
       return my_strdup("unknown");
     }
-  } else if (!strcmp(dest, "console_foreground_intensity") || !strcmp(dest, "screen_foreground_intensity") || !strcmp(dest, "terminal_foreground_intensity")) {
+  } else if (!strcmp(dest, "console_foreground_intensity") ||
+             !strcmp(dest, "screen_foreground_intensity") ||
+             !strcmp(dest, "terminal_foreground_intensity")) {
     if (con_fore_inten == cciLEGACY) {
       return my_strdup("legacy");
     } else if (con_fore_inten == cciBRIGHT) {
@@ -1761,13 +1790,17 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       /* cannot happen, but anyway */
       return my_strdup("unknown");
     }
-  } else if (!strcmp(dest, "console_foreground_color") || !strcmp(dest, "screen_foreground_color") || !strcmp(dest, "terminal_foreground_color")) {
+  } else if (!strcmp(dest, "console_foreground_color") ||
+             !strcmp(dest, "screen_foreground_color") ||
+             !strcmp(dest, "terminal_foreground_color")) {
     if (con_fore_col == -1) {
       return my_strdup("unset");
     } else {
       return yc2name(con_fore_col);
     }
-  } else if (!strcmp(dest, "console_background_color") || !strcmp(dest, "screen_background_color") || !strcmp(dest, "terminal_background_color")) {
+  } else if (!strcmp(dest, "console_background_color") ||
+             !strcmp(dest, "screen_background_color") ||
+             !strcmp(dest, "terminal_background_color")) {
     if (con_back_col == -1) {
       return my_strdup("unset");
     } else {
@@ -1809,7 +1842,9 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
       s = "";
     }
     return my_strdup(s);
-  } else if (!strcmp(dest, "console_color_mode") || !strcmp(dest, "screen_color_mode") || !strcmp(dest, "terminal_color_mode")) {
+  } else if (!strcmp(dest, "console_color_mode") ||
+             !strcmp(dest, "screen_color_mode") ||
+             !strcmp(dest, "terminal_color_mode")) {
     if (con_fore_inten == cciLEGACY) {
       return my_strdup("legacy");
     } else if (con_fore_inten == cciBRIGHT) {
@@ -1817,12 +1852,18 @@ static char *peek2(char *dest, struct command *curr) /* peek into internals */
     } else if (con_fore_inten == cciNORMAL) {
       return my_strdup("standard");
     } else {
-      sprintf(estring, "Internal error: Invalid value for console_foreground_intensity: %d", con_fore_inten);
+      sprintf(
+          estring,
+          "Internal error: Invalid value for console_foreground_intensity: %d",
+          con_fore_inten);
       error(sERROR, estring);
       return my_strdup("");
     }
   } else {
-    sprintf(string, "invalid peek: '%s'; see the documentation of 'peek$' for accepted values", dest);
+    sprintf(string,
+            "invalid peek: '%s'; see the documentation of 'peek$' for accepted "
+            "values",
+            dest);
     error(sERROR, string);
   }
   return my_strdup("");
@@ -2062,7 +2103,8 @@ void dblrelop(struct command *cmd) /* compare topmost double-values */
     c = (a > b);
     break;
   default:
-    /* this is an error, but handled already in create_dblrelop; code below only to silence compiler */
+    /* this is an error, but handled already in create_dblrelop; code below only
+     * to silence compiler */
     c = 0;
   }
   result = push();
@@ -2129,7 +2171,8 @@ void strrelop(struct command *cmd) /* compare topmost string-values */
     c = (strcmp(a, b) >= 0);
     break;
   default:
-    /* this is an error, but handled already in create_strrelop; code below only to silence compiler */
+    /* this is an error, but handled already in create_strrelop; code below only
+     * to silence compiler */
     c = 0;
   }
   result = push();

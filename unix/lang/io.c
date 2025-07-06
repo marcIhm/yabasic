@@ -49,12 +49,12 @@ extern int yyparse(); /* call bison parser */
 
 /* ------------- local functions ---------------- */
 
-static int onechar(void);   /* read one char from currentinstream */
-static void backchar(int);  /* put char back into stream */
-static void readline(void); /* read one line from current stream */
-static void con_xcap_init(void);  /* initialize console extra capabilities */
-static void initcol(void);  /* initialize colors */
-int checkstream(void);      /* test if currst is still valid */
+static int onechar(void);        /* read one char from currentinstream */
+static void backchar(int);       /* put char back into stream */
+static void readline(void);      /* read one line from current stream */
+static void con_xcap_init(void); /* initialize console extra capabilities */
+static void initcol(void);       /* initialize colors */
+int checkstream(void);           /* test if currst is still valid */
 #ifdef WINDOWS
 static DWORD keythread(LPWORD);          /* wait for key input from console */
 static int is_valid_key(INPUT_RECORD *); /* check if input rec is valid key */
@@ -74,13 +74,14 @@ static int currstr = STDIO_STREAM; /* currently switched stream */
 static FILE *cinstr;               /* current stream for input */
 static FILE *coutstr;              /* current stream for output */
 static char linebuffer[INBUFFLEN]; /* buffer for one line of input */
-int con_xcap_inized = FALSE;             /* true, if console extra capabilities have been initialized */
-static char *currchar;             /* current char to read */
+int con_xcap_inized =
+    FALSE; /* true, if console extra capabilities have been initialized */
+static char *currchar; /* current char to read */
 #ifdef UNIX
 FILE *lineprinter = NULL; /* handle for line printer */
 #else
-static short stdfc; /* standard foreground color for console */
-static short stdbc; /* standard background color for console */
+static short stdfc;      /* standard foreground color for console */
+static short stdbc;      /* standard background color for console */
 static short stdfc_orig; /* initial standard foreground color for console */
 static short stdbc_orig; /* initial standard background color for console */
 HANDLE gotwinkey = INVALID_HANDLE_VALUE;   /* mutex to signal key reception */
@@ -250,30 +251,36 @@ void clearscreen() /* clear entire screen */
   coord.Y = 0;
   FillConsoleOutputCharacter(ConsoleOutput, ' ', LINES * COLS, coord, &written);
   /* This use of attributes needs to be consistent with the use in colour() */
-  SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));  
-  FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS, coord, &written);
+  SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));
+  FillConsoleOutputAttribute(ConsoleOutput, (WORD)(stdfc | stdbc), LINES * COLS,
+                             coord, &written);
   SetConsoleCursorPosition(ConsoleOutput, coord);
-  /* In theory, this does nothing more, than already done with the api-calls above; however
-     to avoid coloring-problems this seems necessary nevertheless. See the comments around
-     system("color") in main.c for some more motivation */
+  /* In theory, this does nothing more, than already done with the api-calls
+     above; however to avoid coloring-problems this seems necessary
+     nevertheless. See the comments around system("color") in main.c for some
+     more motivation */
   system("cls");
 #endif
 }
 
-static void con_xcap_init(void) /* initialize console extra capabilities, e.g. curses */
+static void
+con_xcap_init(void) /* initialize console extra capabilities, e.g. curses */
 {
 #ifdef WINDOWS
   CONSOLE_SCREEN_BUFFER_INFO coninfo; /* receives console size */
 #endif
 
   if (con_fore_col != -1 && con_back_col == -1) {
-    /* lifting this restriction leads to problems under linux: Poking only background violates check 1 in input_with_color.yab */
-    sprintf(estring, "only 'console_foreground_color' has been poked, but you need to poke 'console_background_color' too");
+    /* lifting this restriction leads to problems under linux: Poking only
+     * background violates check 1 in input_with_color.yab */
+    sprintf(estring, "only 'console_foreground_color' has been poked, but you "
+                     "need to poke 'console_background_color' too");
     error(sERROR, estring);
     return;
   }
   if (con_fore_col == -1 && con_back_col != -1) {
-    sprintf(estring, "only 'console_background_color' has been poked, but you need to poke 'console_foreground_color' too");
+    sprintf(estring, "only 'console_background_color' has been poked, but you "
+                     "need to poke 'console_foreground_color' too");
     error(sERROR, estring);
     return;
   }
@@ -283,7 +290,7 @@ static void con_xcap_init(void) /* initialize console extra capabilities, e.g. c
             my_strerror(errno));
     error(sERROR, estring);
     return;
-  };  
+  };
   if (!initscr()) {
     error(sERROR, "could not initialize curses");
     return;
@@ -306,7 +313,7 @@ static void con_xcap_init(void) /* initialize console extra capabilities, e.g. c
   LINES = coninfo.srWindow.Bottom + 1;
   initcol();
 #endif
-  con_xcap_inized = TRUE;  
+  con_xcap_inized = TRUE;
 }
 
 void con_xcap_deinit(void) /* bring console back to normal/inital state */
@@ -319,7 +326,7 @@ void con_xcap_deinit(void) /* bring console back to normal/inital state */
 #else
   SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc_orig | stdbc_orig));
 #endif
-  con_xcap_inized = FALSE;    
+  con_xcap_inized = FALSE;
 }
 
 char *inkey(double maxtime) /* get char from keyboard */
@@ -1164,7 +1171,7 @@ static void readline(void) /* read one line from current stream */
   char *nl; /* position of newline */
 #ifdef __GNUC__
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #endif
   int x, y;
 #ifdef __GNUC__
@@ -1328,13 +1335,15 @@ void colour(struct command *cmd) /* switch on colour */
       return;
     }
 #ifdef UNIX
-    /* Turn off all attributes including color, probably bringing us back to COLOR_PAIR(0) */
+    /* Turn off all attributes including color, probably bringing us back to
+     * COLOR_PAIR(0) */
     attrset(A_NORMAL);
     if (con_fore_inten == cciBRIGHT) {
       attron(A_BOLD);
     }
 #else
-    /* This use of attributes needs to be consisten with the use in clearscreen() */
+    /* This use of attributes needs to be consisten with the use in
+     * clearscreen() */
     SetConsoleTextAttribute(ConsoleOutput, (WORD)(stdfc | stdbc));
     return;
 #endif
@@ -1344,7 +1353,8 @@ void colour(struct command *cmd) /* switch on colour */
     attrset(A_REVERSE);
     return;
 #else
-    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), FALSE) | yc2oc(oc2yc(stdbc), TRUE)));
+    SetConsoleTextAttribute(ConsoleOutput, (WORD)(yc2oc(oc2yc(stdfc), FALSE) |
+                                                  yc2oc(oc2yc(stdbc), TRUE)));
     return;
 #endif
   } else {
@@ -1390,7 +1400,8 @@ void colour(struct command *cmd) /* switch on colour */
     }
 #ifdef UNIX
     if (back) {
-      /* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */      
+      /* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must
+       * match */
       attrset(COLOR_PAIR(fc + bc * 8 + 1));
     } else {
       attrset(COLOR_PAIR(65 + fc));
@@ -1400,7 +1411,8 @@ void colour(struct command *cmd) /* switch on colour */
     }
 #else
     SetConsoleTextAttribute(
-        ConsoleOutput, (WORD)(yc2oc(fc, TRUE) | (back ? yc2oc(bc, FALSE) : stdbc)));
+        ConsoleOutput,
+        (WORD)(yc2oc(fc, TRUE) | (back ? yc2oc(bc, FALSE) : stdbc)));
 #endif
   }
 }
@@ -1426,12 +1438,14 @@ static void initcol(void) /* initialize console colors */
   /* This makes color pair 0 to consist of default fore- and background */
   assume_default_colors(yc2oc(con_fore_col, true), yc2oc(con_back_col, false));
   /* 73 = 8 * 8 + 8 + 1 = pairs + fore-only + immutable-pair-0 */
-  if (COLOR_PAIRS < 73) return;
-  
+  if (COLOR_PAIRS < 73)
+    return;
+
   for (b = 0; b < 8; b++) {
     for (f = 0; f < 8; f++) {
       /* arguments are fore, back. Skip color pair 0 which has been set above */
-      /* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */
+      /* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must
+       * match */
       init_pair(f + b * 8 + 1, yc2oc(f, TRUE), yc2oc(b, FALSE));
     }
   }
@@ -1446,13 +1460,15 @@ static void initcol(void) /* initialize console colors */
 
 #else
   GetConsoleScreenBufferInfo(ConsoleOutput, &csbi);
-  stdfc_orig = csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+  stdfc_orig =
+      csbi.wAttributes & (FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
   if (con_fore_col == -1) {
     stdfc = stdfc_orig;
   } else {
     stdfc = yc2oc(con_fore_col, TRUE);
   }
-  stdbc_orig = csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+  stdbc_orig =
+      csbi.wAttributes & (BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
   if (con_back_col == -1) {
     stdbc = stdbc_orig;
   } else {
@@ -1460,7 +1476,7 @@ static void initcol(void) /* initialize console colors */
   }
   if (con_fore_inten == cciBRIGHT) {
     stdfc |= FOREGROUND_INTENSITY;
-  }    
+  }
 #endif
 }
 
@@ -1504,25 +1520,25 @@ char *yc2name(int yc) /* convert an integer to a color name */
     return my_strdup("black");
   }
   if (yc == YC_WHITE) {
-    return my_strdup("white");    
+    return my_strdup("white");
   }
   if (yc == YC_RED) {
-    return my_strdup("red");    
+    return my_strdup("red");
   }
   if (yc == YC_BLUE) {
-    return my_strdup("blue");    
+    return my_strdup("blue");
   }
   if (yc == YC_GREEN) {
     return my_strdup("green");
   }
   if (yc == YC_YELLOW) {
-    return my_strdup("yellow");    
+    return my_strdup("yellow");
   }
   if (yc == YC_CYAN) {
-    return my_strdup("cyan");    
+    return my_strdup("cyan");
   }
   if (yc == YC_MAGENTA) {
-    return my_strdup("magenta");    
+    return my_strdup("magenta");
   }
   return my_strdup("invalid");
 }
@@ -1560,164 +1576,169 @@ int yc2oc(int yc,
   if (con_fore_inten == cciLEGACY) {
     if (fore) {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+        return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
       }
       if (yc == YC_RED) {
-	return FOREGROUND_RED;
+        return FOREGROUND_RED;
       }
       if (yc == YC_BLUE) {
-	return FOREGROUND_BLUE;
+        return FOREGROUND_BLUE;
       }
       if (yc == YC_GREEN) {
-	return FOREGROUND_GREEN;
+        return FOREGROUND_GREEN;
       }
       if (yc == YC_YELLOW) {
-	return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+        return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
       }
       if (yc == YC_CYAN) {
-	return FOREGROUND_GREEN | FOREGROUND_BLUE;
+        return FOREGROUND_GREEN | FOREGROUND_BLUE;
       }
       if (yc == YC_MAGENTA) {
-	return FOREGROUND_BLUE | FOREGROUND_RED;
+        return FOREGROUND_BLUE | FOREGROUND_RED;
       }
     } else {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+        return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
       }
       if (yc == YC_RED) {
-	return BACKGROUND_RED;
+        return BACKGROUND_RED;
       }
       if (yc == YC_BLUE) {
-	return BACKGROUND_BLUE;
+        return BACKGROUND_BLUE;
       }
       if (yc == YC_GREEN) {
-	return BACKGROUND_GREEN;
+        return BACKGROUND_GREEN;
       }
       if (yc == YC_YELLOW) {
-	return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+        return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
       }
       if (yc == YC_CYAN) {
-	return BACKGROUND_GREEN | BACKGROUND_BLUE;
+        return BACKGROUND_GREEN | BACKGROUND_BLUE;
       }
       if (yc == YC_MAGENTA) {
-	return BACKGROUND_BLUE | BACKGROUND_RED;
+        return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } else if ( con_fore_inten == cciNORMAL ) {
+  } else if (con_fore_inten == cciNORMAL) {
     if (fore) {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+        return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
       }
       if (yc == YC_RED) {
-	return FOREGROUND_RED;
+        return FOREGROUND_RED;
       }
       if (yc == YC_BLUE) {
-	return FOREGROUND_BLUE;
+        return FOREGROUND_BLUE;
       }
       if (yc == YC_GREEN) {
-	return FOREGROUND_GREEN;
+        return FOREGROUND_GREEN;
       }
       if (yc == YC_YELLOW) {
-	return FOREGROUND_GREEN | FOREGROUND_RED;
+        return FOREGROUND_GREEN | FOREGROUND_RED;
       }
       if (yc == YC_CYAN) {
-	return FOREGROUND_GREEN | FOREGROUND_BLUE;
+        return FOREGROUND_GREEN | FOREGROUND_BLUE;
       }
       if (yc == YC_MAGENTA) {
-	return FOREGROUND_BLUE | FOREGROUND_RED;
+        return FOREGROUND_BLUE | FOREGROUND_RED;
       }
     } else {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+        return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
       }
       if (yc == YC_RED) {
-	return BACKGROUND_RED;
+        return BACKGROUND_RED;
       }
       if (yc == YC_BLUE) {
-	return BACKGROUND_BLUE;
+        return BACKGROUND_BLUE;
       }
       if (yc == YC_GREEN) {
-	return BACKGROUND_GREEN;
+        return BACKGROUND_GREEN;
       }
       if (yc == YC_YELLOW) {
-	return BACKGROUND_GREEN | BACKGROUND_RED;
+        return BACKGROUND_GREEN | BACKGROUND_RED;
       }
       if (yc == YC_CYAN) {
-	return BACKGROUND_GREEN | BACKGROUND_BLUE;
+        return BACKGROUND_GREEN | BACKGROUND_BLUE;
       }
       if (yc == YC_MAGENTA) {
-	return BACKGROUND_BLUE | BACKGROUND_RED;
+        return BACKGROUND_BLUE | BACKGROUND_RED;
       }
     }
-  } else if ( con_fore_inten == cciBRIGHT ) {
+  } else if (con_fore_inten == cciBRIGHT) {
     if (fore) {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE |
+               FOREGROUND_INTENSITY;
       }
       if (yc == YC_RED) {
-	return FOREGROUND_RED | FOREGROUND_INTENSITY;
+        return FOREGROUND_RED | FOREGROUND_INTENSITY;
       }
       if (yc == YC_BLUE) {
-	return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
       }
       if (yc == YC_GREEN) {
-	return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+        return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
       }
       if (yc == YC_YELLOW) {
-	return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+        return FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
       }
       if (yc == YC_CYAN) {
-	return FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        return FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
       }
       if (yc == YC_MAGENTA) {
-	return FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY;
+        return FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY;
       }
     } else {
       if (yc == YC_BLACK) {
-	return 0;
+        return 0;
       }
       if (yc == YC_WHITE) {
-	return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+        return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE |
+               BACKGROUND_INTENSITY;
       }
       if (yc == YC_RED) {
-	return BACKGROUND_RED | BACKGROUND_INTENSITY;
+        return BACKGROUND_RED | BACKGROUND_INTENSITY;
       }
       if (yc == YC_BLUE) {
-	return BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+        return BACKGROUND_BLUE | BACKGROUND_INTENSITY;
       }
       if (yc == YC_GREEN) {
-	return BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+        return BACKGROUND_GREEN | BACKGROUND_INTENSITY;
       }
       if (yc == YC_YELLOW) {
-	return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+        return BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
       }
       if (yc == YC_CYAN) {
-	return BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
+        return BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
       }
       if (yc == YC_MAGENTA) {
-	return BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_INTENSITY;
+        return BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_INTENSITY;
       }
     }
   } else {
-    sprintf(estring, "Internal error: Invalid value for console_foreground_intensity: %d", con_fore_inten);
+    sprintf(
+        estring,
+        "Internal error: Invalid value for console_foreground_intensity: %d",
+        con_fore_inten);
     error(sERROR, estring);
   }
-  
+
 #endif
   return -1;
 }
@@ -1755,24 +1776,23 @@ int oc2yc(int oc) /* convert an operating system color to yabasic color */
   }
   if (oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN) ||
       oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN) ||
-      oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY) ||
-      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY)) {
+      oc == (FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN |
+             FOREGROUND_INTENSITY) ||
+      oc == (BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN |
+             BACKGROUND_INTENSITY)) {
     return YC_WHITE;
   }
-  if (oc == (FOREGROUND_RED) ||
-      oc == (BACKGROUND_RED) ||
+  if (oc == (FOREGROUND_RED) || oc == (BACKGROUND_RED) ||
       oc == (FOREGROUND_RED | FOREGROUND_INTENSITY) ||
       oc == (BACKGROUND_RED | BACKGROUND_INTENSITY)) {
     return YC_RED;
   }
-  if (oc == (FOREGROUND_BLUE) ||
-      oc == (BACKGROUND_BLUE) ||
+  if (oc == (FOREGROUND_BLUE) || oc == (BACKGROUND_BLUE) ||
       oc == (FOREGROUND_BLUE | FOREGROUND_INTENSITY) ||
       oc == (BACKGROUND_BLUE | BACKGROUND_INTENSITY)) {
     return YC_BLUE;
   }
-  if (oc == (FOREGROUND_GREEN) ||
-      oc == (BACKGROUND_GREEN) ||
+  if (oc == (FOREGROUND_GREEN) || oc == (BACKGROUND_GREEN) ||
       oc == (FOREGROUND_GREEN | FOREGROUND_INTENSITY) ||
       oc == (BACKGROUND_GREEN | BACKGROUND_INTENSITY)) {
     return YC_GREEN;
@@ -1806,7 +1826,7 @@ void putchars(void) /* put rect onto screen */
   int tox, toy;
 #ifdef __GNUC__
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #endif
   int oldx, oldy;
 #ifdef __GNUC__
@@ -1873,11 +1893,12 @@ void putchars(void) /* put rect onto screen */
       }
 #ifdef UNIX
       if (has_colors()) {
-	/* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */	
+        /* Encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER
+         * must match */
         attrset(COLOR_PAIR(f + b * 8 + 1));
-	if (con_fore_inten == cciBRIGHT) {
-	  attron(A_BOLD);
-	}	
+        if (con_fore_inten == cciBRIGHT) {
+          attron(A_BOLD);
+        }
       }
       mvaddch(y, x, text);
 #else
@@ -1961,18 +1982,19 @@ char *getchars(int xf, int yf, int xt, int yt) /* get rect from screen */
         if (!isprint(ct)) {
           ct = ' ';
         }
-	/* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER must match */
+        /* encoding and decoding around init_pair, COLOR_PAIR and PAIR_NUMBER
+         * must match */
         cc = PAIR_NUMBER(c & A_COLOR);
-	if (cc == 0) {
-	  cf = YC_WHITE;
-	  cb = YC_BLACK;
-	} else if (cc >= 65) {
-	  cf = cc - 65;
-	  cb = YC_BLACK;
-	} else {
-	  cf = (cc - 1) & 7;
-	  cb = (cc - 1 - cf) / 8;
-	}
+        if (cc == 0) {
+          cf = YC_WHITE;
+          cb = YC_BLACK;
+        } else if (cc >= 65) {
+          cf = cc - 65;
+          cb = YC_BLACK;
+        } else {
+          cf = (cc - 1) & 7;
+          cb = (cc - 1 - cf) / 8;
+        }
         if (has_colors()) {
           sprintf(cols, "%c:%s:%s,", ct, yc2short(cf), yc2short(cb));
         } else {
@@ -2014,7 +2036,7 @@ char *yc2short(int col) /* convert yabasic colours to short colour name */
   }
 
   strcpy(pr, "***");
-  
+
   if (col == YC_BLACK) {
     strcpy(pr, "Bla");
   }

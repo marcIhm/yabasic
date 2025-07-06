@@ -77,22 +77,23 @@ static int debug_count;   /* number of debug messages */
 static int note_count;    /* number of notes */
 static int warning_count; /* number of warning messages */
 static int error_count;   /* number of error messages */
-int x11_note_on_receive_expose = FALSE;  /* print a note when receiving this event */
+int x11_note_on_receive_expose =
+    FALSE;                      /* print a note when receiving this event */
 int con_fore_inten = cciLEGACY; /* console foreground intensity */
-int con_fore_col = -1; /* console foreground color */
-int con_back_col = -1; /* console background color */
-int interactive;          /* true, if commands come from stdin */
-int is_bound;             /* true, if this executable is bound */
-static char *to_bind = NULL; /* name bound program to be written */
-FILE *bound_program = NULL;  /* points to embedded yabasic program (if any) */
-char *string;                /* for trash-strings */
-char *estring;               /* for error-strings */
-int errorcode;               /* error-codes */
-static int commandcount;     /* total number of commands */
-int program_state;           /* state of program */
-char *progname = NULL;       /* name of yabasic-program */
-int print_docu = FALSE;      /* TRUE, if only docu should be printed */
-int hold_docu = FALSE;       /* TRUE, if docu should be printed in portions */
+int con_fore_col = -1;          /* console foreground color */
+int con_back_col = -1;          /* console background color */
+int interactive;                /* true, if commands come from stdin */
+int is_bound;                   /* true, if this executable is bound */
+static char *to_bind = NULL;    /* name bound program to be written */
+FILE *bound_program = NULL; /* points to embedded yabasic program (if any) */
+char *string;               /* for trash-strings */
+char *estring;              /* for error-strings */
+int errorcode;              /* error-codes */
+static int commandcount;    /* total number of commands */
+int program_state;          /* state of program */
+char *progname = NULL;      /* name of yabasic-program */
+int print_docu = FALSE;     /* TRUE, if only docu should be printed */
+int hold_docu = FALSE;      /* TRUE, if docu should be printed in portions */
 #ifdef WINDOWS
 DWORD InitialConsole; /* initial state of console window */
 #endif
@@ -167,18 +168,19 @@ int main(int argc, char **argv) {
   ConsoleInput = GetStdHandle(STD_INPUT_HANDLE);
   ConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
   GetConsoleMode(ConsoleInput, &InitialConsole);
-  /* In theory, the system-call below does the same as the api-calls above. However, this
-     seems to make color-handling more robust, and brings windows console into a sane state,
-     that cannot (?) be reached with ordinary api-calls. This is needed especially for
-     study/default_console_colors.yab if it is started several times in the same window of
-     windows console-host (windows-terminal is okay); in that case traces of the yellow
-     color appear even before "clear screen" has been called; maybe those traces have
-     survived between yabasic-runs in the console-host and can only erased with "color" ...
-     See also
+  /* In theory, the system-call below does the same as the api-calls above.
+     However, this seems to make color-handling more robust, and brings windows
+     console into a sane state, that cannot (?) be reached with ordinary
+     api-calls. This is needed especially for study/default_console_colors.yab
+     if it is started several times in the same window of windows console-host
+     (windows-terminal is okay); in that case traces of the yellow color appear
+     even before "clear screen" has been called; maybe those traces have
+     survived between yabasic-runs in the console-host and can only erased with
+     "color" ... See also
      https://stackoverflow.com/questions/6460932/change-entire-console-background-color-win32-c.
      And also system("cls") in io.c */
   system("color");
-  
+
   /* request processing of excape sequences */
   GetConsoleMode(ConsoleOutput, &consoleflags);
   SetConsoleMode(ConsoleOutput, consoleflags | ENABLE_PROCESSED_OUTPUT |
@@ -811,7 +813,8 @@ static void parse_arguments(int cargc, char *cargv[])
         fontname = my_strdup(argv[ar]);
       } else if (!print_docu &&
                  (!strcmp("--doc", option) || !strncmp("--doc_", option, 5) ||
-                  !strcmp("--docu", option) || !strncmp("--docu_", option, 6))) {
+                  !strcmp("--docu", option) ||
+                  !strncmp("--docu_", option, 6))) {
         print_docu = TRUE;
         if (!strncmp("--doc_", option, 6)) {
           ar--;
@@ -996,8 +999,8 @@ static void end_it(void) /* perform shutdown-operations */
 #else
   if (!Commandline && endreason != rREQUEST) {
 #endif
-    /* we assume that user want to study grafical window or curses-output before we close
-       all this */
+    /* we assume that user want to study grafical window or curses-output before
+       we close all this */
     mystream(STDIO_STREAM);
     onestring("---Program done, press RETURN---\n");
 #ifdef UNIX
@@ -1006,10 +1009,11 @@ static void end_it(void) /* perform shutdown-operations */
       raw();
       cbreak();
       noecho();
-      /* Consume chars until we see ctrl-c or return. On ctrl-c this behaves better than
-	 getnstr, because with this loop we get a chance to reset terminal quickly. */
-      while(ch != 3 && ch != 10 && ch != 13) {
-	ch=getch();
+      /* Consume chars until we see ctrl-c or return. On ctrl-c this behaves
+         better than getnstr, because with this loop we get a chance to reset
+         terminal quickly. */
+      while (ch != 3 && ch != 10 && ch != 13) {
+        ch = getch();
       }
     } else {
       /* avoid a compiler warning */
@@ -1025,7 +1029,7 @@ static void end_it(void) /* perform shutdown-operations */
 #endif
   }
 
-  con_xcap_deinit();  
+  con_xcap_deinit();
 #ifdef WINDOWS
   if (printerfont) {
     DeleteObject(printerfont);
