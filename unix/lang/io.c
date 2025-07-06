@@ -116,10 +116,14 @@ void print(struct command *cmd) /* print on screen */
   long int n;
   double d;
 #ifdef UNIX
+#ifdef __GNUC__
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
   int x, y;
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 #endif
 
   r = NULL;
@@ -1158,10 +1162,14 @@ static void readline(void) /* read one line from current stream */
 {
 #ifdef UNIX
   char *nl; /* position of newline */
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
+#endif
   int x, y;
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 #else
   int read;
 #endif
@@ -1796,10 +1804,14 @@ void putchars(void) /* put rect onto screen */
   char *ch, text, fore[4], back[4];
   int n, sx, sy, x, y, f, b;
   int tox, toy;
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"  
+#endif
   int oldx, oldy;
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 #ifdef WINDOWS
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   COORD cp;

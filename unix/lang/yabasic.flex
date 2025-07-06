@@ -12,7 +12,9 @@
 
 */
 
+#ifdef __GNUC__
 #pragma GCC diagnostic ignored "-Wmisleading-indentation"  
+#endif
 
 #include <string.h>
 
