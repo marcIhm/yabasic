@@ -1528,7 +1528,7 @@ void poke(struct command *cmd) /* poke into internals */
       sprintf(estring,
               "invalid argument for poke 'debug_internal': '%s' ; allowed "
               "values are:\n"
-              "     x11_send_expose             :   send an artifical expose "
+              "     x11_send_expose             :   send an artificial expose "
               "event to the open graphic window\n"
               "     x11_note_on_receive_expose  :   make the redraw-coprocess "
               "output a note on\n"
