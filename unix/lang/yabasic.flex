@@ -2,7 +2,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2025
+    written by Marc Ihm 1995-2026
     more info at www.yabasic.de
 
     FLEX part
@@ -290,6 +290,7 @@ MAX return tMAX;
 "RTRIM$" return tRTRIM;
 "TRIM$" return tTRIM;
 "STRING$" return tSTRING2;
+"REPLACE$" return tREPLACE;
 INSTR return tINSTR;
 RINSTR return tRINSTR;
 "CHOMP$" return tCHOMP;

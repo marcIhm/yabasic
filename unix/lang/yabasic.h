@@ -1,7 +1,7 @@
 /*
 
     YABASIC ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2025
+    written by Marc Ihm 1995-2026
     more info at www.yabasic.de
 
     yabasic.h --- function prototypes and global variables
@@ -306,9 +306,9 @@ enum functions {
     fLTRIM, fRTRIM, fTRIM, fCHR, fBITNOT,
     fONEARGS, fDEC2, fATAN2, fLEFT, fAND, fOR,
     fEOR, fSHL, fSHR, fLOG2,
-    fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2, fSTRING, 
+    fRIGHT, fINSTR, fRINSTR, fSTR2, fMOD, fMIN, fMAX, fPEEK3, fMID2, fSTRING,
     fTWOARGS,
-    fMID, fINSTR2, fRINSTR2, fSTR3,
+    fMID, fINSTR2, fRINSTR2, fSTR3, fREPLACE,
     fTHREEARGS,
     fGETBIT, fGETCHAR,
     fLAST_FUNCTION,		/* no function, just marks end of list */

@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2025
+    written by Marc Ihm 1995-2026
     more info at www.yabasic.de
 
     function.c -- code for functions
@@ -372,11 +372,11 @@ void create_function(int type) /* create command 'function' */
 void function(struct command *cmd) /* performs a function */
 {
   struct stackentry *stack, *a1 = NULL, *a2 = NULL, *a3 = NULL, *a4 = NULL;
-  char *pointer;
+  char *pointer, *ptr;
   double value;
   time_t datetime;
-  int type, result, len, start, i, j, k, max, cnt;
-  char *str, *str2;
+  int type, result, len, len2, len3, start, i, j, k, max, cnt;
+  char *str, *str2, *str3;
 
   type = cmd->args;
   if (type > fTHREEARGS) {
@@ -720,7 +720,7 @@ void function(struct command *cmd) /* performs a function */
     }
     str = a2->pointer;
     len = strlen(str);
-    pointer = my_malloc(cnt * strlen(str) * sizeof(char *) + 1);
+    pointer = my_malloc(cnt * strlen(str) * sizeof(char) + 1);
     k = 0;
     for (i = 0; i < cnt; i++) {
       for (j = 0; j < len; j++) {
@@ -729,6 +729,41 @@ void function(struct command *cmd) /* performs a function */
     }
     pointer[k] = '\0';
     result = stSTRING;
+    break;
+  case fREPLACE:
+    result = stSTRING;
+    str = a1->pointer;
+    len = strlen(str);
+    str2 = a2->pointer;
+    len2 = strlen(str2);
+    if (len2 == 0) {
+      pointer = my_strdup(str);
+      break;
+    }
+    str3 = a3->pointer;
+    len3 = strlen(str3);
+    /* strings to replace from to may have different length, so things get more complicated */
+    /* count occurrences of str2 within str */
+    cnt = 0;
+    ptr = str;
+    while ((ptr = strstr(ptr, str2))) {
+      cnt++;
+      ptr += len2;
+    }
+    pointer = my_malloc((len + len3 - len2) * cnt * sizeof(char) + 1);
+    i = 0;
+    j = 0;
+    while (str[i]) {
+      if (!strncmp(str + i, str2, len2)) {
+	i += len2;
+	/* copy whole string over */
+	strcpy(pointer + j, str3);
+	j += len3;
+      } else {
+	pointer[j++] = str[i++];
+      }
+    }
+    pointer[j] = '\0';
     break;
   case fINSTR:
     str = a1->pointer;

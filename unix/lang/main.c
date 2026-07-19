@@ -1,7 +1,7 @@
 /*
 
     YABASIC  ---  a simple Basic Interpreter
-    written by Marc Ihm 1995-2025
+    written by Marc Ihm 1995-2026
     more info at www.yabasic.de
 
     main.c -- main() and auxilliary functions
@@ -27,7 +27,7 @@
     break;                                                                     \
   } /* reduces type-work */
 #define COPYRIGHT                                                              \
-  "Copyright 1995-2025 by Marc Ihm, according to the MIT License"
+  "Copyright 1995-2026 by Marc Ihm, according to the MIT License"
 /* NOTE: Including whatever timestamp into the banner would break the
  * reproducible build */
 #define BANNER                                                                 \
@@ -1403,6 +1403,7 @@ static void initialize(void)
   fexplanation[fRTRIM] = "RTRIM";
   fexplanation[fTRIM] = "TRIM";
   fexplanation[fSTRING] = "STRING";
+  fexplanation[fREPLACE] = "REPLACE";
   fexplanation[fCHR] = "CHR";
   fexplanation[fBITNOT] = "BITNOT";
   fexplanation[fONEARGS] = "ONEARGS";

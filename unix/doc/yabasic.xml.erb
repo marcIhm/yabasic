@@ -894,13 +894,6 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
-	  <term><link linkend="ref_rinstr">rinstr()</link></term>
-	  <listitem>
-	    <%= purpose['ref_rinstr'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
 	  <term><link linkend="ref_left">left$()</link></term>
 	  <listitem>
 	    <%= purpose['ref_left'] %>
@@ -936,9 +929,30 @@ yabasic*font: 9x15
 	</varlistentry>
 
 	<varlistentry>
+	  <term><link linkend="ref_replace">replace$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_replace'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><link linkend="ref_right">right$()</link></term>
 	  <listitem>
 	    <%= purpose['ref_right'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_rinstr">rinstr()</link></term>
+	  <listitem>
+	    <%= purpose['ref_rinstr'] %>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><link linkend="ref_rtrim">rtrim$()</link></term>
+	  <listitem>
+	    <%= purpose['ref_rtrim'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -974,13 +988,6 @@ yabasic*font: 9x15
 	  <term><link linkend="ref_trim">trim$()</link></term>
 	  <listitem>
 	    <%= purpose['ref_trim'] %>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><link linkend="ref_rtrim">rtrim$()</link></term>
-	  <listitem>
-	    <%= purpose['ref_rtrim'] %>
 	  </listitem>
 	</varlistentry>
 
@@ -2606,7 +2613,7 @@ sub matadd(m1(),m2(),r())
 	</refsynopsisdiv>
 	<refsection><info><title>Description</title></info>
 	  
-	  <para>The <function>asc</function>-function accepts a string, takes its first character and looks it up within the <acronym>ascii</acronym>-charset; this position will be returned. The <function>asc</function>-function is the opposite of the <function><link linkend="ref_chr">chr$</link></function>-function. There are valid uses for <function>asc</function>, however, comparing strings (i.e. to bring them into alphabetical sequence) is <emphasis>not</emphasis> among them; in such many cases you might consider to compare strings directly with <literal>&lt;</literal>, <literal>=</literal> and <literal>&gt;</literal> (rather than converting a string to a number and comparing this number).</para>
+	  <para>The <function>asc</function>-function accepts a string, takes its first character and looks it up within the <acronym>ascii</acronym>-charset; this position will be returned. The <function>asc</function>-function is the opposite of the <function><link linkend="ref_chr">chr$</link></function>-function. There are many valid uses for <function>asc</function>, however, comparing strings (i.e. to bring them into alphabetical sequence) is <emphasis>not</emphasis> among them; in such many cases you might consider to compare strings directly with <literal>&lt;</literal>, <literal>=</literal> and <literal>&gt;</literal> (rather than converting a string to a number and comparing this number).</para>
 	</refsection>
 	<refsection><info><title>Example</title></info>
 	  
@@ -6094,7 +6101,7 @@ endif
 	</refsection>
 	<refsection><info><title>See also</title></info>
 	  
-	  <para><function><link linkend="ref_rinstr">rinstr</link></function></para>
+	  <para><function><link linkend="ref_rinstr">rinstr</link></function>, <function><link linkend="ref_replace">replace$</link></function></para>
 	</refsection>
       </refentry>
 
@@ -9111,6 +9118,47 @@ print int(-2.3),round(-2.5), round(-2.7)
 	  <para><function><link linkend="ref_ceil">ceil</link></function>, <function><link linkend="ref_floor">floor</link></function>, <function><link linkend="ref_int">int</link></function>, <function><link linkend="ref_frac">frac</link></function></para>
 	</refsection>
       </refentry>
+
+      <refentry xml:id="ref_replace">
+	<refmeta>
+	  <refentrytitle>replace$()</refentrytitle>
+	</refmeta>
+	<refnamediv>
+	  <refname>replace$()</refname>
+	  <refpurpose>in a string, replace occurrences of one substring by another</refpurpose>
+	</refnamediv>
+	<refsynopsisdiv>
+	  <synopsis format="linespecific">
+a$=replace$(b$,from$,to$)
+</synopsis>
+	</refsynopsisdiv>
+	<refsection><info><title>Description</title></info>
+	  
+	  <para>The <function>replace$</function>-function takes its first argument and searches within it for all occurrences of its second one; each occurrence is then replaced by the third argument. Finally, the initial string but with all occurrences replaced, is returnd as the result. Note, that the second and third argument can be strings of <emphasis>different</emphasis> length.</para>
+	</refsection>
+	<refsection><info><title>Example</title></info>
+	  
+	  <informalexample>
+	    <programlisting>
+line$="Sweets for my sweet"
+print line$
+print replace$(replace$(line$, "Sweets", "Sugar"), "sweet", "honey")
+          </programlisting>
+	    <para>This prints the following output by employing <function>replace$</function> <emphasis>twice</emphasis>:</para>
+	    <para>
+	    <screen>
+Sweets for my sweet
+sugar for my honey
+	    </screen>
+	    </para>
+	  </informalexample>
+	</refsection>
+	<refsection><info><title>See also</title></info>
+	  
+	  <para><function><link linkend="ref_instr">instr</link></function></para>
+	</refsection>
+      </refentry>
+
 
       <refentry xml:id="ref_rtrim">
 	<refmeta>
