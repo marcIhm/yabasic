@@ -14,3 +14,17 @@ if replace$("foo","o","uu")<>"fuuuu" error "replace$ has problems"
 if replace$("fuuuu","uu","o")<>"foo" error "replace$ has problems"
 if replace$("foo","","x")<>"foo" error "replace$ has problems"
 if replace$("foo","o","")<>"f" error "replace$ has problems"
+
+a$="foo"
+left$(a$,1)="z"
+if a$ <> "zoo" error "Assigning to left$ has problems"
+left$(a$,1)="bar"
+if a$ <> "boo" error "Assigning to left$ has problems"
+
+a$="bar"
+right$(a$,3)="foo"
+if a$ <> "foo" error "Assigning to right$ has problems"
+
+a$="foobarbaz"
+mid$(a$,4,3)="qux"
+if a$ <> "fooquxbaz" error "Assigning to mid$ has problems"

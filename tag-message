@@ -1,4 +1,4 @@
-Version 2.91.4 (August 31, 2025)
-  - Fixed compile-warnings for missing prototypes
-  - Some minor updates in toolchain
+Version 2.92.0 (July 19, 2026)
+  - New function 'replace$' to replace substrings within a sring
+  - New peeks 'screenposx' and y to get cursor position
 

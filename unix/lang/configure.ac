@@ -5,7 +5,7 @@ dnl    apt install libtool
 dnl    autoreconf --install
 dnl    automake --add-missing --copy
 
-AC_INIT([yabasic], [2.91.4])
+AC_INIT([yabasic], [2.92.0])
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE
 LT_INIT

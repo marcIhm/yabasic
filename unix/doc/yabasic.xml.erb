@@ -2698,7 +2698,7 @@ next x
 	</refsection>
 	<refsection><info><title>See also</title></info>
 	  
-	  <para><link linkend="ref_print"><function>print</function></link>, <link linkend="ref_clear_screen"><function>clear screen</function></link>, <link linkend="ref_print_color"><function>color</function></link></para>
+	  <para><link linkend="ref_print"><function>print</function></link>, <link linkend="ref_clear_screen"><function>clear screen</function></link>, <link linkend="ref_print_color"><function>color</function></link>, <function><link linkend="ref_peek">peek("screenposx")</link></function></para>
 	</refsection>
       </refentry>
 
@@ -6651,7 +6651,7 @@ mid$(a$,5)="foo"
 	</refsynopsisdiv>
 	<refsection><info><title>Description</title></info>
 	  
-	  <para>The <function>mid$</function>-function requires three arguments: a string and two numbers, where the first number specifies a position within the string and the second one gives the number of characters to be returned; if you omit the third argument, the <function>mid$</function>-function returns all characters up to the end of the string.</para>
+	  <para>The <function>mid$</function>-function requires three arguments: a string and two numbers. The first number specifies a position within the string; please note, that it starts at <emphasis>1</emphasis>. The second number (which is the third argument) gives the count of characters to be returned; if you omit it, the <function>mid$</function>-function returns all characters up to the end of the string.</para>
 	  <para>Note, that you may assign to the <function>mid$</function>-function, i.e. <function>mid$</function> may appear on the left hand side of an assignment. In this way it is possible to change a part of the variable used within the <function>mid$</function>-function. Note, that that way the <emphasis>length</emphasis> of the string cannot be changed, i.e. characters might be overwritten, but not added. For an example see below.</para>
 	</refsection>
 	<refsection><info><title>Example</title></info>
@@ -7769,9 +7769,25 @@ a=peek(#1)
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><function>peek("screenposx")</function></term>
+	      <listitem>
+		<para>Return the current horizontal (i.e. in x-direction) cursor position (in characters) within the window, where <application>yabasic</application> runs. The count starts at 0 at the left edge of the screen (which is consistent with <function><link linkend="ref_at">at</link></function>). You need to call <function><link linkend="ref_clear_screen">clear screen</link></function> first, or this <function>peek</function> will return -1.</para>
+		<para>See also <function>peek("screenposy")</function> below.</para>		
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><function>peek("screenposy")</function></term>
+	      <listitem>
+		<para>Return the current vertical (i.e. in y-direction) cursor position (in characters) within the window, where <application>yabasic</application> runs. The count starts with 0 at the top edge of the screen (which is consistent with <function><link linkend="ref_at">at</link></function>). You need to call <function><link linkend="ref_clear_screen">clear screen</link></function> first, or this <function>peek</function> will return -1.</para>
+		<para>See also <function>peek("screenposx")</function> above.</para>		
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><function>peek("screenheight")</function></term>
 	      <listitem>
-		<para>Return the height in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
+		<para>Return the height (in characters) of the window, where <application>yabasic</application> runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
                 <para>Please note, that there is a similar-sounding <function>peek("displayheight")</function>, that however relates to the graphics window thay you may have opened.</para>
 		<para>See also <function>peek("screenwidth")</function> below.</para>		
 	      </listitem>
@@ -7780,7 +7796,7 @@ a=peek(#1)
 	    <varlistentry>
 	      <term><function>peek("screenwidth")</function></term>
 	      <listitem>
-		<para>Return the width in characters of the window, wherein yabasic runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
+		<para>Return the width (in characters) of the window, where <application>yabasic</application> runs. If you have not called <function><link linkend="ref_clear_screen">clear screen</link></function> yet, this <function>peek</function>will return 0, regardless of the size of your terminal.</para>
 		<para>See also <function>peek("screenheight")</function> above.</para>		
 	      </listitem>
 	    </varlistentry>

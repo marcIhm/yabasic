@@ -283,7 +283,7 @@ void create_changestring(int type) /* create command 'changestring' */
   cmd->args = type;
 }
 
-void changestring(struct command *cmd) /* changes a string */
+void changestring(struct command *cmd) /* changes a string, e.g. for assignment to left$, right$, mid$ */
 {
   int type, a2, a3;
   char *newpart;
@@ -301,7 +301,8 @@ void changestring(struct command *cmd) /* changes a string */
   }
   a1 = pop(stSTRING);
   oldstring = a1->pointer;
-  a1->pointer = NULL; /* this prevents push from freeing the memory */
+  a1->pointer = NULL; /* this prevents push from freeing the memory and so allows us to
+			 change the result in place */
 
   if (!oldstring || !*oldstring) {
     return;
@@ -1730,6 +1731,11 @@ void pokefile(struct command *cmd) /* poke into file */
 static double peek(char *dest) /* peek into internals */
 {
   char *s;
+#ifdef UNIX
+  int x,y;
+#else /* WINDOWS */
+  CONSOLE_SCREEN_BUFFER_INFO coninfo; /* receives console size */
+#endif    
 
   for (s = dest; *s; s++) {
     *s = tolower((int)*s);
@@ -1743,6 +1749,29 @@ static double peek(char *dest) /* peek into internals */
   } else if (!strcmp(dest, "screenheight")) {
     return LINES;
   } else if (!strcmp(dest, "screenwidth")) {
+    return COLS;
+  } else if (!strcmp(dest, "screenposx")) {
+    if (!con_xcap_inized) {
+      return -1;
+    }    
+#ifdef UNIX
+      getyx(stdscr,y,x);
+      return x;
+#else /* WINDOWS */
+      GetConsoleScreenBufferInfo(ConsoleOutput, &coninfo);
+      return coninfo.dwCursorPosition.X;
+#endif
+  } else if (!strcmp(dest, "screenposy")) {
+    if (!con_xcap_inized) {
+      return -1;
+    }    
+#ifdef UNIX
+      getyx(stdscr,y,x);
+      return y;
+#else /* WINDOWS */
+      GetConsoleScreenBufferInfo(ConsoleOutput, &coninfo);
+      return coninfo.dwCursorPosition.Y;
+#endif
     return COLS;
   } else if (!strcmp(dest, "displaywidth")) {
     if (displaywidth == 0)
