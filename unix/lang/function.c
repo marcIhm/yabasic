@@ -743,7 +743,9 @@ void function(struct command *cmd) /* performs a function */
     }
     str3 = a3->pointer;
     len3 = strlen(str3);
-    /* strings to replace from to may have different length, so things get more complicated */
+    /* strings to replace from to may have different length, so things get more
+       complicated */
+    
     /* count occurrences of str2 within str */
     cnt = 0;
     ptr = str;
@@ -751,7 +753,7 @@ void function(struct command *cmd) /* performs a function */
       cnt++;
       ptr += len2;
     }
-    pointer = my_malloc((len + len3 - len2) * cnt * sizeof(char) + 1);
+    pointer = my_malloc(len + (len3 - len2) * cnt * sizeof(char) + 1);
     i = 0;
     j = 0;
     while (str[i]) {
